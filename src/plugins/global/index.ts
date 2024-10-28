@@ -10,6 +10,10 @@ const componentsDir = path.resolve(
 export const globalPlugin = (): RspressPlugin => {
   return {
     name: 'doom-global',
+    globalStyles: path.resolve(
+      import.meta.dirname,
+      '../../../styles/global.scss',
+    ),
     markdown: {
       globalComponents: fs
         .readdirSync(componentsDir)

@@ -39,7 +39,7 @@ export function Overview(props: {
 }) {
   const {
     siteData,
-    page: { routePath, frontmatter },
+    page: { routePath, frontmatter, title },
   } = usePageData()
   const { content, groups: customGroups, defaultGroupTitle = 'Others' } = props
   const subFilter = (link: string) =>
@@ -137,54 +137,73 @@ export function Overview(props: {
   ): item is SidebarItem | (NormalizedSidebarGroup & { link: string }) =>
     !('items' in item) && 'link' in item
 
+  const getGroup = (
+    sidebarGroups: (NormalizedSidebarGroup | SidebarItem | SidebarDivider)[],
+  ) => {
+    const group = sidebarGroups
+      .filter((sidebarGroup) => {
+        if ('items' in sidebarGroup && sidebarGroup.items) {
+          return (
+            sidebarGroup.items.filter((item) => subFilter(getChildLink(item)))
+              .length > 0
+          )
+        }
+        if (
+          isSingleFile(sidebarGroup) &&
+          subFilter(getChildLink(sidebarGroup))
+        ) {
+          return true
+        }
+        return false
+      })
+      .map((sidebarGroup) => {
+        let items: (GroupItem | SidebarDivider)[] = []
+        if (sidebarGroup && 'items' in sidebarGroup) {
+          items = sidebarGroup.items
+            .map((item) =>
+              normalizeSidebarItem(item, sidebarGroup, frontmatter),
+            )
+            .filter((_): _ is GroupItem | SidebarDivider => !!_)
+        } else if (isSingleFile(sidebarGroup)) {
+          items = [
+            normalizeSidebarItem(
+              {
+                link: sidebarGroup.link,
+                text: sidebarGroup.text || '',
+                tag: sidebarGroup.tag,
+                _fileKey: sidebarGroup._fileKey,
+                overviewHeaders: sidebarGroup.overviewHeaders,
+              },
+              undefined,
+              frontmatter,
+            ),
+          ].filter((_): _ is GroupItem | SidebarDivider => !!_)
+        }
+        return {
+          name: ('text' in sidebarGroup && sidebarGroup.text) || '',
+          items,
+        }
+      }) as Group[]
+    return group
+  }
+
   const groups =
     customGroups ??
     useMemo(() => {
-      const group = overviewSidebarGroups
-        .filter((sidebarGroup) => {
-          if ('items' in sidebarGroup && sidebarGroup.items) {
-            return (
-              sidebarGroup.items.filter((item) => subFilter(getChildLink(item)))
-                .length > 0
-            )
-          }
-          if (
-            isSingleFile(sidebarGroup) &&
-            subFilter(getChildLink(sidebarGroup))
-          ) {
-            return true
-          }
-          return false
-        })
-        .map((sidebarGroup) => {
-          let items: (GroupItem | SidebarDivider)[] = []
-          if (sidebarGroup && 'items' in sidebarGroup) {
-            items = sidebarGroup.items
-              .map((item) =>
-                normalizeSidebarItem(item, sidebarGroup, frontmatter),
-              )
-              .filter((_): _ is GroupItem | SidebarDivider => !!_)
-          } else if (isSingleFile(sidebarGroup)) {
-            items = [
-              normalizeSidebarItem(
-                {
-                  link: sidebarGroup.link,
-                  text: sidebarGroup.text || '',
-                  tag: sidebarGroup.tag,
-                  _fileKey: sidebarGroup._fileKey,
-                  overviewHeaders: sidebarGroup.overviewHeaders,
-                },
-                undefined,
-                frontmatter,
-              ),
-            ].filter((_): _ is GroupItem | SidebarDivider => !!_)
-          }
-          return {
-            name: ('text' in sidebarGroup && sidebarGroup.text) || '',
-            items,
-          }
-        }) as Group[]
-      return group
+      const group = getGroup(overviewSidebarGroups)
+      if (group.length) {
+        return group
+      }
+      for (const sidebarGroup of overviewSidebarGroups) {
+        if (!('items' in sidebarGroup)) {
+          continue
+        }
+        const group = getGroup(sidebarGroup.items)
+        if (group.length) {
+          return group
+        }
+      }
+      return []
     }, [overviewSidebarGroups, routePath, frontmatter])
 
   return (
@@ -193,7 +212,8 @@ export function Overview(props: {
       {groups.map((group) => (
         <Fragment key={group.name}>
           {/* If there is no sidebar group, we show the sidebar items directly and hide the group name */}
-          {group.name === defaultGroupTitle && groups.length === 1 ? (
+          {(group.name === title || group.name === defaultGroupTitle) &&
+          groups.length === 1 ? (
             <h2 style={{ paddingTop: 0 }}></h2>
           ) : (
             <h2>{renderInlineMarkdown(group.name)}</h2>
