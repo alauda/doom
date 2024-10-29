@@ -23,7 +23,7 @@
     "build": "tsc -b src",
     "clean": "tsc -b --clean",
     "dev": "yarn swc-node --watch-path src/cli --watch-path src/plugins src/cli/index.ts",
-    "doom": "yarn swc-node src/cli.ts",
+    "doom": "yarn swc-node src/cli/index.ts",
     "lint": "run-p 'lint:*'",
     "lint:es": "yarn swc-node ./node_modules/.bin/eslint . --config eslint.config.ts",
     "lint:tsc": "tsc -b --noEmit",

@@ -44,6 +44,14 @@ const COMMON_CONFIG: UserConfig = {
     ],
   },
   plugins: [autoSidebarPlugin(), globalPlugin()],
+  builderConfig: {
+    dev: {
+      lazyCompilation: true,
+    },
+    server: {
+      open: true,
+    },
+  },
 }
 
 const findConfig = (basePath: string): string | undefined => {

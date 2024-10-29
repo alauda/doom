@@ -1,0 +1,49 @@
+# Container Platform 帮助文档
+
+## 欢迎使用 Container Platform
+
+Container Platform（以下简称本平台或容器平台）拥抱云原生（Cloud Native）技术，通过整合 Docker 容器、Kubernetes 原生架构、微服务等相关新技术和新理念，可实现业务应用从开发、测试，到部署、运维的全生命周期平台化管理，能有效帮助企业实现数字化转型，提升企业的 IT 交付能力和竞争力。
+
+本平台作为企业级的云原生容器平台，可服务于不同规模的企业，支持管理各种复杂度的基础设施环境（单台机器或多个异构的数据中心）、组织结构清晰的部门建制和人员团队。
+
+本平台能够满足企业级应用逐步向容器化、微服务化过渡的广泛需求，支持企业建立一个覆盖内外部各环节和组织结构的私有云平台。提升企业 IT 资源利用率，加快应用迭代速度，降低应用交付成本，实现业务应用的智能运维，从而助力企业获得持续创新的核心能力。
+
+<QuickNav
+  items={[
+    {
+      icon: '/manual.svg',
+      title: '用户手册',
+      links: [
+        { title: 'OAM 应用', href: '/zh/app-manage/oam/' },
+        { title: '应用管理', href: '/zh/app-manage/' },
+        { title: '虚拟化', href: '/zh/kubevirt/' },
+        { title: '应用商店', href: '/zh/catalog/' },
+      ],
+    },
+    {
+      icon: '/api.svg',
+      title: 'API 文档',
+      links: [
+        { title: '计算组件', href: '/zh/api/workloads/' },
+        { title: '配置', href: '/zh/api/config/' },
+        { title: '网络', href: '/zh/api/network/' },
+        { title: '存储', href: '/zh/api/storage/' },
+      ],
+    },
+    {
+      icon: '/faq.svg',
+      title: '常见问题',
+      links: [
+        { title: '如何设置定时任务的定时触发规则？', href: '/zh/faq/crontab/' },
+        {
+          title: '集群没有负载均衡时，入站规则是否可用？',
+          href: '/zh/faq/ingress-controller/',
+        },
+        {
+          title: '被接入集群未部署 OLM 导致无法安装 Operator 时，如何处理？',
+          href: '/zh/faq/olm/',
+        },
+      ],
+    },
+  ]}
+/>

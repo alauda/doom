@@ -7,3 +7,48 @@ Container Platform (hereinafter referred to as the platform or container platfor
 This platform is an enterprise-level cloud-native container platform that can serve enterprises of different scales. It supports the management of infrastructure environments of various complexities (single machines or multiple heterogeneous data centers) and well-structured departmental organizations and personnel teams.
 
 This platform can meet the extensive needs of enterprise-level applications transitioning to containerization and microservices, supporting enterprises in establishing a private cloud platform that covers internal and external processes and organizational structures. It improves the utilization of enterprise IT resources, accelerates application iteration speed, reduces application delivery costs, enables intelligent operation and maintenance of business applications, and thereby helps enterprises gain core capabilities for continuous innovation.
+
+<QuickNav
+  items={[
+    {
+      icon: '/manual.svg',
+      title: 'User Manual',
+      links: [
+        { title: 'OAM applications', href: '/app-manage/oam/' },
+        { title: 'Application Management', href: '/app-manage/' },
+        { title: 'Virtualization', href: '/kubevirt/' },
+        { title: 'App Store', href: '/catalog/' },
+      ],
+    },
+    {
+      icon: '/api.svg',
+      title: 'API Documentation',
+      links: [
+        { title: 'Workloads', href: '/api/workloads/' },
+        { title: 'Configuration', href: '/api/config/' },
+        { title: 'Network', href: '/api/network/' },
+        { title: 'Storage', href: '/api/storage/' },
+      ],
+    },
+    {
+      icon: '/faq.svg',
+      title: 'FAQ',
+      links: [
+        {
+          title: 'How to set the timing trigger rule for a timed task?',
+          href: '/faq/crontab/',
+        },
+        {
+          title:
+            'Are inbound rules available when the cluster does not have load balancing?',
+          href: '/faq/ingress-controller/',
+        },
+        {
+          title:
+            'How to handle the situation when the cluster to be accessed is not deployed with OLM, resulting in the inability to install the Operator?',
+          href: '/faq/olm/',
+        },
+      ],
+    },
+  ]}
+/>

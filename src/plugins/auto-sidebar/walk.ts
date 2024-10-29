@@ -170,7 +170,7 @@ export async function scanSideMeta(
         name,
         label = '',
         collapsible,
-        collapsed = true,
+        collapsed,
         link,
         tag,
         dashed,
