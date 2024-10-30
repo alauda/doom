@@ -1,9 +1,9 @@
 {
   "name": "@alauda/doom",
-  "version": "0.0.0-alpha.0",
+  "version": "0.0.0-alpha.1",
   "type": "module",
   "description": "Doctor Doom making docs.",
-  "repository": "git+https://gitlab-ce.alauda.cn/idp/Doom.git",
+  "repository": "https://gitlab-ce.alauda.cn/idp/Doom",
   "packageManager": "yarn@4.5.0",
   "engines": {
     "node": ">=20.11.0"
@@ -11,7 +11,7 @@
   "bin": "./lib/cli/index.js",
   "exports": {
     "./package.json": "./package.json",
-    "./runtime": "./src/runtime/index.ts"
+    "./runtime": "./lib/runtime/index.js"
   },
   "files": [
     "global.d.ts",
@@ -21,7 +21,7 @@
   ],
   "scripts": {
     "build": "tsc -b src",
-    "clean": "tsc -b --clean",
+    "clean": "tsc -b src --clean",
     "dev": "yarn swc-node --watch-path src/cli --watch-path src/plugins src/cli/index.ts",
     "doom": "yarn swc-node src/cli/index.ts",
     "lint": "run-p 'lint:*'",
@@ -55,10 +55,6 @@
     "typescript-eslint": "^8.12.2"
   },
   "publishConfig": {
-    "access": "public",
-    "exports": {
-      "./package.json": "./package.json",
-      "./runtime": "./lib/runtime/index.js"
-    }
+    "access": "public"
   }
 }
