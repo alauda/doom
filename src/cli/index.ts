@@ -14,16 +14,12 @@ import { program } from 'commander'
 import { green } from 'yoctocolors'
 import module from 'node:module'
 
-import { DEFAULT_CONFIGS } from './constants.js'
-import { loadConfig, resolveDocRoot } from './load-config.js'
-
-const I18N_FILE = 'i18n.json'
+import { CWD, DEFAULT_CONFIGS, I18N_FILE } from './constants.js'
+import { loadConfig } from './load-config.js'
 
 const META_FILE = '_meta.json'
 
 const CONFIG_FILES = [...DEFAULT_CONFIGS, I18N_FILE]
-
-const cwd = process.cwd()
 
 const setNodeEnv = (env: 'development' | 'production') => {
   process.env.NODE_ENV = env
@@ -59,15 +55,12 @@ program
       const startDevServer = async () => {
         const { config, filepath } = await loadConfig(root, configFile)
 
-        config.root = resolveDocRoot(cwd, root, config.root)
-        config.i18nSourcePath = path.resolve(config.root, I18N_FILE)
-
-        const docDirectory = config.root
+        const docDirectory = config.root!
 
         try {
           devServer = await dev({
             config,
-            appDirectory: cwd,
+            appDirectory: CWD,
             docDirectory,
             extraBuilderConfig: {
               server,
@@ -79,11 +72,13 @@ program
         }
 
         cliWatcher = watch(
-          filepath ? [filepath, docDirectory] : [...CONFIG_FILES, docDirectory],
+          filepath
+            ? [filepath, docDirectory, config.i18nSourcePath!]
+            : [...CONFIG_FILES, docDirectory],
           {
             ignoreInitial: true,
             ignored: ['**/node_modules/**', '**/.git/**', '**/.DS_Store/**'],
-            cwd,
+            cwd: CWD,
           },
         )
 
@@ -94,7 +89,8 @@ program
             eventName === 'add' ||
             eventName === 'unlink' ||
             (eventName === 'change' &&
-              (CONFIG_FILES.includes(path.basename(filepath)) ||
+              (filepath === config.i18nSourcePath ||
+                CONFIG_FILES.includes(path.basename(filepath)) ||
                 path.basename(filepath) === META_FILE))
           ) {
             if (isRestarting) {
@@ -104,7 +100,7 @@ program
             isRestarting = true
             console.log(
               `\n✨ ${eventName} ${green(
-                path.relative(cwd, filepath),
+                path.relative(CWD, filepath),
               )}, dev server will restart...\n`,
             )
             await devServer?.close()
@@ -137,14 +133,11 @@ program
 
     const { config } = await loadConfig(root, configFile)
 
-    config.root = resolveDocRoot(cwd, root, config.root)
-    config.i18nSourcePath = path.resolve(config.root, I18N_FILE)
-
-    const docDirectory = config.root
+    const docDirectory = config.root!
 
     await build({
       config,
-      appDirectory: cwd,
+      appDirectory: CWD,
       docDirectory,
     })
   })
@@ -162,9 +155,6 @@ program
       setNodeEnv('production')
 
       const { config } = await loadConfig(root, configFile)
-
-      config.root = resolveDocRoot(cwd, root, config.root)
-      config.i18nSourcePath = path.resolve(config.root, I18N_FILE)
 
       await serve({
         config,

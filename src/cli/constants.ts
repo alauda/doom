@@ -19,3 +19,7 @@ export const DEFAULT_EXTENSIONS = [
 export const DEFAULT_CONFIGS = DEFAULT_EXTENSIONS.map(
   (ext) => `${DEFAULT_CONFIG_NAME}${ext}` as const,
 )
+
+export const I18N_FILE = 'i18n.json'
+
+export const CWD = process.cwd()

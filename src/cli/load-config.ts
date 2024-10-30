@@ -11,16 +11,21 @@ import rehypeRaw from 'rehype-raw'
 import { parse } from 'yaml'
 
 import { autoSidebarPlugin, globalPlugin } from '../plugins/index.js'
+import { pkgResolve } from '../utils/helpers.js'
 import {
+  CWD,
   DEFAULT_CONFIG_NAME,
   DEFAULT_EXTENSIONS,
+  I18N_FILE,
   YAML_EXTENSIONS,
 } from './constants.js'
 
+const DEFAULT_LOGO = path.relative(CWD, pkgResolve('assets/logo.svg'))
+
 const COMMON_CONFIG: UserConfig = {
   lang: 'en',
-  logo: '/logo.svg',
-  icon: '/logo.svg',
+  logo: DEFAULT_LOGO,
+  icon: DEFAULT_LOGO,
   markdown: {
     checkDeadLinks: true,
     mdxRs: false,
@@ -115,6 +120,19 @@ export async function loadConfig(
   const base = addLeadingSlash(mergedConfig.base || '/')
 
   mergedConfig.base = base
+
+  mergedConfig.root = resolveDocRoot(CWD, root, mergedConfig.root)
+
+  if (mergedConfig.i18nSourcePath) {
+    if (!path.isAbsolute(mergedConfig.i18nSourcePath)) {
+      mergedConfig.i18nSourcePath = path.resolve(
+        configFilePath,
+        mergedConfig.i18nSourcePath,
+      )
+    }
+  } else {
+    mergedConfig.i18nSourcePath = path.resolve(mergedConfig.root, I18N_FILE)
+  }
 
   if (!mergedConfig.outDir) {
     mergedConfig.outDir = `dist${base}`
