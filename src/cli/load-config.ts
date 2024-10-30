@@ -2,6 +2,7 @@ import { nodeTypes } from '@mdx-js/mdx'
 import {
   addLeadingSlash,
   addTrailingSlash,
+  removeLeadingSlash,
   type UserConfig,
 } from '@rspress/core'
 import { logger } from '@rspress/shared/logger'
@@ -11,7 +12,6 @@ import rehypeRaw from 'rehype-raw'
 import { parse } from 'yaml'
 
 import { autoSidebarPlugin, globalPlugin } from '../plugins/index.js'
-import { pkgResolve } from '../utils/helpers.js'
 import {
   CWD,
   DEFAULT_CONFIG_NAME,
@@ -19,13 +19,12 @@ import {
   I18N_FILE,
   YAML_EXTENSIONS,
 } from './constants.js'
+import { pkgResolve } from '../utils/helpers.js'
 
-const DEFAULT_LOGO = path.relative(CWD, pkgResolve('assets/logo.svg'))
+const DEFAULT_LOGO = '/logo.svg'
 
 const COMMON_CONFIG: UserConfig = {
   lang: 'en',
-  logo: DEFAULT_LOGO,
-  icon: DEFAULT_LOGO,
   markdown: {
     checkDeadLinks: true,
     mdxRs: false,
@@ -123,6 +122,28 @@ export async function loadConfig(
 
   mergedConfig.root = resolveDocRoot(CWD, root, mergedConfig.root)
 
+  let ensureDefaultLogo = false
+
+  if (!mergedConfig.logo) {
+    mergedConfig.logo = DEFAULT_LOGO
+    ensureDefaultLogo = true
+  }
+
+  if (!mergedConfig.icon) {
+    mergedConfig.icon = DEFAULT_LOGO
+    ensureDefaultLogo = true
+  }
+
+  if (ensureDefaultLogo) {
+    const publicPath = path.resolve(mergedConfig.root, `public`)
+    fs.mkdirSync(publicPath, { recursive: true })
+    const logoPath = path.resolve(publicPath, removeLeadingSlash(DEFAULT_LOGO))
+
+    if (!fs.existsSync(logoPath)) {
+      fs.copyFileSync(pkgResolve(`assets${DEFAULT_LOGO}`), logoPath)
+    }
+  }
+
   if (mergedConfig.i18nSourcePath) {
     if (!path.isAbsolute(mergedConfig.i18nSourcePath)) {
       mergedConfig.i18nSourcePath = path.resolve(
@@ -138,7 +159,7 @@ export async function loadConfig(
     mergedConfig.outDir = `dist${base}`
   }
 
-  if (mergedConfig.builderConfig?.server?.open) {
+  if (mergedConfig.builderConfig?.server?.open === true) {
     mergedConfig.builderConfig.server.open = addTrailingSlash(base)
   }
 
