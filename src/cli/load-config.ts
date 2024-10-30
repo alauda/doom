@@ -21,7 +21,6 @@ const COMMON_CONFIG: UserConfig = {
   lang: 'en',
   logo: '/logo.svg',
   icon: '/logo.svg',
-  outDir: 'dist',
   markdown: {
     checkDeadLinks: true,
     mdxRs: false,
@@ -119,6 +118,10 @@ export async function loadConfig(
   const base = addLeadingSlash(mergedConfig.base || '/')
 
   mergedConfig.base = base
+
+  if (!mergedConfig.outDir) {
+    mergedConfig.outDir = `dist${base}`
+  }
 
   if (mergedConfig.builderConfig?.server?.open) {
     mergedConfig.builderConfig.server.open = addTrailingSlash(base)
