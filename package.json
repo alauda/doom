@@ -1,6 +1,6 @@
 {
   "name": "@alauda/doom",
-  "version": "0.0.1",
+  "version": "0.0.0-alpha.0",
   "type": "module",
   "description": "Doctor Doom making docs.",
   "repository": "git+https://gitlab-ce.alauda.cn/idp/Doom.git",
@@ -14,9 +14,9 @@
     "./runtime": "./src/runtime/index.ts"
   },
   "files": [
+    "global.d.ts",
     "lib",
     "styles",
-    "global.d.ts",
     "!lib/*.tsbuildinfo"
   ],
   "scripts": {
@@ -25,12 +25,13 @@
     "dev": "yarn swc-node --watch-path src/cli --watch-path src/plugins src/cli/index.ts",
     "doom": "yarn swc-node src/cli/index.ts",
     "lint": "run-p 'lint:*'",
-    "lint:es": "yarn swc-node ./node_modules/.bin/eslint . --config eslint.config.ts",
+    "lint:es": "eslint .",
     "lint:tsc": "tsc -b --noEmit",
-    "swc-node": "node --enable-source-maps --disable-warning=ExperimentalWarning --import @swc-node/register/esm-register"
+    "prepare": "simple-git-hooks",
+    "swc-node": "node --enable-source-maps --import @swc-node/register/esm-register"
   },
   "dependencies": {
-    "@rspress/core": "^1.35.1",
+    "@rspress/core": "^1.35.2",
     "chokidar": "^4.0.1",
     "commander": "^12.1.0",
     "rehype-raw": "^6.1.1",
@@ -43,15 +44,18 @@
     "@swc/core": "1.7.40",
     "@types/eslint__js": "^8.42.3",
     "@types/fs-extra": "^11.0.4",
-    "@types/node": "^22.8.1",
+    "@types/node": "^22.8.4",
     "eslint": "^9.13.0",
-    "npm-run-all2": "^6.2.6",
+    "lint-staged": "^15.2.10",
+    "npm-run-all2": "^7.0.1",
     "prettier": "^3.3.3",
     "prettier-plugin-pkg": "^0.18.1",
+    "simple-git-hooks": "^2.11.1",
     "typescript": "^5.6.3",
-    "typescript-eslint": "^8.11.0"
+    "typescript-eslint": "^8.12.2"
   },
   "publishConfig": {
+    "access": "public",
     "exports": {
       "./package.json": "./package.json",
       "./runtime": "./lib/runtime/index.js"

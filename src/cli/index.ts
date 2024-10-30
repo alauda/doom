@@ -1,4 +1,4 @@
-#!/usr/bin/env node --disable-warning=ExperimentalWarning
+#!/usr/bin/env node
 
 /**
  * Adopted from @see https://github.com/web-infra-dev/rspress/blob/main/packages/cli/src/index.ts
@@ -14,7 +14,6 @@ import { program } from 'commander'
 import { green } from 'yoctocolors'
 import module from 'node:module'
 
-import pkg from '../../package.json' assert { type: 'json' }
 import { DEFAULT_CONFIGS } from './constants.js'
 import { loadConfig, resolveDocRoot } from './load-config.js'
 
@@ -30,7 +29,12 @@ const setNodeEnv = (env: 'development' | 'production') => {
   process.env.NODE_ENV = env
 }
 
-const require = module.createRequire(import.meta.url)
+const cjsRequire = module.createRequire(import.meta.url)
+
+const pkg = cjsRequire('../../package.json') as {
+  description: string
+  version: string
+}
 
 program
   .name('doom')
@@ -151,9 +155,11 @@ program
   .option('--host [host]', 'Host name')
   .action(
     async (
-      root = 'docs',
+      root: string,
       { config: configFile, ...server }: ServerConfig & { config?: string },
     ) => {
+      setNodeEnv('production')
+
       const { config } = await loadConfig(configFile)
 
       config.root = resolveDocRoot(cwd, root, config.root)

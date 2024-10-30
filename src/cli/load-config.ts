@@ -14,7 +14,7 @@ import {
 } from './constants.js'
 
 const COMMON_CONFIG: UserConfig = {
-  base: 'docs',
+  base: '/docs',
   lang: 'en',
   logo: '/logo.svg',
   icon: '/logo.svg',
@@ -49,7 +49,7 @@ const COMMON_CONFIG: UserConfig = {
       lazyCompilation: true,
     },
     server: {
-      open: true,
+      open: '/docs/',
     },
   },
 }
@@ -62,12 +62,12 @@ export async function loadConfig(configFile?: string): Promise<{
   config: UserConfig
   filepath?: string
 }> {
-  let configFilePath: string
+  let configFilePath: string | undefined
 
   if (configFile) {
     configFilePath = path.resolve(configFile)
   } else {
-    configFilePath = findConfig(path.resolve(DEFAULT_CONFIG_NAME))!
+    configFilePath = findConfig(path.resolve(DEFAULT_CONFIG_NAME))
   }
 
   if (!configFilePath) {

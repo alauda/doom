@@ -58,6 +58,7 @@ export function Overview(props: {
     }
     return ''
   }
+
   const findItemByRoutePath = (
     items: (SidebarDivider | SidebarItem | NormalizedSidebarGroup)[],
     routePath: string,
@@ -68,18 +69,12 @@ export function Overview(props: {
         return [item]
       }
       if ('items' in item) {
-        const foundItem = findItemByRoutePath(
-          item.items,
-          routePath,
-          originalItems,
-        )
-        if (foundItem) {
-          return foundItem
-        }
+        return findItemByRoutePath(item.items, routePath, originalItems)
       }
     }
     return originalItems
   }
+
   const { pages } = siteData
   const overviewModules = pages.filter((page) => subFilter(page.routePath))
   let { items: overviewSidebarGroups } = useSidebarData()
@@ -112,9 +107,9 @@ export function Overview(props: {
       return false
     }
     // props > frontmatter in single file > _meta.json config in a file > frontmatter in overview page > _meta.json config in sidebar
-    const overviewHeaders = props?.overviewHeaders ??
+    const overviewHeaders = props.overviewHeaders ??
       item.overviewHeaders ??
-      (frontmatter?.overviewHeaders as number[]) ??
+      (frontmatter?.overviewHeaders as number[] | undefined) ??
       sidebarGroup?.overviewHeaders ?? [2]
     // sidebar items link without base path
     const pageModule = overviewModules.find((m) =>
@@ -123,10 +118,10 @@ export function Overview(props: {
     const link = getChildLink(item)
     return {
       ...item,
-      description: pageModule?.frontmatter?.description,
+      description: pageModule?.frontmatter.description,
       link,
       headers:
-        pageModule?.toc?.filter((header) =>
+        pageModule?.toc.filter((header) =>
           overviewHeaders.some((depth) => header.depth === depth),
         ) || [],
     } as GroupItem
@@ -142,7 +137,7 @@ export function Overview(props: {
   ) => {
     const group = sidebarGroups
       .filter((sidebarGroup) => {
-        if ('items' in sidebarGroup && sidebarGroup.items) {
+        if ('items' in sidebarGroup) {
           return (
             sidebarGroup.items.filter((item) => subFilter(getChildLink(item)))
               .length > 0
@@ -158,7 +153,7 @@ export function Overview(props: {
       })
       .map((sidebarGroup) => {
         let items: (GroupItem | SidebarDivider)[] = []
-        if (sidebarGroup && 'items' in sidebarGroup) {
+        if ('items' in sidebarGroup) {
           items = sidebarGroup.items
             .map((item) =>
               normalizeSidebarItem(item, sidebarGroup, frontmatter),

@@ -1,8 +1,9 @@
-import type { NavItem, Sidebar } from '@rspress/shared'
+import type { NavItem } from '@rspress/shared'
 import fs from '@rspress/shared/fs-extra'
 import { logger } from '@rspress/shared/logger'
 import { loadFrontMatter } from '@rspress/shared/node-utils'
 import path from 'node:path'
+import { DoomSidebar } from './walk'
 
 export async function detectFilePath(rawPath: string, extensions: string[]) {
   // The params doesn't have extension name, so we need to try to find the file with the extension name.
@@ -71,7 +72,7 @@ export async function extractInfoFromFrontmatter(
 }
 
 export function combineWalkResult(
-  walks: { nav: NavItem[]; sidebar: Sidebar }[],
+  walks: { nav: NavItem[]; sidebar: Record<string, DoomSidebar[]> }[],
   versions: string[],
 ) {
   return walks.reduce(

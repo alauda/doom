@@ -90,7 +90,7 @@ export async function scanSideMeta(
   try {
     // Don't use require to avoid require cache, which make hmr not work.
     sideMeta = (await fs.readJSON(metaFile, 'utf8')) as SideMeta
-  } catch (e) {
+  } catch {
     // If the `_meta.json` file doesn't exist, we will generate the sidebar config from the directory structure.
     let subItems = await fs.readdir(workDir)
     // If there exists a file with the same name of the directory folder
@@ -178,7 +178,7 @@ export async function scanSideMeta(
         context,
       } = metaItem
       // when type is divider, name maybe undefined, and link is not used
-      const pureLink = `${relativePath}/${name?.replace(/\.mdx?$/, '')}`
+      const pureLink = `${relativePath}/${name.replace(/\.mdx?$/, '')}`
       if (type === 'file') {
         const info = await extractInfoFromFrontmatter(
           path.resolve(workDir, name),
@@ -261,7 +261,7 @@ export async function walk(
   // Get the nav config from the `_meta.json` file
   try {
     navConfig = (await fs.readJSON(rootMetaFile, 'utf8')) as NavItem[]
-  } catch (e) {
+  } catch {
     navConfig = []
   }
 

@@ -207,7 +207,7 @@ export const autoSidebarPlugin = (): RspressPlugin => {
       const versions = config.multiVersion?.versions || []
       const defaultLang = config.lang || ''
       const { default: defaultVersion = '' } = config.multiVersion || {}
-      const { extensions = defaultExtensions } = config?.route || {}
+      const { extensions = defaultExtensions } = config.route || {}
       if (hasLocales) {
         const metaInfo = await processLocales(
           langs,
