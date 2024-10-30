@@ -1,5 +1,9 @@
 import { nodeTypes } from '@mdx-js/mdx'
-import type { UserConfig } from '@rspress/core'
+import {
+  addLeadingSlash,
+  addTrailingSlash,
+  type UserConfig,
+} from '@rspress/core'
 import { logger } from '@rspress/shared/logger'
 import fs from 'node:fs'
 import path from 'node:path'
@@ -14,7 +18,6 @@ import {
 } from './constants.js'
 
 const COMMON_CONFIG: UserConfig = {
-  base: '/docs',
   lang: 'en',
   logo: '/logo.svg',
   icon: '/logo.svg',
@@ -49,7 +52,7 @@ const COMMON_CONFIG: UserConfig = {
       lazyCompilation: true,
     },
     server: {
-      open: '/docs/',
+      open: true,
     },
   },
 }
@@ -58,7 +61,10 @@ const findConfig = (basePath: string): string | undefined => {
   return DEFAULT_EXTENSIONS.map((ext) => basePath + ext).find(fs.existsSync)
 }
 
-export async function loadConfig(configFile?: string): Promise<{
+export async function loadConfig(
+  root?: string,
+  configFile?: string,
+): Promise<{
   config: UserConfig
   filepath?: string
 }> {
@@ -67,7 +73,16 @@ export async function loadConfig(configFile?: string): Promise<{
   if (configFile) {
     configFilePath = path.resolve(configFile)
   } else {
-    configFilePath = findConfig(path.resolve(DEFAULT_CONFIG_NAME))
+    if (root) {
+      configFilePath = findConfig(path.resolve(root, DEFAULT_CONFIG_NAME))
+    }
+    if (!configFilePath) {
+      configFilePath = findConfig(path.resolve(DEFAULT_CONFIG_NAME))
+    }
+    // when root is not specified, try to find config in docs folder
+    if (!root && !configFilePath) {
+      configFilePath = findConfig(path.resolve('docs', DEFAULT_CONFIG_NAME))
+    }
   }
 
   if (!configFilePath) {
@@ -99,8 +114,18 @@ export async function loadConfig(configFile?: string): Promise<{
     logger.error(`Failed to load config from ${configFilePath}`)
   }
 
+  const mergedConfig = mergeRsbuildConfig(COMMON_CONFIG, config ?? {})
+
+  const base = addLeadingSlash(mergedConfig.base || '/')
+
+  mergedConfig.base = base
+
+  if (mergedConfig.builderConfig?.server?.open) {
+    mergedConfig.builderConfig.server.open = addTrailingSlash(base)
+  }
+
   return {
-    config: mergeRsbuildConfig(COMMON_CONFIG, config ?? {}),
+    config: mergedConfig,
     filepath: configFilePath,
   }
 }

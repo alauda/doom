@@ -57,7 +57,7 @@ program
       let cliWatcher: FSWatcher
 
       const startDevServer = async () => {
-        const { config, filepath } = await loadConfig(configFile)
+        const { config, filepath } = await loadConfig(root, configFile)
 
         config.root = resolveDocRoot(cwd, root, config.root)
         config.i18nSourcePath = path.resolve(config.root, I18N_FILE)
@@ -135,7 +135,7 @@ program
   .action(async (root: string, { config: configFile }: { config?: string }) => {
     setNodeEnv('production')
 
-    const { config } = await loadConfig(configFile)
+    const { config } = await loadConfig(root, configFile)
 
     config.root = resolveDocRoot(cwd, root, config.root)
     config.i18nSourcePath = path.resolve(config.root, I18N_FILE)
@@ -161,7 +161,7 @@ program
     ) => {
       setNodeEnv('production')
 
-      const { config } = await loadConfig(configFile)
+      const { config } = await loadConfig(root, configFile)
 
       config.root = resolveDocRoot(cwd, root, config.root)
       config.i18nSourcePath = path.resolve(config.root, I18N_FILE)
