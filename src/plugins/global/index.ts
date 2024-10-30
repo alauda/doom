@@ -17,7 +17,10 @@ export const globalPlugin = (): RspressPlugin => {
     markdown: {
       globalComponents: fs
         .readdirSync(componentsDir)
-        .filter((file) => path.basename(file, path.extname(file)) !== 'index')
+        .filter((file) => {
+          const basename = path.basename(file, path.extname(file))
+          return !basename.endsWith('.d') && basename !== 'index'
+        })
         .map((file) => path.resolve(componentsDir, file)),
     },
   }
