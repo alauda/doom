@@ -1,2 +1,2 @@
-export * from './auto-sidebar'
-export * from './global'
+export * from './auto-sidebar/index.js'
+export * from './global/index.js'

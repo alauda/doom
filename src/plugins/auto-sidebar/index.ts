@@ -2,8 +2,8 @@ import { addTrailingSlash, type RspressPlugin } from '@rspress/core'
 import { logger } from '@rspress/shared/logger'
 import path from 'node:path'
 
-import { combineWalkResult } from './utils'
-import { walk } from './walk'
+import { combineWalkResult } from './utils.js'
+import { walk } from './walk.js'
 
 // Scan all the directories and files in the work directory(such as `docs`), and then generate the nav and sidebar configuration according to the directory structure.
 // We will do as follows:

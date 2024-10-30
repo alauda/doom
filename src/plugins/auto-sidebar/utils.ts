@@ -3,7 +3,8 @@ import fs from '@rspress/shared/fs-extra'
 import { logger } from '@rspress/shared/logger'
 import { loadFrontMatter } from '@rspress/shared/node-utils'
 import path from 'node:path'
-import { DoomSidebar } from './walk'
+
+import { DoomSidebar } from './walk.js'
 
 export async function detectFilePath(rawPath: string, extensions: string[]) {
   // The params doesn't have extension name, so we need to try to find the file with the extension name.

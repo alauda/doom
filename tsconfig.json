@@ -1,14 +1,17 @@
 {
   "compilerOptions": {
     "jsx": "react-jsx",
-    "module": "Preserve",
-    "moduleResolution": "Bundler",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
-    "target": "ESNext"
+    "target": "ESNext",
+    "paths": {
+      "@alauda/doom/runtime": ["./src/runtime/index.ts"]
+    }
   },
   "mdx": {
     "checkMdx": true

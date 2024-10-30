@@ -1,2 +1,2 @@
-export * from './Overview'
-export * from './QuickNav'
+export * from './Overview.js'
+export * from './QuickNav.js'

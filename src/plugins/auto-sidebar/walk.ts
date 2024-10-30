@@ -13,8 +13,8 @@ import fs from '@rspress/shared/fs-extra'
 import { logger } from '@rspress/shared/logger'
 import path from 'node:path'
 
-import type { NavMeta, SideMeta } from './type'
-import { detectFilePath, extractInfoFromFrontmatter } from './utils'
+import type { NavMeta, SideMeta } from './type.js'
+import { detectFilePath, extractInfoFromFrontmatter } from './utils.js'
 
 export interface DoomSidebarItem extends SidebarItem {
   weight?: number

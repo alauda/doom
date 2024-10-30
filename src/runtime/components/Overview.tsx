@@ -1,17 +1,17 @@
-import { Fragment, useMemo } from 'react'
+import { Link, renderInlineMarkdown, useSidebarData } from '@rspress/core/theme'
+import {
+  isEqualPath,
+  normalizeHrefInRuntime as normalizeHref,
+  usePageData,
+  withBase,
+} from '@rspress/runtime'
 import type {
   Header,
   NormalizedSidebarGroup,
-  SidebarItem,
   SidebarDivider,
+  SidebarItem,
 } from '@rspress/shared'
-import {
-  usePageData,
-  normalizeHrefInRuntime as normalizeHref,
-  withBase,
-  isEqualPath,
-} from '@rspress/runtime'
-import { Link, renderInlineMarkdown, useSidebarData } from '@rspress/core/theme'
+import { Fragment, useMemo } from 'react'
 
 import classes from '../../../styles/overview.module.scss'
 

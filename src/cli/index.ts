@@ -6,7 +6,7 @@
 
 import path from 'node:path'
 
-import { ServerConfig } from '@rsbuild/core'
+import { ServerConfig, logger } from '@rsbuild/core'
 import { build, dev, serve } from '@rspress/core'
 import { type FSWatcher, watch } from 'chokidar'
 import type { EventName } from 'chokidar/handler.js'
@@ -73,7 +73,8 @@ program
               server,
             },
           })
-        } catch {
+        } catch (err) {
+          logger.error(err)
           devServer = undefined
         }
 

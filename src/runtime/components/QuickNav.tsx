@@ -1,7 +1,7 @@
 import { Link } from '@rspress/core/theme'
+import { normalizeImagePath } from '@rspress/core/runtime'
 
 import classes from '../../../styles/quick-nav.module.scss'
-import { normalizeImagePath } from '@rspress/core/runtime'
 
 export interface QuickNavItem {
   icon: string
