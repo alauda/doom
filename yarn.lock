@@ -15,7 +15,7 @@ __metadata:
     "@swc/core": "npm:1.7.40"
     "@types/eslint__js": "npm:^8.42.3"
     "@types/fs-extra": "npm:^11.0.4"
-    "@types/node": "npm:^22.8.4"
+    "@types/node": "npm:~18.13.0"
     chokidar: "npm:^4.0.1"
     commander: "npm:^12.1.0"
     eslint: "npm:^9.13.0"
@@ -1213,12 +1213,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:^22.8.4":
+"@types/node@npm:*":
   version: 22.8.4
   resolution: "@types/node@npm:22.8.4"
   dependencies:
     undici-types: "npm:~6.19.8"
   checksum: 10c0/f88d030480630194a9168772462ec09b2d86454f34368c46d2b7fda5dc6e14594b1576fcc5c35cc53b57a4d1e8dd2865a85ae81f34ded0d1af753a0f5d294c25
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:~18.13.0":
+  version: 18.13.0
+  resolution: "@types/node@npm:18.13.0"
+  checksum: 10c0/985ca4e6e19fb0ee8bf5618f96f0b6d96a434c28a9123c93f25a3dcc202c3fa903cf234fcee649e10977b057ccb3b796e81b094d9c84eadbaa2b7c4b97a8866e
   languageName: node
   linkType: hard
 

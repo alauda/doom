@@ -2,18 +2,14 @@ import fs from 'node:fs'
 import path from 'node:path'
 import type { RspressPlugin } from '@rspress/core'
 
-const componentsDir = path.resolve(
-  import.meta.dirname,
-  '../../runtime/components',
-)
+import { baseResolve, pkgResolve } from '../../utils/index.js'
+
+const componentsDir = baseResolve('runtime/components')
 
 export const globalPlugin = (): RspressPlugin => {
   return {
     name: 'doom-global',
-    globalStyles: path.resolve(
-      import.meta.dirname,
-      '../../../styles/global.scss',
-    ),
+    globalStyles: pkgResolve('styles/global.scss'),
     markdown: {
       globalComponents: fs
         .readdirSync(componentsDir)

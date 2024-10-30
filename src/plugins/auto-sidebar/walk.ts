@@ -170,7 +170,7 @@ export async function scanSideMeta(
         name,
         label = '',
         collapsible,
-        collapsed,
+        collapsed = true,
         link,
         tag,
         dashed,
@@ -299,8 +299,8 @@ export async function walk(
       extensions,
     )
     const sidebar = index
-      ? { ...index, collapsed: true, items: others }
-      : { text: subDir, collapsed: true, items: others }
+      ? { ...index, items: others }
+      : { text: subDir, items: others }
 
     if (!sidebar.items.length) {
       // @ts-expect-error -- FIXME: rspress should handle `undefined` items
