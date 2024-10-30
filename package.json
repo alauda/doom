@@ -1,6 +1,6 @@
 {
   "name": "@alauda/doom",
-  "version": "0.0.0-alpha.6",
+  "version": "0.0.0-alpha.7",
   "type": "module",
   "description": "Doctor Doom making docs.",
   "repository": "https://gitlab-ce.alauda.cn/idp/Doom",
