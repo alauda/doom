@@ -25,6 +25,9 @@ const DEFAULT_LOGO = '/logo.svg'
 
 const COMMON_CONFIG: UserConfig = {
   lang: 'en',
+  route: {
+    exclude: ['shared/**/*', 'components/**/*', 'doom.config.*'],
+  },
   markdown: {
     checkDeadLinks: true,
     mdxRs: false,
@@ -53,6 +56,15 @@ const COMMON_CONFIG: UserConfig = {
   builderConfig: {
     server: {
       open: true,
+    },
+    tools: {
+      rspack: {
+        resolve: {
+          extensionAlias: {
+            '.js': ['.ts', '.tsx', '.js'],
+          },
+        },
+      },
     },
   },
 }
@@ -85,33 +97,30 @@ export async function loadConfig(
     }
   }
 
-  if (!configFilePath) {
-    logger.info(`No doom config file found in ${process.cwd()}`)
-    return {
-      config: {},
-    }
-  }
+  let config: UserConfig | null | undefined
 
   const { loadConfig, mergeRsbuildConfig } = await import('@rsbuild/core')
 
-  let config: UserConfig | null | undefined
-
-  try {
-    if (
-      (YAML_EXTENSIONS as readonly string[]).includes(
-        path.extname(configFilePath),
-      )
-    ) {
-      config = parse(fs.readFileSync(configFilePath, 'utf-8')) as UserConfig
-    } else {
-      const { content } = await loadConfig({
-        cwd: path.dirname(configFilePath),
-        path: configFilePath,
-      })
-      config = content as UserConfig
+  if (!configFilePath) {
+    logger.info(`No doom config file found in ${process.cwd()}`)
+  } else {
+    try {
+      if (
+        (YAML_EXTENSIONS as readonly string[]).includes(
+          path.extname(configFilePath),
+        )
+      ) {
+        config = parse(fs.readFileSync(configFilePath, 'utf-8')) as UserConfig
+      } else {
+        const { content } = await loadConfig({
+          cwd: path.dirname(configFilePath),
+          path: configFilePath,
+        })
+        config = content as UserConfig
+      }
+    } catch {
+      logger.error(`Failed to load config from ${configFilePath}`)
     }
-  } catch {
-    logger.error(`Failed to load config from ${configFilePath}`)
   }
 
   const mergedConfig = mergeRsbuildConfig(COMMON_CONFIG, config ?? {})
@@ -147,7 +156,7 @@ export async function loadConfig(
   if (mergedConfig.i18nSourcePath) {
     if (!path.isAbsolute(mergedConfig.i18nSourcePath)) {
       mergedConfig.i18nSourcePath = path.resolve(
-        configFilePath,
+        configFilePath ?? mergedConfig.root,
         mergedConfig.i18nSourcePath,
       )
     }
