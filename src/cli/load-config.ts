@@ -23,50 +23,59 @@ import { pkgResolve } from '../utils/helpers.js'
 
 const DEFAULT_LOGO = '/logo.svg'
 
-const COMMON_CONFIG: UserConfig = {
-  lang: 'en',
-  route: {
-    exclude: ['shared/**/*', 'components/**/*', 'doom.config.*'],
-  },
-  markdown: {
-    checkDeadLinks: true,
-    mdxRs: false,
-    rehypePlugins: [[rehypeRaw, { passThrough: nodeTypes }]],
-  },
-  ssg: {
-    strict: true,
-  },
-  themeConfig: {
-    locales: [
-      {
-        lang: 'zh',
-        label: '简体中文',
-        searchPlaceholderText: '搜索文档',
-        searchNoResultsText: '未搜索到相关结果',
-        searchSuggestedQueryText: '可更换不同的关键字后重试',
-        outlineTitle: '本页概览',
-      },
-      {
-        lang: 'en',
-        label: 'English',
-      },
-    ],
-  },
-  plugins: [autoSidebarPlugin(), globalPlugin()],
-  builderConfig: {
-    server: {
-      open: true,
+const getCommonConfig = (config: UserConfig): UserConfig => {
+  return {
+    lang: 'en',
+    route: {
+      exclude: ['shared/**/*', 'doom.config.*'],
     },
-    tools: {
-      rspack: {
-        resolve: {
-          extensionAlias: {
-            '.js': ['.ts', '.tsx', '.js'],
+    markdown: {
+      checkDeadLinks: true,
+      highlightLanguages: [['jsonc', 'json']],
+      mdxRs: false,
+      rehypePlugins: [[rehypeRaw, { passThrough: nodeTypes }]],
+    },
+    ssg: {
+      strict: true,
+    },
+    themeConfig: {
+      enableContentAnimation: true,
+      enableAppearanceAnimation: true,
+      enableScrollToTop: true,
+      locales:
+        'lang' in config && config.lang == null
+          ? undefined
+          : [
+              {
+                lang: 'zh',
+                label: '简体中文',
+                searchPlaceholderText: '搜索文档',
+                searchNoResultsText: '未搜索到相关结果',
+                searchSuggestedQueryText: '可更换不同的关键字后重试',
+                outlineTitle: '本页概览',
+              },
+              {
+                lang: 'en',
+                label: 'English',
+              },
+            ],
+    },
+    plugins: [autoSidebarPlugin(), globalPlugin()],
+    builderConfig: {
+      server: {
+        open: true,
+      },
+      tools: {
+        rspack: {
+          resolve: {
+            extensionAlias: {
+              '.js': ['.ts', '.tsx', '.js'],
+            },
           },
         },
       },
     },
-  },
+  }
 }
 
 const findConfig = (basePath: string): string | undefined => {
@@ -97,7 +106,7 @@ export async function loadConfig(
     }
   }
 
-  let config: UserConfig | null | undefined
+  let config: UserConfig | undefined | null
 
   const { loadConfig, mergeRsbuildConfig } = await import('@rsbuild/core')
 
@@ -110,7 +119,9 @@ export async function loadConfig(
           path.extname(configFilePath),
         )
       ) {
-        config = parse(fs.readFileSync(configFilePath, 'utf-8')) as UserConfig
+        config = parse(
+          fs.readFileSync(configFilePath, 'utf-8'),
+        ) as UserConfig | null
       } else {
         const { content } = await loadConfig({
           cwd: path.dirname(configFilePath),
@@ -123,7 +134,9 @@ export async function loadConfig(
     }
   }
 
-  const mergedConfig = mergeRsbuildConfig(COMMON_CONFIG, config ?? {})
+  config ??= {}
+
+  const mergedConfig = mergeRsbuildConfig(getCommonConfig(config), config)
 
   const base = addLeadingSlash(mergedConfig.base || '/')
 

@@ -280,7 +280,9 @@ export async function walk(
   // find the `_meta.json` file in the subdirectory
   const subDirs = (await fs.readdir(workDir)).filter(
     (v) =>
-      fs.statSync(path.join(workDir, v)).isDirectory() && v !== 'node_modules',
+      fs.statSync(path.join(workDir, v)).isDirectory() &&
+      v !== 'node_modules' &&
+      (workDir !== docsDir || !['public', 'shared'].includes(v)),
   )
 
   const sidebars: DoomSidebar[] = []

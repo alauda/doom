@@ -1,0 +1,82 @@
+import { PackageManagerTabs } from '@rspress/core/theme'
+
+# 开始
+
+## 创建项目
+
+首先，你可以通过以下命令创建一个新目录：
+
+```bash
+mkdir my-docs && cd my-docs
+```
+
+执行 `npm init -y` 来初始化一个项目。你可以使用 npm、yarn 或 pnpm 安装 doom:
+
+<PackageManagerTabs command="install -D @alauda/doom typescript" />
+
+然后通过如下命令创建文件:
+
+```bash
+# 创建 docs 目录，默认支持中英文双语
+mkdir docs/en && echo '# Hello World' > docs/en/index.md
+mkdir docs/zh && echo '# 你好世界' > docs/zh/index.md
+```
+
+在 `package.json` 中加上如下的脚本:
+
+```json
+{
+  "scripts": {
+    "dev": "doom dev",
+    "build": "doom build",
+    "serve": "doom serve"
+  }
+}
+```
+
+然后初始化一个配置文件 `doom.config.yml`:
+
+```yaml
+title: My Docs
+```
+
+同时新建 `tsconfig.json`，内容如下：
+
+```jsonc
+{
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "ESNext",
+  },
+  "mdx": {
+    "checkMdx": true,
+  },
+}
+```
+
+最后创建 `global.d.ts` 文件，内容如下：
+
+```ts
+/// <reference types="@alauda/doom/runtime" />
+```
+
+这样你便可以在 `.mdx` 文件中类型安全地使用 doom 提供的全局组件了。
+
+## 启动开发服务
+
+执行 `yarn dev` 启动开发服务，浏览器会自动打开文档首页
+
+## 生产环境构建
+
+执行 `yarn build` 构建生产环境代码，构建完成后会在 `dist` 目录生成静态文件
+
+## 本地预览
+
+执行 `yarn serve` 预览构建后的静态文件
