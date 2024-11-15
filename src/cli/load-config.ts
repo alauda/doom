@@ -5,6 +5,7 @@ import {
   removeLeadingSlash,
   type UserConfig,
 } from '@rspress/core'
+import { pluginPreview } from '@rspress/plugin-preview'
 import { logger } from '@rspress/shared/logger'
 import fs from 'node:fs'
 import path from 'node:path'
@@ -12,6 +13,7 @@ import rehypeRaw from 'rehype-raw'
 import { parse } from 'yaml'
 
 import { autoSidebarPlugin, globalPlugin } from '../plugins/index.js'
+import { pkgResolve } from '../utils/helpers.js'
 import {
   CWD,
   DEFAULT_CONFIG_NAME,
@@ -19,7 +21,6 @@ import {
   I18N_FILE,
   YAML_EXTENSIONS,
 } from './constants.js'
-import { pkgResolve } from '../utils/helpers.js'
 
 const DEFAULT_LOGO = '/logo.svg'
 
@@ -39,8 +40,6 @@ const getCommonConfig = (config: UserConfig): UserConfig => {
       strict: true,
     },
     themeConfig: {
-      enableContentAnimation: true,
-      enableAppearanceAnimation: true,
       enableScrollToTop: true,
       locales:
         'lang' in config && config.lang == null
@@ -53,6 +52,8 @@ const getCommonConfig = (config: UserConfig): UserConfig => {
                 searchNoResultsText: '未搜索到相关结果',
                 searchSuggestedQueryText: '可更换不同的关键字后重试',
                 outlineTitle: '本页概览',
+                prevPageText: '上一页',
+                nextPageText: '下一页',
               },
               {
                 lang: 'en',
@@ -60,7 +61,16 @@ const getCommonConfig = (config: UserConfig): UserConfig => {
               },
             ],
     },
-    plugins: [autoSidebarPlugin(), globalPlugin()],
+    plugins: [
+      pluginPreview({
+        iframeOptions: {
+          devPort: 7891,
+        },
+        defaultRenderMode: 'pure',
+      }),
+      autoSidebarPlugin(),
+      globalPlugin(),
+    ],
     builderConfig: {
       server: {
         open: true,

@@ -1,14 +1,17 @@
 {
   "name": "@alauda/doom",
-  "version": "0.0.0-alpha.11",
+  "version": "0.1.0",
   "type": "module",
   "description": "Doctor Doom making docs.",
-  "repository": "https://gitlab-ce.alauda.cn/idp/Doom",
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab-ce.alauda.cn/idp/Doom.git"
+  },
   "packageManager": "yarn@4.5.0",
   "engines": {
     "node": ">=18.12.0"
   },
-  "bin": "./lib/cli/index.js",
+  "bin": "lib/cli/index.js",
   "exports": {
     "./package.json": "./package.json",
     "./runtime": "./lib/runtime/index.js"
@@ -34,6 +37,7 @@
   },
   "dependencies": {
     "@rspress/core": "^1.36.0",
+    "@rspress/plugin-preview": "^1.36.0",
     "chokidar": "^4.0.1",
     "commander": "^12.1.0",
     "rehype-raw": "^6.1.1",

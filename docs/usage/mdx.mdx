@@ -1,0 +1,81 @@
+---
+description: 使用 MDX 可以实现动态内容的展示和内容复用
+weight: 3
+---
+
+# MDX
+
+[MDX](https://mdxjs.com/) 是一种 Markdown 的扩展语法，允许在 Markdown 中使用 JSX 语法，使用方式可以参考 [rspress MDX](https://rspress.dev/zh/guide/basic/use-mdx)。
+
+## rspress 组件
+
+可以通过导入 `@rspress/theme-default` 中的组件来使用 `rspress` 主题提供的[内置组件](https://rspress.dev/zh/guide/default-theme/components)，比如：
+
+```ts
+import { Badge } from '@rspress/theme-default'
+```
+
+## doom 组件
+
+`doom` 提供了一些全局组件来辅助文档编写，不需要导入即可直接使用，目前包括：
+
+1. `Overview`：文档概览组件，用于展示文档目录
+2. `QuickNav`：快速导航组件，用于展示快速导航信息，样式和功能将根据后续实际使用需求进行调整
+
+```tsx preview
+import { QuickNav } from '@alauda/doom/runtime' // .mdx 文件中无需导入
+
+export default () => (
+  <QuickNav
+    items={[
+      {
+        icon: '/logo.svg',
+        title: 'Doom',
+        links: [
+          {
+            title: '首页',
+            href: '/',
+          },
+          {
+            title: '开始',
+            href: '/start/',
+          },
+          {
+            title: '使用',
+            href: '/usage/',
+          },
+        ],
+      },
+    ]}
+  />
+)
+```
+
+## 自定义组件复用
+
+根据[约定](./convention)，我们可以将需要复用的内容抽取到 `shared` 目录中，然后在需要的地方引入即可，比如：
+
+```mdx
+import CommonContent from './shared/CommonContent.mdx'
+
+<CommonContent />
+```
+
+如果需要使用更多 [runtime](https://rspress.dev/zh/api/client-api/api-runtime) 相关的 API，可以使用 `.jsx/.tsx` 实现组件，然后在 `.mdx` 文件中引入使用。
+
+```tsx
+// shared/CommonContent.tsx
+export const CommonContent = () => {
+  const { page } = usePageData()
+  return <div>{page.title}</div>
+}
+
+// showcase/content.mdx
+import { CommonContent } from './shared/CommonContent'
+
+;<CommonContent />
+```
+
+:::warning
+注意：目前 `.mdx` 导出的组件不支持 `props` 传参，参考[此 issue](https://github.com/web-infra-dev/rspress/issues/1555)，因此需要传递 `props` 的场景请使用 `.jsx/.tsx` 组件进行开发
+:::
