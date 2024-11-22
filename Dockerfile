@@ -1,5 +1,5 @@
 FROM build-harbor.alauda.cn/ops/alpine:latest
 
-WORKDIR /docs
+WORKDIR /app
 
 COPY . dist
