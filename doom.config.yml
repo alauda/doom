@@ -8,3 +8,10 @@ themeConfig:
   outlineTitle: 本页概览
   prevPageText: 上一页
   nextPageText: 下一页
+api:
+  crds:
+    - shared/crds/*.yaml
+  openapis:
+    - shared/openapis/*.json
+  references:
+    v1alpha1.CodeQualityAnalyzeMetric: /apis/references/CodeQualityAnalyzeMetric#CodeQualityAnalyzeMetric

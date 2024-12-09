@@ -1,0 +1,1254 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: artifactcleanupruns.artifacts.katanomi.dev
+spec:
+  group: artifacts.katanomi.dev
+  names:
+    kind: ArtifactCleanupRun
+    listKind: ArtifactCleanupRunList
+    plural: artifactcleanupruns
+    singular: artifactcleanuprun
+  scope: Namespaced
+  versions:
+    - name: v1alpha1
+      schema:
+        openAPIV3Schema:
+          description:
+            ArtifactCleanupRun is the Schema for the artifactcleanupruns
+            API
+          properties:
+            apiVersion:
+              description: |-
+                APIVersion defines the versioned schema of this representation of an object.
+                Servers should convert recognized schemas to the latest internal value, and
+                may reject unrecognized values.
+                More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+              type: string
+            kind:
+              description: |-
+                Kind is a string value representing the REST resource this object represents.
+                Servers may infer this from the endpoint the client submits requests to.
+                Cannot be updated.
+                In CamelCase.
+                More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+              type: string
+            metadata:
+              type: object
+            spec:
+              description: ArtifactCleanupRunSpec defines the desired state of ArtifactCleanupRun
+              properties:
+                artifactCleanupRef:
+                  description: Reference to an existing ArtifactCleanup
+                  properties:
+                    apiVersion:
+                      description: API version of the referent.
+                      type: string
+                    fieldPath:
+                      description: |-
+                        If referring to a piece of an object instead of an entire object, this string
+                        should contain a valid JSON/Go field access statement, such as desiredState.manifest.containers[2].
+                        For example, if the object reference is to a container within a pod, this would take on a value like:
+                        "spec.containers{name}" (where "name" refers to the name of the container that triggered
+                        the event) or if no container name is specified "spec.containers[2]" (container with
+                        index 2 in this pod). This syntax is chosen only to have some well-defined way of
+                        referencing a part of an object.
+                        TODO: this design is not final and this field is subject to change in the future.
+                      type: string
+                    kind:
+                      description: |-
+                        Kind of the referent.
+                        More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+                      type: string
+                    name:
+                      description: |-
+                        Name of the referent.
+                        More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                      type: string
+                    namespace:
+                      description: |-
+                        Namespace of the referent.
+                        More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/
+                      type: string
+                    resourceVersion:
+                      description: |-
+                        Specific resourceVersion to which this reference is made, if any.
+                        More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency
+                      type: string
+                    uid:
+                      description: |-
+                        UID of the referent.
+                        More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids
+                      type: string
+                  type: object
+                  x-kubernetes-map-type: atomic
+                artifactCleanupSpec:
+                  description:
+                    In-line spec for ArtifactCleanup. This options is mutually
+                    exclusive with artifactCleanupRef.
+                  properties:
+                    address:
+                      description: Address stores the integrated service API address
+                      properties:
+                        CACerts:
+                          description: |-
+                            CACerts is the Certification Authority (CA) certificates in PEM format
+                            according to https://www.rfc-editor.org/rfc/rfc7468.
+                          type: string
+                        name:
+                          description: Name is the name of the address.
+                          type: string
+                        url:
+                          type: string
+                      type: object
+                    historyLimits:
+                      description: |-
+                        HistoryLimits limits the number of executed items are preserved
+                        It only calculates already completed items
+                      properties:
+                        count:
+                          description: |-
+                            Sets a hard count for all finished items
+                            to be cleared from storage
+                          type: integer
+                      type: object
+                    integrationClassName:
+                      description:
+                        IntegrationClassName sets the name of IntegrationClass
+                        that this integration is implemented
+                      type: string
+                    integrationRef:
+                      description:
+                        Reference to specific integration that contains the
+                        tool API define.
+                      nullable: true
+                      properties:
+                        apiVersion:
+                          description: API version of the referent.
+                          type: string
+                        fieldPath:
+                          description: |-
+                            If referring to a piece of an object instead of an entire object, this string
+                            should contain a valid JSON/Go field access statement, such as desiredState.manifest.containers[2].
+                            For example, if the object reference is to a container within a pod, this would take on a value like:
+                            "spec.containers{name}" (where "name" refers to the name of the container that triggered
+                            the event) or if no container name is specified "spec.containers[2]" (container with
+                            index 2 in this pod). This syntax is chosen only to have some well-defined way of
+                            referencing a part of an object.
+                            TODO: this design is not final and this field is subject to change in the future.
+                          type: string
+                        kind:
+                          description: |-
+                            Kind of the referent.
+                            More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+                          type: string
+                        name:
+                          description: |-
+                            Name of the referent.
+                            More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                          type: string
+                        namespace:
+                          description: |-
+                            Namespace of the referent.
+                            More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/
+                          type: string
+                        resourceVersion:
+                          description: |-
+                            Specific resourceVersion to which this reference is made, if any.
+                            More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency
+                          type: string
+                        uid:
+                          description: |-
+                            UID of the referent.
+                            More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids
+                          type: string
+                      type: object
+                      x-kubernetes-map-type: atomic
+                    policies:
+                      description: List of strategies.
+                      items:
+                        description:
+                          Policy A detailed description of the policy, including
+                          warehouse, cleanup rules, and retention rules.
+                        properties:
+                          cleanupRules:
+                            description: Clean up the list of rules.
+                            items:
+                              description: Rule Describes the parameters of the rule.
+                              properties:
+                                duration:
+                                  description: The interval for saving time type rules.
+                                  type: string
+                                name:
+                                  description: Rule names are for display purposes only.
+                                  type: string
+                                quantity:
+                                  description:
+                                    Quantity value used to hold quantity
+                                    type rules.
+                                  format: int64
+                                  type: integer
+                                regexp:
+                                  description:
+                                    The regular expression used to hold the
+                                    match type rules.
+                                  type: string
+                                type:
+                                  description: Rule type
+                                  type: string
+                              type: object
+                            type: array
+                          repository:
+                            description:
+                              A list of Repository to match. Regular expressions
+                              are supported.
+                            properties:
+                              name:
+                                description:
+                                  Matches the warehouse rule name, for display
+                                  only.
+                                type: string
+                              regexp:
+                                description: Regular expression that matches the repository.
+                                type: string
+                            type: object
+                          retentionRules:
+                            description: Retention a list of rules.
+                            items:
+                              description: Rule Describes the parameters of the rule.
+                              properties:
+                                duration:
+                                  description: The interval for saving time type rules.
+                                  type: string
+                                name:
+                                  description: Rule names are for display purposes only.
+                                  type: string
+                                quantity:
+                                  description:
+                                    Quantity value used to hold quantity
+                                    type rules.
+                                  format: int64
+                                  type: integer
+                                regexp:
+                                  description:
+                                    The regular expression used to hold the
+                                    match type rules.
+                                  type: string
+                                type:
+                                  description: Rule type
+                                  type: string
+                              type: object
+                            type: array
+                        type: object
+                      type: array
+                    resource:
+                      description: Resources array of predefined resources to be used
+                      properties:
+                        annotations:
+                          additionalProperties:
+                            type: string
+                          description:
+                            Annotations provides a method to annotate specific
+                            resources in order to provide some metadata
+                          type: object
+                        name:
+                          description: Name stores the name of the resource object
+                          type: string
+                        properties:
+                          description:
+                            Properties of the resource. This is used to transmit
+                            fields and values to the integration class
+                          nullable: true
+                          type: object
+                          x-kubernetes-preserve-unknown-fields: true
+                        readOnly:
+                          description:
+                            ReadOnly adds a desired behaviour for consumers
+                            of this resource
+                          type: boolean
+                        replicationPolicyRef:
+                          description: |-
+                            ReplicationPolicyRef stores a reference to a policy that generated this resource
+                            used by the ClusterIntegration object when replicating and creating Integration objects
+                          nullable: true
+                          properties:
+                            apiVersion:
+                              description: API version of the referent.
+                              type: string
+                            fieldPath:
+                              description: |-
+                                If referring to a piece of an object instead of an entire object, this string
+                                should contain a valid JSON/Go field access statement, such as desiredState.manifest.containers[2].
+                                For example, if the object reference is to a container within a pod, this would take on a value like:
+                                "spec.containers{name}" (where "name" refers to the name of the container that triggered
+                                the event) or if no container name is specified "spec.containers[2]" (container with
+                                index 2 in this pod). This syntax is chosen only to have some well-defined way of
+                                referencing a part of an object.
+                                TODO: this design is not final and this field is subject to change in the future.
+                              type: string
+                            kind:
+                              description: |-
+                                Kind of the referent.
+                                More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+                              type: string
+                            name:
+                              description: |-
+                                Name of the referent.
+                                More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                              type: string
+                            namespace:
+                              description: |-
+                                Namespace of the referent.
+                                More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/
+                              type: string
+                            resourceVersion:
+                              description: |-
+                                Specific resourceVersion to which this reference is made, if any.
+                                More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency
+                              type: string
+                            uid:
+                              description: |-
+                                UID of the referent.
+                                More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids
+                              type: string
+                          type: object
+                          x-kubernetes-map-type: atomic
+                        subResources:
+                          description: SubResources sub resource to be used in resource
+                          items:
+                            properties:
+                              annotations:
+                                additionalProperties:
+                                  type: string
+                                description:
+                                  Annotations provides a method to annotate
+                                  specific resources in order to provide some metadata
+                                type: object
+                              name:
+                                description: Name stores the name of the resource object
+                                type: string
+                              properties:
+                                description:
+                                  Properties of the resource. This is used
+                                  to transmit fields and values to the integration class
+                                nullable: true
+                                type: object
+                                x-kubernetes-preserve-unknown-fields: true
+                              subtype:
+                                default: Repository
+                                description:
+                                  Subtype of resource associated with the
+                                  object
+                                type: string
+                              type:
+                                default: Repository
+                                description: Type of resource associated with the object
+                                type: string
+                            required:
+                              - name
+                              - type
+                            type: object
+                          nullable: true
+                          type: array
+                        subtype:
+                          default: Project
+                          description: Subtype of resource associated with the object
+                          type: string
+                        syncPolicy:
+                          default: SyncOnly
+                          description:
+                            SyncPolicy specifies how resources are synced
+                            to the system. Defaults to "SyncOnly"
+                          enum:
+                            - SyncOnly
+                            - CreateIfNotExists
+                          type: string
+                        type:
+                          default: Project
+                          description: Type of resource associated with the object
+                          type: string
+                      required:
+                        - name
+                        - type
+                      type: object
+                    triggers:
+                      description: all triggers defined for triggering current artifactcleanup
+                      properties:
+                        cronTriggers:
+                          description: List of timed triggers
+                          items:
+                            description: ArtifactCleanupCronTrigger defines cronTrigger.
+                            properties:
+                              annotations:
+                                additionalProperties:
+                                  type: string
+                                description: |-
+                                  Annotations is an unstructured key value map stored with a resource that may be
+                                  set by external tools to store and retrieve arbitrary metadata. They are not
+                                  queryable and should be preserved when modifying objects.
+                                  More info: http://kubernetes.io/docs/user-guide/annotations
+                                type: object
+                              name:
+                                description: The name of the timed trigger
+                                type: string
+                              spec:
+                                description: Trigger the desired property periodically.
+                                properties:
+                                  broker:
+                                    description: Broker instance to listen
+                                    type: string
+                                  disabled:
+                                    description: Disabled a switch for crontrigger.
+                                    type: boolean
+                                  params:
+                                    description: Params for rendering runnable template
+                                    items:
+                                      description:
+                                        TriggerValueBinding represent values
+                                        that will bind to template
+                                      properties:
+                                        const:
+                                          description:
+                                            If true, indicates that value
+                                            is a constant, not an expression.
+                                          type: boolean
+                                        name:
+                                          description: name of template parameter
+                                          type: string
+                                        value:
+                                          description: |-
+                                            value of template parameter
+                                            do we only need type of string
+                                          type: string
+                                      type: object
+                                    type: array
+                                  runnableRef:
+                                    description: reference of runnabledefinition
+                                    properties:
+                                      apiVersion:
+                                        description: API version of the referent.
+                                        type: string
+                                      fieldPath:
+                                        description: |-
+                                          If referring to a piece of an object instead of an entire object, this string
+                                          should contain a valid JSON/Go field access statement, such as desiredState.manifest.containers[2].
+                                          For example, if the object reference is to a container within a pod, this would take on a value like:
+                                          "spec.containers{name}" (where "name" refers to the name of the container that triggered
+                                          the event) or if no container name is specified "spec.containers[2]" (container with
+                                          index 2 in this pod). This syntax is chosen only to have some well-defined way of
+                                          referencing a part of an object.
+                                          TODO: this design is not final and this field is subject to change in the future.
+                                        type: string
+                                      kind:
+                                        description: |-
+                                          Kind of the referent.
+                                          More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+                                        type: string
+                                      name:
+                                        description: |-
+                                          Name of the referent.
+                                          More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                                        type: string
+                                      namespace:
+                                        description: |-
+                                          Namespace of the referent.
+                                          More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/
+                                        type: string
+                                      resourceVersion:
+                                        description: |-
+                                          Specific resourceVersion to which this reference is made, if any.
+                                          More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency
+                                        type: string
+                                      uid:
+                                        description: |-
+                                          UID of the referent.
+                                          More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids
+                                        type: string
+                                    type: object
+                                    x-kubernetes-map-type: atomic
+                                  runnableSpec:
+                                    description: Inline spec for runnable template.
+                                    properties:
+                                      kube:
+                                        description:
+                                          Uses a yaml format to create a
+                                          template for resource
+                                        properties:
+                                          parameters:
+                                            description:
+                                              Parameters used to generate
+                                              the resource with jsonpath replacement
+                                              rules
+                                            items:
+                                              description:
+                                                KubeParameter used to generate
+                                                the resource with jsonpath replacement
+                                                rules
+                                              properties:
+                                                fieldPaths:
+                                                  description:
+                                                    FieldPaths is jsonpath
+                                                    for replacing the parameter value
+                                                    into the resource at render time
+                                                  items:
+                                                    type: string
+                                                  type: array
+                                                name:
+                                                  description: Unique parameter name
+                                                  type: string
+                                                required:
+                                                  description:
+                                                    Parameter required, Defaults
+                                                    to false
+                                                  type: boolean
+                                                type:
+                                                  description:
+                                                    Parameter value type,
+                                                    one of [string, number, boolean],
+                                                    default is string
+                                                  enum:
+                                                    - string
+                                                    - number
+                                                    - boolean
+                                                  type: string
+                                              type: object
+                                            type: array
+                                          template:
+                                            description: Raw resource definition yaml
+                                            type: object
+                                            x-kubernetes-preserve-unknown-fields: true
+                                        type: object
+                                    type: object
+                                  schedule:
+                                    description: Schedule is the cron schedule.
+                                    type: string
+                                  timezone:
+                                    default: UTC
+                                    description: |-
+                                      Timezone modifies the actual time relative to the specified timezone. Defaults to UTC.
+                                      More general information about time zones: https://www.iana.org/time-zones
+                                      List of valid timezone values: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+                                    type: string
+                                required:
+                                  - schedule
+                                type: object
+                            type: object
+                          type: array
+                      type: object
+                  type: object
+                dryRun:
+                  description:
+                    '`True` means that the simulation runs without performing
+                    specific cleanup operations.'
+                  type: boolean
+                status:
+                  description:
+                    Status Used for cancelling a ArtifactCleanupRun (and
+                    maybe more later on)
+                  type: string
+              type: object
+            status:
+              description: ArtifactCleanupRunStatus defines the observed state of ArtifactCleanupRun
+              properties:
+                annotations:
+                  additionalProperties:
+                    type: string
+                  description: |-
+                    Annotations is additional Status fields for the Resource to save some
+                    additional State as well as convey more information to the user. This is
+                    roughly akin to Annotations on any k8s resource, just the reconciler conveying
+                    richer information outwards.
+                  type: object
+                artifactCleanupSpec:
+                  description:
+                    When spec.artifactCleanupRef is used, the spec will be
+                    stored here for future reference
+                  properties:
+                    address:
+                      description: Address stores the integrated service API address
+                      properties:
+                        CACerts:
+                          description: |-
+                            CACerts is the Certification Authority (CA) certificates in PEM format
+                            according to https://www.rfc-editor.org/rfc/rfc7468.
+                          type: string
+                        name:
+                          description: Name is the name of the address.
+                          type: string
+                        url:
+                          type: string
+                      type: object
+                    historyLimits:
+                      description: |-
+                        HistoryLimits limits the number of executed items are preserved
+                        It only calculates already completed items
+                      properties:
+                        count:
+                          description: |-
+                            Sets a hard count for all finished items
+                            to be cleared from storage
+                          type: integer
+                      type: object
+                    integrationClassName:
+                      description:
+                        IntegrationClassName sets the name of IntegrationClass
+                        that this integration is implemented
+                      type: string
+                    integrationRef:
+                      description:
+                        Reference to specific integration that contains the
+                        tool API define.
+                      nullable: true
+                      properties:
+                        apiVersion:
+                          description: API version of the referent.
+                          type: string
+                        fieldPath:
+                          description: |-
+                            If referring to a piece of an object instead of an entire object, this string
+                            should contain a valid JSON/Go field access statement, such as desiredState.manifest.containers[2].
+                            For example, if the object reference is to a container within a pod, this would take on a value like:
+                            "spec.containers{name}" (where "name" refers to the name of the container that triggered
+                            the event) or if no container name is specified "spec.containers[2]" (container with
+                            index 2 in this pod). This syntax is chosen only to have some well-defined way of
+                            referencing a part of an object.
+                            TODO: this design is not final and this field is subject to change in the future.
+                          type: string
+                        kind:
+                          description: |-
+                            Kind of the referent.
+                            More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+                          type: string
+                        name:
+                          description: |-
+                            Name of the referent.
+                            More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                          type: string
+                        namespace:
+                          description: |-
+                            Namespace of the referent.
+                            More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/
+                          type: string
+                        resourceVersion:
+                          description: |-
+                            Specific resourceVersion to which this reference is made, if any.
+                            More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency
+                          type: string
+                        uid:
+                          description: |-
+                            UID of the referent.
+                            More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids
+                          type: string
+                      type: object
+                      x-kubernetes-map-type: atomic
+                    policies:
+                      description: List of strategies.
+                      items:
+                        description:
+                          Policy A detailed description of the policy, including
+                          warehouse, cleanup rules, and retention rules.
+                        properties:
+                          cleanupRules:
+                            description: Clean up the list of rules.
+                            items:
+                              description: Rule Describes the parameters of the rule.
+                              properties:
+                                duration:
+                                  description: The interval for saving time type rules.
+                                  type: string
+                                name:
+                                  description: Rule names are for display purposes only.
+                                  type: string
+                                quantity:
+                                  description:
+                                    Quantity value used to hold quantity
+                                    type rules.
+                                  format: int64
+                                  type: integer
+                                regexp:
+                                  description:
+                                    The regular expression used to hold the
+                                    match type rules.
+                                  type: string
+                                type:
+                                  description: Rule type
+                                  type: string
+                              type: object
+                            type: array
+                          repository:
+                            description:
+                              A list of Repository to match. Regular expressions
+                              are supported.
+                            properties:
+                              name:
+                                description:
+                                  Matches the warehouse rule name, for display
+                                  only.
+                                type: string
+                              regexp:
+                                description: Regular expression that matches the repository.
+                                type: string
+                            type: object
+                          retentionRules:
+                            description: Retention a list of rules.
+                            items:
+                              description: Rule Describes the parameters of the rule.
+                              properties:
+                                duration:
+                                  description: The interval for saving time type rules.
+                                  type: string
+                                name:
+                                  description: Rule names are for display purposes only.
+                                  type: string
+                                quantity:
+                                  description:
+                                    Quantity value used to hold quantity
+                                    type rules.
+                                  format: int64
+                                  type: integer
+                                regexp:
+                                  description:
+                                    The regular expression used to hold the
+                                    match type rules.
+                                  type: string
+                                type:
+                                  description: Rule type
+                                  type: string
+                              type: object
+                            type: array
+                        type: object
+                      type: array
+                    resource:
+                      description: Resources array of predefined resources to be used
+                      properties:
+                        annotations:
+                          additionalProperties:
+                            type: string
+                          description:
+                            Annotations provides a method to annotate specific
+                            resources in order to provide some metadata
+                          type: object
+                        name:
+                          description: Name stores the name of the resource object
+                          type: string
+                        properties:
+                          description:
+                            Properties of the resource. This is used to transmit
+                            fields and values to the integration class
+                          nullable: true
+                          type: object
+                          x-kubernetes-preserve-unknown-fields: true
+                        readOnly:
+                          description:
+                            ReadOnly adds a desired behaviour for consumers
+                            of this resource
+                          type: boolean
+                        replicationPolicyRef:
+                          description: |-
+                            ReplicationPolicyRef stores a reference to a policy that generated this resource
+                            used by the ClusterIntegration object when replicating and creating Integration objects
+                          nullable: true
+                          properties:
+                            apiVersion:
+                              description: API version of the referent.
+                              type: string
+                            fieldPath:
+                              description: |-
+                                If referring to a piece of an object instead of an entire object, this string
+                                should contain a valid JSON/Go field access statement, such as desiredState.manifest.containers[2].
+                                For example, if the object reference is to a container within a pod, this would take on a value like:
+                                "spec.containers{name}" (where "name" refers to the name of the container that triggered
+                                the event) or if no container name is specified "spec.containers[2]" (container with
+                                index 2 in this pod). This syntax is chosen only to have some well-defined way of
+                                referencing a part of an object.
+                                TODO: this design is not final and this field is subject to change in the future.
+                              type: string
+                            kind:
+                              description: |-
+                                Kind of the referent.
+                                More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+                              type: string
+                            name:
+                              description: |-
+                                Name of the referent.
+                                More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                              type: string
+                            namespace:
+                              description: |-
+                                Namespace of the referent.
+                                More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/
+                              type: string
+                            resourceVersion:
+                              description: |-
+                                Specific resourceVersion to which this reference is made, if any.
+                                More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency
+                              type: string
+                            uid:
+                              description: |-
+                                UID of the referent.
+                                More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids
+                              type: string
+                          type: object
+                          x-kubernetes-map-type: atomic
+                        subResources:
+                          description: SubResources sub resource to be used in resource
+                          items:
+                            properties:
+                              annotations:
+                                additionalProperties:
+                                  type: string
+                                description:
+                                  Annotations provides a method to annotate
+                                  specific resources in order to provide some metadata
+                                type: object
+                              name:
+                                description: Name stores the name of the resource object
+                                type: string
+                              properties:
+                                description:
+                                  Properties of the resource. This is used
+                                  to transmit fields and values to the integration class
+                                nullable: true
+                                type: object
+                                x-kubernetes-preserve-unknown-fields: true
+                              subtype:
+                                default: Repository
+                                description:
+                                  Subtype of resource associated with the
+                                  object
+                                type: string
+                              type:
+                                default: Repository
+                                description: Type of resource associated with the object
+                                type: string
+                            required:
+                              - name
+                              - type
+                            type: object
+                          nullable: true
+                          type: array
+                        subtype:
+                          default: Project
+                          description: Subtype of resource associated with the object
+                          type: string
+                        syncPolicy:
+                          default: SyncOnly
+                          description:
+                            SyncPolicy specifies how resources are synced
+                            to the system. Defaults to "SyncOnly"
+                          enum:
+                            - SyncOnly
+                            - CreateIfNotExists
+                          type: string
+                        type:
+                          default: Project
+                          description: Type of resource associated with the object
+                          type: string
+                      required:
+                        - name
+                        - type
+                      type: object
+                    triggers:
+                      description: all triggers defined for triggering current artifactcleanup
+                      properties:
+                        cronTriggers:
+                          description: List of timed triggers
+                          items:
+                            description: ArtifactCleanupCronTrigger defines cronTrigger.
+                            properties:
+                              annotations:
+                                additionalProperties:
+                                  type: string
+                                description: |-
+                                  Annotations is an unstructured key value map stored with a resource that may be
+                                  set by external tools to store and retrieve arbitrary metadata. They are not
+                                  queryable and should be preserved when modifying objects.
+                                  More info: http://kubernetes.io/docs/user-guide/annotations
+                                type: object
+                              name:
+                                description: The name of the timed trigger
+                                type: string
+                              spec:
+                                description: Trigger the desired property periodically.
+                                properties:
+                                  broker:
+                                    description: Broker instance to listen
+                                    type: string
+                                  disabled:
+                                    description: Disabled a switch for crontrigger.
+                                    type: boolean
+                                  params:
+                                    description: Params for rendering runnable template
+                                    items:
+                                      description:
+                                        TriggerValueBinding represent values
+                                        that will bind to template
+                                      properties:
+                                        const:
+                                          description:
+                                            If true, indicates that value
+                                            is a constant, not an expression.
+                                          type: boolean
+                                        name:
+                                          description: name of template parameter
+                                          type: string
+                                        value:
+                                          description: |-
+                                            value of template parameter
+                                            do we only need type of string
+                                          type: string
+                                      type: object
+                                    type: array
+                                  runnableRef:
+                                    description: reference of runnabledefinition
+                                    properties:
+                                      apiVersion:
+                                        description: API version of the referent.
+                                        type: string
+                                      fieldPath:
+                                        description: |-
+                                          If referring to a piece of an object instead of an entire object, this string
+                                          should contain a valid JSON/Go field access statement, such as desiredState.manifest.containers[2].
+                                          For example, if the object reference is to a container within a pod, this would take on a value like:
+                                          "spec.containers{name}" (where "name" refers to the name of the container that triggered
+                                          the event) or if no container name is specified "spec.containers[2]" (container with
+                                          index 2 in this pod). This syntax is chosen only to have some well-defined way of
+                                          referencing a part of an object.
+                                          TODO: this design is not final and this field is subject to change in the future.
+                                        type: string
+                                      kind:
+                                        description: |-
+                                          Kind of the referent.
+                                          More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+                                        type: string
+                                      name:
+                                        description: |-
+                                          Name of the referent.
+                                          More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                                        type: string
+                                      namespace:
+                                        description: |-
+                                          Namespace of the referent.
+                                          More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/
+                                        type: string
+                                      resourceVersion:
+                                        description: |-
+                                          Specific resourceVersion to which this reference is made, if any.
+                                          More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency
+                                        type: string
+                                      uid:
+                                        description: |-
+                                          UID of the referent.
+                                          More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids
+                                        type: string
+                                    type: object
+                                    x-kubernetes-map-type: atomic
+                                  runnableSpec:
+                                    description: Inline spec for runnable template.
+                                    properties:
+                                      kube:
+                                        description:
+                                          Uses a yaml format to create a
+                                          template for resource
+                                        properties:
+                                          parameters:
+                                            description:
+                                              Parameters used to generate
+                                              the resource with jsonpath replacement
+                                              rules
+                                            items:
+                                              description:
+                                                KubeParameter used to generate
+                                                the resource with jsonpath replacement
+                                                rules
+                                              properties:
+                                                fieldPaths:
+                                                  description:
+                                                    FieldPaths is jsonpath
+                                                    for replacing the parameter value
+                                                    into the resource at render time
+                                                  items:
+                                                    type: string
+                                                  type: array
+                                                name:
+                                                  description: Unique parameter name
+                                                  type: string
+                                                required:
+                                                  description:
+                                                    Parameter required, Defaults
+                                                    to false
+                                                  type: boolean
+                                                type:
+                                                  description:
+                                                    Parameter value type,
+                                                    one of [string, number, boolean],
+                                                    default is string
+                                                  enum:
+                                                    - string
+                                                    - number
+                                                    - boolean
+                                                  type: string
+                                              type: object
+                                            type: array
+                                          template:
+                                            description: Raw resource definition yaml
+                                            type: object
+                                            x-kubernetes-preserve-unknown-fields: true
+                                        type: object
+                                    type: object
+                                  schedule:
+                                    description: Schedule is the cron schedule.
+                                    type: string
+                                  timezone:
+                                    default: UTC
+                                    description: |-
+                                      Timezone modifies the actual time relative to the specified timezone. Defaults to UTC.
+                                      More general information about time zones: https://www.iana.org/time-zones
+                                      List of valid timezone values: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+                                    type: string
+                                required:
+                                  - schedule
+                                type: object
+                            type: object
+                          type: array
+                      type: object
+                  type: object
+                completionTime:
+                  description: CompletionTime is the time when StageRun completed.
+                  format: date-time
+                  type: string
+                conditions:
+                  description:
+                    Conditions the latest available observations of a resource's
+                    current state.
+                  items:
+                    description: |-
+                      Condition defines a readiness condition for a Knative resource.
+                      See: https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#typical-status-properties
+                    properties:
+                      lastTransitionTime:
+                        description: |-
+                          LastTransitionTime is the last time the condition transitioned from one status to another.
+                          We use VolatileTime in place of metav1.Time to exclude this from creating equality.Semantic
+                          differences (all other things held constant).
+                        type: string
+                      message:
+                        description:
+                          A human readable message indicating details about
+                          the transition.
+                        type: string
+                      reason:
+                        description: The reason for the condition's last transition.
+                        type: string
+                      severity:
+                        description: |-
+                          Severity with which to treat failures of this type of condition.
+                          When this is not specified, it defaults to Error.
+                        type: string
+                      status:
+                        description: Status of the condition, one of True, False, Unknown.
+                        type: string
+                      type:
+                        description: Type of condition.
+                        type: string
+                    required:
+                      - status
+                      - type
+                    type: object
+                  type: array
+                observedGeneration:
+                  description: |-
+                    ObservedGeneration is the 'Generation' of the Service that
+                    was last processed by the controller.
+                  format: int64
+                  type: integer
+                resources:
+                  description: Resources stores a list of clean record.
+                  items:
+                    description: Resource A detailed description of the cleanup reocrd.
+                    properties:
+                      message:
+                        description: Description of reason info.
+                        type: string
+                      reason:
+                        description:
+                          Describes the reason for the status, such as Cancelled,
+                          InternalServerError, DryRun.
+                        type: string
+                      repository:
+                        description:
+                          A list of repositories to match. Regular expressions
+                          are supported.
+                        type: string
+                      status:
+                        description: Describes the cleanup state. (Unknown, True, False)
+                        type: string
+                      tags:
+                        description: Retation a list of rules.
+                        items:
+                          properties:
+                            name:
+                              description: tag name
+                              type: string
+                            pullTime:
+                              description:
+                                tag push time, if Name is empty, the pushtime
+                                of the version
+                              type: string
+                            pushTime:
+                              description:
+                                tag pull time, if Name is empty, the pulltime
+                                of the version
+                              type: string
+                          type: object
+                        type: array
+                      version:
+                        description: Clean up the list of rules.
+                        type: string
+                    type: object
+                  type: array
+                startTime:
+                  description: StartTime is the time when StageRun actually started.
+                  format: date-time
+                  type: string
+                summary:
+                  description:
+                    Describe the overall result of the cleanup. Record success,
+                    failure, ignore the number of records.
+                  properties:
+                    failed:
+                      description: Failed records the total number of cleanup failures.
+                      type: integer
+                    skiped:
+                      description: Skiped records the total number of cleanup ignores.
+                      type: integer
+                    succeeded:
+                      description:
+                        Succeeded records the total number of successful
+                        cleanups.
+                      type: integer
+                  type: object
+                triggeredBy:
+                  description: TriggeredBy stores a list of triggered information.
+                  properties:
+                    cloudEvent:
+                      description: Cloud Event data for the event that triggered.
+                      properties:
+                        data:
+                          description: Data event payload
+                          type: string
+                        datacontenttype:
+                          type: string
+                        extensions:
+                          additionalProperties:
+                            type: string
+                          type: object
+                        id:
+                          type: string
+                        source:
+                          type: string
+                        specversion:
+                          type: string
+                        subject:
+                          type: string
+                        time:
+                          format: date-time
+                          type: string
+                        type:
+                          description: Type of event
+                          type: string
+                      type: object
+                    ref:
+                      description:
+                        Reference to another object that might have triggered
+                        this object
+                      properties:
+                        apiVersion:
+                          description: API version of the referent.
+                          type: string
+                        fieldPath:
+                          description: |-
+                            If referring to a piece of an object instead of an entire object, this string
+                            should contain a valid JSON/Go field access statement, such as desiredState.manifest.containers[2].
+                            For example, if the object reference is to a container within a pod, this would take on a value like:
+                            "spec.containers{name}" (where "name" refers to the name of the container that triggered
+                            the event) or if no container name is specified "spec.containers[2]" (container with
+                            index 2 in this pod). This syntax is chosen only to have some well-defined way of
+                            referencing a part of an object.
+                            TODO: this design is not final and this field is subject to change in the future.
+                          type: string
+                        kind:
+                          description: |-
+                            Kind of the referent.
+                            More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+                          type: string
+                        name:
+                          description: |-
+                            Name of the referent.
+                            More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                          type: string
+                        namespace:
+                          description: |-
+                            Namespace of the referent.
+                            More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/
+                          type: string
+                        resourceVersion:
+                          description: |-
+                            Specific resourceVersion to which this reference is made, if any.
+                            More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency
+                          type: string
+                        uid:
+                          description: |-
+                            UID of the referent.
+                            More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids
+                          type: string
+                      type: object
+                      x-kubernetes-map-type: atomic
+                    triggeredTimestamp:
+                      description: |-
+                        Date time of creation of triggered event. Will match a resource's metadata.creationTimestamp
+                        it is added here for convinience only
+                      format: date-time
+                      type: string
+                    triggeredType:
+                      description: Indicates trigger type, such as Manual Automated.
+                      type: string
+                    user:
+                      description:
+                        Reference to the user that triggered the object.
+                        Any Kubernetes `Subject` is accepted.
+                      properties:
+                        apiGroup:
+                          description: |-
+                            APIGroup holds the API group of the referenced subject.
+                            Defaults to "" for ServiceAccount subjects.
+                            Defaults to "rbac.authorization.k8s.io" for User and Group subjects.
+                          type: string
+                        kind:
+                          description: |-
+                            Kind of object being referenced. Values defined by this API group are "User", "Group", and "ServiceAccount".
+                            If the Authorizer does not recognized the kind value, the Authorizer should report an error.
+                          type: string
+                        name:
+                          description: Name of the object being referenced.
+                          type: string
+                        namespace:
+                          description: |-
+                            Namespace of the referenced object.  If the object kind is non-namespace, such as "User" or "Group", and this value is not empty
+                            the Authorizer should report an error.
+                          type: string
+                      required:
+                        - kind
+                        - name
+                      type: object
+                      x-kubernetes-map-type: atomic
+                  type: object
+              type: object
+          type: object
+      served: true
+      storage: true
+      subresources:
+        status: {}

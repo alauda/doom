@@ -12,7 +12,7 @@ import path from 'node:path'
 import rehypeRaw from 'rehype-raw'
 import { parse } from 'yaml'
 
-import { autoSidebarPlugin, globalPlugin } from '../plugins/index.js'
+import { autoSidebarPlugin, globalPlugin, apiPlugin } from '../plugins/index.js'
 import { pkgResolve } from '../utils/helpers.js'
 import {
   CWD,
@@ -70,6 +70,7 @@ const getCommonConfig = (config: UserConfig): UserConfig => {
       }),
       autoSidebarPlugin(),
       globalPlugin(),
+      apiPlugin(),
     ],
     builderConfig: {
       server: {

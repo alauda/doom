@@ -1,6 +1,13 @@
 export const DEFAULT_CONFIG_NAME = 'doom.config'
 
+export const JSON_EXTENSION = '.json'
+
 export const YAML_EXTENSIONS = ['.yaml', '.yml'] as const
+
+export const STATIC_CONFIG_EXTENSIONS = [
+  JSON_EXTENSION,
+  ...YAML_EXTENSIONS,
+] as const
 
 export const JS_EXTENSIONS = [
   '.js',

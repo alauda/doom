@@ -1,2 +1,5 @@
+export * from './K8sCrd.js'
 export * from './Overview.js'
 export * from './QuickNav.js'
+export * from './OpenAPIRef.js'
+export * from './OpenAPIPath.js'

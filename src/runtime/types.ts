@@ -1,0 +1,14 @@
+import { PageData } from '@rspress/core'
+import { OpenAPIV3_1 } from 'openapi-types'
+
+import type { CustomResourceDefinition } from '../plugins/api/types.js'
+
+export interface ExtendedPage {
+  crdsMap?: Record<string, CustomResourceDefinition>
+  openapisMap?: Record<string, OpenAPIV3_1.Document>
+  references?: Record<string, string>
+}
+
+export interface ExtendedPageData extends PageData {
+  page: PageData['page'] & ExtendedPage
+}

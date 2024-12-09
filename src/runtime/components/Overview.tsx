@@ -217,7 +217,7 @@ export function Overview(props: {
           <div className={classes.overviewGroups}>
             {group.items.map((item) => (
               <div className={classes.overviewGroup} key={item.link}>
-                <div className="flex">
+                <div className="flex break-all">
                   <h3 style={{ marginBottom: 8 }}>
                     <Link href={normalizeHref(item.link)}>
                       {renderInlineMarkdown(item.text)}
