@@ -11,7 +11,6 @@ export const Markdown = ({ children }: { children?: string }) =>
       remarkPlugins={[[remarkGfm]]}
       components={components}
       skipHtml={true}
-      className="rspress-plugin-api-docgen"
     >
       {children}
     </ReactMarkdown>

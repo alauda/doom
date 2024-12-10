@@ -1,6 +1,6 @@
 {
   "name": "@alauda/doom",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "type": "module",
   "description": "Doctor Doom making docs.",
   "repository": {
@@ -40,6 +40,7 @@
     "@rspress/core": "^1.37.4",
     "@rspress/plugin-preview": "^1.37.4",
     "chokidar": "^4.0.1",
+    "clsx": "^2.1.1",
     "commander": "^12.1.0",
     "es-toolkit": "^1.29.0",
     "react-markdown": "^8.0.7",
