@@ -7,6 +7,7 @@ export interface ExtendedPage {
   crdsMap?: Record<string, CustomResourceDefinition>
   openapisMap?: Record<string, OpenAPIV3_1.Document>
   references?: Record<string, string>
+  pathPrefix?: string
 }
 
 export interface ExtendedPageData extends PageData {

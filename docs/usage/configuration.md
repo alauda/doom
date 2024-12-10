@@ -42,3 +42,23 @@ doom serve --config ./my-config.js
 - `icon`：文档 favicon，默认同 `logo`
 - `base`：文档基础路径，用于部署到非根路径
 - `outDir`：构建产物目录，默认为 `dist/{base}`
+
+## API 文档配置
+
+```yaml
+api:
+  # CRD 定义文件路径，支持 glob 匹配，json/yaml 文件
+  crds:
+    - shared/crds/*.yaml
+  # OpenAPI 定义文件路径，支持 glob 匹配，json/yaml 文件
+  openapis:
+    - shared/openapis/*.json
+  # 渲染 openapi 相关的资源定义时，默认会在页面内联，如果需要将相关联的资源定义单独提取到文件中，可以配置以下选项
+  # 参考 https://doom.alauda.cn/apis/references/CodeQuality.html#v1alpha1.CodeQualitySpec
+  references:
+    v1alpha1.CodeQualityBranch: /apis/references/CodeQualityBranch#v1alpha1.CodeQualityBranch
+  # 可选，API 文档路径前缀，如果当前业务使用 gateway 等代理服务，可以配置此项
+  pathPrefix: /apis
+```
+
+文档编写参考 [API 文档](./api)

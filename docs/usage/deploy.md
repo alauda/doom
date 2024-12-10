@@ -1,6 +1,6 @@
 ---
 description: 文档项目开发完成后我们可以将项目部署到 ACP 平台
-weight: 5
+weight: 6
 ---
 
 # 部署

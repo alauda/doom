@@ -12,7 +12,10 @@ import { CustomResourceDefinition } from './types.js'
 const crdsMap: Record<string, CustomResourceDefinition> = {}
 const openapisMap: Record<string, OpenAPIV3_1.Document> = {}
 
-let allReferences: Record<string, string> | undefined
+const shared: {
+  references?: Record<string, string>
+  pathPrefix?: string
+} = {}
 
 export const apiPlugin = (): RspressPlugin => {
   return {
@@ -24,7 +27,7 @@ export const apiPlugin = (): RspressPlugin => {
         return
       }
 
-      const { crds, openapis, references } = config.api
+      const { crds, openapis, references, pathPrefix } = config.api
 
       if (crds) {
         for (const file of await glob(crds, {
@@ -60,12 +63,14 @@ export const apiPlugin = (): RspressPlugin => {
         }
       }
 
-      allReferences = references
+      shared.references = references
+      shared.pathPrefix = pathPrefix
     },
     extendPageData(pageData) {
       pageData.crdsMap = crdsMap
       pageData.openapisMap = openapisMap
-      pageData.references = allReferences
+      pageData.references = shared.references
+      pageData.pathPrefix = shared.pathPrefix
     },
   }
 }

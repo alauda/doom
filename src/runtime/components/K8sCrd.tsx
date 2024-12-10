@@ -13,7 +13,14 @@ import { Markdown } from './_Markdown.js'
 import Directive from './Directive.js'
 
 export interface K8sCrdProps {
+  /**
+   * The `metadata.name` of the CustomResourceDefinition
+   */
   name: string
+  /**
+   * The specific path to the CRD, otherwise the first matched will be used.
+   */
+  crdPath?: string
 }
 
 const X = getCustomMDXComponent()
@@ -90,6 +97,8 @@ export const K8sCrdSchemaPart = ({
   )
 }
 
+const SKIPPED_PROPERTIES = ['apiVersion', 'kind', 'metadata']
+
 export const K8sCrdSchema = ({
   schema,
   version,
@@ -142,29 +151,35 @@ export const K8sCrdSchema = ({
         <Directive type="warning">{t('crd_no_schema')}</Directive>
       ) : (
         <div className="doom-collapse-group">
-          {Object.entries(properties).map(([name, subSchema]) => (
-            <K8sCrdSchemaPart
-              key={name}
-              name={name}
-              parent={schema}
-              schema={subSchema}
-              openAll={openAll}
-            />
-          ))}
+          {Object.entries(properties).map(
+            ([name, subSchema]) =>
+              SKIPPED_PROPERTIES.includes(name) || (
+                <K8sCrdSchemaPart
+                  key={name}
+                  name={name}
+                  parent={schema}
+                  schema={subSchema}
+                  openAll={openAll}
+                />
+              ),
+          )}
         </div>
       )}
     </>
   )
 }
 
-export const K8sCrd = ({ name }: K8sCrdProps) => {
+export const K8sCrd = ({ name, crdPath }: K8sCrdProps) => {
   const { page } = usePageData() as ExtendedPageData
 
-  const crd = useMemo(
+  const [, crd] = useMemo(
     () =>
-      Object.values(page.crdsMap || {}).find(
-        (crd) => crd.metadata.name === name,
-      ),
+      Object.entries(page.crdsMap || {}).find(([pathname, crd]) => {
+        if (crdPath && pathname !== crdPath) {
+          return false
+        }
+        return crd.metadata.name === name
+      }) || [],
     [page],
   )
 

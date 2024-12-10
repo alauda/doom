@@ -5,5 +5,6 @@ export interface DoomConfig extends UserConfig {
     crds?: string[]
     openapis?: string[]
     references?: Record<string, string>
+    pathPrefix?: string
   }
 }

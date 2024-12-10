@@ -11,12 +11,18 @@ import {
   resolveRef,
 } from '../utils.js'
 import { HeadingTitle } from './_HeadingTitle.js'
-import { RefLink } from './_RefLink.js'
 import { Markdown } from './_Markdown.js'
+import { RefLink } from './_RefLink.js'
 
 export interface OpenAPIRefProps {
+  /**
+   * The schema name under the OpenAPI schema `definitions` (swagger 2.0) or `components/schemas` (openapi 3.x).
+   */
   schema: string
-  openapi?: OpenAPIV3_1.Document
+  /**
+   * The specific path to the OpenAPI schema, otherwise the first matched will be used.
+   */
+  openapiPath?: string
   collectRefs?: boolean
 }
 
@@ -119,23 +125,19 @@ const getRefsForSchema = (
 
 export const OpenAPIRef = ({
   schema,
-  openapi: openapi_,
+  openapiPath: openapiPath_,
   collectRefs = true,
 }: OpenAPIRefProps) => {
   const { page } = usePageData() as ExtendedPageData
 
-  const [schemaItem, openapi] = useMemo(() => {
-    if (openapi_) {
-      return [
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-arguments -- no sure to understand
-        resolveRef<OpenAPIV3_1.SchemaObject>(openapi_, schema),
-        openapi_,
-      ]
-    }
-    for (const openapi of Object.values(page.openapisMap || {})) {
+  const [schemaItem, openapi, openapiPath] = useMemo(() => {
+    for (const [pathname, openapi] of Object.entries(page.openapisMap || {})) {
+      if (openapiPath_ && pathname !== openapiPath_) {
+        continue
+      }
       const schemaItem = openapi.components?.schemas?.[schema]
       if (schemaItem) {
-        return [schemaItem, openapi]
+        return [schemaItem, openapi, pathname]
       }
     }
     return []
@@ -178,7 +180,7 @@ export const OpenAPIRef = ({
         <OpenAPIRef
           key={index}
           schema={schema}
-          openapi={openapi}
+          openapiPath={openapiPath}
           collectRefs={false}
         />
       ))}

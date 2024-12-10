@@ -12,7 +12,18 @@ import OpenAPIRef from './OpenAPIRef.js'
 import { Markdown } from './_Markdown.js'
 
 export interface OpenAPIPathProps {
+  /**
+   * The path under the OpenAPI schema `paths` definition.
+   */
   path: string
+  /**
+   * The specific path to the OpenAPI schema, otherwise the first matched will be used.
+   */
+  openapiPath?: string
+  /**
+   * If you have a gateway which adds common path prefix, can be used to override global config level `pathPrefix`.
+   */
+  pathPrefix?: string
 }
 
 const X = getCustomMDXComponent()
@@ -128,18 +139,28 @@ const getRefsForPath = (
   return Array.from(refs)
 }
 
-export const OpenAPIPath = ({ path }: OpenAPIPathProps) => {
+export const OpenAPIPath = ({
+  path,
+  openapiPath: openapiPath_,
+  pathPrefix: pathPrefix_,
+}: OpenAPIPathProps) => {
   const { page } = usePageData() as ExtendedPageData
+
+  const pathPrefix = pathPrefix_ ?? (page.pathPrefix || '')
 
   const slugger = useMemo(() => new BananaSlug(), [])
 
-  const [pathItem, openapi, refs] = useMemo(() => {
-    for (const openapi of Object.values(page.openapisMap || {})) {
+  const [pathItem, openapi, openapiPath, refs] = useMemo(() => {
+    for (const [pathname, openapi] of Object.entries(page.openapisMap || {})) {
+      if (openapiPath_ && pathname !== openapiPath_) {
+        continue
+      }
       const pathItem = openapi.paths?.[path]
       if (pathItem) {
         return [
           pathItem as OpenAPIV3_1.PathItemObject,
           openapi,
+          pathname,
           getRefsForPath(
             openapi,
             path,
@@ -165,6 +186,7 @@ export const OpenAPIPath = ({ path }: OpenAPIPathProps) => {
   return (
     <>
       <HeadingTitle slugger={slugger} level={2}>
+        {pathPrefix}
         {path}
       </HeadingTitle>
 
@@ -239,7 +261,7 @@ export const OpenAPIPath = ({ path }: OpenAPIPathProps) => {
           <OpenAPIRef
             key={index}
             schema={ref}
-            openapi={openapi}
+            openapiPath={openapiPath}
             collectRefs={false}
           />
         )

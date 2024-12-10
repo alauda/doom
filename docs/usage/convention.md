@@ -10,7 +10,6 @@ weight: 2
 除了首页 `index.md` 或 `index.mdx` 外，其他文档都应放置在子文件夹中，以自动生成左侧边栏，子文件夹中可以使用 `index.md` 或 `index.mdx` 并定义文档一级标题来设置左侧边栏分组标题，其他子文档将自动归并到当前分组下，嵌套子文件夹也遵循相同规则。
 
 ```tree
-.
 ├── index.md
 ├── start
 │   └── index.mdx
@@ -34,7 +33,7 @@ category: 分类
 ---
 ```
 
-在文档正文中，参考[MDX](./mdx)使用 `.mdx` 文件时可以使用 `frontmatter` 来访问这些元数据。
+在文档正文中，参考 [MDX](./mdx) 使用 `.mdx` 文件时可以使用 `frontmatter` 来访问这些元数据。
 
 ## 排序
 
