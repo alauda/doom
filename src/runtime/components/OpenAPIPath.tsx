@@ -1,5 +1,5 @@
 import { usePageData } from '@rspress/core/runtime'
-import { getCustomMDXComponent } from '@rspress/core/theme'
+import { Badge, getCustomMDXComponent } from '@rspress/core/theme'
 import BananaSlug from 'github-slugger'
 import { OpenAPIV3, OpenAPIV3_1 } from 'openapi-types'
 import { ReactNode, useMemo } from 'react'
@@ -54,7 +54,8 @@ export const OpenAPIParameters = ({
         return (
           <X.li key={index}>
             <X.code>{paramObj.name}</X.code>(<em>in {paramObj.in}</em>):{' '}
-            {typeNode}, {paramObj.required ? 'required' : 'optional'}
+            {typeNode}
+            {paramObj.required && <Badge>required</Badge>}
             <Markdown>{paramObj.description}</Markdown>
           </X.li>
         )
@@ -210,6 +211,20 @@ export const OpenAPIPath = ({
         const { description, parameters, requestBody, responses, summary } =
           pathItem[method]
 
+        const requestBodyRef =
+          requestBody &&
+          ('$ref' in requestBody
+            ? requestBody.$ref
+            : (
+                requestBody.content['application/json'].schema as
+                  | OpenAPIV3_1.ReferenceObject
+                  | undefined
+              )?.$ref)
+
+        const requestBodySchema = requestBodyRef
+          ? resolveRef(openapi, requestBodyRef)
+          : undefined
+
         return (
           <>
             <HeadingTitle slugger={slugger} level={3}>
@@ -225,22 +240,15 @@ export const OpenAPIPath = ({
                 <OpenAPIParameters parameters={parameters} openapi={openapi} />
               </>
             )}
-            {requestBody && (
+            {requestBodySchema && (
               <>
                 <HeadingTitle slugger={slugger} level={4}>
                   Request Body
                 </HeadingTitle>
-                <RefLink
-                  $ref={
-                    '$ref' in requestBody
-                      ? requestBody.$ref
-                      : (
-                          requestBody.content['application/json'].schema as
-                            | OpenAPIV3_1.ReferenceObject
-                            | undefined
-                        )?.$ref
-                  }
-                />
+                <X.p>
+                  <RefLink $ref={requestBodyRef} />
+                  {requestBodySchema.required && <Badge>required</Badge>}
+                </X.p>
               </>
             )}
             {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
