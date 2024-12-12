@@ -28,7 +28,7 @@ const getCommonConfig = (config: UserConfig): UserConfig => {
   return {
     lang: 'en',
     route: {
-      exclude: ['shared/**/*', 'doom.config.*', '**/assets/**/*'],
+      exclude: ['shared/**/*', 'doom.config.*', '**/assets/**/*', '**/*.d.ts'],
     },
     markdown: {
       checkDeadLinks: true,
