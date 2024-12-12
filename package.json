@@ -1,6 +1,6 @@
 {
   "name": "@alauda/doom",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "type": "module",
   "description": "Doctor Doom making docs.",
   "repository": {
@@ -28,6 +28,7 @@
     "clean": "tsc -b src --clean",
     "dev": "yarn swc-node --watch-path src/cli --watch-path src/plugins src/cli/index.ts",
     "doom": "yarn swc-node src/cli/index.ts",
+    "fixture": "yarn doom fixture-docs",
     "lint": "run-p 'lint:*'",
     "lint:es": "eslint .",
     "lint:tsc": "tsc -b --noEmit",

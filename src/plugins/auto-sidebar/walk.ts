@@ -107,7 +107,7 @@ export async function scanSideMeta(
       await Promise.all(
         subItems.map(async (item) => {
           // Fix https://github.com/web-infra-dev/rspress/issues/346
-          if (item === '_meta.json') {
+          if (item === '_meta.json' || item === 'assets') {
             return null
           }
           const stat = await fs.stat(path.join(workDir, item))

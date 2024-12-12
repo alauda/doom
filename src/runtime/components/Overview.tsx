@@ -53,7 +53,7 @@ export function Overview(props: {
     if ('link' in traverseItem && traverseItem.link) {
       return traverseItem.link
     }
-    if ('items' in traverseItem) {
+    if ('items' in traverseItem && traverseItem.items.length) {
       return getChildLink(traverseItem.items[0])
     }
     return ''
