@@ -3,17 +3,18 @@ import {
   addLeadingSlash,
   addTrailingSlash,
   removeLeadingSlash,
-  type UserConfig,
 } from '@rspress/core'
 import { pluginPreview } from '@rspress/plugin-preview'
 import { logger } from '@rspress/shared/logger'
+import getPort from 'get-port'
 import fs from 'node:fs'
 import path from 'node:path'
 import rehypeRaw from 'rehype-raw'
 import { parse } from 'yaml'
 
-import { autoSidebarPlugin, globalPlugin, apiPlugin } from '../plugins/index.js'
+import { apiPlugin, autoSidebarPlugin, globalPlugin } from '../plugins/index.js'
 import { pkgResolve } from '../utils/helpers.js'
+import { DoomConfig } from '../utils/types.js'
 import {
   CWD,
   DEFAULT_CONFIG_NAME,
@@ -24,7 +25,7 @@ import {
 
 const DEFAULT_LOGO = '/logo.svg'
 
-const getCommonConfig = (config: UserConfig): UserConfig => {
+const getCommonConfig = async (config: DoomConfig): Promise<DoomConfig> => {
   return {
     lang: 'en',
     route: {
@@ -64,7 +65,7 @@ const getCommonConfig = (config: UserConfig): UserConfig => {
     plugins: [
       pluginPreview({
         iframeOptions: {
-          devPort: 7891,
+          devPort: await getPort({ port: 7891 }),
         },
         defaultRenderMode: 'pure',
       }),
@@ -97,7 +98,7 @@ export async function loadConfig(
   root?: string,
   configFile?: string,
 ): Promise<{
-  config: UserConfig
+  config: DoomConfig
   filepath?: string
 }> {
   let configFilePath: string | undefined
@@ -117,7 +118,7 @@ export async function loadConfig(
     }
   }
 
-  let config: UserConfig | undefined | null
+  let config: DoomConfig | undefined | null
 
   const { loadConfig, mergeRsbuildConfig } = await import('@rsbuild/core')
 
@@ -132,13 +133,13 @@ export async function loadConfig(
       ) {
         config = parse(
           fs.readFileSync(configFilePath, 'utf-8'),
-        ) as UserConfig | null
+        ) as DoomConfig | null
       } else {
         const { content } = await loadConfig({
           cwd: path.dirname(configFilePath),
           path: configFilePath,
         })
-        config = content as UserConfig
+        config = content as DoomConfig
       }
     } catch {
       logger.error(`Failed to load config from ${configFilePath}`)
@@ -147,7 +148,7 @@ export async function loadConfig(
 
   config ??= {}
 
-  const mergedConfig = mergeRsbuildConfig(getCommonConfig(config), config)
+  const mergedConfig = mergeRsbuildConfig(await getCommonConfig(config), config)
 
   const base = addLeadingSlash(mergedConfig.base || '/')
 

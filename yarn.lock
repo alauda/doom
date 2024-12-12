@@ -24,6 +24,7 @@ __metadata:
     commander: "npm:^12.1.0"
     es-toolkit: "npm:^1.29.0"
     eslint: "npm:^9.16.0"
+    get-port: "npm:^7.1.0"
     lint-staged: "npm:^15.2.10"
     npm-run-all2: "npm:^7.0.1"
     openapi-types: "npm:^12.1.3"
@@ -3035,6 +3036,13 @@ __metadata:
   version: 1.3.0
   resolution: "get-east-asian-width@npm:1.3.0"
   checksum: 10c0/1a049ba697e0f9a4d5514c4623781c5246982bdb61082da6b5ae6c33d838e52ce6726407df285cdbb27ec1908b333cf2820989bd3e986e37bb20979437fdf34b
+  languageName: node
+  linkType: hard
+
+"get-port@npm:^7.1.0":
+  version: 7.1.0
+  resolution: "get-port@npm:7.1.0"
+  checksum: 10c0/896051fea0fd3df58c050566754ab91f46406e898ce0c708414739d908a5ac03ffef3eca7a494ea9cc1914439e8caccd2218010d1eeabdde914b9ff920fa28fc
   languageName: node
   linkType: hard
 
