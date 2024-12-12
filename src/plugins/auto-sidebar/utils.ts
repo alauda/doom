@@ -57,6 +57,13 @@ export async function extractInfoFromFrontmatter(
   const fileNameWithoutExt = path.basename(realPath, path.extname(realPath))
   const h1RegExp = /^#\s+(.*)$/m
   const match = content.match(h1RegExp)
+  let contentTitle = match?.[1]
+  if (contentTitle) {
+    contentTitle =
+      contentTitle.match(
+        /{\s*useI18n\s*\(\s*\)\s*\(\s*(['"])([^'"]+)\1\s*\)\s*}/m,
+      )?.[2] ?? contentTitle
+  }
   const { frontmatter } = loadFrontMatter<{
     title?: string
     overviewHeaders?: number[]
@@ -65,7 +72,7 @@ export async function extractInfoFromFrontmatter(
   }>(content, filePath, rootDir)
   return {
     realPath,
-    title: frontmatter.title || match?.[1] || fileNameWithoutExt,
+    title: frontmatter.title || contentTitle || fileNameWithoutExt,
     overviewHeaders: frontmatter.overviewHeaders,
     context: frontmatter.context,
     weight: frontmatter.weight,

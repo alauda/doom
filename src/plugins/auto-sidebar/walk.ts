@@ -1,6 +1,7 @@
 import {
   isExternalUrl,
   type NavItem,
+  removeLeadingSlash,
   removeTrailingSlash,
   type SidebarDivider,
   type SidebarGroup,
@@ -73,6 +74,7 @@ export async function scanSideMeta(
   docsDir: string,
   routePrefix: string,
   extensions: string[],
+  ignoredDirs: string[],
 ) {
   if (!(await fs.exists(workDir))) {
     logger.error(
@@ -80,7 +82,8 @@ export async function scanSideMeta(
       `Generate sidebar meta error: ${workDir} not exists`,
     )
   }
-  const addRoutePrefix = (link: string) => `${routePrefix}${link}`
+  const addRoutePrefix = (link: string) =>
+    `${routePrefix}${removeLeadingSlash(link)}`
   // find the `_meta.json` file
   const metaFile = path.resolve(workDir, '_meta.json')
   // Fix the windows path
@@ -107,12 +110,16 @@ export async function scanSideMeta(
       await Promise.all(
         subItems.map(async (item) => {
           // Fix https://github.com/web-infra-dev/rspress/issues/346
-          if (item === '_meta.json' || item === 'assets') {
+          if (item === '_meta.json') {
             return null
           }
           const stat = await fs.stat(path.join(workDir, item))
           // If the item is a directory, we will transform it to a object with `type` and `name` property.
           if (stat.isDirectory()) {
+            if (ignoredDirs.includes(item)) {
+              return null
+            }
+
             // set H1 title to sidebar label when have same name md/mdx file
             const mdFilePath = path.join(workDir, `${item}.md`)
             const mdxFilePath = path.join(workDir, `${item}.mdx`)
@@ -208,6 +215,7 @@ export async function scanSideMeta(
           docsDir,
           routePrefix,
           extensions,
+          ['assets'],
         )
         const realPath = await detectFilePath(subDir, extensions)
         const group = {
@@ -277,42 +285,24 @@ export async function walk(
       navItem.link = withBase(navItem.link, routePrefix)
     }
   })
-  // find the `_meta.json` file in the subdirectory
-  const subDirs = (await fs.readdir(workDir)).filter(
-    (v) =>
-      fs.statSync(path.join(workDir, v)).isDirectory() &&
-      v !== 'node_modules' &&
-      (workDir !== docsDir || !['public', 'shared'].includes(v)),
+
+  const { index, others } = await scanSideMeta(
+    workDir,
+    workDir,
+    docsDir,
+    routePrefix,
+    extensions,
+    ['assets', 'public', 'shared'],
   )
 
-  const sidebars: DoomSidebar[] = []
+  const sidebars = index ? [index, ...others] : others
+
+  sidebars.sort(sidebarSorter)
 
   // Every sub dir will represent a group of sidebar
   const sidebarConfig = {
     [routePrefix]: sidebars,
   }
-
-  for (const subDir of subDirs) {
-    const { index, others } = await scanSideMeta(
-      path.join(workDir, subDir),
-      workDir,
-      docsDir,
-      routePrefix,
-      extensions,
-    )
-    const sidebar = index
-      ? { ...index, items: others }
-      : { text: subDir, items: others }
-
-    if (!sidebar.items.length) {
-      // @ts-expect-error -- FIXME: rspress should handle `undefined` items
-      delete sidebar.items
-    }
-
-    sidebars.push(sidebar)
-  }
-
-  sidebars.sort(sidebarSorter)
 
   if (removeTrailingSlash(routePrefix)) {
     sidebarConfig[removeTrailingSlash(routePrefix)] = sidebars

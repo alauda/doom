@@ -29,7 +29,14 @@ const getCommonConfig = async (config: DoomConfig): Promise<DoomConfig> => {
   return {
     lang: 'en',
     route: {
-      exclude: ['shared/**/*', 'doom.config.*', '**/assets/**/*', '**/*.d.ts'],
+      exclude: [
+        'dist/**/*',
+        'public/**/*',
+        'shared/**/*',
+        'doom.config.*',
+        '**/assets/**/*',
+        '**/*.d.ts',
+      ],
     },
     markdown: {
       checkDeadLinks: true,
