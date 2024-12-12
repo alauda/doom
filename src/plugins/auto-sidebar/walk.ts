@@ -48,11 +48,13 @@ const splitSideMeta = (sideMeta: DoomSidebar[], extensions: string[]) => {
     others: DoomSidebar[]
   }>(
     (acc, curr) => {
+      let fileParts: string[] | undefined
       if (
         '_fileKey' in curr &&
         !('items' in curr) &&
         !acc.index &&
-        extensions.some((ext) => curr._fileKey?.endsWith(`/index${ext}`))
+        (fileParts = curr._fileKey?.split('/')) &&
+        extensions.some((ext) => fileParts!.at(-1) === `index${ext}`)
       ) {
         acc.index = curr
       } else {
@@ -296,8 +298,6 @@ export async function walk(
   )
 
   const sidebars = index ? [index, ...others] : others
-
-  sidebars.sort(sidebarSorter)
 
   // Every sub dir will represent a group of sidebar
   const sidebarConfig = {
