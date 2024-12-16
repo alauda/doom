@@ -51,6 +51,57 @@ export default () => (
 )
 ```
 
+3. `Callouts`: 源码标注组件
+
+::: note
+
+1. 下列演示代码块中的 `\[!code callout]` 实际使用时应为 `[!code callout]`
+2. 行内代码注释支持 `#`, `//` 和 `/** */` 三种，请根据实际情况选择使用
+
+:::
+
+````mdx
+```sh
+Memory overhead per virtual machine ≈ (1.002 × requested memory) \
+              + 218 MiB \  // \[!code callout]
+              + 8 MiB × (number of vCPUs) \  // \[!code callout]
+              + 16 MiB × (number of graphics devices) \  // \[!code callout]
+              + (additional memory overhead)  // \[!code callout]
+```
+
+<Callouts>
+
+1. Required for the processes that run in the `virt-launcher` pod.
+2. Number of virtual CPUs requested by the virtual machine.
+3. Number of virtual graphics cards requested by the virtual machine.
+4. Additional memory overhead:
+   - If your environment includes a Single Root I/O Virtualization (SR-IOV) network device or a Graphics Processing Unit (GPU), allocate 1 GiB additional memory overhead for each device.
+   - If Secure Encrypted Virtualization (SEV) is enabled, add 256 MiB.
+   - If Trusted Platform Module (TPM) is enabled, add 53 MiB.
+
+</Callouts>
+````
+
+```sh
+Memory overhead per virtual machine ≈ (1.002 × requested memory) \
+              + 218 MiB \  // [!code callout]
+              + 8 MiB × (number of vCPUs) \  // [!code callout]
+              + 16 MiB × (number of graphics devices) \  // [!code callout]
+              + (additional memory overhead)  // [!code callout]
+```
+
+<Callouts>
+
+1. Required for the processes that run in the `virt-launcher` pod.
+2. Number of virtual CPUs requested by the virtual machine.
+3. Number of virtual graphics cards requested by the virtual machine.
+4. Additional memory overhead:
+   - If your environment includes a Single Root I/O Virtualization (SR-IOV) network device or a Graphics Processing Unit (GPU), allocate 1 GiB additional memory overhead for each device.
+   - If Secure Encrypted Virtualization (SEV) is enabled, add 256 MiB.
+   - If Trusted Platform Module (TPM) is enabled, add 53 MiB.
+
+</Callouts>
+
 ## 自定义组件复用
 
 根据[约定](./convention)，我们可以将需要复用的内容抽取到 `shared` 目录中，然后在需要的地方引入即可，比如：

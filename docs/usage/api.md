@@ -6,7 +6,7 @@ weight: 5
 
 根据实际业务，我们一般会将 API 分为高级 API 和 CRD (Custom Resource Definition) 两种，因此在目录结构上一般分为：
 
-```tree
+```sh
 ├── apis
 │   ├── advanced-apis # 高级 API
 │   ├── crds # CRDs

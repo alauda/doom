@@ -248,7 +248,7 @@ export async function scanSideMeta(
       }
       return {
         text: label,
-        link: isExternalUrl(link) ? link! : withBase(link, routePrefix),
+        link: isExternalUrl(link) ? link! : withBase(link!, routePrefix),
         tag,
       }
     }),

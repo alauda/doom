@@ -37,3 +37,49 @@ td {
     }
   }
 }
+
+@mixin callout {
+  counter-increment: callouts;
+  content: counter(callouts);
+  border-radius: 50%;
+  background-color: #06c;
+  color: #fff;
+  width: 20px;
+  height: 20px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.has-callouts .rspress-code-content {
+  counter-reset: callouts;
+
+  .line.callout {
+    &:after {
+      @include callout;
+    }
+  }
+}
+
+.doom-callouts {
+  > ol {
+    counter-reset: callouts;
+    list-style-type: none;
+
+    > li {
+      margin-left: -1.25rem;
+
+      &:before {
+        @include callout;
+        margin-right: 0.75rem;
+      }
+
+      > {
+        ul,
+        ol {
+          margin-left: 1.25rem;
+        }
+      }
+    }
+  }
+}
