@@ -55,18 +55,18 @@ export default () => (
 
 ::: note
 
-1. 下列演示代码块中的 `\[!code callout]` 实际使用时应为 `[!code callout]`
-2. 行内代码注释支持 `#`, `//` 和 `/** */` 三种，请根据实际情况选择使用
+1. 请根据实际语言使用行内代码注释，如 `;`, `%`, `#`, `//`, `/** */`, `--` 和 `<!-- -->` 等
+2. 如果需要将其视为代码注释，请使用 `[\!code callout]` 进行转义
 
 :::
 
 ````mdx
 ```sh
 Memory overhead per virtual machine ≈ (1.002 × requested memory) \
-              + 218 MiB \  // \[!code callout]
-              + 8 MiB × (number of vCPUs) \  // \[!code callout]
-              + 16 MiB × (number of graphics devices) \  // \[!code callout]
-              + (additional memory overhead)  // \[!code callout]
+              + 218 MiB \  # [\!code callout]
+              + 8 MiB × (number of vCPUs) \  # [\!code callout]
+              + 16 MiB × (number of graphics devices) \  # [\!code callout]
+              + (additional memory overhead)  # [\!code callout]
 ```
 
 <Callouts>
@@ -84,10 +84,10 @@ Memory overhead per virtual machine ≈ (1.002 × requested memory) \
 
 ```sh
 Memory overhead per virtual machine ≈ (1.002 × requested memory) \
-              + 218 MiB \  // [!code callout]
-              + 8 MiB × (number of vCPUs) \  // [!code callout]
-              + 16 MiB × (number of graphics devices) \  // [!code callout]
-              + (additional memory overhead)  // [!code callout]
+              + 218 MiB \  # [!code callout]
+              + 8 MiB × (number of vCPUs) \  # [!code callout]
+              + 16 MiB × (number of graphics devices) \  # [!code callout]
+              + (additional memory overhead)  # [!code callout]
 ```
 
 <Callouts>
@@ -101,6 +101,8 @@ Memory overhead per virtual machine ≈ (1.002 × requested memory) \
    - If Trusted Platform Module (TPM) is enabled, add 53 MiB.
 
 </Callouts>
+
+更多源码转换功能请参考 [Shiki Transformers](https://shiki.style/packages/transformers#transformers)。
 
 ## 自定义组件复用
 

@@ -8,19 +8,28 @@ import {
   removeLeadingSlash,
 } from '@rspress/core'
 import { pluginPreview } from '@rspress/plugin-preview'
-import {
-  createTransformerDiff,
-  createTransformerErrorLevel,
-  createTransformerFocus,
-  createTransformerHighlight,
-  pluginShiki,
-} from '@rspress/plugin-shiki'
 import { logger } from '@rspress/shared/logger'
+import {
+  transformerMetaHighlight,
+  transformerMetaWordHighlight,
+  transformerNotationDiff,
+  transformerNotationErrorLevel,
+  transformerNotationFocus,
+  transformerNotationHighlight,
+  transformerNotationWordHighlight,
+  transformerRemoveNotationEscape,
+} from '@shikijs/transformers'
 import getPort from 'get-port'
 import rehypeRaw from 'rehype-raw'
 import { parse } from 'yaml'
 
-import { apiPlugin, autoSidebarPlugin, globalPlugin } from '../plugins/index.js'
+import {
+  apiPlugin,
+  autoSidebarPlugin,
+  createTransformerCallouts,
+  globalPlugin,
+  shikiPlugin,
+} from '../plugins/index.js'
 import { pkgResolve } from '../utils/helpers.js'
 import { DoomConfig } from '../utils/types.js'
 import {
@@ -30,7 +39,6 @@ import {
   I18N_FILE,
   YAML_EXTENSIONS,
 } from './constants.js'
-import { createTransformerCallouts } from './shiki/index.js'
 
 const DEFAULT_LOGO = '/logo.svg'
 
@@ -49,7 +57,6 @@ const getCommonConfig = async (config: DoomConfig): Promise<DoomConfig> => {
     },
     markdown: {
       checkDeadLinks: true,
-      defaultWrapCode: true,
       highlightLanguages: [['jsonc', 'json']],
       mdxRs: false,
       rehypePlugins: [[rehypeRaw, { passThrough: nodeTypes }]],
@@ -86,21 +93,26 @@ const getCommonConfig = async (config: DoomConfig): Promise<DoomConfig> => {
         },
         defaultRenderMode: 'pure',
       }),
-      pluginShiki({
+      apiPlugin(),
+      autoSidebarPlugin(),
+      globalPlugin(),
+      shikiPlugin({
+        langs: ['dockerfile', 'go', 'jsonc'],
         transformers: [
           // builtin transformers
-          createTransformerDiff(),
-          createTransformerErrorLevel(),
-          createTransformerFocus(),
-          createTransformerHighlight(),
+          transformerMetaHighlight(),
+          transformerMetaWordHighlight(),
+          transformerNotationDiff(),
+          transformerNotationErrorLevel(),
+          transformerNotationFocus(),
+          transformerNotationHighlight(),
+          transformerNotationWordHighlight(),
+          transformerRemoveNotationEscape(),
 
           // custom transformers
           createTransformerCallouts(),
         ],
       }),
-      autoSidebarPlugin(),
-      globalPlugin(),
-      apiPlugin(),
     ],
     builderConfig: {
       server: {
