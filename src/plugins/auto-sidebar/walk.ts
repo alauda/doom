@@ -299,6 +299,12 @@ export async function walk(
 
   const sidebars = index ? [index, ...others] : others
 
+  for (const sidebarItem of sidebars) {
+    if ('items' in sidebarItem && sidebarItem.items.length) {
+      sidebarItem.collapsed = false
+    }
+  }
+
   // Every sub dir will represent a group of sidebar
   const sidebarConfig = {
     [routePrefix]: sidebars,
