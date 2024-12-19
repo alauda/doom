@@ -1,6 +1,4 @@
 import type { RspressPlugin } from '@rspress/shared'
-import { dirname, join } from 'node:path'
-import { fileURLToPath } from 'node:url'
 import {
   type BuiltinLanguage,
   type BuiltinTheme,
@@ -9,15 +7,12 @@ import {
   createCssVariablesTheme,
 } from 'shiki'
 
+import { getHighlighter } from './highlighter.js'
 import { rehypePluginShiki } from './rehypePlugin.js'
 import {
   SHIKI_TRANSFORMER_LINE_NUMBER,
   createTransformerLineNumber,
 } from './transformers/line-number.js'
-import { getHighlighter } from './highlighter.js'
-
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = dirname(__filename)
 
 export interface PluginShikiOptions {
   /**
@@ -95,7 +90,6 @@ export function shikiPlugin({
       ])
       return config
     },
-    globalStyles: join(__dirname, './shiki.css'),
   }
 }
 

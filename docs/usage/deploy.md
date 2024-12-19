@@ -28,6 +28,31 @@ COPY . dist
 
 ## 部署到 ACP
 
+### 合并目录结构
+
+```sh
+├── console-docs
+│   ├── v4.0
+│   ├── v4.1
+│   ├── index.html
+|   └── versions.yaml
+│── console-devops-docs
+│   ├── v4.0
+│   ├── v4.1
+│   ├── index.html
+|   └── versions.yaml
+│── console-tekton-docs
+│   ├── v1.0
+│   ├── v1.1
+│   ├── index.html
+|   └── versions.yaml
+```
+
+```yaml title="versions.yaml"
+- v4.0
+- v4.1
+```
+
 ### 随产品发布的文档
 
 目前产品文档跟随 [chart-frontend](https://gitlab-ce.alauda.cn/frontend/chart-frontend/-/blob/master/chart/values.yaml#L78-107) 一起部署，因此对发布流程不需要变更，可以延续原 [alauda-docs](https://gitlab-ce.alauda.cn/alauda/alauda-docs) 发布流程，如果后续将所有产品文档进行拆分处理啧需要前端同时配合调整相关[发布流水线](https://edge.alauda.cn/console-devops/workspace/frontend/cd?delivery=packager-frontend-chart)中 `check-alauda-docs` 阶段的镜像检查配置

@@ -1,6 +1,5 @@
 import {
   isExternalUrl,
-  type NavItem,
   removeLeadingSlash,
   removeTrailingSlash,
   type SidebarDivider,
@@ -14,7 +13,7 @@ import fs from '@rspress/shared/fs-extra'
 import { logger } from '@rspress/shared/logger'
 import path from 'node:path'
 
-import type { NavMeta, SideMeta } from './type.js'
+import type { SideMeta } from './type.js'
 import { detectFilePath, extractInfoFromFrontmatter } from './utils.js'
 
 export interface DoomSidebarItem extends SidebarItem {
@@ -265,29 +264,6 @@ export async function walk(
   docsDir: string,
   extensions: string[],
 ) {
-  // find the `_meta.json` file
-  const rootMetaFile = path.resolve(workDir, '_meta.json')
-  let navConfig: NavMeta | undefined
-  // Get the nav config from the `_meta.json` file
-  try {
-    navConfig = (await fs.readJSON(rootMetaFile, 'utf8')) as NavItem[]
-  } catch {
-    navConfig = []
-  }
-
-  navConfig.forEach((navItem) => {
-    if ('items' in navItem) {
-      navItem.items.forEach((item) => {
-        if ('link' in item && !isExternalUrl(item.link)) {
-          item.link = withBase(item.link, routePrefix)
-        }
-      })
-    }
-    if ('link' in navItem && !isExternalUrl(navItem.link)) {
-      navItem.link = withBase(navItem.link, routePrefix)
-    }
-  })
-
   const { index, others } = await scanSideMeta(
     workDir,
     workDir,
@@ -315,7 +291,7 @@ export async function walk(
   }
 
   return {
-    nav: navConfig as NavItem[],
+    nav: [],
     sidebar: sidebarConfig,
   }
 }

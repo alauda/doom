@@ -9,7 +9,7 @@ import path from 'node:path'
 import { ServerConfig, logger } from '@rsbuild/core'
 import { build, dev, serve } from '@rspress/core'
 import { type FSWatcher, watch } from 'chokidar'
-import type { EventName } from 'chokidar/handler.js'
+// import type { EventName } from 'chokidar/handler.js'
 import { program } from 'commander'
 import { green } from 'yoctocolors'
 import module from 'node:module'
@@ -84,7 +84,7 @@ program
 
         let isRestarting = false
 
-        cliWatcher.on('all', async (eventName: EventName, filepath: string) => {
+        cliWatcher.on('all', async (eventName, filepath) => {
           if (
             eventName === 'add' ||
             eventName === 'unlink' ||
