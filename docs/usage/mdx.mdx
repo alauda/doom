@@ -9,10 +9,22 @@ weight: 3
 
 ## rspress 组件
 
-可以通过导入 `@rspress/theme-default` 中的组件来使用 `rspress` 主题提供的[内置组件](https://rspress.dev/zh/guide/default-theme/components)，比如：
+`rspress` 主题提供的[内置组件](https://rspress.dev/zh/guide/default-theme/components)大部分已调整为全局组件，可以在 `.mdx` 文件中无需导入直接使用，包括：
 
-```ts
-import { Badge } from '@rspress/theme-default'
+- `Badge`
+- `Card`
+- `LinkCard`
+- `PackageManagerTabs`
+- `Steps`
+- `Tab/Tabs`
+- `Toc`
+
+其他不常用的组件可以通过 `@rspress/theme-default` 导入使用，例如：
+
+```mdx title="preview.mdx"
+import { SourceCode } from '@rspress/theme-default'
+
+<SourceCode />
 ```
 
 ## doom 组件
