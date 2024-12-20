@@ -40,7 +40,7 @@ doom serve --config ./my-config.js
 - `logo`：文档左上角 logo，支持图片链接、文件路径，绝对路径代表 `public` 目录下的文件，相对路径代表相对于当前工具目录的文件，默认使用 `doom` 包内置的 alauda logo
 - `logoText`：文档标题，会显示在左上角的 logo 处
 - `icon`：文档 favicon，默认同 `logo`
-- `base`：文档基础路径，用于部署到非根路径
+- `base`：文档基础路径，用于部署到非根路径，如 `product-docs`，请勿使用 `master` 或 `vX.Y` 等版本号作为 `base` 结尾
 - `outDir`：构建产物目录，默认为 `dist/{base}`
 
 ## API 文档配置

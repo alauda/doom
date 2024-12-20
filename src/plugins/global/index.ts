@@ -10,6 +10,7 @@ export const globalPlugin = (): RspressPlugin => {
   return {
     name: 'doom-global',
     globalStyles: pkgResolve('styles/global.scss'),
+    globalUIComponents: [baseResolve('global/VersionsNav/index.tsx')],
     markdown: {
       globalComponents: fs
         .readdirSync(componentsDir)

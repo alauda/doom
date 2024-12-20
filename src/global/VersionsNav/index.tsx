@@ -1,0 +1,72 @@
+import { usePageData } from '@rspress/core/runtime'
+import { noop } from 'es-toolkit'
+import { useEffect, useMemo, useState } from 'react'
+import { createPortal } from 'react-dom'
+import { parse } from 'yaml'
+import { NavMenuGroup } from './NavMenuGroup.js'
+
+export const VersionsNav = () => {
+  const { siteData } = usePageData()
+
+  const [versionsBase, version] = useMemo(() => {
+    const parts = siteData.base.split('/')
+    const last = parts.at(-1)!
+    return last === 'master' || /^v\d+\.\d$/.test(last)
+      ? [parts.slice(0, -1).join('/'), last]
+      : []
+  }, [siteData.base])
+
+  const [navMenu, setNavMenu] = useState<Element | null>()
+
+  const [versions, setVersions] = useState<string[]>()
+
+  useEffect(() => {
+    const fetchVersions = async () => {
+      if (versionsBase == null) {
+        return
+      }
+      const res = await fetch(`${versionsBase}/versions.yaml`)
+      const text = await res.text()
+      setNavMenu(document.querySelector('.rspress-nav-menu'))
+      setVersions(parse(text) as string[])
+    }
+
+    fetchVersions().catch(noop)
+  }, [])
+
+  // hack way to detect nav menu recreation on theme change
+  useEffect(() => {
+    if (!navMenu) {
+      return
+    }
+    const observer = new MutationObserver((mutations) => {
+      if (mutations.some((m) => m.removedNodes.length)) {
+        setNavMenu(document.querySelector('.rspress-nav-menu'))
+      }
+    })
+    observer.observe(navMenu, { childList: true })
+    return () => {
+      observer.disconnect()
+    }
+  }, [navMenu])
+
+  if (!versions?.length) {
+    return null
+  }
+
+  return createPortal(
+    <NavMenuGroup
+      text={version}
+      base={versionsBase}
+      items={versions.map((v) => ({
+        text: v,
+        link: `${versionsBase}/${v}/`,
+        activeMatch: v,
+      }))}
+      pathname={siteData.base}
+    />,
+    document.querySelector('.rspress-nav-menu')!,
+  )
+}
+
+export default VersionsNav

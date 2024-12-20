@@ -1,0 +1,11 @@
+.singleItem {
+  word-break: keep-all;
+}
+
+.activeItem,
+.singleItem:hover {
+  background-color: var(--rp-c-bg-mute);
+  cursor: pointer;
+  color: var(--rp-c-link);
+  border-radius: var(--rp-radius);
+}
