@@ -4,15 +4,14 @@
  * Adopted from @see https://github.com/web-infra-dev/rspress/blob/main/packages/cli/src/index.ts
  */
 
+import module from 'node:module'
 import path from 'node:path'
 
 import { ServerConfig, logger } from '@rsbuild/core'
 import { build, dev, serve } from '@rspress/core'
 import { type FSWatcher, watch } from 'chokidar'
-// import type { EventName } from 'chokidar/handler.js'
 import { program } from 'commander'
 import { green } from 'yoctocolors'
-import module from 'node:module'
 
 import { CWD, DEFAULT_CONFIGS, I18N_FILE } from './constants.js'
 import { loadConfig } from './load-config.js'

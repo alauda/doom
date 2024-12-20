@@ -1,13 +1,6 @@
 lang: null
 title: Doom
 logoText: Doom
-themeConfig:
-  searchPlaceholderText: 搜索文档
-  searchNoResultsText: 未搜索到相关结果
-  searchSuggestedQueryText: 可更换不同的关键字后重试
-  outlineTitle: 本页概览
-  prevPageText: 上一页
-  nextPageText: 下一页
 api:
   crds:
     - shared/crds/*.yaml

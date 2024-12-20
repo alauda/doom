@@ -5,6 +5,7 @@ import { nodeTypes } from '@mdx-js/mdx'
 import {
   addLeadingSlash,
   addTrailingSlash,
+  LocaleConfig,
   removeLeadingSlash,
 } from '@rspress/core'
 import { pluginPreview } from '@rspress/plugin-preview'
@@ -42,9 +43,19 @@ import {
 
 const DEFAULT_LOGO = '/logo.svg'
 
+const zhLocaleConfig: Omit<LocaleConfig, 'lang' | 'label'> = {
+  searchPlaceholderText: '搜索文档',
+  searchNoResultsText: '未搜索到相关结果',
+  searchSuggestedQueryText: '可更换不同的关键字后重试',
+  outlineTitle: '本页概览',
+  prevPageText: '上一页',
+  nextPageText: '下一页',
+}
+
 const getCommonConfig = async (config: DoomConfig): Promise<DoomConfig> => {
+  const fallbackToZh = 'lang' in config && config.lang == null
   return {
-    lang: 'en',
+    lang: fallbackToZh ? 'zh' : config.lang,
     route: {
       exclude: [
         'dist/**/*',
@@ -66,25 +77,14 @@ const getCommonConfig = async (config: DoomConfig): Promise<DoomConfig> => {
     },
     themeConfig: {
       enableScrollToTop: true,
-      locales:
-        'lang' in config && config.lang == null
-          ? undefined
-          : [
-              {
-                lang: 'zh',
-                label: '简体中文',
-                searchPlaceholderText: '搜索文档',
-                searchNoResultsText: '未搜索到相关结果',
-                searchSuggestedQueryText: '可更换不同的关键字后重试',
-                outlineTitle: '本页概览',
-                prevPageText: '上一页',
-                nextPageText: '下一页',
-              },
-              {
-                lang: 'en',
-                label: 'English',
-              },
+      ...(fallbackToZh
+        ? zhLocaleConfig
+        : {
+            locales: [
+              { lang: 'zh', label: '简体中文', ...zhLocaleConfig },
+              { lang: 'en', label: 'English' },
             ],
+          }),
     },
     plugins: [
       pluginPreview({
