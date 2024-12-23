@@ -9,15 +9,15 @@ import { glob } from 'tinyglobby'
 import { DoomConfig, resolveStaticConfig } from '../../utils/index.js'
 import { CustomResourceDefinition } from './types.js'
 
-const crdsMap: Record<string, CustomResourceDefinition> = {}
-const openapisMap: Record<string, OpenAPIV3_1.Document> = {}
-
-const shared: {
-  references?: Record<string, string>
-  pathPrefix?: string
-} = {}
-
 export const apiPlugin = (): RspressPlugin => {
+  const crdsMap: Record<string, CustomResourceDefinition> = {}
+  const openapisMap: Record<string, OpenAPIV3_1.Document> = {}
+
+  const shared: {
+    references?: Record<string, string>
+    pathPrefix?: string
+  } = {}
+
   return {
     name: 'doom-api',
     async beforeBuild(config_) {

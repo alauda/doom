@@ -13,12 +13,12 @@ import { type FSWatcher, watch } from 'chokidar'
 import { program } from 'commander'
 import { green } from 'yoctocolors'
 
-import { CWD, DEFAULT_CONFIGS, I18N_FILE } from './constants.js'
+import { CWD, DEFAULT_CONFIGS, I18N_FILE, SITES_FILE } from './constants.js'
 import { loadConfig } from './load-config.js'
 
 const META_FILE = '_meta.json'
 
-const CONFIG_FILES = [...DEFAULT_CONFIGS, I18N_FILE]
+const CONFIG_FILES = [...DEFAULT_CONFIGS, I18N_FILE, SITES_FILE]
 
 const setNodeEnv = (env: 'development' | 'production') => {
   process.env.NODE_ENV = env
@@ -72,7 +72,7 @@ program
 
         cliWatcher = watch(
           filepath
-            ? [filepath, docDirectory, config.i18nSourcePath!]
+            ? [filepath, config.i18nSourcePath!, docDirectory, SITES_FILE]
             : [...CONFIG_FILES, docDirectory],
           {
             ignoreInitial: true,
@@ -84,6 +84,7 @@ program
         let isRestarting = false
 
         cliWatcher.on('all', async (eventName, filepath) => {
+          console.log(eventName, filepath)
           if (
             eventName === 'add' ||
             eventName === 'unlink' ||

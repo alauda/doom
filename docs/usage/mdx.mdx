@@ -14,6 +14,7 @@ weight: 3
 - `Badge`
 - `Card`
 - `LinkCard`
+- `PackageManagerTabs`
 - `Steps`
 - `Tab/Tabs`
 - `Toc`
@@ -30,8 +31,13 @@ import { SourceCode } from '@rspress/core/theme'
 
 `doom` 提供了一些全局组件来辅助文档编写，不需要导入即可直接使用，目前包括：
 
-1. `Overview`：文档概览组件，用于展示文档目录
-2. `QuickNav`：快速导航组件，用于展示快速导航信息，样式和功能将根据后续实际使用需求进行调整
+### `Overview`
+
+文档概览组件，用于展示文档目录
+
+### `QuickNav`
+
+快速导航组件，用于展示快速导航信息，样式和功能将根据后续实际使用需求进行调整
 
 ```tsx preview
 import { QuickNav } from '@alauda/doom/runtime' // .mdx 文件中无需导入
@@ -62,7 +68,9 @@ export default () => (
 )
 ```
 
-3. `Callouts`: 源码标注组件
+### `Callouts`
+
+源码标注组件
 
 ::: note
 
@@ -114,6 +122,16 @@ Memory overhead per virtual machine ≈ (1.002 × requested memory) \
 </Callouts>
 
 更多源码转换功能请参考 [Shiki Transformers](https://shiki.style/packages/transformers#transformers)。
+
+### `ExternalSite`
+
+外部站点引用组件
+
+```mdx
+<ExternalSite name="connectors" />
+```
+
+<ExternalSite name="connectors" />
 
 ## 自定义组件复用
 

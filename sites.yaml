@@ -1,0 +1,8 @@
+- name: connectors
+  displayName:
+    en: DevOps Connectors
+    zh: DevOps 连接器
+  base: /devops-connectors
+  repo: https://github.com/AlaudaDevops/connectors-operator
+  image: devops/connectors-docs
+  defaultVersion: v1.1

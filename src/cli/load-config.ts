@@ -22,7 +22,6 @@ import {
 } from '@shikijs/transformers'
 import getPort from 'get-port'
 import rehypeRaw from 'rehype-raw'
-import { parse } from 'yaml'
 
 import {
   apiPlugin,
@@ -31,13 +30,18 @@ import {
   globalPlugin,
   shikiPlugin,
 } from '../plugins/index.js'
-import { pkgResolve } from '../utils/helpers.js'
-import { DoomConfig } from '../utils/types.js'
+import {
+  type DoomConfig,
+  type DoomSite,
+  pkgResolve,
+  resolveStaticConfig,
+} from '../utils/index.js'
 import {
   CWD,
   DEFAULT_CONFIG_NAME,
   DEFAULT_EXTENSIONS,
   I18N_FILE,
+  SITES_FILE,
   YAML_EXTENSIONS,
 } from './constants.js'
 
@@ -172,9 +176,7 @@ export async function loadConfig(
           path.extname(configFilePath),
         )
       ) {
-        config = parse(
-          fs.readFileSync(configFilePath, 'utf-8'),
-        ) as DoomConfig | null
+        config = await resolveStaticConfig<DoomConfig>(configFilePath)
       } else {
         const { content } = await loadConfig({
           cwd: path.dirname(configFilePath),
@@ -188,6 +190,15 @@ export async function loadConfig(
   }
 
   config ??= {}
+
+  if (config.sites) {
+    logger.error('Use separate `sites.yaml` config in repository root instead')
+  } else {
+    const sitesConfigFilePath = path.resolve(SITES_FILE)
+    if (fs.existsSync(sitesConfigFilePath)) {
+      config.sites = await resolveStaticConfig<DoomSite[]>(sitesConfigFilePath)
+    }
+  }
 
   const mergedConfig = mergeRsbuildConfig(await getCommonConfig(config), config)
 

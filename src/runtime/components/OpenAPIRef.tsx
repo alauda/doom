@@ -1,5 +1,5 @@
 import { usePageData } from '@rspress/core/runtime'
-import { getCustomMDXComponent } from '@rspress/theme-default'
+import { getCustomMDXComponent } from '@rspress/core/theme'
 import { OpenAPIV3_1 } from 'openapi-types'
 import { ReactNode, useMemo } from 'react'
 
