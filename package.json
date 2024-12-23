@@ -54,6 +54,7 @@
     "shiki": "^1.24.3",
     "swagger2openapi": "^7.0.8",
     "tinyglobby": "^0.2.10",
+    "type-fest": "^4.30.2",
     "yaml": "^2.6.1",
     "yoctocolors": "^2.1.1"
   },

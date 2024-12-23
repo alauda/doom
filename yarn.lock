@@ -39,6 +39,7 @@ __metadata:
     simple-git-hooks: "npm:^2.11.1"
     swagger2openapi: "npm:^7.0.8"
     tinyglobby: "npm:^0.2.10"
+    type-fest: "npm:^4.30.2"
     typescript: "npm:^5.7.2"
     typescript-eslint: "npm:^8.18.1"
     yaml: "npm:^2.6.1"
@@ -6501,6 +6502,13 @@ __metadata:
   dependencies:
     prelude-ls: "npm:^1.2.1"
   checksum: 10c0/7b3fd0ed43891e2080bf0c5c504b418fbb3e5c7b9708d3d015037ba2e6323a28152ec163bcb65212741fa5d2022e3075ac3c76440dbd344c9035f818e8ecee58
+  languageName: node
+  linkType: hard
+
+"type-fest@npm:^4.30.2":
+  version: 4.30.2
+  resolution: "type-fest@npm:4.30.2"
+  checksum: 10c0/c28db60ff57223fb23180e66bd9652fb3197fb533e9360f9ee76e66c3ccb6849b292df5e8fa5897f215f6685357dd31c946511da56be549cb5de9d42ac9ea67d
   languageName: node
   linkType: hard
 
