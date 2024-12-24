@@ -131,7 +131,9 @@ program
     process.on('SIGINT', exitProcess)
     process.on('SIGTERM', exitProcess)
   })
-  .parent!.command('build')
+
+program
+  .command('build')
   .description('Build the documentation')
   .argument('[root]', 'Root directory of the documentation')
   .action(async function (this: Command, root: string) {
@@ -152,7 +154,9 @@ program
       docDirectory,
     })
   })
-  .parent!.command('preview')
+
+program
+  .command('preview')
   .alias('serve')
   .description('Preview the built documentation')
   .argument('[root]', 'Root directory of the documentation')
@@ -174,4 +178,9 @@ program
       ...server,
     })
   })
-  .parent!.parse()
+
+program.command('new', 'Create a new documentation site/module/page', {
+  executableFile: 'new',
+})
+
+program.parseAsync().catch(console.error)
