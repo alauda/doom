@@ -255,8 +255,11 @@ export async function loadConfig(
     mergedConfig.i18nSourcePath = path.resolve(mergedConfig.root, I18N_FILE)
   }
 
-  if (!mergedConfig.outDir) {
-    mergedConfig.outDir = `dist${version === 'unversioned' ? `/unversioned${base}` : base}`
+  if (mergedConfig.outDir) {
+    mergedConfig.outDir =
+      addTrailingSlash(mergedConfig.outDir) + normalizedVersion
+  } else {
+    mergedConfig.outDir = `dist${normalizedVersion === 'unversioned' ? `/unversioned${base}` : base}`
   }
 
   if (mergedConfig.builderConfig?.server?.open === true) {
