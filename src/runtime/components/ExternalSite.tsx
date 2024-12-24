@@ -1,7 +1,8 @@
 import { useLang, usePageData } from '@rspress/core/runtime'
 import { addTrailingSlash } from '@rspress/shared'
-
 import { FC, useMemo } from 'react'
+
+import { normalizeVersion } from '../../shared/index.js'
 import { ExtendedPageData } from '../types.js'
 import { handleCJKWhitespaces } from '../utils.js'
 import { Directive } from './_Directive.js'
@@ -63,9 +64,17 @@ export const ExternalSite = ({ name }: ExternalSiteProps) => {
     )
   }
   const Note = Notes[lang] || Notes[fallbackLang] || Notes.en!
+  const siteBase = addTrailingSlash(site.base)
   return (
     <Directive title="Note">
-      <Note name={displayName} href={addTrailingSlash(site.base)} />
+      <Note
+        name={displayName}
+        href={
+          page.v
+            ? addTrailingSlash(siteBase + normalizeVersion(site.defaultVersion))
+            : siteBase
+        }
+      />
     </Directive>
   )
 }

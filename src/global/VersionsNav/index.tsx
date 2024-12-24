@@ -1,20 +1,22 @@
-import { usePageData } from '@rspress/core/runtime'
+import { isProduction, usePageData } from '@rspress/core/runtime'
 import { noop } from 'es-toolkit'
 import { useEffect, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { parse } from 'yaml'
+
+import { ExtendedPageData } from '../../runtime/types.js'
 import { NavMenuGroup } from './NavMenuGroup.js'
 
 export const VersionsNav = () => {
-  const { siteData } = usePageData()
+  const { siteData, page } = usePageData() as ExtendedPageData
 
   const [versionsBase, version] = useMemo(() => {
-    const parts = siteData.base.split('/')
-    const last = parts.at(-1)!
-    return last === 'master' || /^v\d+\.\d$/.test(last)
-      ? [parts.slice(0, -1).join('/'), last]
-      : []
-  }, [siteData.base])
+    if (!page.v) {
+      return []
+    }
+
+    return [siteData.base.slice(0, -page.v.length - 1), page.v]
+  }, [siteData.base, page.v])
 
   const [navMenu, setNavMenu] = useState<Element | null>()
 
@@ -25,10 +27,16 @@ export const VersionsNav = () => {
       if (versionsBase == null) {
         return
       }
-      const res = await fetch(`${versionsBase}/versions.yaml`)
+      const res = await fetch(
+        `${isProduction() ? versionsBase : ''}/versions.yaml`,
+      )
       const text = await res.text()
       setNavMenu(document.querySelector('.rspress-nav-menu'))
-      setVersions(parse(text) as string[])
+      const versions = parse(text) as string[]
+      if (version && !versions.includes(version)) {
+        versions.unshift(version)
+      }
+      setVersions(versions)
     }
 
     fetchVersions().catch(noop)

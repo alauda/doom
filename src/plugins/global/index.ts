@@ -6,7 +6,7 @@ import { baseResolve, DoomConfig, pkgResolve } from '../../utils/index.js'
 
 const componentsDir = baseResolve('runtime/components')
 
-export const globalPlugin = (): RspressPlugin => {
+export const globalPlugin = (version?: string): RspressPlugin => {
   let config: DoomConfig
   return {
     name: 'doom-global',
@@ -30,6 +30,7 @@ export const globalPlugin = (): RspressPlugin => {
     },
     extendPageData(pageData) {
       pageData.sites = config.sites
+      pageData.v = version === 'unversioned' ? undefined : version
     },
   }
 }

@@ -7,6 +7,7 @@ import {
   addTrailingSlash,
   LocaleConfig,
   removeLeadingSlash,
+  removeTrailingSlash,
 } from '@rspress/core'
 import { pluginPreview } from '@rspress/plugin-preview'
 import { logger } from '@rspress/shared/logger'
@@ -30,9 +31,9 @@ import {
   globalPlugin,
   shikiPlugin,
 } from '../plugins/index.js'
+import { normalizeVersion, type DoomSite } from '../shared/index.js'
 import {
   type DoomConfig,
-  type DoomSite,
   pkgResolve,
   resolveStaticConfig,
 } from '../utils/index.js'
@@ -56,7 +57,10 @@ const zhLocaleConfig: Omit<LocaleConfig, 'lang' | 'label'> = {
   nextPageText: '下一页',
 }
 
-const getCommonConfig = async (config: DoomConfig): Promise<DoomConfig> => {
+const getCommonConfig = async (
+  config: DoomConfig,
+  version?: string,
+): Promise<DoomConfig> => {
   const fallbackToZh = 'lang' in config && config.lang == null
   return {
     lang: fallbackToZh ? 'zh' : config.lang,
@@ -99,9 +103,9 @@ const getCommonConfig = async (config: DoomConfig): Promise<DoomConfig> => {
       }),
       apiPlugin(),
       autoSidebarPlugin(),
-      globalPlugin(),
+      globalPlugin(version),
       shikiPlugin({
-        langs: ['dockerfile', 'go', 'jsonc'],
+        langs: ['dockerfile', 'html', 'go', 'jsonc'],
         transformers: [
           // builtin transformers
           transformerMetaHighlight(),
@@ -142,6 +146,7 @@ const findConfig = (basePath: string): string | undefined => {
 export async function loadConfig(
   root?: string,
   configFile?: string,
+  version?: string,
 ): Promise<{
   config: DoomConfig
   filepath?: string
@@ -200,11 +205,20 @@ export async function loadConfig(
     }
   }
 
-  const mergedConfig = mergeRsbuildConfig(await getCommonConfig(config), config)
+  const normalizedVersion = normalizeVersion(version)
 
-  const base = addLeadingSlash(mergedConfig.base || '/')
+  const mergedConfig = mergeRsbuildConfig(
+    await getCommonConfig(config, normalizedVersion),
+    config,
+  )
 
-  mergedConfig.base = base
+  let base = addLeadingSlash(mergedConfig.base || '/')
+
+  if (normalizedVersion && normalizedVersion !== 'unversioned') {
+    base = removeTrailingSlash(base) + `/${normalizedVersion}`
+  }
+
+  mergedConfig.base = base = addTrailingSlash(base)
 
   mergedConfig.root = resolveDocRoot(CWD, root, mergedConfig.root)
 
@@ -242,11 +256,11 @@ export async function loadConfig(
   }
 
   if (!mergedConfig.outDir) {
-    mergedConfig.outDir = `dist${base}`
+    mergedConfig.outDir = `dist${version === 'unversioned' ? `/unversioned${base}` : base}`
   }
 
   if (mergedConfig.builderConfig?.server?.open === true) {
-    mergedConfig.builderConfig.server.open = addTrailingSlash(base)
+    mergedConfig.builderConfig.server.open = base
   }
 
   return {

@@ -2,7 +2,7 @@ import { PageData } from '@rspress/core'
 import { OpenAPIV3_1 } from 'openapi-types'
 
 import type { CustomResourceDefinition } from '../plugins/api/types.js'
-import { DoomSite } from '../utils/types.js'
+import type { DoomSite } from '../shared/types.js'
 
 export interface ExtendedPage {
   crdsMap?: Record<string, CustomResourceDefinition>
@@ -10,6 +10,7 @@ export interface ExtendedPage {
   references?: Record<string, string>
   pathPrefix?: string
   sites?: DoomSite[]
+  v?: string
 }
 
 export interface ExtendedPageData extends PageData {

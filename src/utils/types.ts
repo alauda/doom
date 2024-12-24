@@ -1,12 +1,6 @@
 import { UserConfig } from '@rspress/core'
 
-export interface DoomSite {
-  name: string
-  displayName?: Record<string, string>
-  repo: string
-  base: string
-  defaultVersion?: string
-}
+import { DoomSite } from '../shared/index.js'
 
 export interface DoomConfig extends UserConfig {
   api?: {

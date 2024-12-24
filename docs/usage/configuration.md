@@ -62,3 +62,18 @@ api:
 ```
 
 文档编写参考 [API 文档](./api)
+
+## `sites.yaml` 配置
+
+`sites.yaml` 配置文件用于配置当前文档站点关联的子站点信息，[引用外部站点组件](./mdx#externalsite) 和构建单版本文档时会用到此处定义的信息。
+
+```yaml
+- name: connectors # 全站唯一名称
+  displayName: # 站点显示名称，如果不填写或未匹配到语言，则默认使用 name
+    en: DevOps Connectors
+    zh: DevOps 连接器
+  base: /devops-connectors # 站点访问基础路径
+  repo: https://github.com/AlaudaDevops/connectors-operator # 站点仓库地址，如果是内部 gitlab 仓库，可以直接使用相关 slug，如 `alauda/product-docs`
+  image: devops/connectors-docs # 站点构建镜像，用于构建全站点时拉取镜像
+  defaultVersion: v1.1 # 可选，默认版本号，构建多版本站点时跳转的默认版本，如果不填写，则默认跳转到最新版本
+```
