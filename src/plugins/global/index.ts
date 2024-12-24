@@ -11,7 +11,7 @@ export const globalPlugin = (version?: string): RspressPlugin => {
   return {
     name: 'doom-global',
     globalStyles: pkgResolve('styles/global.scss'),
-    globalUIComponents: [baseResolve('global/VersionsNav/index.tsx')],
+    globalUIComponents: [baseResolve('global/VersionsNav/index')],
     markdown: {
       globalComponents: fs
         .readdirSync(componentsDir)
