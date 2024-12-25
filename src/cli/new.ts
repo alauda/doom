@@ -22,8 +22,7 @@ export interface ScaffoldingTemplate {
 
 const scaffoldingTemplates: Record<string, ScaffoldingTemplate> = {
   'product-doc': {
-    repo: 'alauda/product-doc-guide',
-    branches: ['master', 'feat/templates'],
+    repo: 'alauda-public/product-doc-guide',
   },
 }
 
