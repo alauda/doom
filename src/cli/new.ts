@@ -147,6 +147,7 @@ const resolveScaffoldings = async (
   const git = simpleGit(repoFolder)
 
   if (!created) {
+    logger.info(`Cloning scaffolding template \`${cyan(name)}\` repository...`)
     await git.clone(
       /^((\w+):)?\/\//.test(repo)
         ? repo
@@ -186,8 +187,10 @@ const resolveScaffoldings = async (
 
   for (const branch of branches) {
     if (branch === currentBranch) {
-      await git.pull([...options, '--no-rebase'])
+      logger.info(`Pulling latest changes from branch \`${cyan(branch)}\`...`)
+      await git.pull([...options, '--rebase'])
     } else {
+      logger.info(`Switching to branch \`${cyan(branch)}\`...`)
       await git.fetch('origin', `${branch}:${branch}`, options)
       await git.checkout((currentBranch = branch))
     }
@@ -213,7 +216,7 @@ const handleTemplateFile = async ({
 }: {
   source: string
   target: string
-  parameters: Record<string, unknown>
+  parameters?: Record<string, unknown>
   processors?: ScaffoldingLayoutProcessor[]
   writeMode?: ScaffoldingLayoutWriteMode
 }) => {
@@ -257,6 +260,9 @@ program
       (await resolveScaffoldings(name, force)) || {}
 
     if (!scaffoldings) {
+      logger.error(
+        `Unable to resolve any scaffoldings, if you are sure the template \`${magenta(name)}\` exists, try to use the \`--force\` option, or event remove the local cache at ${magenta(path.resolve(scaffoldingsFolder, name))} and try again`,
+      )
       return
     }
 
@@ -287,6 +293,8 @@ program
       parameters[param.name] = await prompts[param.type](param.options)
     }
 
+    logger.start('Generating scaffolding...')
+
     for (const layout of scaffolding.layout || []) {
       const source = path.resolve(base!, render(layout.source, { parameters }))
       const target = path.resolve(render(layout.target, { parameters }))
@@ -308,6 +316,17 @@ program
           break
         }
         case 'folder': {
+          const dirents = await fs.readdir(source, {
+            recursive: true,
+            withFileTypes: true,
+          })
+          const files = new Set(
+            dirents
+              .filter((d) => d.isFile())
+              .map((d) =>
+                path.relative(source, path.resolve(d.parentPath, d.name)),
+              ),
+          )
           for (const matcher of layout.matchers || []) {
             const matched = await glob(
               matcher.match.map((m) => render(m, { parameters })),
@@ -315,6 +334,7 @@ program
             )
 
             for (const file of matched) {
+              files.delete(file)
               await handleTemplateFile({
                 source: path.resolve(source, file),
                 target: path.resolve(
@@ -327,10 +347,19 @@ program
               })
             }
           }
+
+          for (const file of files) {
+            await handleTemplateFile({
+              source: path.resolve(source, file),
+              target: path.resolve(target, file),
+            })
+          }
           break
         }
       }
     }
+
+    logger.success('Scaffolding generated successfully!')
   })
   .parseAsync(process.argv)
   .catch((err: unknown) => {
