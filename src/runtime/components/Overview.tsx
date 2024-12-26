@@ -207,7 +207,7 @@ export function Overview(props: {
       {groups.map((group) => (
         <Fragment key={group.name}>
           {/* If there is no sidebar group, we show the sidebar items directly and hide the group name */}
-          {(group.name === title || group.name === defaultGroupTitle) &&
+          {(!title || [title, defaultGroupTitle].includes(group.name)) &&
           groups.length === 1 ? (
             <h2 style={{ paddingTop: 0 }}></h2>
           ) : (

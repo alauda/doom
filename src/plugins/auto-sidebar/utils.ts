@@ -57,7 +57,7 @@ export async function extractInfoFromFrontmatter(
   const fileNameWithoutExt = path.basename(realPath, path.extname(realPath))
   const h1RegExp = /^#\s+(.*)$/m
   const match = content.match(h1RegExp)
-  let contentTitle = match?.[1]
+  let contentTitle = match?.[1]?.trim()
   if (contentTitle) {
     contentTitle =
       contentTitle.match(

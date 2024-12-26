@@ -1,6 +1,6 @@
 {
   "name": "@alauda/doom",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "type": "module",
   "description": "Doctor Doom making docs.",
   "repository": {
@@ -40,9 +40,9 @@
   "dependencies": {
     "@inquirer/prompts": "^7.2.1",
     "@openapi-contrib/openapi-schema-to-json-schema": "^5.1.0",
-    "@rspress/core": "^1.38.0",
-    "@rspress/plugin-preview": "^1.38.0",
-    "@shikijs/transformers": "^1.24.3",
+    "@rspress/core": "^1.39.2",
+    "@rspress/plugin-preview": "^1.39.2",
+    "@shikijs/transformers": "^1.24.4",
     "chokidar": "^4.0.3",
     "clsx": "^2.1.1",
     "commander": "^12.1.0",
@@ -53,11 +53,11 @@
     "react-markdown": "^8.0.7",
     "rehype-raw": "^6.1.1",
     "remark-gfm": "^3.0.1",
-    "shiki": "^1.24.3",
+    "shiki": "^1.24.4",
     "simple-git": "^3.27.0",
     "swagger2openapi": "^7.0.8",
     "tinyglobby": "^0.2.10",
-    "type-fest": "^4.30.2",
+    "type-fest": "^4.31.0",
     "yaml": "^2.6.1",
     "yoctocolors": "^2.1.1"
   },
@@ -65,7 +65,7 @@
     "@eslint/js": "^9.17.0",
     "@swc-node/register": "^1.10.9",
     "@swc/core": "1.10.1",
-    "@types/ejs": "^3",
+    "@types/ejs": "^3.1.5",
     "@types/eslint__js": "^8.42.3",
     "@types/fs-extra": "^11.0.4",
     "@types/node": "^18.19.68",
@@ -78,7 +78,7 @@
     "prettier-plugin-pkg": "^0.18.1",
     "simple-git-hooks": "^2.11.1",
     "typescript": "^5.7.2",
-    "typescript-eslint": "^8.18.1"
+    "typescript-eslint": "^8.18.2"
   },
   "publishConfig": {
     "access": "public"
