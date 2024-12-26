@@ -6,6 +6,7 @@ import {
   addLeadingSlash,
   addTrailingSlash,
   LocaleConfig,
+  normalizeSlash,
   removeLeadingSlash,
   removeTrailingSlash,
 } from '@rspress/core'
@@ -146,6 +147,7 @@ const findConfig = (basePath: string): string | undefined => {
 export async function loadConfig(
   root?: string,
   configFile?: string,
+  prefix?: string,
   version?: string,
 ): Promise<{
   config: DoomConfig
@@ -220,6 +222,10 @@ export async function loadConfig(
 
   mergedConfig.base = base = addTrailingSlash(base)
 
+  if (prefix) {
+    mergedConfig.base = normalizeSlash(prefix) + base
+  }
+
   mergedConfig.root = resolveDocRoot(CWD, root, mergedConfig.root)
 
   let ensureDefaultLogo = false
@@ -263,7 +269,7 @@ export async function loadConfig(
   }
 
   if (mergedConfig.builderConfig?.server?.open === true) {
-    mergedConfig.builderConfig.server.open = base
+    mergedConfig.builderConfig.server.open = mergedConfig.base
   }
 
   return {

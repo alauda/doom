@@ -40,6 +40,10 @@ program
   })
   .option('-c, --config [config]', 'Specify the path to the config file')
   .option('-v <version>', 'Specify the version of the documentation')
+  .option(
+    '-p, --prefix <prefix>',
+    'Specify the prefix of the documentation base',
+  )
   .command('dev', { isDefault: true })
   .description('Start the development server')
   .argument('[root]', 'Root directory of the documentation')
@@ -54,11 +58,19 @@ program
     const {
       config: configFile,
       v: version,
+      prefix,
       ...server
-    } = this.optsWithGlobals<ServerConfig & { config?: string; v?: string }>()
+    } = this.optsWithGlobals<
+      ServerConfig & { config?: string; prefix?: string; v?: string }
+    >()
 
     const startDevServer = async () => {
-      const { config, filepath } = await loadConfig(root, configFile, version)
+      const { config, filepath } = await loadConfig(
+        root,
+        configFile,
+        prefix,
+        version,
+      )
 
       const docDirectory = config.root!
 
@@ -139,12 +151,17 @@ program
   .action(async function (this: Command, root: string) {
     setNodeEnv('production')
 
-    const { config: configFile, v: version } = this.optsWithGlobals<{
+    const {
+      config: configFile,
+      prefix,
+      v: version,
+    } = this.optsWithGlobals<{
       config?: string
+      prefix?: string
       v?: string
     }>()
 
-    const { config } = await loadConfig(root, configFile, version)
+    const { config } = await loadConfig(root, configFile, prefix, version)
 
     const docDirectory = config.root!
 
@@ -167,11 +184,14 @@ program
 
     const {
       config: configFile,
+      prefix,
       v: version,
       ...server
-    } = this.optsWithGlobals<ServerConfig & { config?: string; v?: string }>()
+    } = this.optsWithGlobals<
+      ServerConfig & { config?: string; prefix?: string; v?: string }
+    >()
 
-    const { config } = await loadConfig(root, configFile, version)
+    const { config } = await loadConfig(root, configFile, prefix, version)
 
     await serve({
       config,
