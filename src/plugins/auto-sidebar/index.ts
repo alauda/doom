@@ -159,6 +159,7 @@ function processLocales(
   defaultLang: string,
   defaultVersion: string,
   extensions: string[],
+  collapsed?: boolean,
 ) {
   return Promise.all(
     langs.map(async (lang) => {
@@ -175,6 +176,7 @@ function processLocales(
                 routePrefix,
                 root,
                 extensions,
+                collapsed,
               )
             }),
           )
@@ -184,6 +186,7 @@ function processLocales(
               addTrailingSlash(lang === defaultLang ? '' : `/${lang}`),
               root,
               extensions,
+              collapsed,
             ),
           ]
       return combineWalkResult(walks, versions)
@@ -193,7 +196,13 @@ function processLocales(
 
 const defaultExtensions = ['.mdx', '.md', '.tsx', '.jsx', '.ts', '.js']
 
-export const autoSidebarPlugin = (): RspressPlugin => {
+export interface AutoSidebarPluginOptions {
+  collapsed?: boolean
+}
+
+export const autoSidebarPlugin = ({
+  collapsed,
+}: AutoSidebarPluginOptions = {}): RspressPlugin => {
   return {
     name: 'doom-auto-sidebar',
     async config(config, utils) {
@@ -216,6 +225,7 @@ export const autoSidebarPlugin = (): RspressPlugin => {
           defaultLang,
           defaultVersion,
           extensions,
+          collapsed,
         )
         config.themeConfig.locales = config.themeConfig.locales.map(
           (item, index) => ({
@@ -244,10 +254,11 @@ export const autoSidebarPlugin = (): RspressPlugin => {
                   routePrefix,
                   config.root!,
                   extensions,
+                  collapsed,
                 )
               }),
             )
-          : [await walk(config.root!, '/', config.root!, extensions)]
+          : [await walk(config.root!, '/', config.root!, extensions, collapsed)]
 
         const combined = combineWalkResult(walks, versions)
 

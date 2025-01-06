@@ -124,7 +124,7 @@ const getCommonConfig = async (
         defaultRenderMode: 'pure',
       }),
       apiPlugin(config.api),
-      autoSidebarPlugin(),
+      autoSidebarPlugin(config.sidebar),
       globalPlugin({
         sites: config.sites,
         version,

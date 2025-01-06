@@ -76,6 +76,13 @@ reference:
 
 文档编写参考[引用文档](./reference)
 
+## 左导航配置
+
+```yaml
+sidebar:
+  collapsed: false # 可选，是否默认折叠左导航，默认折叠，文档内容不多时可以考虑设置为 false
+```
+
 ## `sites.yaml` 配置
 
 `sites.yaml` 配置文件用于配置当前文档站点关联的子站点信息，[引用外部站点组件](./mdx#externalsite) 和构建单版本文档时会用到此处定义的信息。

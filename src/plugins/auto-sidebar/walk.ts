@@ -262,6 +262,7 @@ export async function walk(
   routePrefix = '/',
   docsDir: string,
   extensions: string[],
+  collapsed?: boolean,
 ) {
   const { index, others } = await scanSideMeta(
     workDir,
@@ -274,9 +275,11 @@ export async function walk(
 
   const sidebars = index ? [index, ...others] : others
 
-  for (const sidebarItem of sidebars) {
-    if ('items' in sidebarItem && sidebarItem.items.length) {
-      sidebarItem.collapsed = false
+  if (collapsed != null) {
+    for (const sidebarItem of sidebars) {
+      if ('items' in sidebarItem && sidebarItem.items.length) {
+        sidebarItem.collapsed = collapsed
+      }
     }
   }
 
