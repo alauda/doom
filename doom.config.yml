@@ -8,3 +8,7 @@ api:
     - shared/openapis/*.json
   references:
     v1alpha1.CodeQualityBranch: /apis/references/CodeQualityBranch#CodeQualityBranch
+reference:
+  - sources:
+      - name: ref
+        path: docs/usage/configuration.md#引用文档配置

@@ -44,6 +44,12 @@ program
     '-p, --prefix <prefix>',
     'Specify the prefix of the documentation base',
   )
+  .option(
+    '-f, --force [boolean]',
+    'Force to fetch latest reference remotes, otherwise use local cache',
+    (value) => !!value && value !== 'false',
+    false,
+  )
   .command('dev', { isDefault: true })
   .description('Start the development server')
   .argument('[root]', 'Root directory of the documentation')
@@ -59,9 +65,15 @@ program
       config: configFile,
       v: version,
       prefix,
+      force,
       ...server
     } = this.optsWithGlobals<
-      ServerConfig & { config?: string; prefix?: string; v?: string }
+      ServerConfig & {
+        config?: string
+        prefix?: string
+        v?: string
+        force?: boolean
+      }
     >()
 
     const startDevServer = async () => {
@@ -70,6 +82,7 @@ program
         configFile,
         prefix,
         version,
+        force,
       )
 
       const docDirectory = config.root!
@@ -155,13 +168,21 @@ program
       config: configFile,
       prefix,
       v: version,
+      force,
     } = this.optsWithGlobals<{
       config?: string
       prefix?: string
       v?: string
+      force?: boolean
     }>()
 
-    const { config } = await loadConfig(root, configFile, prefix, version)
+    const { config } = await loadConfig(
+      root,
+      configFile,
+      prefix,
+      version,
+      force,
+    )
 
     const docDirectory = config.root!
 
@@ -186,12 +207,24 @@ program
       config: configFile,
       prefix,
       v: version,
+      force,
       ...server
     } = this.optsWithGlobals<
-      ServerConfig & { config?: string; prefix?: string; v?: string }
+      ServerConfig & {
+        config?: string
+        prefix?: string
+        v?: string
+        force?: boolean
+      }
     >()
 
-    const { config } = await loadConfig(root, configFile, prefix, version)
+    const { config } = await loadConfig(
+      root,
+      configFile,
+      prefix,
+      version,
+      force,
+    )
 
     await serve({
       config,

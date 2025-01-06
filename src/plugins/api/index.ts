@@ -2,14 +2,19 @@ import path from 'node:path'
 
 import { openapiSchemaToJsonSchema } from '@openapi-contrib/openapi-schema-to-json-schema'
 import type { RspressPlugin } from '@rspress/core'
+import type { OpenAPI, OpenAPIV3_1 } from 'openapi-types'
 import { convertObj } from 'swagger2openapi'
-import { OpenAPI, OpenAPIV3_1 } from 'openapi-types'
 import { glob } from 'tinyglobby'
 
-import { DoomConfig, resolveStaticConfig } from '../../utils/index.js'
-import { CustomResourceDefinition } from './types.js'
+import { resolveStaticConfig } from '../../utils/index.js'
+import type { ApiPluginOptions, CustomResourceDefinition } from './types.js'
 
-export const apiPlugin = (): RspressPlugin => {
+export const apiPlugin = ({
+  crds,
+  openapis,
+  references,
+  pathPrefix,
+}: ApiPluginOptions = {}): RspressPlugin => {
   const crdsMap: Record<string, CustomResourceDefinition> = {}
   const openapisMap: Record<string, OpenAPIV3_1.Document> = {}
 
@@ -20,15 +25,7 @@ export const apiPlugin = (): RspressPlugin => {
 
   return {
     name: 'doom-api',
-    async beforeBuild(config_) {
-      const config = config_ as DoomConfig
-
-      if (!config.api) {
-        return
-      }
-
-      const { crds, openapis, references, pathPrefix } = config.api
-
+    async beforeBuild(config) {
       if (crds) {
         for (const file of await glob(crds, {
           cwd: config.root,

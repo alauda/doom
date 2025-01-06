@@ -46,6 +46,7 @@ import {
   SITES_FILE,
   YAML_EXTENSIONS,
 } from './constants.js'
+import { referencePlugin } from '../plugins/reference/index.js'
 
 const DEFAULT_LOGO = '/logo.svg'
 
@@ -60,10 +61,30 @@ const zhLocaleConfig: Omit<LocaleConfig, 'lang' | 'label'> = {
 
 const getCommonConfig = async (
   config: DoomConfig,
+  cliRoot?: string,
+  prefix?: string,
+  configFilePath?: string,
   version?: string,
+  force?: boolean,
 ): Promise<DoomConfig> => {
   const fallbackToZh = 'lang' in config && config.lang == null
+  const root = resolveDocRoot(CWD, cliRoot, config.root)
+
+  let base = addLeadingSlash(config.base || '/')
+
+  if (version && version !== 'unversioned') {
+    base = removeTrailingSlash(base) + `/${version}`
+  }
+
+  base = addTrailingSlash(base)
+
+  if (prefix) {
+    base = normalizeSlash(prefix) + base
+  }
+
   return {
+    base,
+    root,
     lang: fallbackToZh ? 'zh' : config.lang,
     route: {
       exclude: [
@@ -102,9 +123,19 @@ const getCommonConfig = async (
         },
         defaultRenderMode: 'pure',
       }),
-      apiPlugin(),
+      apiPlugin(config.api),
       autoSidebarPlugin(),
-      globalPlugin(version),
+      globalPlugin({
+        sites: config.sites,
+        version,
+      }),
+      referencePlugin({
+        base,
+        root,
+        localBasePath: configFilePath ? path.dirname(configFilePath) : root,
+        items: config.reference,
+        force,
+      }),
       shikiPlugin({
         langs: ['dockerfile', 'html', 'go', 'jsonc'],
         transformers: [
@@ -149,6 +180,7 @@ export async function loadConfig(
   configFile?: string,
   prefix?: string,
   version?: string,
+  force?: boolean,
 ): Promise<{
   config: DoomConfig
   filepath?: string
@@ -209,24 +241,19 @@ export async function loadConfig(
 
   const normalizedVersion = normalizeVersion(version)
 
-  const mergedConfig = mergeRsbuildConfig(
-    await getCommonConfig(config, normalizedVersion),
+  const commonConfig = await getCommonConfig(
     config,
+    root,
+    prefix,
+    configFilePath,
+    normalizedVersion,
+    force,
   )
 
-  let base = addLeadingSlash(mergedConfig.base || '/')
-
-  if (normalizedVersion && normalizedVersion !== 'unversioned') {
-    base = removeTrailingSlash(base) + `/${normalizedVersion}`
-  }
-
-  mergedConfig.base = base = addTrailingSlash(base)
-
-  if (prefix) {
-    mergedConfig.base = normalizeSlash(prefix) + base
-  }
-
-  mergedConfig.root = resolveDocRoot(CWD, root, mergedConfig.root)
+  const mergedConfig = mergeRsbuildConfig(commonConfig, config, {
+    base: commonConfig.base,
+    root: commonConfig.root,
+  })
 
   let ensureDefaultLogo = false
 
@@ -241,7 +268,7 @@ export async function loadConfig(
   }
 
   if (ensureDefaultLogo) {
-    const publicPath = path.resolve(mergedConfig.root, `public`)
+    const publicPath = path.resolve(mergedConfig.root!, `public`)
     fs.mkdirSync(publicPath, { recursive: true })
     const logoPath = path.resolve(publicPath, removeLeadingSlash(DEFAULT_LOGO))
 
@@ -253,18 +280,21 @@ export async function loadConfig(
   if (mergedConfig.i18nSourcePath) {
     if (!path.isAbsolute(mergedConfig.i18nSourcePath)) {
       mergedConfig.i18nSourcePath = path.resolve(
-        configFilePath ?? mergedConfig.root,
+        configFilePath ? path.dirname(configFilePath) : mergedConfig.root!,
         mergedConfig.i18nSourcePath,
       )
     }
   } else {
-    mergedConfig.i18nSourcePath = path.resolve(mergedConfig.root, I18N_FILE)
+    mergedConfig.i18nSourcePath = path.resolve(mergedConfig.root!, I18N_FILE)
   }
 
   if (mergedConfig.outDir) {
     mergedConfig.outDir =
       addTrailingSlash(mergedConfig.outDir) + normalizedVersion
   } else {
+    const base = prefix
+      ? mergedConfig.base!.replace(normalizeSlash(prefix), '')
+      : mergedConfig.base!
     mergedConfig.outDir = `dist${normalizedVersion === 'unversioned' ? `/unversioned${base}` : base}`
   }
 

@@ -32,10 +32,9 @@ export interface DoomSidebarGroup extends Omit<SidebarGroup, 'items'> {
 }
 
 const sidebarSorter = (a: DoomSidebar, b: DoomSidebar) => {
-  if ('weight' in a && 'weight' in b) {
-    return a.weight! - b.weight!
-  }
-  return 0
+  const aWeight = 'weight' in a && a.weight != null ? a.weight : 100
+  const bWeight = 'weight' in b && b.weight != null ? b.weight : 100
+  return aWeight - bWeight
 }
 
 /**

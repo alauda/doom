@@ -63,6 +63,19 @@ api:
 
 文档编写参考 [API 文档](./api)
 
+## 引用文档配置
+
+```yaml
+reference:
+  - repo: alauda-public/product-doc-guide # 可选，引用文档仓库地址，如果不填写，则默认使用当前文档仓库地址
+    sources:
+      - name: anchor # 引用文档名称，用于在文档中引用，全局唯一
+        path: docs/index.mdx#介绍 # 引用文档路径，支持锚点定位，远程仓库相对于仓库根目录，本地相对于 doom.config.* 所在目录
+        # ignoreHeading: [boolean] # 可选，是否忽略标题，如果为 true，则不会在引用文档中显示锚点的标题
+```
+
+文档编写参考[引用文档](./reference)
+
 ## `sites.yaml` 配置
 
 `sites.yaml` 配置文件用于配置当前文档站点关联的子站点信息，[引用外部站点组件](./mdx#externalsite) 和构建单版本文档时会用到此处定义的信息。

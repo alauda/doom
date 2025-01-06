@@ -1,13 +1,22 @@
 import fs from 'node:fs'
 import path from 'node:path'
+
 import type { RspressPlugin } from '@rspress/core'
 
-import { baseResolve, DoomConfig, pkgResolve } from '../../utils/index.js'
+import type { DoomSite } from '../../shared/types.js'
+import { baseResolve, pkgResolve } from '../../utils/index.js'
 
 const componentsDir = baseResolve('runtime/components')
 
-export const globalPlugin = (version?: string): RspressPlugin => {
-  let config: DoomConfig
+export interface GlobalPluginOptions {
+  sites?: DoomSite[]
+  version?: string
+}
+
+export const globalPlugin = ({
+  sites,
+  version,
+}: GlobalPluginOptions = {}): RspressPlugin => {
   return {
     name: 'doom-global',
     globalStyles: pkgResolve('styles/global.scss'),
@@ -25,11 +34,8 @@ export const globalPlugin = (version?: string): RspressPlugin => {
         })
         .map((file) => path.resolve(componentsDir, file)),
     },
-    beforeBuild(config_) {
-      config = config_
-    },
     extendPageData(pageData) {
-      pageData.sites = config.sites
+      pageData.sites = sites
       pageData.v = version === 'unversioned' ? undefined : version
     },
   }

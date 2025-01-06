@@ -1,2 +1,10 @@
 lang: zh
 title: Fixture Docs
+reference:
+  - sources:
+      - name: other
+        path: zh/other.mdx#heading-1
+  - repo: alauda-public/product-doc-guide
+    sources:
+      - name: anchor
+        path: docs/index.mdx#介绍

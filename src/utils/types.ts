@@ -1,13 +1,11 @@
 import { UserConfig } from '@rspress/core'
 
-import { DoomSite } from '../shared/index.js'
+import type { ApiPluginOptions } from '../plugins/api/types.js'
+import type { ReferenceItem } from '../plugins/reference/types.js'
+import type { DoomSite } from '../shared/index.js'
 
 export interface DoomConfig extends UserConfig {
-  api?: {
-    crds?: string[]
-    openapis?: string[]
-    references?: Record<string, string>
-    pathPrefix?: string
-  }
+  api?: ApiPluginOptions
   sites?: DoomSite[]
+  reference?: ReferenceItem[]
 }

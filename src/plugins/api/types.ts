@@ -1,5 +1,12 @@
 import { OpenAPIV3 } from 'openapi-types'
 
+export interface ApiPluginOptions {
+  crds?: string[]
+  openapis?: string[]
+  references?: Record<string, string>
+  pathPrefix?: string
+}
+
 export interface CustomResourceDefinitionVersion {
   name: string
   schema: {
