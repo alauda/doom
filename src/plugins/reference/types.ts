@@ -14,3 +14,15 @@ export interface NormalizedReferenceSource extends ReferenceItemSource {
   slug?: string
   anchor?: string
 }
+
+export interface ReleaseNotesOptions {
+  queryTemplates: Record<string, string>
+}
+
+export interface JiraIssue {
+  expand: string
+  id: string
+  self: string
+  key: string
+  fields: Partial<Record<string, string>>
+}

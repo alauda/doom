@@ -1,8 +1,13 @@
 import { logger } from '@rspress/shared/logger'
-import { red } from 'yoctocolors'
-import type { Root, Content, Parent } from 'mdast'
-import type { Node } from 'unist'
+import type { Content, Parent, Root } from 'mdast'
 import type { MdxjsEsm } from 'mdast-util-mdxjs-esm'
+import remarkFrontmatter from 'remark-frontmatter'
+import remarkGfm from 'remark-gfm'
+import remarkMdx from 'remark-mdx'
+import remarkParse from 'remark-parse'
+import { unified } from 'unified'
+import type { Node } from 'unist'
+import { red } from 'yoctocolors'
 
 import type { NormalizedReferenceSource, ReferenceItem } from './types.js'
 
@@ -112,3 +117,11 @@ export const getASTNodeImport = (name: string, from: string) =>
       },
     },
   }) as MdxjsEsm
+
+export const mdProcessor = unified()
+  .use(remarkParse)
+  .use(remarkFrontmatter)
+  .use(remarkGfm)
+  .freeze()
+
+export const mdxProcessor = mdProcessor().use(remarkMdx).freeze()

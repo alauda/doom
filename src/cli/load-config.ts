@@ -132,9 +132,11 @@ const getCommonConfig = async (
       referencePlugin({
         base,
         root,
+        lang: fallbackToZh ? null : (config.lang ?? 'en'),
         localBasePath: configFilePath ? path.dirname(configFilePath) : root,
         items: config.reference,
         force,
+        releaseNotes: config.releaseNotes,
       }),
       shikiPlugin({
         langs: ['dockerfile', 'html', 'go', 'jsonc'],

@@ -76,6 +76,30 @@ reference:
 
 文档编写参考[引用文档](./reference)
 
+## 发行说明配置
+
+```yaml
+releaseNotes:
+  queryTemplates:
+    fixed: # 可包含 ejs 模板的 jql 语句
+    unfixed:
+```
+
+```md title="release-notes.md"
+<!-- release-notes-for-bugs?template=fixed&project=DevOps -->
+```
+
+```mdx title="release-notes.mdx"
+{/* release-notes-for-bugs?template=fixed&project=DevOps */}
+```
+
+以上述 `template=fixed&project=DevOps` 为例，`fixed` 为 `queryTemplates` 中定义的模板名称，剩余的 `query` 参数 `project=DevOps` 将作为 `ejs` 模板参数传递给 `fixed` 模板处理后作为 jira [`jql`](https://www.atlassian.com/zh/software/jira/guides/jql/overview#what-is-jql) 发起 `https://jira.alauda.cn/rest/api/2/search?jql=<jql>` 请求，此 API 要求鉴权，有如下两种方式提供环境变量：
+
+1. 本地开发环境可以设置 `JIRA_USERNAME` 和 `JIRA_PASSWORD`
+2. CI 流水线环境后续将自动注入 `JIRA_TOKEN`
+
+`JIRA_TOKEN` 优先级高于 `JIRA_USERNAME` 和 `JIRA_PASSWORD`，如果同时设置，将优先使用 `JIRA_TOKEN`。
+
 ## 左导航配置
 
 ```yaml

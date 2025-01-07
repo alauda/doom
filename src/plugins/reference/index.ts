@@ -1,34 +1,31 @@
 import fs from 'node:fs/promises'
 
-import type { RspressPlugin } from '@rspress/core'
-import remarkGfm from 'remark-gfm'
-import remarkMdx from 'remark-mdx'
-import remarkParse from 'remark-parse'
+import type { Header, RspressPlugin } from '@rspress/core'
+import { logger } from '@rspress/shared/logger'
 import remarkStringify from 'remark-stringify'
-import { unified } from 'unified'
 
 import { remarkPluginNormalizeLink } from './remark-normalize-link.js'
-import { maybeHaveRef, refCache, remarkReplace } from './remark-replace.js'
-import { remarkPluginToc } from './remark-toc.js'
-import type { ReferenceItem } from './types.js'
-import { normalizeReferenceItems } from './utils.js'
-
-const mdProcessor = unified().use(remarkParse).use(remarkGfm)
-
-const mdxProcessor = mdProcessor().use(remarkMdx)
+import { maybeHaveRef, remarkReplace } from './remark-replace.js'
+import { PageMeta, remarkPluginToc } from './remark-toc.js'
+import type { ReferenceItem, ReleaseNotesOptions } from './types.js'
+import { mdProcessor, mdxProcessor, normalizeReferenceItems } from './utils.js'
 
 export const referencePlugin = ({
   base,
   root,
+  lang,
   localBasePath,
   items = [],
   force,
+  releaseNotes,
 }: {
   base: string
   root: string
+  lang: string | null
   localBasePath: string
   items?: ReferenceItem[]
   force?: boolean
+  releaseNotes?: ReleaseNotesOptions
 }): RspressPlugin => {
   const normalizedItems = normalizeReferenceItems(items)
   return {
@@ -38,8 +35,11 @@ export const referencePlugin = ({
         [
           remarkReplace,
           {
+            lang,
             localBasePath,
+            root,
             items: normalizedItems,
+            releaseNotes,
             force,
           },
         ],
@@ -48,32 +48,55 @@ export const referencePlugin = ({
       ],
     },
     async modifySearchIndexData(pages) {
-      refCache.clear()
+      const results = await Promise.allSettled(
+        pages.map(async (page) => {
+          const filepath = page._filepath
 
-      for (const page of pages) {
-        const filepath = page._filepath
+          if (!/\.mdx?$/.test(filepath)) {
+            return
+          }
 
-        if (!/\.mdx?$/.test(filepath)) {
-          continue
-        }
+          const content = await fs.readFile(filepath, 'utf8')
 
-        const content = await fs.readFile(filepath, 'utf8')
+          if (!maybeHaveRef(filepath, content)) {
+            return
+          }
 
-        if (!maybeHaveRef(filepath, content)) {
-          continue
-        }
+          const processor = filepath.endsWith('.mdx')
+            ? mdxProcessor
+            : mdProcessor
 
-        const processor = filepath.endsWith('.mdx') ? mdxProcessor : mdProcessor
+          const compiler = processor()
+            .use(remarkReplace, {
+              lang,
+              localBasePath,
+              root,
+              items: normalizedItems,
+              force,
+              releaseNotes,
+            })
+            .use(remarkPluginToc)
+            .use(remarkStringify)
 
-        const vfile = await processor()
-          .use(remarkReplace, { localBasePath, items: normalizedItems, force })
-          .use(remarkStringify)
-          .process({
+          compiler.data('pageMeta', {})
+
+          const vfile = await compiler.process({
             path: filepath,
             value: content,
           })
 
-        page.content = vfile.toString()
+          const { toc, title } = compiler.data('pageMeta') as PageMeta
+
+          page.title = title
+          page.toc = toc as unknown as Header[]
+          page.content = vfile.toString()
+        }),
+      )
+
+      for (const result of results) {
+        if (result.status === 'rejected') {
+          logger.error(result.reason)
+        }
       }
     },
   }

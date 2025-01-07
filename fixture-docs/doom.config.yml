@@ -8,3 +8,26 @@ reference:
     sources:
       - name: anchor
         path: docs/index.mdx#介绍
+releaseNotes:
+  queryTemplates:
+    fixed: |
+      filter = 16502
+      AND Feature not in ("AIT - 平台打包")
+      AND (resolution not in ("By Design", "Not a Bug", Duplicate, Rejected, "Cannot Reproduce") OR resolution is EMPTY)
+      AND (priority in ("L0 - Critical", "L1 - High") OR Severity in ("L0 - Critical", "L1 - High"))
+      AND (labels not in (安全问题) OR labels is EMPTY)
+      AND (affectedVersion in versionMatch("3.1[0-7]")
+      AND fixVersion in (v3.18.0)
+      AND status in (Done, Resolved, 已完成)
+      OR (affectedVersion in (v3.16.0)
+          AND (fixVersion in versionMatch("v3.16.[1-9]") OR fixVersion is EMPTY)
+          OR affectedVersion in (v3.16.1)
+          AND (fixVersion in versionMatch("v3.16.[2-9]")
+          OR fixVersion is EMPTY)
+      OR affectedVersion in (v3.16.2)
+      AND (fixVersion in versionMatch("v3.16.[3-9]") OR fixVersion is EMPTY))
+      AND (issueFunction in linkedIssuesOf("(affectedVersion=v3.17.0 and fixVersion in versionMatch(v3.17.0) or affectedVersion=v3.18.0 and fixVersion in versionMatch(v3.18.0)) and status in (Done, Resolved, 已完成)", clones)
+        OR issueFunction in linkedIssuesOf("(affectedVersion=v3.17.0 and fixVersion in versionMatch(v3.17.0) or affectedVersion=v3.18.0 and fixVersion in versionMatch(v3.18.0)) and status in (Done, Resolved, 已完成)", "is cloned by")))
+      AND ReleaseNotesStatus = Publish
+      AND project = <%= project %>
+    unfixed: ''
