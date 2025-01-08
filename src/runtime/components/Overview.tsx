@@ -13,6 +13,8 @@ import type {
 } from '@rspress/shared'
 import { Fragment, useMemo } from 'react'
 
+import { findItemByRoutePath } from './_utils.js'
+
 import classes from '../../../styles/overview.module.scss'
 
 interface GroupItem {
@@ -59,22 +61,6 @@ export function Overview(props: {
     return ''
   }
 
-  const findItemByRoutePath = (
-    items: (SidebarDivider | SidebarItem | NormalizedSidebarGroup)[],
-    routePath: string,
-    originalItems: (SidebarDivider | SidebarItem | NormalizedSidebarGroup)[],
-  ): (SidebarDivider | SidebarItem | NormalizedSidebarGroup)[] => {
-    for (const item of items) {
-      if ('link' in item && withBase(item.link) === routePath) {
-        return [item]
-      }
-      if ('items' in item) {
-        return findItemByRoutePath(item.items, routePath, originalItems)
-      }
-    }
-    return originalItems
-  }
-
   const { pages } = siteData
   const overviewModules = pages.filter((page) => subFilter(page.routePath))
   let { items: overviewSidebarGroups } = useSidebarData()
@@ -87,7 +73,6 @@ export function Overview(props: {
     overviewSidebarGroups = findItemByRoutePath(
       overviewSidebarGroups,
       routePath,
-      overviewSidebarGroups,
     )
   }
 
