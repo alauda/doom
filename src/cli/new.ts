@@ -43,6 +43,7 @@ export interface ScaffoldingParameter<T extends keyof Prompts = keyof Prompts> {
 
 export type ScaffoldingLayoutProcessor = {
   type: 'ejsTemplate'
+  data?: Record<string, unknown>
 }
 
 export type ScaffoldingLayoutWriteMode = 'append' | 'write'
@@ -226,7 +227,7 @@ const handleTemplateFile = async ({
     switch (processor.type) {
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       case 'ejsTemplate': {
-        content = render(content, { parameters })
+        content = render(content, { data: processor.data, parameters })
         break
       }
       default: {
