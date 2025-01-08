@@ -4,16 +4,12 @@ import path from 'node:path'
 
 import { logger } from '@rspress/shared/logger'
 import { render } from 'ejs'
-import type {
-  Content,
-  HTML,
-  List,
-  ListItem,
-  PhrasingContent,
-  Root,
-} from 'mdast'
+import type { Content, List, ListItem, PhrasingContent, Root } from 'mdast'
+import remarkFrontmatter from 'remark-frontmatter'
+import remarkStringify from 'remark-stringify'
 import { simpleGit } from 'simple-git'
 import { type Plugin } from 'unified'
+import { parse, stringify } from 'yaml'
 import { cyan, red } from 'yoctocolors'
 
 import { parseToc } from './remark-toc.js'
@@ -22,11 +18,16 @@ import type {
   NormalizedReferenceSource,
   ReleaseNotesOptions,
 } from './types.js'
-import { flatMap, mdProcessor, mdxProcessor } from './utils.js'
+import {
+  getFrontmatterNode,
+  mdProcessor,
+  mdxProcessor,
+  stringifySettings,
+} from './utils.js'
 
 const remotesFolder = path.resolve(os.homedir(), '.doom/remotes')
 
-const refCache = new Map<string, Promise<Content | Content[] | undefined>>()
+export const refCache = new Map<string, Promise<Content[] | undefined>>()
 
 const resolveReference_ = async (
   localBasePath: string,
@@ -91,15 +92,39 @@ const resolveReference_ = async (
     logger.error(
       `Reference path \`${red(source.path)}\` for \`${red(source.name)}\` not found`,
     )
+    return
   }
 
-  const processor = sourcePath.endsWith('.mdx') ? mdxProcessor : mdProcessor
+  let content = await fs.readFile(sourcePath, 'utf8')
 
-  const root = processor.parse(await fs.readFile(sourcePath))
+  for (const processor of source.processors ?? []) {
+    switch (processor.type) {
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      case 'ejsTemplate': {
+        content = await render(
+          content,
+          { data: processor.data },
+          { async: true },
+        )
+        break
+      }
+    }
+  }
+
+  const processor = (sourcePath.endsWith('.ejs')
+    ? sourcePath.slice(0, -4)
+    : sourcePath
+  ).endsWith('.mdx')
+    ? mdxProcessor
+    : mdProcessor
+
+  const root = processor.parse(content)
 
   if (!source.anchor) {
     return root.children
   }
+
+  const frontmatterNode = getFrontmatterNode(root)
 
   const { toc } = parseToc(root, true)
 
@@ -112,7 +137,7 @@ const resolveReference_ = async (
     return
   }
 
-  const nodes: Content[] = []
+  const nodes: Content[] = frontmatterNode ? [frontmatterNode] : []
 
   for (let i = active.index, n = root.children.length; i < n; i++) {
     if (i === active.index && (source.ignoreHeading ?? active.depth === 1)) {
@@ -147,7 +172,7 @@ const resolveReference = async (
   return resolving
 }
 
-const releaseCache = new Map<
+export const releaseCache = new Map<
   string,
   Promise<Record<string, Content | Content[]> | undefined>
 >()
@@ -203,7 +228,7 @@ const resolveRelease_ = async (
   const templateName = query.get('template')
   if (!templateName) {
     logger.error(
-      `Release notes template not found in query \`${red(releaseQuery)}\``,
+      `Release notes template not found for query \`${red(releaseQuery)}\``,
     )
     return
   }
@@ -280,22 +305,29 @@ const resolveRelease = async (
   return resolved?.[lang] ?? resolved?.en
 }
 
-const MD_REF_COMMENT_PATTERN = /<!-{2,} *reference-include#(.+) *-{2,}>/
-const MDX_REF_COMMENT_PATTERN = /{\/\*+ *reference-include#(.+) *\*+\/}/
-const MDX_REF_PATTERN = /\/\*+ *reference-include#(.+) \*+\//
+const MD_REF_START_COMMENT_PATTERN = /<!-{2,} *reference-start#(.+) *-{2,}>/
+const MDX_REF_START_COMMENT_PATTERN = /{\/\*+ *reference-start#(.+) *\*+\/}/
+const MDX_REF_START_PATTERN = /\/\*+ *reference-start#(.+) *\*+\//
 
-const MD_RELEASE_COMMENT_PATTERN =
+const MD_REF_END_COMMENT_PATTERN = /<!-{2,} *reference-end *-{2,}>/
+const MDX_REF_END_PATTERN = /\/\*+ *reference-end *\*+\//
+
+export const MD_RELEASE_COMMENT_PATTERN =
   /<!-{2,} *release-notes-for-bugs\?(.+) *-{2,}>/
-const MDX_RELEASE_COMMENT_PATTERN =
+export const MDX_RELEASE_COMMENT_PATTERN =
   /{\/\*+ *release-notes-for-bugs\?(.+) *\*+\/}/
 const MDX_RELEASE_PATTERN = /\/\*+ *release-notes-for-bugs\?(.+) *\*+\//
 
-export const maybeHaveRef = (filepath: string, content: string) =>
-  (filepath.endsWith('.mdx')
-    ? [MDX_REF_COMMENT_PATTERN, MDX_RELEASE_COMMENT_PATTERN]
-    : [MD_REF_COMMENT_PATTERN, MD_RELEASE_COMMENT_PATTERN]
+export const maybeHaveRef = (filepath: string, content: string) => {
+  if (!/\.mdx?$/.test(filepath)) {
+    return
+  }
+  return (
+    filepath.endsWith('.mdx')
+      ? [MDX_REF_START_COMMENT_PATTERN, MDX_RELEASE_COMMENT_PATTERN]
+      : [MD_REF_START_COMMENT_PATTERN, MD_RELEASE_COMMENT_PATTERN]
   ).some((p) => p.test(content))
-
+}
 export const remarkReplace: Plugin<
   [
     {
@@ -311,44 +343,179 @@ export const remarkReplace: Plugin<
 > = function ({ lang, localBasePath, root, items, force, releaseNotes }) {
   return async (ast, vfile) => {
     const filepath = vfile.path
-    const content = vfile.toString()
+    let content = vfile.toString()
 
     if (!maybeHaveRef(filepath, content)) {
       return
     }
 
+    const processor = this()
+      .use(remarkFrontmatter)
+      .use(remarkStringify, stringifySettings)
+
+    const originalAst = vfile.data.original
+      ? ast
+      : processor.parse((content = await fs.readFile(filepath, 'utf8')))
+
+    const frontmatterNode = getFrontmatterNode(originalAst)
+
+    let frontmatter =
+      frontmatterNode &&
+      (parse(frontmatterNode.value) as Record<string, unknown> | null)
+
+    const isMdx = filepath.endsWith('.mdx')
+
     const relativePath = path.relative(root, filepath)
 
     const currLang = lang === null ? 'zh' : relativePath.split('/')[0]
 
-    return flatMap(ast, async (node) => {
-      let refMatched: RegExpMatchArray | null = null
-      let releaseMatched: RegExpMatchArray | null = null
+    const references: Array<number | [number, number]> = []
 
-      if (node.type === 'html') {
-        refMatched = (node as HTML).value.match(MD_REF_COMMENT_PATTERN)
-        releaseMatched = (node as HTML).value.match(MD_RELEASE_COMMENT_PATTERN)
-      } else if (node.type === 'mdxFlowExpression') {
-        refMatched = (node as HTML).value.match(MDX_REF_PATTERN)
-        releaseMatched = (node as HTML).value.match(MDX_RELEASE_PATTERN)
-      } else {
-        return
+    const newAstChildren: Array<Content | Content[]> = []
+    const newContentChildren: Array<Content | Content[]> = []
+
+    let index = 0
+    let start: number | null = null
+    let refName = ''
+    let matched: RegExpMatchArray | null
+
+    for (const node of ast.children) {
+      index++
+
+      if (node.type !== (isMdx ? 'mdxFlowExpression' : 'html')) {
+        if (node.type === 'yaml') {
+          continue
+        }
+
+        newAstChildren.push(node)
+        if (start == null) {
+          newContentChildren.push(node)
+        }
+        continue
       }
 
-      const refName = refMatched?.[1]
-      const releaseQuery = releaseMatched?.[1]
+      if (
+        (matched = node.value.match(
+          isMdx ? MDX_REF_START_PATTERN : MD_REF_START_COMMENT_PATTERN,
+        ))
+      ) {
+        if (start != null) {
+          logger.warn(
+            `Invalid reference start block ${node.value}, nested reference blocks are not allowed`,
+          )
+        } else {
+          start = index
+          refName = matched[1].trim()
+        }
 
-      if (refName) {
-        return resolveReference(localBasePath, items, refName.trim(), force)
+        newAstChildren.push(node)
+        newContentChildren.push(node)
+
+        continue
       }
 
-      if (releaseNotes?.queryTemplates && releaseQuery) {
-        return resolveRelease(
-          releaseNotes.queryTemplates,
-          releaseQuery.trim(),
+      if (
+        (isMdx ? MDX_REF_END_PATTERN : MD_REF_END_COMMENT_PATTERN).test(
+          node.value,
+        )
+      ) {
+        if (start == null) {
+          logger.warn(
+            `Invalid reference end block ${node.value}, no matching start block found`,
+          )
+        } else {
+          references.push([start, index])
+          start = null
+        }
+
+        const resolved = await resolveReference(
+          localBasePath,
+          items,
+          refName,
+          force,
+        )
+
+        if (resolved) {
+          const { frontmatterMode } = items[refName]
+          for (const nodeItem of resolved) {
+            if (nodeItem.type !== 'yaml') {
+              newContentChildren.push(nodeItem)
+              continue
+            }
+
+            if (!frontmatterMode || frontmatterMode === 'ignore') {
+              continue
+            }
+
+            if (frontmatterMode === 'remove') {
+              frontmatter = null
+              continue
+            }
+
+            const data = parse(nodeItem.value) as Record<string, unknown> | null
+
+            if (frontmatterMode === 'merge') {
+              if (data) {
+                frontmatter = {
+                  ...frontmatter,
+                  ...data,
+                }
+              }
+              // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+            } else if (frontmatterMode === 'replace') {
+              frontmatter = data
+            }
+          }
+        }
+
+        newAstChildren.push(node)
+        newContentChildren.push(node)
+
+        continue
+      }
+
+      if (
+        (matched = node.value.match(
+          isMdx ? MDX_RELEASE_PATTERN : MD_RELEASE_COMMENT_PATTERN,
+        ))
+      ) {
+        const releaseContent = await resolveRelease(
+          releaseNotes?.queryTemplates ?? {},
+          matched[1].trim(),
           currLang,
         )
+        newAstChildren.push(releaseContent ?? node)
+        newContentChildren.push(node)
       }
+    }
+
+    if (start != null) {
+      logger.warn(
+        `Invalid reference start block ${start}, no matching end block found, adding for you`,
+      )
+      newContentChildren.push({
+        type: isMdx ? 'mdxFlowExpression' : 'html',
+        value: isMdx ? '/* reference-end */' : '<!-- reference-end -->',
+      })
+    }
+
+    if (frontmatter) {
+      newContentChildren.unshift({
+        type: 'yaml',
+        value: stringify(frontmatter).trim(),
+      })
+    }
+
+    const newContent = processor.stringify({
+      ...ast,
+      children: newContentChildren.flat().filter((n) => n.type !== 'mdxjsEsm'),
     })
+
+    if (content !== newContent) {
+      await fs.writeFile(filepath, newContent)
+      return
+    }
+
+    ast.children = newAstChildren.flat()
   }
 }

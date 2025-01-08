@@ -11,6 +11,7 @@ import { glob } from 'tinyglobby'
 import { cyan, magenta } from 'yoctocolors'
 
 import { resolveStaticConfig } from '../utils/helpers.js'
+import { ContentProcessor } from '../utils/types.js'
 
 export const DEFAULT_PATH = 'templates/scaffolding.yaml'
 
@@ -41,15 +42,10 @@ export interface ScaffoldingParameter<T extends keyof Prompts = keyof Prompts> {
   options: PromptOptions<T>
 }
 
-export type ScaffoldingLayoutProcessor = {
-  type: 'ejsTemplate'
-  data?: Record<string, unknown>
-}
-
 export type ScaffoldingLayoutWriteMode = 'append' | 'write'
 
 export interface ScaffoldingLayoutBase {
-  processors?: ScaffoldingLayoutProcessor[]
+  processors?: ContentProcessor[]
   writeMode?: ScaffoldingLayoutWriteMode
 }
 
@@ -218,7 +214,7 @@ const handleTemplateFile = async ({
   source: string
   target: string
   parameters?: Record<string, unknown>
-  processors?: ScaffoldingLayoutProcessor[]
+  processors?: ContentProcessor[]
   writeMode?: ScaffoldingLayoutWriteMode
 }) => {
   let content = await fs.readFile(source, 'utf-8')

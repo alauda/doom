@@ -2,16 +2,19 @@ import fs from 'node:fs/promises'
 
 import type { Header, RspressPlugin } from '@rspress/core'
 import { logger } from '@rspress/shared/logger'
-import remarkStringify from 'remark-stringify'
 
-import { remarkPluginNormalizeLink } from './remark-normalize-link.js'
-import { maybeHaveRef, remarkReplace } from './remark-replace.js'
+import {
+  MD_RELEASE_COMMENT_PATTERN,
+  MDX_RELEASE_COMMENT_PATTERN,
+  refCache,
+  releaseCache,
+  remarkReplace,
+} from './remark-replace.js'
 import { PageMeta, remarkPluginToc } from './remark-toc.js'
 import type { ReferenceItem, ReleaseNotesOptions } from './types.js'
 import { mdProcessor, mdxProcessor, normalizeReferenceItems } from './utils.js'
 
 export const referencePlugin = ({
-  base,
   root,
   lang,
   localBasePath,
@@ -43,11 +46,14 @@ export const referencePlugin = ({
             force,
           },
         ],
-        remarkPluginToc,
-        [remarkPluginNormalizeLink, { base, root }],
       ],
     },
-    async modifySearchIndexData(pages) {
+    async modifySearchIndexData(pages, isProd) {
+      if (!isProd) {
+        refCache.clear()
+        releaseCache.clear()
+      }
+
       const results = await Promise.allSettled(
         pages.map(async (page) => {
           const filepath = page._filepath
@@ -56,17 +62,21 @@ export const referencePlugin = ({
             return
           }
 
+          const isMdx = filepath.endsWith('.mdx')
           const content = await fs.readFile(filepath, 'utf8')
 
-          if (!maybeHaveRef(filepath, content)) {
+          if (
+            !(
+              isMdx ? MDX_RELEASE_COMMENT_PATTERN : MD_RELEASE_COMMENT_PATTERN
+            ).test(content)
+          ) {
             return
           }
 
-          const processor = filepath.endsWith('.mdx')
-            ? mdxProcessor
-            : mdProcessor
+          const processor = isMdx ? mdxProcessor : mdProcessor
 
           const compiler = processor()
+            .data('pageMeta', {})
             .use(remarkReplace, {
               lang,
               localBasePath,
@@ -76,13 +86,13 @@ export const referencePlugin = ({
               releaseNotes,
             })
             .use(remarkPluginToc)
-            .use(remarkStringify)
-
-          compiler.data('pageMeta', {})
 
           const vfile = await compiler.process({
             path: filepath,
             value: content,
+            data: {
+              original: true,
+            },
           })
 
           const { toc, title } = compiler.data('pageMeta') as PageMeta

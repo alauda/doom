@@ -41,7 +41,7 @@ doom serve --config ./my-config.js
 - `logoText`：文档标题，会显示在左上角的 logo 处
 - `icon`：文档 favicon，默认同 `logo`
 - `base`：文档基础路径，用于部署到非根路径，如 `product-docs`，默认为 `/`
-- `outDir`：构建产物目录，默认为 `dist/{base}/${version}`，如果指定此项，则变更为 `dist/{outDir}/{version}`，其中 `version` 可选，参考[多版本构建](./deploy#多版本构建)
+- `outDir`：构建产物目录，默认为 `dist/{base}/${version}`，如果指定此项，则变更为 `dist/{outDir}/{version}`，其中 `version` 可选，参考[多版本构建](/usage/deploy.html#多版本构建)
 
 ## API 文档配置
 
@@ -61,7 +61,7 @@ api:
   pathPrefix: /apis
 ```
 
-文档编写参考 [API 文档](./api)
+文档编写参考 [API 文档](/usage/api.html)
 
 ## 引用文档配置
 
@@ -72,9 +72,13 @@ reference:
       - name: anchor # 引用文档名称，用于在文档中引用，全局唯一
         path: docs/index.mdx#介绍 # 引用文档路径，支持锚点定位，远程仓库相对于仓库根目录，本地相对于 doom.config.* 所在目录
         # ignoreHeading: [boolean] # 可选，是否忽略标题，如果为 true，则不会在引用文档中显示锚点的标题
+        processors: # 可选，引用文档内容处理器
+          - type: ejsTemplate
+            data: # ejs 模板参数，使用 `<%= data.xx %>` 访问
+        frontmatterMode: merge # 可选，引用文档处理 frontmatter 模式，默认为 ignore，可选值为 ignore/merge/replace/remove
 ```
 
-文档编写参考[引用文档](./reference)
+文档编写参考[引用文档](/usage/reference.html)
 
 ## 发行说明配置
 
@@ -109,7 +113,7 @@ sidebar:
 
 ## `sites.yaml` 配置
 
-`sites.yaml` 配置文件用于配置当前文档站点关联的子站点信息，[引用外部站点组件](./mdx#externalsite) 和构建单版本文档时会用到此处定义的信息。
+`sites.yaml` 配置文件用于配置当前文档站点关联的子站点信息，[引用外部站点组件](/usage/mdx.html#externalsite) 和构建单版本文档时会用到此处定义的信息。
 
 ```yaml
 - name: connectors # 全站唯一名称

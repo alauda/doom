@@ -1,7 +1,14 @@
+import { ContentProcessor } from '../../utils/types.js'
+
 export interface ReferenceItemSource {
   name: string
   path: string
   ignoreHeading?: boolean
+  /**
+   * @default 'ignore'
+   */
+  frontmatterMode?: 'ignore' | 'merge' | 'remove' | 'replace'
+  processors?: ContentProcessor[]
 }
 
 export interface ReferenceItem {

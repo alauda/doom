@@ -7,7 +7,8 @@ reference:
   - repo: alauda-public/product-doc-guide
     sources:
       - name: anchor
-        path: docs/index.mdx#介绍
+        path: templates/module_docs/intro.mdx
+        frontmatterMode: merge
 releaseNotes:
   queryTemplates:
     fixed: |

@@ -1,12 +1,12 @@
 import { logger } from '@rspress/shared/logger'
-import type { Content, Parent, Root } from 'mdast'
+import type { Root, YAML } from 'mdast'
 import type { MdxjsEsm } from 'mdast-util-mdxjs-esm'
 import remarkFrontmatter from 'remark-frontmatter'
 import remarkGfm from 'remark-gfm'
 import remarkMdx from 'remark-mdx'
 import remarkParse from 'remark-parse'
+import remarkStringify, { type Options } from 'remark-stringify'
 import { unified } from 'unified'
-import type { Node } from 'unist'
 import { red } from 'yoctocolors'
 
 import type { NormalizedReferenceSource, ReferenceItem } from './types.js'
@@ -47,47 +47,6 @@ export const normalizeReferenceItems = (items: ReferenceItem[]) =>
     return acc
   }, {})
 
-export const flatMap = async (
-  root: Root,
-  fn: (
-    node: Node,
-    index: number,
-    parent: Parent | null,
-  ) => Promise<Node | Node[] | undefined> | Node | Node[] | undefined,
-) => {
-  const transformed = await transform(root, 0, null)
-
-  if (!transformed) {
-    return root
-  }
-
-  return (Array.isArray(transformed) ? transformed[0] : transformed) as Root
-
-  async function transform(
-    node: Node | Parent,
-    index: number,
-    parent: Parent | null,
-  ) {
-    if ('children' in node && node.children.length) {
-      const out: Content[] = []
-      for (let i = 0, n = node.children.length; i < n; i++) {
-        const child = node.children[i]
-        let xs = await transform(child, i, node)
-        if (xs) {
-          xs = Array.isArray(xs) ? xs : [xs]
-          for (let j = 0, m = xs.length; j < m; j++) {
-            out.push(xs[j] as Content)
-          }
-        } else {
-          out.push(child)
-        }
-      }
-      node.children = out
-    }
-    return fn(node, index, parent)
-  }
-}
-
 // Construct import statement for AST
 // Such as: import image1 from './test.png'
 export const getASTNodeImport = (name: string, from: string) =>
@@ -118,10 +77,21 @@ export const getASTNodeImport = (name: string, from: string) =>
     },
   }) as MdxjsEsm
 
+export const stringifySettings: Options = {
+  bullet: '-',
+  listItemIndent: 'one',
+}
+
 export const mdProcessor = unified()
   .use(remarkParse)
   .use(remarkFrontmatter)
   .use(remarkGfm)
+  .use(remarkStringify, stringifySettings)
   .freeze()
 
 export const mdxProcessor = mdProcessor().use(remarkMdx).freeze()
+
+export const getFrontmatterNode = (ast: Root): YAML | undefined => {
+  const firstNode = ast.children[0]
+  return firstNode.type === 'yaml' ? firstNode : undefined
+}

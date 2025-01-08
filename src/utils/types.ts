@@ -15,3 +15,8 @@ export interface DoomConfig extends UserConfig {
   sidebar?: AutoSidebarPluginOptions
   releaseNotes?: ReleaseNotesOptions
 }
+
+export type ContentProcessor = {
+  type: 'ejsTemplate'
+  data?: Record<string, unknown>
+}
