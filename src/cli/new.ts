@@ -4,7 +4,7 @@ import path from 'node:path'
 
 import * as prompts from '@inquirer/prompts'
 import { logger } from '@rsbuild/core'
-import { program } from 'commander'
+import { Command } from 'commander'
 import { render } from 'ejs'
 import { simpleGit } from 'simple-git'
 import { glob } from 'tinyglobby'
@@ -242,20 +242,16 @@ const handleTemplateFile = async ({
   await fs[`${writeMode}File`](target, content)
 }
 
-program
+export const newCommand = new Command('new')
   .argument('[template]', 'Scaffolding template name, format: `[name][:type]`')
-  .option(
-    '-f, --force [boolean]',
-    'Force to fetch latest scaffolding template, otherwise use local cache',
-    (value) => !!value && value !== 'false',
-    false,
-  )
-  .action(async (template: string = '', { force }: { force: boolean }) => {
+  .action(async function (this: Command, template: string = '') {
     let [name, type] = template.split(':')
 
     if (!name) {
       name = 'product-doc'
     }
+
+    const { force } = this.optsWithGlobals<{ force: boolean }>()
 
     const { base, scaffoldings } =
       (await resolveScaffoldings(name, force)) || {}
@@ -361,11 +357,4 @@ program
     }
 
     logger.success('Scaffolding generated successfully!')
-  })
-  .parseAsync(process.argv)
-  .catch((err: unknown) => {
-    if (err instanceof Error && err.name === 'ExitPromptError') {
-      return
-    }
-    logger.error(err)
   })

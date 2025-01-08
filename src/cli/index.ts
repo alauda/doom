@@ -15,6 +15,7 @@ import { green } from 'yoctocolors'
 
 import { CWD, DEFAULT_CONFIGS, I18N_FILE, SITES_FILE } from './constants.js'
 import { loadConfig } from './load-config.js'
+import { newCommand } from './new.js'
 
 const META_FILE = '_meta.json'
 
@@ -46,7 +47,7 @@ program
   )
   .option(
     '-f, --force [boolean]',
-    'Force to fetch latest reference remotes, otherwise use local cache',
+    'Force to fetch latest reference remotes or scaffolding templates, otherwise use local cache',
     (value) => !!value && value !== 'false',
     false,
   )
@@ -232,8 +233,11 @@ program
     })
   })
 
-program.command('new', 'Create a new documentation site/module/page', {
-  executableFile: 'new',
-})
+program.addCommand(newCommand)
 
-program.parseAsync().catch(console.error)
+program.parseAsync().catch((err: unknown) => {
+  if (err instanceof Error && err.name === 'ExitPromptError') {
+    return
+  }
+  logger.error(err)
+})
