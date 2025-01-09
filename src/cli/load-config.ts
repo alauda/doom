@@ -10,7 +10,6 @@ import {
   removeLeadingSlash,
   removeTrailingSlash,
 } from '@rspress/core'
-import { pluginPreview } from '@rspress/plugin-preview'
 import { logger } from '@rspress/shared/logger'
 import {
   transformerMetaHighlight,
@@ -22,7 +21,6 @@ import {
   transformerNotationWordHighlight,
   transformerRemoveNotationEscape,
 } from '@shikijs/transformers'
-import getPort from 'get-port'
 import rehypeRaw from 'rehype-raw'
 
 import {
@@ -59,14 +57,14 @@ const zhLocaleConfig: Omit<LocaleConfig, 'lang' | 'label'> = {
   nextPageText: '下一页',
 }
 
-const getCommonConfig = async (
+const getCommonConfig = (
   config: DoomConfig,
   cliRoot?: string,
   prefix?: string,
   configFilePath?: string,
   version?: string,
   force?: boolean,
-): Promise<DoomConfig> => {
+): DoomConfig => {
   const fallbackToZh = 'lang' in config && config.lang == null
   const root = resolveDocRoot(CWD, cliRoot, config.root)
 
@@ -117,12 +115,6 @@ const getCommonConfig = async (
           }),
     },
     plugins: [
-      pluginPreview({
-        iframeOptions: {
-          devPort: await getPort({ port: 7891 }),
-        },
-        defaultRenderMode: 'pure',
-      }),
       apiPlugin(config.api),
       autoSidebarPlugin(config.sidebar),
       globalPlugin({
@@ -243,7 +235,7 @@ export async function loadConfig(
 
   const normalizedVersion = normalizeVersion(version)
 
-  const commonConfig = await getCommonConfig(
+  const commonConfig = getCommonConfig(
     config,
     root,
     prefix,

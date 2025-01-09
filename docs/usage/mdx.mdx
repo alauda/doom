@@ -39,34 +39,53 @@ import { SourceCode } from '@rspress/core/theme'
 
 快速导航组件，用于展示快速导航信息，样式和功能将根据后续实际使用需求进行调整
 
-```tsx preview
-import { QuickNav } from '@alauda/doom/runtime' // .mdx 文件中无需导入
-
-export default () => (
-  <QuickNav
-    items={[
-      {
-        icon: '/logo.svg',
-        title: 'Doom',
-        links: [
-          {
-            title: '首页',
-            href: '/',
-          },
-          {
-            title: '开始',
-            href: '/start',
-          },
-          {
-            title: '使用',
-            href: '/usage/',
-          },
-        ],
-      },
-    ]}
-  />
-)
+```mdx title="quick-nav.mdx"
+<QuickNav
+  items={[
+    {
+      icon: '/logo.svg',
+      title: 'Doom',
+      links: [
+        {
+          title: '首页',
+          href: '/',
+        },
+        {
+          title: '开始',
+          href: '/start',
+        },
+        {
+          title: '使用',
+          href: '/usage/',
+        },
+      ],
+    },
+  ]}
+/>
 ```
+
+<QuickNav
+  items={[
+    {
+      icon: '/logo.svg',
+      title: 'Doom',
+      links: [
+        {
+          title: '首页',
+          href: '/',
+        },
+        {
+          title: '开始',
+          href: '/start',
+        },
+        {
+          title: '使用',
+          href: '/usage/',
+        },
+      ],
+    },
+  ]}
+/>
 
 ### `Callouts`
 
