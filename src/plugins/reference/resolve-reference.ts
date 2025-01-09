@@ -138,7 +138,9 @@ const resolveReference_ = async (
 
   const { toc } = parseToc(root, true)
 
-  const active = toc.find((it) => it.id === source.anchor)
+  const active =
+    toc.find((it) => it.id === source.anchor) ??
+    toc.find((it) => it.text === source.anchor)
 
   if (!active) {
     logger.error(
