@@ -60,7 +60,6 @@ const zhLocaleConfig: Omit<LocaleConfig, 'lang' | 'label'> = {
 const getCommonConfig = (
   config: DoomConfig,
   cliRoot?: string,
-  prefix?: string,
   configFilePath?: string,
   version?: string,
   force?: boolean,
@@ -68,20 +67,7 @@ const getCommonConfig = (
   const fallbackToZh = 'lang' in config && config.lang == null
   const root = resolveDocRoot(CWD, cliRoot, config.root)
 
-  let base = addLeadingSlash(config.base || '/')
-
-  if (version && version !== 'unversioned') {
-    base = removeTrailingSlash(base) + `/${version}`
-  }
-
-  base = addTrailingSlash(base)
-
-  if (prefix) {
-    base = normalizeSlash(prefix) + base
-  }
-
   return {
-    base,
     root,
     lang: fallbackToZh ? 'zh' : config.lang,
     route: {
@@ -122,7 +108,6 @@ const getCommonConfig = (
         version,
       }),
       referencePlugin({
-        base,
         root,
         lang: fallbackToZh ? null : (config.lang ?? 'en'),
         localBasePath: configFilePath ? path.dirname(configFilePath) : root,
@@ -238,16 +223,26 @@ export async function loadConfig(
   const commonConfig = getCommonConfig(
     config,
     root,
-    prefix,
     configFilePath,
     normalizedVersion,
     force,
   )
 
   const mergedConfig = mergeRsbuildConfig(commonConfig, config, {
-    base: commonConfig.base,
     root: commonConfig.root,
   })
+
+  let base = addLeadingSlash(mergedConfig.base || '/')
+
+  if (normalizedVersion && normalizedVersion !== 'unversioned') {
+    base = removeTrailingSlash(base) + `/${normalizedVersion}`
+  }
+
+  mergedConfig.base = base = addTrailingSlash(base)
+
+  if (prefix) {
+    mergedConfig.base = normalizeSlash(prefix) + base
+  }
 
   let ensureDefaultLogo = false
 
@@ -286,9 +281,6 @@ export async function loadConfig(
     mergedConfig.outDir =
       addTrailingSlash(mergedConfig.outDir) + normalizedVersion
   } else {
-    const base = prefix
-      ? mergedConfig.base!.replace(normalizeSlash(prefix), '')
-      : mergedConfig.base!
     mergedConfig.outDir = `dist${normalizedVersion === 'unversioned' ? `/unversioned${base}` : base}`
   }
 

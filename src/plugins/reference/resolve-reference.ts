@@ -1,0 +1,199 @@
+import fs from 'node:fs/promises'
+import os from 'node:os'
+import path from 'node:path'
+
+import { isProduction } from '@rspress/core'
+import { logger } from '@rspress/shared/logger'
+import { render } from 'ejs'
+import type { Content } from 'mdast'
+import { simpleGit } from 'simple-git'
+import { cyan, red } from 'yoctocolors'
+
+import { parseToc } from './parse-toc.js'
+import type { NormalizedReferenceSource } from './types.js'
+import { getFrontmatterNode, mdProcessor, mdxProcessor } from './utils.js'
+
+const remotesFolder = path.resolve(os.homedir(), '.doom/remotes')
+
+export interface ResolveReferenceResult {
+  publicBase: string
+  sourceBase: string
+  contents: Content[]
+}
+
+const refCache = new Map<string, Promise<ResolveReferenceResult | undefined>>()
+
+const resolveReference_ = async (
+  localBasePath: string,
+  localPublicBase: string,
+  items: Record<string, NormalizedReferenceSource>,
+  refName: string,
+  force?: boolean,
+): Promise<ResolveReferenceResult | undefined> => {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (!items[refName]) {
+    logger.error(`Reference \`${red(refName)}\` not found`)
+    return
+  }
+
+  const source = items[refName]
+
+  let publicBase
+  let sourcePath = source.path
+  if (source.repo) {
+    const repoFolder = path.resolve(remotesFolder, source.slug!)
+
+    let created = false
+
+    try {
+      const stat = await fs.stat(path.resolve(repoFolder, '.git'))
+      if (stat.isDirectory()) {
+        created = true
+      }
+    } catch {
+      // ignore
+    }
+
+    if (!created) {
+      await fs.mkdir(repoFolder, { recursive: true })
+    }
+
+    const git = simpleGit(repoFolder)
+
+    if (!created) {
+      logger.info(`Cloning remote \`${cyan(source.slug!)}\` repository...`)
+      await git.clone(source.repo, repoFolder, ['--depth', '1'])
+    }
+
+    if (force) {
+      logger.info(`Pulling latest changes for \`${cyan(source.slug!)}\`...`)
+      await git.pull([
+        '--depth',
+        '1',
+        '--force',
+        '--rebase',
+        '--allow-unrelated-histories',
+      ])
+    }
+
+    publicBase = path.resolve(repoFolder, source.publicBase ?? 'docs/public')
+    sourcePath = path.resolve(repoFolder, sourcePath)
+  } else {
+    publicBase = localPublicBase
+    sourcePath = path.resolve(localBasePath, sourcePath)
+  }
+
+  let found = false
+
+  try {
+    const stat = await fs.stat(sourcePath)
+    found = stat.isFile()
+  } catch {
+    //
+  }
+
+  if (!found) {
+    logger.error(
+      `Reference path \`${red(source.path)}\` for \`${red(source.name)}\` not found`,
+    )
+    return
+  }
+
+  let content = await fs.readFile(sourcePath, 'utf8')
+
+  for (const processor of source.processors ?? []) {
+    switch (processor.type) {
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      case 'ejsTemplate': {
+        content = await render(
+          content,
+          { data: processor.data },
+          { async: true },
+        )
+        break
+      }
+    }
+  }
+
+  const processor = (sourcePath.endsWith('.ejs')
+    ? sourcePath.slice(0, -4)
+    : sourcePath
+  ).endsWith('.mdx')
+    ? mdxProcessor
+    : mdProcessor
+
+  const root = processor.parse(content)
+
+  const sourceBase = path.dirname(sourcePath)
+
+  if (!source.anchor) {
+    return {
+      publicBase,
+      sourceBase,
+      contents: root.children,
+    }
+  }
+
+  const frontmatterNode = getFrontmatterNode(root)
+
+  const { toc } = parseToc(root, true)
+
+  const active = toc.find((it) => it.id === source.anchor)
+
+  if (!active) {
+    logger.error(
+      `Anchor \`${red(source.anchor)}\` not found in \`${red(source.name)}\``,
+    )
+    return
+  }
+
+  const nodes: Content[] = frontmatterNode ? [frontmatterNode] : []
+
+  for (let i = active.index, n = root.children.length; i < n; i++) {
+    if (i === active.index && (source.ignoreHeading ?? active.depth === 1)) {
+      continue
+    }
+    const node = root.children[i]
+    if (
+      node.type === 'heading' &&
+      node.depth <= active.depth &&
+      i > active.index
+    ) {
+      break
+    }
+    nodes.push(node)
+  }
+
+  return {
+    publicBase,
+    sourceBase,
+    contents: nodes,
+  }
+}
+
+export const resolveReference = async (
+  localBasePath: string,
+  localPublicBase: string,
+  items: Record<string, NormalizedReferenceSource>,
+  refName: string,
+  force?: boolean,
+) => {
+  if (refCache.has(refName)) {
+    return refCache.get(refName)
+  }
+
+  const resolving = resolveReference_(
+    localBasePath,
+    localPublicBase,
+    items,
+    refName,
+    force,
+  )
+  refCache.set(refName, resolving)
+  if (!isProduction()) {
+    setTimeout(() => {
+      refCache.delete(refName)
+    }, 5_000)
+  }
+  return resolving
+}

@@ -41,7 +41,7 @@ doom serve --config ./my-config.js
 - `logoText`：文档标题，会显示在左上角的 logo 处
 - `icon`：文档 favicon，默认同 `logo`
 - `base`：文档基础路径，用于部署到非根路径，如 `product-docs`，默认为 `/`
-- `outDir`：构建产物目录，默认为 `dist/{base}/${version}`，如果指定此项，则变更为 `dist/{outDir}/{version}`，其中 `version` 可选，参考[多版本构建](/usage/deploy.html#多版本构建)
+- `outDir`：构建产物目录，默认为 `dist/{base}/${version}`，如果指定此项，则变更为 `dist/{outDir}/{version}`，其中 `version` 可选，参考[多版本构建](./deploy#多版本构建)
 
 ## API 文档配置
 
@@ -61,7 +61,7 @@ api:
   pathPrefix: /apis
 ```
 
-文档编写参考 [API 文档](/usage/api)
+文档编写参考 [API 文档](./api)
 
 ## 引用文档配置
 
@@ -86,7 +86,7 @@ reference:
 - `replace`：使用引用文档的 frontmatter 替换当前文档的 frontmatter
 - `remove`：移除当前文档的 frontmatter
 
-文档编写参考[引用文档](/usage/reference)
+文档编写参考[引用文档](./reference)
 
 ## 发行说明配置
 
@@ -121,7 +121,7 @@ sidebar:
 
 ## `sites.yaml` 配置
 
-`sites.yaml` 配置文件用于配置当前文档站点关联的子站点信息，[引用外部站点组件](/usage/mdx#externalsite) 和构建单版本文档时会用到此处定义的信息。
+`sites.yaml` 配置文件用于配置当前文档站点关联的子站点信息，[引用外部站点组件](./mdx#externalsite)和构建单版本文档时会用到此处定义的信息。
 
 ```yaml
 - name: connectors # 全站唯一名称

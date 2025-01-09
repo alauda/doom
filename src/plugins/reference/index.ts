@@ -19,7 +19,6 @@ export const referencePlugin = ({
   force,
   releaseNotes,
 }: {
-  base: string
   root: string
   lang: string | null
   localBasePath: string

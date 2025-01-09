@@ -1,4 +1,8 @@
-import { isProduction, usePageData } from '@rspress/core/runtime'
+import {
+  isProduction,
+  removeTrailingSlash,
+  usePageData,
+} from '@rspress/core/runtime'
 import { noop } from 'es-toolkit'
 import { useEffect, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
@@ -15,7 +19,10 @@ export const VersionsNav = () => {
       return []
     }
 
-    return [siteData.base.slice(0, -page.v.length - 1), page.v]
+    return [
+      removeTrailingSlash(siteData.base).slice(0, -page.v.length - 1),
+      page.v,
+    ]
   }, [siteData.base, page.v])
 
   const [navMenu, setNavMenu] = useState<Element | null>()
