@@ -13,11 +13,13 @@ export interface ReferenceItemSource {
 
 export interface ReferenceItem {
   repo?: string
+  publicBase?: string
   sources: ReferenceItemSource[]
 }
 
 export interface NormalizedReferenceSource extends ReferenceItemSource {
   repo?: string
+  publicBase?: string
   slug?: string
   anchor?: string
 }

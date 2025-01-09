@@ -20,7 +20,9 @@ weight: 6
 {/* reference-end */}
 ```
 
-上述 `name` 为引用文档的名称，参考[引用文档配置](/usage/configuration.html#引用文档配置)，以下为使用 `{/* reference-start#ref */}` 的实例：
+上述 `name` 为引用文档的名称，参考[引用文档配置](/usage/configuration.html#引用文档配置)，如果引用的文档内容使用了远程仓库图片静态资源，相关静态资源将自动存储在本地 `<root>/public/_remotes/<name>` 目录下。
+
+以下为使用 `{/* reference-start#ref */}` 的实例：
 
 {/* reference-start#ref */}
 
@@ -32,6 +34,7 @@ reference:
     sources:
       - name: anchor # 引用文档名称，用于在文档中引用，全局唯一
         path: docs/index.mdx#介绍 # 引用文档路径，支持锚点定位，远程仓库相对于仓库根目录，本地相对于 doom.config.* 所在目录
+        # publicBase: [string] # 可选，使用远程仓库时使用绝对路径 /images/xx.png 对应的静态资源所在目录，默认为 docs/public
         # ignoreHeading: [boolean] # 可选，是否忽略标题，如果为 true，则不会在引用文档中显示锚点的标题
         processors: # 可选，引用文档内容处理器
           - type: ejsTemplate

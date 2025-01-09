@@ -11,6 +11,7 @@ import { type Plugin } from 'unified'
 import { parse, stringify } from 'yaml'
 import { cyan, red } from 'yoctocolors'
 
+import { normalizeImgSrc } from './normalize-img-src.js'
 import { parseToc } from './parse-toc.js'
 import type {
   JiraIssue,
@@ -21,14 +22,21 @@ import { getFrontmatterNode, mdProcessor, mdxProcessor } from './utils.js'
 
 const remotesFolder = path.resolve(os.homedir(), '.doom/remotes')
 
-export const refCache = new Map<string, Promise<Content[] | undefined>>()
+export interface ResolveReferenceResult {
+  publicBase: string
+  sourceBase: string
+  contents: Content[]
+}
+
+const refCache = new Map<string, Promise<ResolveReferenceResult | undefined>>()
 
 const resolveReference_ = async (
   localBasePath: string,
+  localPublicBase: string,
   items: Record<string, NormalizedReferenceSource>,
   refName: string,
   force?: boolean,
-) => {
+): Promise<ResolveReferenceResult | undefined> => {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!items[refName]) {
     logger.error(`Reference \`${red(refName)}\` not found`)
@@ -37,6 +45,7 @@ const resolveReference_ = async (
 
   const source = items[refName]
 
+  let publicBase
   let sourcePath = source.path
   if (source.repo) {
     const repoFolder = path.resolve(remotesFolder, source.slug!)
@@ -74,8 +83,10 @@ const resolveReference_ = async (
       ])
     }
 
+    publicBase = path.resolve(repoFolder, source.publicBase ?? 'docs/public')
     sourcePath = path.resolve(repoFolder, sourcePath)
   } else {
+    publicBase = localPublicBase
     sourcePath = path.resolve(localBasePath, sourcePath)
   }
 
@@ -120,8 +131,14 @@ const resolveReference_ = async (
 
   const root = processor.parse(content)
 
+  const sourceBase = path.dirname(sourcePath)
+
   if (!source.anchor) {
-    return root.children
+    return {
+      publicBase,
+      sourceBase,
+      contents: root.children,
+    }
   }
 
   const frontmatterNode = getFrontmatterNode(root)
@@ -154,11 +171,16 @@ const resolveReference_ = async (
     nodes.push(node)
   }
 
-  return nodes
+  return {
+    publicBase,
+    sourceBase,
+    contents: nodes,
+  }
 }
 
 const resolveReference = async (
   localBasePath: string,
+  localPublicBase: string,
   items: Record<string, NormalizedReferenceSource>,
   refName: string,
   force?: boolean,
@@ -167,12 +189,23 @@ const resolveReference = async (
     return refCache.get(refName)
   }
 
-  const resolving = resolveReference_(localBasePath, items, refName, force)
+  const resolving = resolveReference_(
+    localBasePath,
+    localPublicBase,
+    items,
+    refName,
+    force,
+  )
   refCache.set(refName, resolving)
+  if (!isProduction()) {
+    setTimeout(() => {
+      refCache.delete(refName)
+    }, 5_000)
+  }
   return resolving
 }
 
-export const releaseCache = new Map<
+const releaseCache = new Map<
   string,
   Promise<Record<string, Content | Content[]> | undefined>
 >()
@@ -351,6 +384,9 @@ export const remarkReplace: Plugin<
       return
     }
 
+    const localPublicBase = path.resolve(root, 'public')
+    const targetBase = path.dirname(filepath)
+
     const isMdx = filepath.endsWith('.mdx')
 
     const processor = isMdx ? mdxProcessor : mdProcessor
@@ -429,16 +465,27 @@ export const remarkReplace: Plugin<
 
         const resolved = await resolveReference(
           localBasePath,
+          localPublicBase,
           items,
           refName,
           force,
         )
 
         if (resolved) {
-          const { frontmatterMode } = items[refName]
-          for (const nodeItem of resolved) {
+          const refSource = items[refName]
+          const { frontmatterMode } = refSource
+          for (const nodeItem of resolved.contents) {
             if (nodeItem.type !== 'yaml') {
-              newContentChildren.push(nodeItem)
+              newContentChildren.push(
+                normalizeImgSrc(nodeItem, {
+                  refSource,
+                  localPublicBase,
+                  targetBase,
+                  publicBase: resolved.publicBase,
+                  sourceBase: resolved.sourceBase,
+                  force,
+                }),
+              )
               continue
             }
 
@@ -492,6 +539,13 @@ export const remarkReplace: Plugin<
           newAstChildren.push(releaseContent ?? node)
         }
         newContentChildren.push(node)
+
+        continue
+      }
+
+      newAstChildren.push(node)
+      if (start == null) {
+        newContentChildren.push(node)
       }
     }
 
@@ -513,19 +567,16 @@ export const remarkReplace: Plugin<
     }
 
     if (checkContent) {
+      const originalImports = originalAst.children
+        .filter((it) => it.type === 'mdxjsEsm')
+        .map((it) => it.value)
       const newContent = processor.stringify({
         ...ast,
-        children: newContentChildren.flat().filter((n) => {
-          if (n.type !== 'mdxjsEsm') {
-            return true
-          }
-
-          const matched = n.value.match(
-            /^import\b.+\bfrom\b\s+(['"])([^'"]+)\1$/,
-          )
-
-          return !matched?.[2] || !path.isAbsolute(matched[2])
-        }),
+        children: newContentChildren
+          .flat()
+          .filter(
+            (n) => n.type !== 'mdxjsEsm' || originalImports.includes(n.value),
+          ),
       })
 
       if (content !== newContent) {

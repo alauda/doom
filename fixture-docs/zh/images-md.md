@@ -1,14 +1,4 @@
-# xxx
-
-<!-- reference-start#other -->
-
-## Heading
-
-This is another paragraph.
-
-<!-- reference-end -->
-
-<!-- reference-start#images-md -->
+# Images MD
 
 ## Absolute
 
@@ -29,7 +19,3 @@ text ![](./assets/alauda.svg)
 <img src="./assets/alauda.svg" alt="alauda" />
 
 text <img src="./assets/alauda.svg" alt="alauda" />
-
-<!-- reference-end -->
-
-<!-- release-notes-for-bugs?template=fixed&project=AIT -->

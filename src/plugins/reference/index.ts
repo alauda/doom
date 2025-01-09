@@ -6,8 +6,6 @@ import { logger } from '@rspress/shared/logger'
 import {
   MD_RELEASE_COMMENT_PATTERN,
   MDX_RELEASE_COMMENT_PATTERN,
-  refCache,
-  releaseCache,
   remarkReplace,
 } from './remark-replace.js'
 import type { ReferenceItem, ReleaseNotesOptions } from './types.js'
@@ -47,12 +45,7 @@ export const referencePlugin = ({
         ],
       ],
     },
-    async modifySearchIndexData(pages, isProd) {
-      if (!isProd) {
-        refCache.clear()
-        releaseCache.clear()
-      }
-
+    async modifySearchIndexData(pages) {
       const results = await Promise.allSettled(
         pages.map(async (page) => {
           const filepath = page._filepath

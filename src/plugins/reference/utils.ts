@@ -40,6 +40,7 @@ export const normalizeReferenceItems = (items: ReferenceItem[]) =>
       acc[source.name] = {
         ...source,
         ...extra,
+        publicBase: curr.publicBase,
         path,
         anchor,
       }

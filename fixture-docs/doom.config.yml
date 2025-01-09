@@ -4,6 +4,10 @@ reference:
   - sources:
       - name: other
         path: zh/other.mdx#heading-1
+      - name: images
+        path: zh/images.mdx#images
+      - name: images-md
+        path: zh/images-md.md#images-md
   - repo: alauda-public/product-doc-guide
     sources:
       - name: anchor

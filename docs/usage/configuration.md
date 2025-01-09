@@ -71,6 +71,7 @@ reference:
     sources:
       - name: anchor # 引用文档名称，用于在文档中引用，全局唯一
         path: docs/index.mdx#介绍 # 引用文档路径，支持锚点定位，远程仓库相对于仓库根目录，本地相对于 doom.config.* 所在目录
+        # publicBase: [string] # 可选，使用远程仓库时使用绝对路径 /images/xx.png 对应的静态资源所在目录，默认为 docs/public
         # ignoreHeading: [boolean] # 可选，是否忽略标题，如果为 true，则不会在引用文档中显示锚点的标题
         processors: # 可选，引用文档内容处理器
           - type: ejsTemplate
@@ -104,7 +105,7 @@ releaseNotes:
 {/* release-notes-for-bugs?template=fixed&project=DevOps */}
 ```
 
-以上述 `template=fixed&project=DevOps` 为例，`fixed` 为 `queryTemplates` 中定义的模板名称，剩余的 `query` 参数 `project=DevOps` 将作为 `ejs` 模板参数传递给 `fixed` 模板处理后作为 jira [`jql`](https://www.atlassian.com/zh/software/jira/guides/jql/overview#what-is-jql) 发起 `https://jira.alauda.cn/rest/api/2/search?jql=<jql>` 请求，此 API 要求鉴权，有如下两种方式提供环境变量：
+以上述 `template=fixed&project=DevOps` 为例，`fixed` 为 `queryTemplates` 中定义的模板名称，剩余的 `query` 参数 `project=DevOps` 将作为 [`ejs`](https://github.com/mde/ejs) 模板参数传递给 `fixed` 模板处理后作为 jira [`jql`](https://www.atlassian.com/zh/software/jira/guides/jql/overview#what-is-jql) 发起 `https://jira.alauda.cn/rest/api/2/search?jql=<jql>` 请求，此 API 要求鉴权，有如下两种方式提供环境变量：
 
 1. 本地开发环境可以设置 `JIRA_USERNAME` 和 `JIRA_PASSWORD`
 2. CI 流水线环境后续将自动注入 `JIRA_TOKEN`
