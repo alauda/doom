@@ -78,6 +78,13 @@ reference:
         frontmatterMode: merge # 可选，引用文档处理 frontmatter 模式，默认为 ignore，可选值为 ignore/merge/replace/remove
 ```
 
+### `frontmatterMode`
+
+- `ignore`：忽略引用文档的 frontmatter，保留使用当前文档的 frontmatter
+- `merge`：合并引用文档的 frontmatter，如果有相同的 key，引用文档的值会覆盖当前文档的值
+- `replace`：使用引用文档的 frontmatter 替换当前文档的 frontmatter
+- `remove`：移除当前文档的 frontmatter
+
 文档编写参考[引用文档](/usage/reference)
 
 ## 发行说明配置

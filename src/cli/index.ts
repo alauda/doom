@@ -187,11 +187,19 @@ program
 
     const docDirectory = config.root!
 
-    await build({
-      config,
-      appDirectory: CWD,
-      docDirectory,
-    })
+    const runBuild = () =>
+      build({
+        config,
+        appDirectory: CWD,
+        docDirectory,
+      })
+
+    await runBuild()
+
+    if (process.env.__DOOM_REBUILD__ === 'true') {
+      logger.info('Rebuilding...')
+      await runBuild()
+    }
   })
 
 program

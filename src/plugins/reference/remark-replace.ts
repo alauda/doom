@@ -2,6 +2,7 @@ import fs from 'node:fs/promises'
 import os from 'node:os'
 import path from 'node:path'
 
+import { isProduction } from '@rspress/core'
 import { logger } from '@rspress/shared/logger'
 import { render } from 'ejs'
 import type { Content, List, ListItem, PhrasingContent, Root } from 'mdast'
@@ -175,7 +176,9 @@ const FIELD_MAPPER: Record<string, string> = {
   en: 'customfield_13801',
 }
 
-const { JIRA_TOKEN, JIRA_USERNAME, JIRA_PASSWORD } = process.env
+const { CI, JIRA_TOKEN, JIRA_USERNAME, JIRA_PASSWORD } = process.env
+
+const isCi = CI !== 'false' && !!CI
 
 const issuesToMdast = (issues: JiraIssue[], lang: string) => {
   return issues
@@ -356,10 +359,6 @@ export const remarkReplace: Plugin<
       frontmatterNode &&
       (parse(frontmatterNode.value) as Record<string, unknown> | null)
 
-    const relativePath = path.relative(root, filepath)
-
-    const currLang = lang === null ? 'zh' : relativePath.split('/')[0]
-
     const newAstChildren: Array<Content | Content[]> = []
     const newContentChildren: Array<Content | Content[]> = []
 
@@ -368,6 +367,10 @@ export const remarkReplace: Plugin<
     let refName = ''
     let matched: RegExpMatchArray | null
     let checkContent = false
+
+    const relativePath = path.relative(root, filepath)
+
+    const currLang = lang === null ? 'zh' : relativePath.split('/')[0]
 
     for (const node of ast.children) {
       index++
@@ -469,12 +472,19 @@ export const remarkReplace: Plugin<
           isMdx ? MDX_RELEASE_PATTERN : MD_RELEASE_COMMENT_PATTERN,
         ))
       ) {
-        const releaseContent = await resolveRelease(
-          releaseNotes?.queryTemplates ?? {},
-          matched[1].trim(),
-          currLang,
-        )
-        newAstChildren.push(releaseContent ?? node)
+        if (start != null) {
+          logger.warn(
+            `Invalid release-notes-for-bugs comment ${red(refName)}, nested reference blocks are not allowed`,
+          )
+          newAstChildren.push(node)
+        } else {
+          const releaseContent = await resolveRelease(
+            releaseNotes?.queryTemplates ?? {},
+            matched[1].trim(),
+            currLang,
+          )
+          newAstChildren.push(releaseContent ?? node)
+        }
         newContentChildren.push(node)
       }
     }
@@ -506,6 +516,16 @@ export const remarkReplace: Plugin<
 
       if (content !== newContent) {
         await fs.writeFile(filepath, newContent)
+
+        if (!vfile.data.original && isProduction()) {
+          const message = `Reference block in \`${cyan(relativePath)}\` has been updated, please commit the changes`
+
+          if (isCi) {
+            process.env.__DOOM_REBUILD__ = 'true'
+          }
+
+          logger.warn(message)
+        }
         return
       }
     }

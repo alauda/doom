@@ -80,6 +80,8 @@ export const getASTNodeImport = (name: string, from: string) =>
 export const stringifySettings: Options = {
   bullet: '-',
   listItemIndent: 'one',
+  rule: '-',
+  tightDefinitions: true,
 }
 
 export const mdProcessor = unified()
