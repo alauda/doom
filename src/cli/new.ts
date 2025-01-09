@@ -317,7 +317,15 @@ export const newCommand = new Command('new')
             dirents
               .filter((d) => d.isFile())
               .map((d) =>
-                path.relative(source, path.resolve(d.parentPath, d.name)),
+                path.relative(
+                  source,
+                  path.resolve(
+                    d.parentPath ||
+                      // eslint-disable-next-line @typescript-eslint/no-deprecated
+                      d.path,
+                    d.name,
+                  ),
+                ),
               ),
           )
           for (const matcher of layout.matchers || []) {

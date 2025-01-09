@@ -11,7 +11,7 @@ import { type Plugin } from 'unified'
 import { parse, stringify } from 'yaml'
 import { cyan, red } from 'yoctocolors'
 
-import { parseToc } from './remark-toc.js'
+import { parseToc } from './parse-toc.js'
 import type {
   JiraIssue,
   NormalizedReferenceSource,

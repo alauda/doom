@@ -1,6 +1,6 @@
 import fs from 'node:fs/promises'
 
-import type { Header, RspressPlugin } from '@rspress/core'
+import type { RspressPlugin } from '@rspress/core'
 import { logger } from '@rspress/shared/logger'
 
 import {
@@ -10,7 +10,6 @@ import {
   releaseCache,
   remarkReplace,
 } from './remark-replace.js'
-import { PageMeta, remarkPluginToc } from './remark-toc.js'
 import type { ReferenceItem, ReleaseNotesOptions } from './types.js'
 import { mdProcessor, mdxProcessor, normalizeReferenceItems } from './utils.js'
 
@@ -75,17 +74,14 @@ export const referencePlugin = ({
 
           const processor = isMdx ? mdxProcessor : mdProcessor
 
-          const compiler = processor()
-            .data('pageMeta', {})
-            .use(remarkReplace, {
-              lang,
-              localBasePath,
-              root,
-              items: normalizedItems,
-              force,
-              releaseNotes,
-            })
-            .use(remarkPluginToc)
+          const compiler = processor().data('pageMeta', {}).use(remarkReplace, {
+            lang,
+            localBasePath,
+            root,
+            items: normalizedItems,
+            force,
+            releaseNotes,
+          })
 
           const vfile = await compiler.process({
             path: filepath,
@@ -95,10 +91,6 @@ export const referencePlugin = ({
             },
           })
 
-          const { toc, title } = compiler.data('pageMeta') as PageMeta
-
-          page.title = title
-          page.toc = toc as unknown as Header[]
           page.content = vfile.toString()
         }),
       )

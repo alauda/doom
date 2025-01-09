@@ -1,6 +1,5 @@
 import Slugger from 'github-slugger'
 import type { Root } from 'mdast'
-import type { Plugin } from 'unified'
 import { visitChildren } from 'unist-util-visit-children'
 
 import { extractTextAndId } from './utils.js'
@@ -78,18 +77,5 @@ export const parseToc = (tree: Root, allDepths?: boolean) => {
   return {
     title,
     toc,
-  }
-}
-
-export const remarkPluginToc: Plugin<[], Root> = function () {
-  const data = this.data() as {
-    pageMeta: PageMeta
-  }
-  return (tree: Root) => {
-    const { toc, title } = parseToc(tree)
-    data.pageMeta.toc = toc
-    if (title) {
-      data.pageMeta.title = title
-    }
   }
 }

@@ -5,7 +5,7 @@ import { config, configs } from 'typescript-eslint'
 
 export default config(
   {
-    ignores: ['.yarn', 'lib', 'node_modules'],
+    ignores: ['.yarn', 'dist', 'lib', 'node_modules', 'test'],
   },
   eslint.configs.recommended,
   configs.eslintRecommended,
