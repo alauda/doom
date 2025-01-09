@@ -65,7 +65,13 @@ const resolveReference_ = async (
 
     if (force) {
       logger.info(`Pulling latest changes for \`${cyan(source.slug!)}\`...`)
-      await git.pull(['--depth', '1', '--force', '--rebase'])
+      await git.pull([
+        '--depth',
+        '1',
+        '--force',
+        '--rebase',
+        '--allow-unrelated-histories',
+      ])
     }
 
     sourcePath = path.resolve(repoFolder, sourcePath)

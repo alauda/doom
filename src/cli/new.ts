@@ -185,7 +185,7 @@ const resolveScaffoldings = async (
   for (const branch of branches) {
     if (branch === currentBranch) {
       logger.info(`Pulling latest changes from branch \`${cyan(branch)}\`...`)
-      await git.pull([...options, '--rebase'])
+      await git.pull([...options, '--rebase', '--allow-unrelated-histories'])
     } else {
       logger.info(`Switching to branch \`${cyan(branch)}\`...`)
       await git.fetch('origin', `${branch}:${branch}`, options)
