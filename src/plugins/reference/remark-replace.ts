@@ -509,9 +509,17 @@ export const remarkReplace: Plugin<
     if (checkContent) {
       const newContent = processor.stringify({
         ...ast,
-        children: newContentChildren
-          .flat()
-          .filter((n) => n.type !== 'mdxjsEsm'),
+        children: newContentChildren.flat().filter((n) => {
+          if (n.type !== 'mdxjsEsm') {
+            return true
+          }
+
+          const matched = n.value.match(
+            /^import\b.+\bfrom\b\s+(['"])([^'"]+)\1$/,
+          )
+
+          return !matched?.[2] || !path.isAbsolute(matched[2])
+        }),
       })
 
       if (content !== newContent) {
