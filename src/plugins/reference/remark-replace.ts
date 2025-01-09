@@ -5,8 +5,6 @@ import path from 'node:path'
 import { logger } from '@rspress/shared/logger'
 import { render } from 'ejs'
 import type { Content, List, ListItem, PhrasingContent, Root } from 'mdast'
-import remarkFrontmatter from 'remark-frontmatter'
-import remarkStringify from 'remark-stringify'
 import { simpleGit } from 'simple-git'
 import { type Plugin } from 'unified'
 import { parse, stringify } from 'yaml'
@@ -18,12 +16,7 @@ import type {
   NormalizedReferenceSource,
   ReleaseNotesOptions,
 } from './types.js'
-import {
-  getFrontmatterNode,
-  mdProcessor,
-  mdxProcessor,
-  stringifySettings,
-} from './utils.js'
+import { getFrontmatterNode, mdProcessor, mdxProcessor } from './utils.js'
 
 const remotesFolder = path.resolve(os.homedir(), '.doom/remotes')
 
@@ -349,9 +342,9 @@ export const remarkReplace: Plugin<
       return
     }
 
-    const processor = this()
-      .use(remarkFrontmatter)
-      .use(remarkStringify, stringifySettings)
+    const isMdx = filepath.endsWith('.mdx')
+
+    const processor = isMdx ? mdxProcessor : mdProcessor
 
     const originalAst = vfile.data.original
       ? ast
@@ -363,13 +356,9 @@ export const remarkReplace: Plugin<
       frontmatterNode &&
       (parse(frontmatterNode.value) as Record<string, unknown> | null)
 
-    const isMdx = filepath.endsWith('.mdx')
-
     const relativePath = path.relative(root, filepath)
 
     const currLang = lang === null ? 'zh' : relativePath.split('/')[0]
-
-    const references: Array<number | [number, number]> = []
 
     const newAstChildren: Array<Content | Content[]> = []
     const newContentChildren: Array<Content | Content[]> = []
@@ -378,6 +367,7 @@ export const remarkReplace: Plugin<
     let start: number | null = null
     let refName = ''
     let matched: RegExpMatchArray | null
+    let checkContent = false
 
     for (const node of ast.children) {
       index++
@@ -401,9 +391,10 @@ export const remarkReplace: Plugin<
       ) {
         if (start != null) {
           logger.warn(
-            `Invalid reference start block ${node.value}, nested reference blocks are not allowed`,
+            `Invalid reference start block ${red(node.value)}, nested reference blocks are not allowed`,
           )
         } else {
+          checkContent = true
           start = index
           refName = matched[1].trim()
         }
@@ -421,10 +412,9 @@ export const remarkReplace: Plugin<
       ) {
         if (start == null) {
           logger.warn(
-            `Invalid reference end block ${node.value}, no matching start block found`,
+            `Invalid reference end block ${red(node.value)}, no matching start block found`,
           )
         } else {
-          references.push([start, index])
           start = null
         }
 
@@ -491,7 +481,7 @@ export const remarkReplace: Plugin<
 
     if (start != null) {
       logger.warn(
-        `Invalid reference start block ${start}, no matching end block found, adding for you`,
+        `Invalid reference start block ${red(refName)}, no matching end block found, adding for you`,
       )
       newContentChildren.push({
         type: isMdx ? 'mdxFlowExpression' : 'html',
@@ -506,14 +496,18 @@ export const remarkReplace: Plugin<
       })
     }
 
-    const newContent = processor.stringify({
-      ...ast,
-      children: newContentChildren.flat().filter((n) => n.type !== 'mdxjsEsm'),
-    })
+    if (checkContent) {
+      const newContent = processor.stringify({
+        ...ast,
+        children: newContentChildren
+          .flat()
+          .filter((n) => n.type !== 'mdxjsEsm'),
+      })
 
-    if (content !== newContent) {
-      await fs.writeFile(filepath, newContent)
-      return
+      if (content !== newContent) {
+        await fs.writeFile(filepath, newContent)
+        return
+      }
     }
 
     ast.children = newAstChildren.flat()

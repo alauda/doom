@@ -61,7 +61,7 @@ api:
   pathPrefix: /apis
 ```
 
-文档编写参考 [API 文档](/usage/api.html)
+文档编写参考 [API 文档](/usage/api)
 
 ## 引用文档配置
 
@@ -78,7 +78,7 @@ reference:
         frontmatterMode: merge # 可选，引用文档处理 frontmatter 模式，默认为 ignore，可选值为 ignore/merge/replace/remove
 ```
 
-文档编写参考[引用文档](/usage/reference.html)
+文档编写参考[引用文档](/usage/reference)
 
 ## 发行说明配置
 
@@ -113,7 +113,7 @@ sidebar:
 
 ## `sites.yaml` 配置
 
-`sites.yaml` 配置文件用于配置当前文档站点关联的子站点信息，[引用外部站点组件](/usage/mdx.html#externalsite) 和构建单版本文档时会用到此处定义的信息。
+`sites.yaml` 配置文件用于配置当前文档站点关联的子站点信息，[引用外部站点组件](/usage/mdx#externalsite) 和构建单版本文档时会用到此处定义的信息。
 
 ```yaml
 - name: connectors # 全站唯一名称
