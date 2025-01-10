@@ -125,11 +125,15 @@ sidebar:
 
 ```yaml
 - name: connectors # 全站唯一名称
+  base: /devops-connectors # 站点访问基础路径
+  version: v1.1 # 构建多版本站点时 ExternalSite/ExternalSiteLink 跳转的版本
+
   displayName: # 站点显示名称，如果不填写或未匹配到语言，则默认使用 name
     en: DevOps Connectors
     zh: DevOps 连接器
-  base: /devops-connectors # 站点访问基础路径
+
+  # 以下属性用于构建全站点时拉取镜像，如果不填写则在最终打包完整网站时将忽略此项
+  # 一般对子站点引用需要配置相关信息，对父站点引用不需要配置
   repo: https://github.com/AlaudaDevops/connectors-operator # 站点仓库地址，如果是内部 gitlab 仓库，可以直接使用相关 slug，如 `alauda/product-docs`
   image: devops/connectors-docs # 站点构建镜像，用于构建全站点时拉取镜像
-  defaultVersion: v1.1 # 可选，默认版本号，构建多版本站点时跳转的默认版本，如果不填写，则默认跳转到最新版本
 ```

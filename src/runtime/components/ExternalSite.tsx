@@ -1,11 +1,10 @@
 import { useLang, usePageData } from '@rspress/core/runtime'
-import { addTrailingSlash } from '@rspress/shared'
 import { FC, useMemo } from 'react'
 
-import { normalizeVersion } from '../../shared/index.js'
 import { ExtendedPageData } from '../types.js'
 import { handleCJKWhitespaces } from '../utils.js'
 import { Directive } from './_Directive.js'
+import { ExternalSiteLink } from './ExternalSiteLink.js'
 
 export interface ExternalSiteProps {
   name: string
@@ -13,33 +12,28 @@ export interface ExternalSiteProps {
 
 export interface ExternalSiteNoteProps {
   name: string
-  href: string
+  displayName: string
 }
 
 const Notes: Partial<Record<string, FC<ExternalSiteNoteProps>>> = {
-  en({ name, href }) {
+  en({ name, displayName }) {
     return (
       <>
-        Because {name} releases on a different cadence from Alauda Container
-        Platform, the {name} documentation is now available as a separate
-        documentation set at{' '}
-        <a href={href} target="_blank" rel="noopener noreferrer">
-          {name}
-        </a>
-        .
+        Because {displayName} releases on a different cadence from Alauda
+        Container Platform, the {displayName} documentation is now available as
+        a separate documentation set at{' '}
+        <ExternalSiteLink name={name}>{displayName}</ExternalSiteLink>.
       </>
     )
   },
-  zh({ name, href }) {
-    const name_ = handleCJKWhitespaces(name)
+  zh({ name, displayName }) {
+    const displayName_ = handleCJKWhitespaces(displayName)
     return (
       <>
-        因为{name_}的发版周期与灵雀云容器平台不同，所以{name_}
-        的文档现在作为独立的文档站点托管在{name_.startsWith(' ') ? ' ' : ''}
-        <a href={href} target="_blank" rel="noopener noreferrer">
-          {name}
-        </a>
-        。
+        因为{displayName_}的发版周期与灵雀云容器平台不同，所以{displayName_}
+        的文档现在作为独立的文档站点托管在
+        {displayName_.startsWith(' ') ? ' ' : ''}
+        <ExternalSiteLink name={name}>{displayName}</ExternalSiteLink>。
       </>
     )
   },
@@ -63,18 +57,12 @@ export const ExternalSite = ({ name }: ExternalSiteProps) => {
       </Directive>
     )
   }
+
   const Note = Notes[lang] || Notes[fallbackLang] || Notes.en!
-  const siteBase = addTrailingSlash(site.base)
+
   return (
     <Directive title="Note">
-      <Note
-        name={displayName}
-        href={
-          page.v
-            ? addTrailingSlash(siteBase + normalizeVersion(site.defaultVersion))
-            : siteBase
-        }
-      />
+      <Note name={name} displayName={displayName} />
     </Directive>
   )
 }

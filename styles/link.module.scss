@@ -1,0 +1,25 @@
+.link {
+  font-weight: 500;
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 0.85;
+  }
+
+  &:active {
+    opacity: 0.7;
+  }
+}
+
+.link,
+:global(summary) .link {
+  &:not(:global(.header-anchor)) {
+    font-weight: 500;
+    color: var(--rp-c-link);
+    transition: color 0.25s;
+  }
+
+  &:hover {
+    border-bottom: 1px solid var(--rp-c-brand);
+  }
+}

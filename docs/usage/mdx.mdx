@@ -152,6 +152,30 @@ Memory overhead per virtual machine ≈ (1.002 × requested memory) \
 
 <ExternalSite name="connectors" />
 
+### `ExternalSiteLink`
+
+引用外部站点链接组件
+
+```mdx
+<ExternalSiteLink name="connectors" href="link" children="Content" />
+```
+
+<ExternalSiteLink name="connectors" href="link" children="Content" />
+
+:::tip
+
+在 mdx 中 `<ExternalSiteLink name="connectors" href="link" children="Content" />` 与下面的内容含义不同
+
+```mdx
+<ExternalSiteLink name="connectors" href="link">
+  Content {/* 将渲染在 `p` 元素内 */}
+</ExternalSiteLink>
+```
+
+如果不希望文本渲染在 `p` 元素内，可以像上面的示例一样使用 `children` 属性传递
+
+:::
+
 ### `JsonViewer`
 
 ```mdx

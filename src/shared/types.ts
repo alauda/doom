@@ -1,7 +1,8 @@
 export interface DoomSite {
   name: string
-  displayName?: Record<string, string>
-  repo: string
   base: string
-  defaultVersion?: string
+  version: string
+  displayName?: Record<string, string>
+  repo?: string
+  image?: string
 }
