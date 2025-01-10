@@ -1,6 +1,7 @@
 export * from './Badge.js'
 export * from './Callouts.js'
 export * from './Card.js'
+export * from './Directive.js'
 export * from './ExternalSite.js'
 export * from './ExternalSiteLink.js'
 export * from './JsonViewer.js'

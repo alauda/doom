@@ -48,3 +48,5 @@ export const Directive = ({
     </div>
   )
 }
+
+export default Directive

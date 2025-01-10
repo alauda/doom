@@ -9,7 +9,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { useTranslation } from '../hooks/index.js'
 import { ExtendedPageData } from '../types.js'
-import { Directive } from './_Directive.js'
+import { Directive } from './Directive.js'
 import { Markdown } from './_Markdown.js'
 
 export interface K8sCrdProps {

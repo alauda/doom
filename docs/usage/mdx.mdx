@@ -142,6 +142,26 @@ Memory overhead per virtual machine ≈ (1.002 × requested memory) \
 
 更多源码转换功能请参考 [Shiki Transformers](https://shiki.style/packages/transformers#transformers)。
 
+### `Directive`
+
+有时，由于嵌套缩进，[自定义容器](https://rspress.dev/zh/guide/basic/use-mdx#%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AE%B9%E5%99%A8)语法可能失效，可以使用 `Directive` 组件代替
+
+```mdx
+- 多语言文档(`doc/en`)的目录结构需要与 `doc/zh` 目录下的文档完全一致，保证多语言文档的链接除了语言标识外完全相同。
+
+  <Directive type="danger" title="注意">
+    如果是使用自动化翻译工具进行翻译，则无需关心该问题，自动化翻译工具会自动根据
+    `doc/zh` 生成目标语言文档的目录结构。
+  </Directive>
+```
+
+- 多语言文档(`doc/en`)的目录结构需要与 `doc/zh` 目录下的文档完全一致，保证多语言文档的链接除了语言标识外完全相同。
+
+  <Directive type="danger" title="注意">
+    如果是使用自动化翻译工具进行翻译，则无需关心该问题，自动化翻译工具会自动根据
+    `doc/zh` 生成目标语言文档的目录结构。
+  </Directive>
+
 ### `ExternalSite`
 
 引用外部站点组件

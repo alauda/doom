@@ -3,7 +3,7 @@ import { FC, useMemo } from 'react'
 
 import { ExtendedPageData } from '../types.js'
 import { handleCJKWhitespaces } from '../utils.js'
-import { Directive } from './_Directive.js'
+import { Directive } from './Directive.js'
 import { ExternalSiteLink } from './ExternalSiteLink.js'
 
 export interface ExternalSiteProps {

@@ -9,7 +9,7 @@ import { AnchorHTMLAttributes, ReactNode, useMemo } from 'react'
 
 import { normalizeVersion } from '../../shared/index.js'
 import { ExtendedPageData } from '../types.js'
-import { Directive } from './_Directive.js'
+import { Directive } from './Directive.js'
 
 import classes from '../../../styles/link.module.scss'
 
