@@ -3,6 +3,7 @@ import fs from 'node:fs/promises'
 import type { RspressPlugin } from '@rspress/core'
 import { logger } from '@rspress/shared/logger'
 
+import { remarkJsxTable } from './remark-jsx-table.js'
 import {
   MD_RELEASE_COMMENT_PATTERN,
   MDX_RELEASE_COMMENT_PATTERN,
@@ -11,7 +12,7 @@ import {
 import type { ReferenceItem, ReleaseNotesOptions } from './types.js'
 import { mdProcessor, mdxProcessor, normalizeReferenceItems } from './utils.js'
 
-export const referencePlugin = ({
+export const replacePlugin = ({
   root,
   lang,
   localBasePath,
@@ -28,7 +29,7 @@ export const referencePlugin = ({
 }): RspressPlugin => {
   const normalizedItems = normalizeReferenceItems(items)
   return {
-    name: 'doom-reference',
+    name: 'doom-replace',
     markdown: {
       remarkPlugins: [
         [
@@ -42,6 +43,7 @@ export const referencePlugin = ({
             force,
           },
         ],
+        remarkJsxTable,
       ],
     },
     async modifySearchIndexData(pages) {

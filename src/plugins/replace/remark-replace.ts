@@ -57,6 +57,7 @@ export const remarkReplace: Plugin<
 > = function ({ lang, localBasePath, root, items, force, releaseNotes }) {
   return async (ast, vfile) => {
     const filepath = vfile.path
+
     let content = vfile.toString()
 
     if (!maybeHaveRef(filepath, content)) {

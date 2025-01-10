@@ -5,7 +5,7 @@ import type { AutoSidebarPluginOptions } from '../plugins/index.js'
 import type {
   ReferenceItem,
   ReleaseNotesOptions,
-} from '../plugins/reference/types.js'
+} from '../plugins/replace/types.js'
 import type { DoomSite } from '../shared/index.js'
 
 export interface DoomConfig extends UserConfig {

@@ -44,7 +44,7 @@ import {
   SITES_FILE,
   YAML_EXTENSIONS,
 } from './constants.js'
-import { referencePlugin } from '../plugins/reference/index.js'
+import { replacePlugin } from '../plugins/replace/index.js'
 
 const DEFAULT_LOGO = '/logo.svg'
 
@@ -107,7 +107,7 @@ const getCommonConfig = (
         sites: config.sites,
         version,
       }),
-      referencePlugin({
+      replacePlugin({
         root,
         lang: fallbackToZh ? null : (config.lang ?? 'en'),
         localBasePath: configFilePath ? path.dirname(configFilePath) : root,
