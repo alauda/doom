@@ -29,22 +29,22 @@ export const K8sCrdSchemaPart = ({
   name,
   parent,
   schema: property,
-  openAll,
+  expandAll,
 }: {
   name: string
   parent: OpenAPIV3_1.SchemaObject
   schema: OpenAPIV3_1.SchemaObject
-  openAll: boolean
+  expandAll: boolean
 }) => {
-  const [open, setOpen] = useState(openAll)
+  const [open, setOpen] = useState(expandAll)
 
   const onToggle = useCallback((open: boolean) => {
     setOpen(open)
   }, [])
 
   useEffect(() => {
-    setOpen(openAll)
-  }, [openAll])
+    setOpen(expandAll)
+  }, [expandAll])
 
   const [props, required, type, schema] = useMemo(() => {
     let schema = property
@@ -89,7 +89,7 @@ export const K8sCrdSchemaPart = ({
               name={name}
               parent={schema}
               schema={subSchema}
-              openAll={openAll}
+              expandAll={expandAll}
             />
           ))}
       </Directive>
@@ -110,14 +110,10 @@ export const K8sCrdSchema = ({
 
   const t = useTranslation()
 
-  const [openAll, setOpenAll] = useState(false)
+  const [expandAll, setExpandAll] = useState(false)
 
-  const expandAll = useCallback(() => {
-    setOpenAll(true)
-  }, [])
-
-  const collapseAll = useCallback(() => {
-    setOpenAll(false)
+  const toggleExpandAll = useCallback(() => {
+    setExpandAll((all) => !all)
   }, [])
 
   return (
@@ -129,22 +125,18 @@ export const K8sCrdSchema = ({
           <Badge>version</Badge>
         </span>
         {properties != null && (
-          <div className="ml-auto">
-            <Button
-              className="doom-btn"
-              type="button"
-              text={<span onClick={collapseAll}>- {t('collapse_all')}</span>}
-              size="medium"
-              theme="alt"
-            ></Button>
-            <Button
-              className="doom-btn ml-2"
-              type="button"
-              text={<span onClick={expandAll}>+ {t('expand_all')}</span>}
-              size="medium"
-              theme="alt"
-            ></Button>
-          </div>
+          <Button
+            className="ml-auto doom-btn"
+            type="button"
+            text={
+              <span onClick={toggleExpandAll}>
+                {expandAll ? '-' : '+'}{' '}
+                {t(expandAll ? 'collapse_all' : 'expand_all')}
+              </span>
+            }
+            size="medium"
+            theme="alt"
+          ></Button>
         )}
       </div>
       {properties == null ? (
@@ -159,7 +151,7 @@ export const K8sCrdSchema = ({
                   name={name}
                   parent={schema}
                   schema={subSchema}
-                  openAll={openAll}
+                  expandAll={expandAll}
                 />
               ),
           )}
