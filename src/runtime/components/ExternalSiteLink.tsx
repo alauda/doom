@@ -1,4 +1,4 @@
-import { usePageData } from '@rspress/core/runtime'
+import { useLang, usePageData } from '@rspress/core/runtime'
 import {
   addTrailingSlash,
   isExternalUrl,
@@ -27,6 +27,8 @@ export const ExternalSiteLink = ({
 }: ExternalSiteLinkProps) => {
   const { page } = usePageData() as ExtendedPageData
   const site = useMemo(() => page.sites?.find((s) => s.name === name), [])
+  const lang = useLang()
+
   if (!site) {
     return (
       <Directive type="danger">
@@ -47,7 +49,9 @@ export const ExternalSiteLink = ({
       href={
         (page.v
           ? addTrailingSlash(siteBase + normalizeVersion(site.version))
-          : siteBase) + removeLeadingSlash(href)
+          : siteBase) +
+        (lang ? `${lang}/` : '') +
+        removeLeadingSlash(href)
       }
       target="_blank"
       rel="noopener noreferrer"

@@ -5,7 +5,7 @@ export interface CalloutsProps {
 }
 
 export const Callouts = ({ children }: CalloutsProps) => {
-  return <p className="my-4 leading-7 doom-callouts">{children}</p>
+  return <div className="my-4 leading-7 doom-callouts">{children}</div>
 }
 
 export default Callouts

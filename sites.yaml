@@ -6,3 +6,6 @@
   repo: https://github.com/AlaudaDevops/connectors-operator
   image: devops/connectors-docs
   version: v1.1
+- name: acp
+  base: /container-platform
+  version: v4.0
