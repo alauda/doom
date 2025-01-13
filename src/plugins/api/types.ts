@@ -1,6 +1,7 @@
 import { OpenAPIV3 } from 'openapi-types'
 
 export interface ApiPluginOptions {
+  localBasePath: string
   crds?: string[]
   openapis?: string[]
   references?: Record<string, string>

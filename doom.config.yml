@@ -3,9 +3,9 @@ title: Doom
 logoText: Doom
 api:
   crds:
-    - shared/crds/*.yaml
+    - docs/shared/crds/*.yaml
   openapis:
-    - shared/openapis/*.json
+    - docs/shared/openapis/*.json
   references:
     v1alpha1.CodeQualityBranch: /apis/references/CodeQualityBranch#CodeQualityBranch
 reference:

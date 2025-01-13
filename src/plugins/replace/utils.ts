@@ -98,3 +98,7 @@ export const getFrontmatterNode = (ast: Root): YAML | undefined => {
   const firstNode = ast.children[0]
   return firstNode.type === 'yaml' ? firstNode : undefined
 }
+
+const { CI } = process.env
+
+export const isCI = CI !== 'false' && !!CI

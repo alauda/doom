@@ -10,7 +10,7 @@ import { cyan, red } from 'yoctocolors'
 
 import { normalizeImgSrc } from './normalize-img-src.js'
 import type { NormalizedReferenceSource, ReleaseNotesOptions } from './types.js'
-import { getFrontmatterNode, mdProcessor, mdxProcessor } from './utils.js'
+import { getFrontmatterNode, isCI, mdProcessor, mdxProcessor } from './utils.js'
 import { resolveReference } from './resolve-reference.js'
 import { resolveRelease } from './resolve-release.js'
 
@@ -37,10 +37,6 @@ export const maybeHaveRef = (filepath: string, content: string) => {
       : [MD_REF_START_COMMENT_PATTERN, MD_RELEASE_COMMENT_PATTERN]
   ).some((p) => p.test(content))
 }
-
-const { CI } = process.env
-
-const isCi = CI !== 'false' && !!CI
 
 export const remarkReplace: Plugin<
   [
@@ -225,7 +221,7 @@ export const remarkReplace: Plugin<
         if (!vfile.data.original && isProduction()) {
           const message = `Reference block in \`${cyan(relativePath)}\` has been updated, please commit the changes`
 
-          if (isCi) {
+          if (isCI) {
             process.env.__DOOM_REBUILD__ = 'true'
           }
 

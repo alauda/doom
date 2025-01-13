@@ -67,6 +67,8 @@ const getCommonConfig = (
   const fallbackToZh = 'lang' in config && config.lang == null
   const root = resolveDocRoot(CWD, cliRoot, config.root)
 
+  const localBasePath = configFilePath ? path.dirname(configFilePath) : root
+
   return {
     root,
     lang: fallbackToZh ? 'zh' : config.lang,
@@ -101,7 +103,10 @@ const getCommonConfig = (
           }),
     },
     plugins: [
-      apiPlugin(config.api),
+      apiPlugin({
+        ...config.api,
+        localBasePath,
+      }),
       autoSidebarPlugin(config.sidebar),
       globalPlugin({
         sites: config.sites,
@@ -110,7 +115,7 @@ const getCommonConfig = (
       replacePlugin({
         root,
         lang: fallbackToZh ? null : (config.lang ?? 'en'),
-        localBasePath: configFilePath ? path.dirname(configFilePath) : root,
+        localBasePath,
         items: config.reference,
         force,
         releaseNotes: config.releaseNotes,

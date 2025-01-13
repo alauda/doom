@@ -4,6 +4,7 @@ import type { Content, List, ListItem, PhrasingContent } from 'mdast'
 import { cyan, red } from 'yoctocolors'
 
 import { JiraIssue } from './types.js'
+import { isCI } from './utils.js'
 
 const releaseCache = new Map<
   string,
@@ -15,7 +16,7 @@ const FIELD_MAPPER: Record<string, string> = {
   en: 'customfield_13801',
 }
 
-const { JIRA_TOKEN, JIRA_USERNAME, JIRA_PASSWORD } = process.env
+const { JIRA_USERNAME, JIRA_PASSWORD } = process.env
 
 const issuesToMdast = (issues: JiraIssue[], lang: string) => {
   return issues
@@ -53,6 +54,8 @@ const issuesToMdast = (issues: JiraIssue[], lang: string) => {
     .filter((_) => !!_)
 }
 
+let warned = false
+
 const resolveRelease_ = async (
   releaseTemplates: Record<string, string>,
   releaseQuery: string,
@@ -74,16 +77,22 @@ const resolveRelease_ = async (
 
   let Authorization: string
 
-  if (JIRA_TOKEN) {
-    Authorization = `Bearer ${JIRA_TOKEN}`
-  } else if (JIRA_USERNAME && JIRA_PASSWORD) {
+  if (JIRA_USERNAME && JIRA_PASSWORD) {
     Authorization = `Basic ${Buffer.from(
       `${JIRA_USERNAME}:${JIRA_PASSWORD}`,
     ).toString('base64')}`
   } else {
-    throw new Error(
-      '`JIRA_TOKEN` or `JIRA_USERNAME` and `JIRA_PASSWORD` environments must be set for fetching Jira issues',
-    )
+    if (warned) {
+      return
+    } else {
+      warned = true
+    }
+    const message = `${cyan('`JIRA_USERNAME`')} and ${cyan('`JIRA_PASSWORD`')} environments must be set for fetching Jira issues`
+    if (isCI) {
+      throw new Error(message)
+    }
+    logger.warn(message)
+    return
   }
 
   const data: Record<string, string> = {}

@@ -10,38 +10,34 @@ import { resolveStaticConfig } from '../../utils/index.js'
 import type { ApiPluginOptions, CustomResourceDefinition } from './types.js'
 
 export const apiPlugin = ({
+  localBasePath,
   crds,
   openapis,
   references,
   pathPrefix,
-}: ApiPluginOptions = {}): RspressPlugin => {
-  const crdsMap: Record<string, CustomResourceDefinition> = {}
-  const openapisMap: Record<string, OpenAPIV3_1.Document> = {}
-
-  const shared: {
-    references?: Record<string, string>
-    pathPrefix?: string
-  } = {}
-
+}: ApiPluginOptions): RspressPlugin => {
   return {
     name: 'doom-api',
-    async beforeBuild(config) {
+    async extendPageData(pageData) {
+      const crdsMap: Record<string, CustomResourceDefinition> = {}
+      const openapisMap: Record<string, OpenAPIV3_1.Document> = {}
+
       if (crds) {
         for (const file of await glob(crds, {
-          cwd: config.root,
+          cwd: localBasePath,
         })) {
           crdsMap[file] = await resolveStaticConfig<CustomResourceDefinition>(
-            path.resolve(config.root!, file),
+            path.resolve(localBasePath, file),
           )
         }
       }
 
       if (openapis) {
         for (const file of await glob(openapis, {
-          cwd: config.root,
+          cwd: localBasePath,
         })) {
           let doc = await resolveStaticConfig<OpenAPI.Document>(
-            path.resolve(config.root!, file),
+            path.resolve(localBasePath, file),
           )
 
           // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -60,14 +56,10 @@ export const apiPlugin = ({
         }
       }
 
-      shared.references = references
-      shared.pathPrefix = pathPrefix
-    },
-    extendPageData(pageData) {
       pageData.crdsMap = crdsMap
       pageData.openapisMap = openapisMap
-      pageData.references = shared.references
-      pageData.pathPrefix = shared.pathPrefix
+      pageData.references = references
+      pageData.pathPrefix = pathPrefix
     },
   }
 }
