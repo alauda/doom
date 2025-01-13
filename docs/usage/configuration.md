@@ -47,12 +47,12 @@ doom serve --config ./my-config.js
 
 ```yaml
 api:
-  # CRD 定义文件路径，支持 glob 匹配，json/yaml 文件
+  # CRD 定义文件路径，相对于 doom.config.* 所在目录，支持 glob 匹配，json/yaml 文件
   crds:
-    - shared/crds/*.yaml
-  # OpenAPI 定义文件路径，支持 glob 匹配，json/yaml 文件
+    - docs/shared/crds/*.yaml
+  # OpenAPI 定义文件路径，相对于 doom.config.* 所在目录，支持 glob 匹配，json/yaml 文件
   openapis:
-    - shared/openapis/*.json
+    - docs/shared/openapis/*.json
   # 渲染 openapi 相关的资源定义时，默认会在页面内联，如果需要将相关联的资源定义单独提取到文件中，可以配置以下选项
   # 参考 https://doom.alauda.cn/apis/references/CodeQuality.html#v1alpha1.CodeQualitySpec
   references:
