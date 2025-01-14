@@ -159,6 +159,7 @@ function processLocales(
   defaultLang: string,
   defaultVersion: string,
   extensions: string[],
+  excludeRoutes?: string[],
   collapsed?: boolean,
 ) {
   return Promise.all(
@@ -176,6 +177,7 @@ function processLocales(
                 routePrefix,
                 root,
                 extensions,
+                excludeRoutes,
                 collapsed,
               )
             }),
@@ -186,6 +188,7 @@ function processLocales(
               addTrailingSlash(lang === defaultLang ? '' : `/${lang}`),
               root,
               extensions,
+              excludeRoutes,
               collapsed,
             ),
           ]
@@ -197,10 +200,12 @@ function processLocales(
 const defaultExtensions = ['.mdx', '.md', '.tsx', '.jsx', '.ts', '.js']
 
 export interface AutoSidebarPluginOptions {
+  excludeRoutes?: string[]
   collapsed?: boolean
 }
 
 export const autoSidebarPlugin = ({
+  excludeRoutes,
   collapsed,
 }: AutoSidebarPluginOptions = {}): RspressPlugin => {
   return {
@@ -210,6 +215,7 @@ export const autoSidebarPlugin = ({
       config.themeConfig = config.themeConfig || {}
       config.themeConfig.locales =
         config.themeConfig.locales || config.locales || []
+      const root = config.root!
       const langs = config.themeConfig.locales.map((locale) => locale.lang)
       const hasLocales = langs.length > 0
       const hasLang = Boolean(config.lang)
@@ -221,10 +227,11 @@ export const autoSidebarPlugin = ({
         const metaInfo = await processLocales(
           langs,
           versions,
-          config.root!,
+          root,
           defaultLang,
           defaultVersion,
           extensions,
+          excludeRoutes,
           collapsed,
         )
         config.themeConfig.locales = config.themeConfig.locales.map(
@@ -250,15 +257,16 @@ export const autoSidebarPlugin = ({
                   version === defaultVersion ? '' : `/${version}`,
                 )
                 return walk(
-                  path.join(config.root!, version),
+                  path.join(root, version),
                   routePrefix,
                   config.root!,
                   extensions,
+                  excludeRoutes,
                   collapsed,
                 )
               }),
             )
-          : [await walk(config.root!, '/', config.root!, extensions, collapsed)]
+          : [await walk(root, '/', root, extensions, excludeRoutes, collapsed)]
 
         const combined = combineWalkResult(walks, versions)
 

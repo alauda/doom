@@ -22,9 +22,9 @@ weight: 6
 
 上述 `name` 为引用文档的名称，参考[引用文档配置](./configuration#引用文档配置)，如果引用的文档内容使用了远程仓库图片静态资源，相关静态资源将自动存储在本地 `<root>/public/_remotes/<name>` 目录下。
 
-以下为使用 `{/* reference-start#ref */}` 的实例：
+以下为使用 `<!-- reference-start#ref -->` 的实例：
 
-{/* reference-start#ref */}
+<!-- reference-start#ref -->
 
 ## 引用文档配置
 
@@ -51,4 +51,4 @@ reference:
 
 文档编写参考[引用文档](./reference)
 
-{/* reference-end */}
+<!-- reference-end -->

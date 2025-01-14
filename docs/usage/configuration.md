@@ -17,22 +17,6 @@ import { defineConfig } from '@alauda/doom/config'
 export default defineConfig({})
 ```
 
-`doom` 会在 `docs` 文件夹或当前工作目录下查找配置文件，如果没有找到，会使用默认配置，也可以通过 `cli` 指定文档目录：
-
-```bash
-doom dev my-docs
-doom build my-docs
-doom serve my-docs
-```
-
-还可以通过 `--config` 指定配置文件路径：
-
-```bash
-doom dev --config ./my-config.js
-doom build --config ./my-config.js
-doom serve --config ./my-config.js
-```
-
 ## 基础配置
 
 - `lang`：默认文档语言，为方便大部分项目使用，我们默认支持中英文文档，默认语言为 `en`，如果当前文档项目不需要多语言支持，可以将此项配置为 `null` 或 `undefined`
@@ -117,6 +101,13 @@ releaseNotes:
 ```yaml
 sidebar:
   collapsed: false # 可选，是否默认折叠左导航，默认折叠，文档内容不多时可以考虑设置为 false
+```
+
+## 内部文档路由
+
+```yaml
+internalRoutes: # 可选，支持 glob 匹配，相对于 docs 目录，匹配到的文件在 cli 启用 `-i, --ignore` 选项时会被忽略
+  - '*/internal/**/*'
 ```
 
 ## `sites.yaml` 配置

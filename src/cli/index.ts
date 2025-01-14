@@ -16,6 +16,7 @@ import { green } from 'yoctocolors'
 import { CWD, DEFAULT_CONFIGS, I18N_FILE, SITES_FILE } from './constants.js'
 import { loadConfig } from './load-config.js'
 import { newCommand } from './new.js'
+import { GlobalCliOptions } from '../utils/types.js'
 
 const META_FILE = '_meta.json'
 
@@ -39,7 +40,7 @@ program
   .configureHelp({
     showGlobalOptions: true,
   })
-  .option('-c, --config [config]', 'Specify the path to the config file')
+  .option('-c, --config <config>', 'Specify the path to the config file')
   .option('-v <version>', 'Specify the version of the documentation')
   .option(
     '-p, --prefix <prefix>',
@@ -51,40 +52,29 @@ program
     (value) => !!value && value !== 'false',
     false,
   )
+  .option(
+    '-i, --ignore [boolean]',
+    'Ignore internal routes',
+    (value) => !!value && value !== 'false',
+    false,
+  )
   .command('dev', { isDefault: true })
   .description('Start the development server')
   .argument('[root]', 'Root directory of the documentation')
-  .option('--port [port]', 'Port number')
   .option('--host [host]', 'Host name')
-  .action(async function (this: Command, root: string) {
+  .option('--port [port]', 'Port number')
+  .action(async function (this: Command, root?: string) {
     setNodeEnv('development')
 
     let devServer: Awaited<ReturnType<typeof dev>> | undefined
     let cliWatcher: FSWatcher
 
-    const {
-      config: configFile,
-      v: version,
-      prefix,
-      force,
-      ...server
-    } = this.optsWithGlobals<
-      ServerConfig & {
-        config?: string
-        prefix?: string
-        v?: string
-        force?: boolean
-      }
+    const { port, host, ...globalOptions } = this.optsWithGlobals<
+      ServerConfig & GlobalCliOptions
     >()
 
     const startDevServer = async () => {
-      const { config, filepath } = await loadConfig(
-        root,
-        configFile,
-        prefix,
-        version,
-        force,
-      )
+      const { config, filepath } = await loadConfig(root, globalOptions)
 
       const docDirectory = config.root!
 
@@ -94,7 +84,7 @@ program
           appDirectory: CWD,
           docDirectory,
           extraBuilderConfig: {
-            server,
+            server: { host, port },
           },
         })
       } catch (err) {
@@ -165,24 +155,9 @@ program
   .action(async function (this: Command, root: string) {
     setNodeEnv('production')
 
-    const {
-      config: configFile,
-      prefix,
-      v: version,
-      force,
-    } = this.optsWithGlobals<{
-      config?: string
-      prefix?: string
-      v?: string
-      force?: boolean
-    }>()
-
     const { config } = await loadConfig(
       root,
-      configFile,
-      prefix,
-      version,
-      force,
+      this.optsWithGlobals<GlobalCliOptions>(),
     )
 
     const docDirectory = config.root!
@@ -207,37 +182,21 @@ program
   .alias('serve')
   .description('Preview the built documentation')
   .argument('[root]', 'Root directory of the documentation')
-  .option('--port [port]', 'Port number', '4173')
   .option('--host [host]', 'Host name')
+  .option('--port [port]', 'Port number', '4173')
   .action(async function (this: Command, root: string) {
     setNodeEnv('production')
 
-    const {
-      config: configFile,
-      prefix,
-      v: version,
-      force,
-      ...server
-    } = this.optsWithGlobals<
-      ServerConfig & {
-        config?: string
-        prefix?: string
-        v?: string
-        force?: boolean
-      }
+    const { port, host, ...globalOptions } = this.optsWithGlobals<
+      ServerConfig & GlobalCliOptions
     >()
 
-    const { config } = await loadConfig(
-      root,
-      configFile,
-      prefix,
-      version,
-      force,
-    )
+    const { config } = await loadConfig(root, globalOptions)
 
     await serve({
       config,
-      ...server,
+      host,
+      port,
     })
   })
 

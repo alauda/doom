@@ -1,3 +1,5 @@
+import path from 'node:path'
+
 import {
   isExternalUrl,
   removeLeadingSlash,
@@ -11,7 +13,8 @@ import {
 } from '@rspress/shared'
 import fs from '@rspress/shared/fs-extra'
 import { logger } from '@rspress/shared/logger'
-import path from 'node:path'
+import { unset } from 'es-toolkit/compat'
+import picomatch from 'picomatch'
 
 import type { SideMeta } from './type.js'
 import { detectFilePath, extractInfoFromFrontmatter } from './utils.js'
@@ -38,26 +41,47 @@ const sidebarSorter = (a: DoomSidebar, b: DoomSidebar) => {
 }
 
 /**
- * Split sideMeta into two parts: `index` and `others` and sort `others` by weight
+ * 1. Split sideMeta into two parts: `index` and `others` and sort `others` by weight
+ * 2. filter out `excludeRoutes`
  */
-const splitSideMeta = (sideMeta: DoomSidebar[], extensions: string[]) => {
+const processSideMeta = (
+  sideMeta: Array<DoomSidebar | undefined>,
+  extensions: string[],
+  excludeRoutes: string[],
+) => {
   const result = sideMeta.reduce<{
     index?: DoomSidebarItem
     others: DoomSidebar[]
   }>(
     (acc, curr) => {
-      let fileParts: string[] | undefined
+      if (!curr) {
+        return acc
+      }
+
+      if (!('_fileKey' in curr) || !curr._fileKey || 'items' in curr) {
+        acc.others.push(curr)
+        return acc
+      }
+
+      const ignored = excludeRoutes.some((glob) =>
+        picomatch.isMatch(curr._fileKey!, glob),
+      )
+
+      let filePart: string | undefined
+
       if (
-        '_fileKey' in curr &&
-        !('items' in curr) &&
         !acc.index &&
-        (fileParts = curr._fileKey?.split('/')) &&
-        extensions.some((ext) => fileParts!.at(-1) === `index${ext}`)
+        (filePart = curr._fileKey.split('/').at(-1)) &&
+        extensions.some((ext) => filePart === `index${ext}`)
       ) {
         acc.index = curr
-      } else {
+        if (ignored) {
+          curr.link = ''
+        }
+      } else if (!ignored) {
         acc.others.push(curr)
       }
+
       return acc
     },
     { others: [] },
@@ -75,6 +99,7 @@ export async function scanSideMeta(
   routePrefix: string,
   extensions: string[],
   ignoredDirs: string[],
+  excludeRoutes: string[],
 ) {
   if (!(await fs.exists(workDir))) {
     logger.error(
@@ -152,7 +177,7 @@ export async function scanSideMeta(
     ).filter(Boolean) as SideMeta
   }
 
-  const sidebarFromMeta: DoomSidebar[] = await Promise.all(
+  const sidebarFromMeta: Array<DoomSidebar | undefined> = await Promise.all(
     sideMeta.map(async (metaItem) => {
       if (typeof metaItem === 'string') {
         const { title, overviewHeaders, context, weight } =
@@ -216,6 +241,7 @@ export async function scanSideMeta(
           routePrefix,
           extensions,
           ['assets'],
+          excludeRoutes,
         )
         const realPath = await detectFilePath(subDir, extensions)
         const group = {
@@ -229,7 +255,16 @@ export async function scanSideMeta(
           context,
           _fileKey: realPath ? path.relative(docsDir, realPath) : '',
         }
-        return index ? { ...group, ...index } : group
+        const sidebarItem = index ? { ...group, ...index } : group
+        if (!subSidebar.length) {
+          if (index) {
+            unset(sidebarItem, 'items')
+            return sidebarItem
+          }
+
+          return
+        }
+        return sidebarItem
       }
 
       if (type === 'divider') {
@@ -252,7 +287,7 @@ export async function scanSideMeta(
     }),
   )
 
-  return splitSideMeta(sidebarFromMeta, extensions)
+  return processSideMeta(sidebarFromMeta, extensions, excludeRoutes)
 }
 
 // Start walking from the doc directory, scan the `_meta.json` file in each subdirectory
@@ -262,6 +297,7 @@ export async function walk(
   routePrefix = '/',
   docsDir: string,
   extensions: string[],
+  excludeRoutes: string[] = [],
   collapsed?: boolean,
 ) {
   const { index, others } = await scanSideMeta(
@@ -271,6 +307,7 @@ export async function walk(
     routePrefix,
     extensions,
     ['assets', 'public', 'shared'],
+    excludeRoutes,
   )
 
   const sidebars = index ? [index, ...others] : others
@@ -288,8 +325,10 @@ export async function walk(
     [routePrefix]: sidebars,
   }
 
-  if (removeTrailingSlash(routePrefix)) {
-    sidebarConfig[removeTrailingSlash(routePrefix)] = sidebars
+  const simpleRoutePrefix = removeTrailingSlash(routePrefix)
+
+  if (simpleRoutePrefix) {
+    sidebarConfig[simpleRoutePrefix] = sidebars
   }
 
   return {

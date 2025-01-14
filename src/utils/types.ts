@@ -8,12 +8,21 @@ import type {
 } from '../plugins/replace/types.js'
 import type { DoomSite } from '../shared/index.js'
 
+export interface GlobalCliOptions {
+  config?: string
+  prefix?: string
+  v?: string
+  ignore?: boolean
+  force?: boolean
+}
+
 export interface DoomConfig extends UserConfig {
   api?: ApiPluginOptions
   sites?: DoomSite[]
   reference?: ReferenceItem[]
   sidebar?: AutoSidebarPluginOptions
   releaseNotes?: ReleaseNotesOptions
+  internalRoutes?: string[]
 }
 
 export type ContentProcessor = {

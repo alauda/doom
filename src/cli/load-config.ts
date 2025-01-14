@@ -33,6 +33,7 @@ import {
 import { normalizeVersion, type DoomSite } from '../shared/index.js'
 import {
   type DoomConfig,
+  GlobalCliOptions,
   pkgResolve,
   resolveStaticConfig,
 } from '../utils/index.js'
@@ -62,12 +63,15 @@ const getCommonConfig = (
   cliRoot?: string,
   configFilePath?: string,
   version?: string,
+  ignore?: boolean,
   force?: boolean,
 ): DoomConfig => {
   const fallbackToZh = 'lang' in config && config.lang == null
   const root = resolveDocRoot(CWD, cliRoot, config.root)
 
   const localBasePath = configFilePath ? path.dirname(configFilePath) : root
+
+  const excludeRoutes = (ignore && config.internalRoutes) || []
 
   return {
     root,
@@ -80,6 +84,7 @@ const getCommonConfig = (
         'doom.config.*',
         '**/assets/**/*',
         '**/*.d.ts',
+        ...excludeRoutes,
       ],
     },
     markdown: {
@@ -107,7 +112,10 @@ const getCommonConfig = (
         ...config.api,
         localBasePath,
       }),
-      autoSidebarPlugin(config.sidebar),
+      autoSidebarPlugin({
+        ...config.sidebar,
+        excludeRoutes,
+      }),
       globalPlugin({
         sites: config.sites,
         version,
@@ -161,10 +169,13 @@ const findConfig = (basePath: string): string | undefined => {
 
 export async function loadConfig(
   root?: string,
-  configFile?: string,
-  prefix?: string,
-  version?: string,
-  force?: boolean,
+  {
+    config: configFile,
+    prefix,
+    v: version,
+    ignore,
+    force,
+  }: GlobalCliOptions = {},
 ): Promise<{
   config: DoomConfig
   filepath?: string
@@ -230,6 +241,7 @@ export async function loadConfig(
     root,
     configFilePath,
     normalizedVersion,
+    ignore,
     force,
   )
 

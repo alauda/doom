@@ -48,6 +48,8 @@ spec:
 
               corepack enable
 
+              yarn config set npmRegistryServer https://internal-mirrors.alauda.cn/repository/npm
+
               yarn --immutable
     - name: build-docs
       runAfter:

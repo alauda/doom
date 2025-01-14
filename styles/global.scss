@@ -64,6 +64,10 @@ td {
 }
 
 .doom-callouts {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  line-height: 1.75rem;
+
   > ol {
     counter-reset: callouts;
     list-style-type: none;

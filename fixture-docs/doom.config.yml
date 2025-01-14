@@ -36,3 +36,5 @@ releaseNotes:
       AND ReleaseNotesStatus = Publish
       AND project = <%= project %>
     unfixed: ''
+internalRoutes:
+  - '*/internal/*.mdx'

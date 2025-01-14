@@ -67,14 +67,45 @@ title: My Docs
 
 这样你便可以在 `.mdx` 文件中类型安全地使用 doom 提供的全局组件了。
 
-## 启动开发服务
+## 命令行工具 \{#cli}
+
+```bash
+doom -h
+
+# output
+Usage: doom [options] [command]
+
+Doctor Doom making docs.
+
+Options:
+  -V, --version                   output the version number
+  -c, --config <config>           Specify the path to the config file
+  -v <version>                    Specify the version of the documentation
+  -p, --prefix <prefix>           Specify the prefix of the documentation base
+  -f, --force [boolean]           Force to fetch latest reference remotes or scaffolding templates, otherwise use local cache (default: false)
+  -i, --ignore [boolean]          Ignore internal routes (default: false)
+  -h, --help                      display help for command
+
+Commands:
+  dev [options] [root]            Start the development server
+  build [root]                    Build the documentation
+  preview|serve [options] [root]  Preview the built documentation
+  new [template]                  Generate scaffolding from templates
+  help [command]                  display help for command
+```
+
+### 启动开发服务
 
 执行 `yarn dev` 启动开发服务，浏览器会自动打开文档首页
 
-## 生产环境构建
+### 生产环境构建
 
 执行 `yarn build` 构建生产环境代码，构建完成后会在 `dist` 目录生成静态文件
 
-## 本地预览
+### 本地预览
 
 执行 `yarn serve` 预览构建后的静态文件
+
+### 使用脚手架模板
+
+执行 `yarn  new` 使用脚手架模板生成项目、模块或文档

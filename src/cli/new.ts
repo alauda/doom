@@ -239,6 +239,7 @@ const handleTemplateFile = async ({
 }
 
 export const newCommand = new Command('new')
+  .description('Generate scaffolding from templates')
   .argument('[template]', 'Scaffolding template name, format: `[name][:type]`')
   .action(async function (this: Command, template: string = '') {
     let [name, type] = template.split(':')
