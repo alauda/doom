@@ -1,19 +1,16 @@
 import fs from 'node:fs/promises'
-import os from 'node:os'
 import path from 'node:path'
 
 import { isProduction } from '@rspress/core'
 import { logger } from '@rspress/shared/logger'
 import { render } from 'ejs'
 import type { Content } from 'mdast'
-import { simpleGit } from 'simple-git'
-import { cyan, red } from 'yoctocolors'
+import { red } from 'yoctocolors'
 
 import { parseToc } from './parse-toc.js'
 import type { NormalizedReferenceSource } from './types.js'
 import { getFrontmatterNode, mdProcessor, mdxProcessor } from './utils.js'
-
-const remotesFolder = path.resolve(os.homedir(), '.doom/remotes')
+import { resolveRepo } from '../../utils/index.js'
 
 export interface ResolveReferenceResult {
   publicBase: string
@@ -41,39 +38,10 @@ const resolveReference_ = async (
   let publicBase
   let sourcePath = source.path
   if (source.repo) {
-    const repoFolder = path.resolve(remotesFolder, source.slug!)
+    const repoFolder = await resolveRepo(source.repo, force, source.branch)
 
-    let created = false
-
-    try {
-      const stat = await fs.stat(path.resolve(repoFolder, '.git'))
-      if (stat.isDirectory()) {
-        created = true
-      }
-    } catch {
-      // ignore
-    }
-
-    if (!created) {
-      await fs.mkdir(repoFolder, { recursive: true })
-    }
-
-    const git = simpleGit(repoFolder)
-
-    if (!created) {
-      logger.info(`Cloning remote \`${cyan(source.slug!)}\` repository...`)
-      await git.clone(source.repo, repoFolder, ['--depth', '1'])
-    }
-
-    if (force) {
-      logger.info(`Pulling latest changes for \`${cyan(source.slug!)}\`...`)
-      await git.pull([
-        '--depth',
-        '1',
-        '--force',
-        '--rebase',
-        '--allow-unrelated-histories',
-      ])
+    if (!repoFolder) {
+      return
     }
 
     publicBase = path.resolve(repoFolder, source.publicBase ?? 'docs/public')

@@ -52,11 +52,12 @@ api:
 ```yaml
 reference:
   - repo: alauda-public/product-doc-guide # 可选，引用文档仓库地址，如果不填写，则默认使用当前文档仓库地址
+    branch: # [string] 可选，引用文档仓库分支
+    publicBase: # [string] 可选，使用远程仓库时使用绝对路径 /images/xx.png 对应的静态资源所在目录，默认为 docs/public
     sources:
       - name: anchor # 引用文档名称，用于在文档中引用，全局唯一
         path: docs/index.mdx#介绍 # 引用文档路径，支持锚点定位，远程仓库相对于仓库根目录，本地相对于 doom.config.* 所在目录
-        # publicBase: [string] # 可选，使用远程仓库时使用绝对路径 /images/xx.png 对应的静态资源所在目录，默认为 docs/public
-        # ignoreHeading: [boolean] # 可选，是否忽略标题，如果为 true，则不会在引用文档中显示锚点的标题
+        ignoreHeading: # [boolean] 可选，是否忽略标题，如果为 true，则不会在引用文档中显示锚点的标题
         processors: # 可选，引用文档内容处理器
           - type: ejsTemplate
             data: # ejs 模板参数，使用 `<%= data.xx %>` 访问

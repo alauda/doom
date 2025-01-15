@@ -1,17 +1,16 @@
 import fs from 'node:fs/promises'
-import os from 'node:os'
 import path from 'node:path'
 
 import * as prompts from '@inquirer/prompts'
 import { logger } from '@rsbuild/core'
 import { Command } from 'commander'
 import { render } from 'ejs'
-import { simpleGit } from 'simple-git'
 import { glob } from 'tinyglobby'
 import { cyan, magenta } from 'yoctocolors'
 
 import { resolveStaticConfig } from '../utils/helpers.js'
 import { ContentProcessor } from '../utils/types.js'
+import { resolveRepo } from '../utils/index.js'
 
 export const DEFAULT_PATH = 'templates/scaffolding.yaml'
 
@@ -75,13 +74,7 @@ export interface Scaffolding {
   layout?: ScaffoldingLayout[]
 }
 
-const scaffoldingsFolder = path.resolve(os.homedir(), '.doom/scaffoldings')
-
-const getScaffoldings = async (
-  repoFolder: string,
-  scaffoldingPath: string,
-  branch: string,
-) => {
+const getScaffoldings = async (repoFolder: string, scaffoldingPath: string) => {
   const scaffoldingFile = path.resolve(repoFolder, scaffoldingPath)
   try {
     const stat = await fs.stat(scaffoldingFile)
@@ -95,7 +88,7 @@ const getScaffoldings = async (
     const err = err_ as Error
     if (err.name === 'YAMLParseError') {
       logger.error(
-        `Failed to parse \`${magenta(scaffoldingPath)}\` on branch \`${magenta(branch)}\`: ${err.message}`,
+        `Failed to parse \`${magenta(scaffoldingPath)}\`: ${err.message}`,
       )
     }
   }
@@ -104,7 +97,9 @@ const getScaffoldings = async (
 const resolveScaffoldings = async (
   name: string,
   force: boolean,
-): Promise<{ base: string; scaffoldings: Scaffolding[] } | undefined> => {
+): Promise<
+  { base: string; repoFolder: string; scaffoldings?: Scaffolding[] } | undefined
+> => {
   if (!Object.hasOwn(scaffoldingTemplates, name)) {
     logger.error(
       `Template \`${magenta(name)}\` not found, current available templates are: ${Object.keys(
@@ -116,92 +111,20 @@ const resolveScaffoldings = async (
     return
   }
 
-  const repoFolder = path.resolve(scaffoldingsFolder, name)
+  const { repo, scaffoldingPath = 'templates/scaffolding.yaml' } =
+    scaffoldingTemplates[name]
 
-  const {
-    repo,
-    branches: branches_,
-    scaffoldingPath = 'templates/scaffolding.yaml',
-  } = scaffoldingTemplates[name]
+  const repoFolder = await resolveRepo(repo, force)
 
-  let branches = branches_
-
-  let created = false
-
-  try {
-    const stat = await fs.stat(path.resolve(repoFolder, '.git'))
-    if (stat.isDirectory()) {
-      created = true
-    }
-  } catch {
-    // ignore
+  if (!repoFolder) {
+    return
   }
-
-  if (!created) {
-    await fs.mkdir(repoFolder, { recursive: true })
-  }
-
-  const git = simpleGit(repoFolder)
-
-  if (!created) {
-    logger.info(`Cloning scaffolding template \`${cyan(name)}\` repository...`)
-    await git.clone(
-      /^((\w+):)?\/\//.test(repo)
-        ? repo
-        : `https://gitlab-ce.alauda.cn/${repo}`,
-      repoFolder,
-      ['--depth', '1'],
-    )
-  }
-
-  let currentBranch = (await git.raw(['branch', '--show-current'])).trim()
-
-  let scaffoldings: Scaffolding[] | undefined
 
   const base = path.resolve(repoFolder, scaffoldingPath, '..')
 
-  if (
-    !force &&
-    (scaffoldings = await getScaffoldings(
-      repoFolder,
-      scaffoldingPath,
-      currentBranch,
-    ))
-  ) {
-    return { base, scaffoldings }
-  }
+  const scaffoldings = await getScaffoldings(repoFolder, scaffoldingPath)
 
-  if (!branches?.length) {
-    const defaultBranch = (
-      await git.raw(['rev-parse', '--abbrev-ref', 'origin/HEAD'])
-    )
-      .trim()
-      .replace('origin/', '')
-    branches = [defaultBranch]
-  }
-
-  const options = ['--depth', '1', '--force']
-
-  for (const branch of branches) {
-    if (branch === currentBranch) {
-      logger.info(`Pulling latest changes from branch \`${cyan(branch)}\`...`)
-      await git.pull([...options, '--rebase', '--allow-unrelated-histories'])
-    } else {
-      logger.info(`Switching to branch \`${cyan(branch)}\`...`)
-      await git.fetch('origin', `${branch}:${branch}`, options)
-      await git.checkout((currentBranch = branch))
-    }
-
-    const scaffoldings = await getScaffoldings(
-      repoFolder,
-      scaffoldingPath,
-      branch,
-    )
-
-    if (scaffoldings) {
-      return { base, scaffoldings }
-    }
-  }
+  return { base, scaffoldings, repoFolder }
 }
 
 const handleTemplateFile = async ({
@@ -250,13 +173,15 @@ export const newCommand = new Command('new')
 
     const { force } = this.optsWithGlobals<{ force: boolean }>()
 
-    const { base, scaffoldings } =
+    const { base, repoFolder, scaffoldings } =
       (await resolveScaffoldings(name, force)) || {}
 
     if (!scaffoldings) {
-      logger.error(
-        `Unable to resolve any scaffoldings, if you are sure the template \`${magenta(name)}\` exists, try to use the \`--force\` option, or event remove the local cache at ${magenta(path.resolve(scaffoldingsFolder, name))} and try again`,
-      )
+      if (repoFolder) {
+        logger.error(
+          `Unable to resolve any scaffoldings, if you are sure the template \`${magenta(name)}\` exists, try to use the \`--force\` option, or event remove the local cache at ${magenta(repoFolder)} and try again`,
+        )
+      }
       return
     }
 

@@ -11,16 +11,19 @@ export interface ReferenceItemSource {
   processors?: ContentProcessor[]
 }
 
-export interface ReferenceItem {
+export interface ReferenceItemRemote {
   repo?: string
+  branch?: string
   publicBase?: string
+}
+
+export interface ReferenceItem extends ReferenceItemRemote {
   sources: ReferenceItemSource[]
 }
 
-export interface NormalizedReferenceSource extends ReferenceItemSource {
-  repo?: string
-  publicBase?: string
-  slug?: string
+export interface NormalizedReferenceSource
+  extends ReferenceItemRemote,
+    ReferenceItemSource {
   anchor?: string
 }
 

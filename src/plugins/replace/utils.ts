@@ -29,18 +29,13 @@ export const normalizeReferenceItems = (items: ReferenceItem[]) =>
           `Duplicate source name \`${red(source.name)}\` will be deduplicated`,
         )
       }
-      const repo = curr.repo
-      const extra: { repo?: string; slug?: string } = {}
-      if (repo) {
-        const url = new URL(repo, 'https://gitlab-ce.alauda.cn')
-        extra.repo = url.toString()
-        extra.slug = url.pathname.slice(1)
-      }
+      const { repo, branch, publicBase } = curr
       const [path, anchor] = source.path.split('#')
       acc[source.name] = {
         ...source,
-        ...extra,
-        publicBase: curr.publicBase,
+        repo,
+        branch,
+        publicBase,
         path,
         anchor,
       }
