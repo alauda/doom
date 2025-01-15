@@ -31,7 +31,7 @@ spec:
           workspace: cache
       taskSpec:
         steps:
-          - image: build-harbor.alauda.cn/devops/builder-nodejs:18
+          - image: build-harbor.alauda.cn/frontend/builder-nodejs:lts-iron
             name: install
             imagePullPolicy: IfNotPresent
             workingDir: $(workspaces.source.path)
@@ -47,10 +47,9 @@ spec:
               export YARN_GLOBAL_FOLDER=/workspace/yarn_cache/global
 
               corepack enable
-
               yarn config set npmRegistryServer https://internal-mirrors.alauda.cn/repository/npm
-
               yarn --immutable
+              git reset --hard
     - name: build-docs
       runAfter:
         - install-dependencies
@@ -59,7 +58,7 @@ spec:
           workspace: source
       taskSpec:
         steps:
-          - image: build-harbor.alauda.cn/devops/builder-nodejs:18
+          - image: build-harbor.alauda.cn/frontend/builder-nodejs:lts-iron
             name: build
             imagePullPolicy: IfNotPresent
             workingDir: $(workspaces.source.path)
