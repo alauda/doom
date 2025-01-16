@@ -6,6 +6,7 @@ import type { RspressPlugin } from '@rspress/core'
 import type { DoomSite } from '../../shared/types.js'
 import { baseResolve, pkgResolve } from '../../utils/index.js'
 
+const globalComponentsDir = baseResolve('global')
 const componentsDir = baseResolve('runtime/components')
 
 export interface GlobalPluginOptions {
@@ -20,7 +21,11 @@ export const globalPlugin = ({
   return {
     name: 'doom-global',
     globalStyles: pkgResolve('styles/global.scss'),
-    globalUIComponents: [baseResolve('global/VersionsNav/index')],
+    globalUIComponents: fs
+      .readdirSync(globalComponentsDir, 'utf8')
+      .map((component) =>
+        path.resolve(globalComponentsDir, component, 'index'),
+      ),
     markdown: {
       globalComponents: fs
         .readdirSync(componentsDir)

@@ -1,0 +1,9 @@
+brand:
+  en:
+    company: Alauda
+    product: Alauda Container Platform
+    productShort: ACP
+  zh:
+    company: 灵雀云
+    product: 灵雀云容器平台
+    productShort: 容器平台

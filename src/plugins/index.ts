@@ -1,4 +1,5 @@
 export * from './api/index.js'
 export * from './auto-sidebar/index.js'
+export * from './directives/index.js'
 export * from './global/index.js'
 export * from './shiki/index.js'

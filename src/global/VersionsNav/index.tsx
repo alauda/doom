@@ -4,14 +4,21 @@ import {
   usePageData,
 } from '@rspress/core/runtime'
 import { noop } from 'es-toolkit'
-import { useEffect, useMemo, useState } from 'react'
+import { type FC, useEffect, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { parse } from 'yaml'
 
 import { ExtendedPageData } from '../../runtime/types.js'
 import { NavMenuGroup } from './NavMenuGroup.js'
 
-export const VersionsNav = () => {
+const getNavMenu = () => {
+  if (typeof document === 'undefined') {
+    return null
+  }
+  return document.querySelector('.rspress-nav-menu')
+}
+
+export const VersionsNav: FC = () => {
   const { siteData, page } = usePageData() as ExtendedPageData
 
   const [versionsBase, version] = useMemo(() => {
@@ -25,7 +32,7 @@ export const VersionsNav = () => {
     ]
   }, [siteData.base, page.v])
 
-  const [navMenu, setNavMenu] = useState<Element | null>()
+  const [navMenu, setNavMenu] = useState(getNavMenu)
 
   const [versions, setVersions] = useState<string[]>()
 
@@ -38,7 +45,7 @@ export const VersionsNav = () => {
         `${isProduction() ? versionsBase : ''}/versions.yaml`,
       )
       const text = await res.text()
-      setNavMenu(document.querySelector('.rspress-nav-menu'))
+      setNavMenu(getNavMenu())
       const versions = parse(text) as string[]
       if (version && !versions.includes(version)) {
         versions.unshift(version)
@@ -56,7 +63,7 @@ export const VersionsNav = () => {
     }
     const observer = new MutationObserver((mutations) => {
       if (mutations.some((m) => m.removedNodes.length)) {
-        setNavMenu(document.querySelector('.rspress-nav-menu'))
+        setNavMenu(getNavMenu)
       }
     })
     observer.observe(navMenu, { childList: true })
@@ -80,7 +87,7 @@ export const VersionsNav = () => {
       }))}
       pathname={siteData.base}
     />,
-    document.querySelector('.rspress-nav-menu')!,
+    getNavMenu()!,
   )
 }
 

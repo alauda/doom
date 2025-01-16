@@ -42,7 +42,9 @@ export const ExternalSiteLink = ({
     return <Directive type="danger">Invalid href `{href}` found</Directive>
   }
 
-  const siteBase = addTrailingSlash(site.base)
+  const siteBase = addTrailingSlash(
+    site.base || (site.name === 'acp' ? '/container-platform' : ''),
+  )
 
   return (
     <a

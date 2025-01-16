@@ -4,7 +4,7 @@ import path from 'node:path'
 import { isProduction } from '@rspress/core'
 import { logger } from '@rspress/shared/logger'
 import type { Content, Root } from 'mdast'
-import { type Plugin } from 'unified'
+import type { Plugin } from 'unified'
 import { parse, stringify } from 'yaml'
 import { cyan, red } from 'yoctocolors'
 

@@ -4,6 +4,12 @@ import { OpenAPIV3_1 } from 'openapi-types'
 import type { CustomResourceDefinition } from '../plugins/api/types.js'
 import type { DoomSite } from '../shared/types.js'
 
+export interface SiteBrand {
+  company: string
+  product: string
+  productShort: string
+}
+
 export interface ExtendedPage {
   crdsMap?: Record<string, CustomResourceDefinition>
   openapisMap?: Record<string, OpenAPIV3_1.Document>

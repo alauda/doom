@@ -107,7 +107,7 @@ Memory overhead per virtual machine ≈ (1.002 × requested memory) \
               + (additional memory overhead)  # [\!code callout]
 ```
 
-<Callouts>
+:::callouts
 
 1. Required for the processes that run in the `virt-launcher` pod.
 2. Number of virtual CPUs requested by the virtual machine.
@@ -116,8 +116,7 @@ Memory overhead per virtual machine ≈ (1.002 × requested memory) \
    - If your environment includes a Single Root I/O Virtualization (SR-IOV) network device or a Graphics Processing Unit (GPU), allocate 1 GiB additional memory overhead for each device.
    - If Secure Encrypted Virtualization (SEV) is enabled, add 256 MiB.
    - If Trusted Platform Module (TPM) is enabled, add 53 MiB.
-
-</Callouts>
+     :::
 ````
 
 ```sh
@@ -128,7 +127,7 @@ Memory overhead per virtual machine ≈ (1.002 × requested memory) \
               + (additional memory overhead)  # [!code callout]
 ```
 
-<Callouts>
+:::callouts
 
 1. Required for the processes that run in the `virt-launcher` pod.
 2. Number of virtual CPUs requested by the virtual machine.
@@ -138,7 +137,7 @@ Memory overhead per virtual machine ≈ (1.002 × requested memory) \
    - If Secure Encrypted Virtualization (SEV) is enabled, add 256 MiB.
    - If Trusted Platform Module (TPM) is enabled, add 53 MiB.
 
-</Callouts>
+:::
 
 更多源码转换功能请参考 [Shiki Transformers](https://shiki.style/packages/transformers#transformers)。
 
@@ -211,6 +210,20 @@ Memory overhead per virtual machine ≈ (1.002 × requested memory) \
 <AcpApisOverview />
 
 <ExternalApisOverview name="connectors" />
+
+### Brand
+
+品牌信息组件，纯文本，动态挂载注入
+
+```mdx
+<CompanyBrand />
+<ProductBrand />
+<ProductShortBrand />
+```
+
+<CompanyBrand />
+<ProductBrand />
+<ProductShortBrand />
 
 ### `JsonViewer`
 

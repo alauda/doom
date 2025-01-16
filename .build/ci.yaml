@@ -44,6 +44,7 @@ spec:
                 memory: 4Gi
             script: |
               # set -x
+              export COREPACK_NPM_REGISTRY=https://registry.npmmirror.com
               export YARN_GLOBAL_FOLDER=/workspace/yarn_cache/global
 
               corepack enable

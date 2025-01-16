@@ -1,13 +1,13 @@
 {
   "name": "@alauda/doom",
-  "version": "0.8.3",
+  "version": "0.8.4",
   "type": "module",
   "description": "Doctor Doom making docs.",
   "repository": {
     "type": "git",
     "url": "git+https://gitlab-ce.alauda.cn/idp/Doom.git"
   },
-  "packageManager": "yarn@4.5.0",
+  "packageManager": "yarn@4.6.0",
   "engines": {
     "node": ">=18.17.0 <20 || >=20.1.0"
   },
@@ -33,15 +33,15 @@
     "lint": "run-p 'lint:*'",
     "lint:es": "eslint .",
     "lint:tsc": "tsc -b",
-    "prepare": "simple-git-hooks",
+    "prepare": "simple-git-hooks && patch-package",
     "prepublishOnly": "yarn build",
     "swc-node": "node --enable-source-maps --import @swc-node/register/esm-register"
   },
   "dependencies": {
-    "@inquirer/prompts": "^7.2.1",
+    "@inquirer/prompts": "^7.2.3",
     "@openapi-contrib/openapi-schema-to-json-schema": "^5.1.0",
-    "@rspress/core": "1.39.3",
-    "@shikijs/transformers": "^1.26.1",
+    "@rspress/core": "1.40.0",
+    "@shikijs/transformers": "^1.27.2",
     "chokidar": "^4.0.3",
     "clsx": "^2.1.1",
     "commander": "^12.1.0",
@@ -51,35 +51,37 @@
     "picomatch": "^4.0.2",
     "react-markdown": "^8.0.7",
     "rehype-raw": "^6.1.1",
+    "remark-directive": "^2.0.1",
     "remark-frontmatter": "^4.0.1",
     "remark-gfm": "^3.0.1",
-    "shiki": "^1.26.1",
+    "shiki": "^1.27.2",
     "simple-git": "^3.27.0",
     "swagger2openapi": "^7.0.8",
     "tinyglobby": "^0.2.10",
-    "type-fest": "^4.31.0",
+    "type-fest": "^4.32.0",
     "yaml": "^2.7.0",
     "yoctocolors": "^2.1.1"
   },
   "devDependencies": {
-    "@eslint/js": "^9.17.0",
+    "@eslint/js": "^9.18.0",
     "@swc-node/register": "^1.10.9",
-    "@swc/core": "1.10.4",
+    "@swc/core": "1.10.7",
     "@types/ejs": "^3.1.5",
     "@types/eslint__js": "^8.42.3",
     "@types/fs-extra": "^11.0.4",
-    "@types/node": "^18.19.70",
+    "@types/node": "^18.19.71",
     "@types/picomatch": "^3.0.1",
     "@types/react-dom": "^18.3.5",
     "@types/swagger2openapi": "^7.0.4",
-    "eslint": "^9.17.0",
-    "lint-staged": "^15.3.0",
+    "@unts/patch-package": "^8.0.0",
+    "eslint": "^9.18.0",
+    "lint-staged": "^15.4.0",
     "npm-run-all2": "^7.0.2",
     "prettier": "^3.4.2",
     "prettier-plugin-pkg": "^0.18.1",
     "simple-git-hooks": "^2.11.1",
-    "typescript": "^5.7.2",
-    "typescript-eslint": "^8.19.1"
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.20.0"
   },
   "publishConfig": {
     "access": "public"

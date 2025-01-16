@@ -27,6 +27,7 @@ import {
   apiPlugin,
   autoSidebarPlugin,
   createTransformerCallouts,
+  directivesPlugin,
   globalPlugin,
   shikiPlugin,
 } from '../plugins/index.js'
@@ -76,6 +77,7 @@ const getCommonConfig = (
   return {
     root,
     lang: fallbackToZh ? 'zh' : config.lang,
+    title: '',
     route: {
       exclude: [
         'dist/**/*',
@@ -116,6 +118,7 @@ const getCommonConfig = (
         ...config.sidebar,
         excludeRoutes,
       }),
+      directivesPlugin(),
       globalPlugin({
         sites: config.sites,
         version,
