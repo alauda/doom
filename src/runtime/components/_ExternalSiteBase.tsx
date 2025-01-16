@@ -1,5 +1,5 @@
 import { useLang, usePageData } from '@rspress/core/runtime'
-import { FC, useMemo } from 'react'
+import { type FC, useMemo } from 'react'
 
 import { handleCJKWhitespaces } from '../utils.js'
 import Directive from './Directive.js'

@@ -1,5 +1,4 @@
 import { addTrailingSlash, type RspressPlugin } from '@rspress/core'
-import { logger } from '@rspress/shared/logger'
 import path from 'node:path'
 
 import { combineWalkResult } from './utils.js'
@@ -242,12 +241,6 @@ export const autoSidebarPlugin = ({
         )
       } else {
         if (hasLang) {
-          logger.error(
-            '`lang` is configured but `locales` not, ' +
-              'thus `@rspress/plugin-auto-nav-sidebar` can not auto generate ' +
-              'navbar level config correctly!\n' +
-              'please check your config file',
-          )
           return config
         }
         const walks = versions.length

@@ -1,4 +1,4 @@
-import { UserConfig } from '@rspress/core'
+import type { UserConfig } from '@rspress/core'
 
 import type { ApiPluginOptions } from '../plugins/api/types.js'
 import type { AutoSidebarPluginOptions } from '../plugins/index.js'

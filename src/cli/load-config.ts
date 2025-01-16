@@ -3,9 +3,9 @@ import path from 'node:path'
 
 import { nodeTypes } from '@mdx-js/mdx'
 import {
+  type LocaleConfig,
   addLeadingSlash,
   addTrailingSlash,
-  LocaleConfig,
   normalizeSlash,
   removeLeadingSlash,
   removeTrailingSlash,
@@ -31,10 +31,13 @@ import {
   globalPlugin,
   shikiPlugin,
 } from '../plugins/index.js'
-import { normalizeVersion, type DoomSite } from '../shared/index.js'
+import { mermaidPlugin } from '../plugins/mermaid/index.js'
+import { permissionPlugin } from '../plugins/permission/index.js'
+import { replacePlugin } from '../plugins/replace/index.js'
+import { type DoomSite, normalizeVersion } from '../shared/index.js'
 import {
   type DoomConfig,
-  GlobalCliOptions,
+  type GlobalCliOptions,
   pkgResolve,
   resolveStaticConfig,
 } from '../utils/index.js'
@@ -46,9 +49,6 @@ import {
   SITES_FILE,
   YAML_EXTENSIONS,
 } from './constants.js'
-import { replacePlugin } from '../plugins/replace/index.js'
-import { mermaidPlugin } from '../plugins/mermaid/index.js'
-import { permissionPlugin } from '../plugins/permission/index.js'
 
 const DEFAULT_LOGO = '/logo.svg'
 
@@ -254,6 +254,7 @@ export async function loadConfig(
   )
 
   const mergedConfig = mergeRsbuildConfig(commonConfig, config, {
+    lang: commonConfig.lang,
     root: commonConfig.root,
   })
 

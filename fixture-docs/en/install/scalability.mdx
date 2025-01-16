@@ -1,0 +1,107 @@
+---
+weight: 20
+i18n:
+  title:
+    en: Capacity Planning
+sourceSHA: 5c8eb865b9174804296228d1c535b2081f7043de0e8754bb7ff45fdac620f7fb
+title: Capacity Planning
+---
+
+# Capacity Planning \{#scale}
+
+Before installing a management cluster, it is essential to select an appropriate installation scenario based on business objectives and actual needs. Different scenarios have distinct requirements for infrastructure resource allocation and architectural design. The following are planning recommendations for three typical scenarios:
+
+### Installation Scenario Selection \{#scenario}
+
+#### Scenario One: Functional Verification
+
+**Applicable Scope**
+This scenario is suitable for platform functional verification, demonstration environment setup, or technical feasibility testing. It is intended solely for validating the core functionalities of the platform and does not handle production-level business traffic, with resource allocation at the minimum level.
+
+**Core Features**
+
+- **Single Node Deployment**: Control plane and computing functions are integrated into a single node.
+- **Lightweight Load**: Runs only core platform components and no more than 10 demo pods.
+- **Non-Production Use**: Does not meet business continuity and high availability requirements.
+
+**Resource Configuration Requirements**
+
+| Dimension  | Specification Requirements      |
+| ---------- | ------------------------------- |
+| Node Count | 1 (physical or virtual machine) |
+| CPU        | ≥16 cores                       |
+| Memory     | ≥32GB                           |
+
+**Architecture Description**
+
+- The management cluster is deployed in a single-node format, integrating all control and computing functions.
+- All business loads run on that node (recommended number of demo pods ≤ 10).
+- Does not support horizontal scaling, thus not suitable for production environments.
+
+---
+
+#### Scenario Two: ISV Integration Delivery
+
+**Applicable Scope**
+This scenario caters to the standardized delivery needs of ISVs (Independent Software Vendors). When installing the management cluster, it handles both platform management and directly runs ISV applications without the need for extra business cluster deployment.
+
+**Core Features**
+
+- **Production-Grade Deployment**: Directly hosts ISV business applications, meeting SLA for production environments.
+- **Resource Collaboration**: Node configurations satisfy both platform component requirements and ISV application loads.
+- **High Availability Assurance**: At least 3 control nodes form a highly available architecture.
+
+**Resource Configuration Requirements**
+
+| Deployment Mode            | Node Type    | Quantity | Minimum Specification                     | Recommended Specification | Notes                                                            |
+| -------------------------- | ------------ | -------- | ----------------------------------------- | ------------------------- | ---------------------------------------------------------------- |
+| **Minimum Deployment**     | Control Node | 3        | 8C16GB + ISV Needs                        | 12C24GB + ISV Needs       | Suggest reserving approximately 30% redundancy resources         |
+|                            | Compute Node | 0        | —                                         | —                         | Control nodes share the operation of ISV applications            |
+| **Recommended Deployment** | Control Node | 3        | 8C16GB                                    | 12C24GB                   | Runs Kubernetes components and platform control plane            |
+|                            | Compute Node | ≥2       | Based on ISV application load requirement | —                         | Run ISV applications independently; HA deployment is recommended |
+
+**Architecture Description**
+
+- Deploy platform components and ISV business pods simultaneously when installing the management cluster, suggesting node taints for isolating critical components.
+- It is recommended for ISV applications to run on dedicated compute nodes to avoid competing for control plane resources.
+- Scaling suggestion: For every additional 50 business pods, increase compute nodes by 1 based on ISV application resource needs.
+
+---
+
+#### Scenario Three: Multi-Cluster Management (Data Center Level)
+
+**Applicable Scope**
+This scenario is suitable for large enterprise data center environments, requiring unified management of multiple business clusters across clouds and regions. As the number of business clusters increases, the management cluster must dynamically expand compute nodes and resource configurations to ensure high availability and high performance.
+
+**Core Features**
+
+- **Hybrid Management**: Supports unified management of business clusters across clouds and regions.
+- **Elastic Expansion**: Management cluster resources expand linearly with the number of connected business clusters.
+- **Physical Isolation**: It is recommended to deploy the control plane and compute plane with physical isolation to ensure system stability.
+
+**Baseline Resource Configuration**
+
+| Node Type    | Quantity | Minimum Specification | Recommended Specification | Deployment Strategy                                 |
+| ------------ | -------- | --------------------- | ------------------------- | --------------------------------------------------- |
+| Control Node | 3 or 5   | 8C16GB                | 16C32GB                   | Independently deployed, enable anti-affinity policy |
+| Compute Node | ≥2       | 12C24GB               | 24C48GB                   | Suggest reserving 30% resource redundancy           |
+
+**Dynamic Expansion Rules**
+
+1. **Vertical Scaling**: A single node can be upgraded incrementally (e.g., 12C24GB → 24C48GB → 48C96GB).
+2. **Horizontal Scaling**: For every 10 business clusters connected, it is recommended to increase compute resources by 20% (increase node count or specifications).
+3. **Monitoring Triggers**: When CPU/memory usage consistently exceeds 70%, initiate scaling measures.
+
+**Architecture Description**
+
+- The control plane consists of 3 nodes forming an ETCD cluster, with TLS encryption and regular snapshots recommended.
+- It is suggested to deploy key platform components on independent compute nodes to avoid resource contention.
+- Disaster recovery suggestion: Deploy across multiple availability zones to ensure compute nodes are distributed across at least 2 physical fault domains.
+
+---
+
+### Global Planning Recommendations
+
+1. **Resource Redundancy**: It is recommended to reserve at least 30% of the resources in production environments to cope with sudden load spikes.
+2. **Network Planning**: The management cluster should be deployed in a dedicated VPC or VLAN to ensure bandwidth is ≥1Gbps.
+3. **Storage Isolation**: ETCD storage is recommended to utilize NVMe SSDs and to maintain physical isolation from business storage.

@@ -1,7 +1,7 @@
 import { useLang } from '@rspress/core/runtime'
-
-import { Locale, TRANSLATIONS } from '../translation.js'
 import { useCallback } from 'react'
+
+import { type Locale, TRANSLATIONS } from '../translation.js'
 
 export const useTranslation = () => {
   const lang = (useLang() || 'zh') as Locale

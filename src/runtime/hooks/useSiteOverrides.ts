@@ -2,8 +2,8 @@ import { isProduction, useLang, usePageData } from '@rspress/core/runtime'
 import { useEffect, useMemo, useState } from 'react'
 import { parse } from 'yaml'
 
-import { SiteBrand } from '../types.js'
-import { DoomSite } from '../../shared/types.js'
+import type { DoomSite } from '../../shared/types.js'
+import type { SiteBrand } from '../types.js'
 
 import virtual from 'doom-@global-virtual'
 

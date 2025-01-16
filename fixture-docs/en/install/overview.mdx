@@ -1,0 +1,37 @@
+---
+weight: 10
+i18n:
+  title:
+    en: Installation overview
+sourceSHA: 13d0c7fe03ad3e6440cd1ad8a4602810c327b58e3df58412095bbab9d6b51b7a
+title: Installation overview
+---
+
+# Installation Overview
+
+The platform architecture and key features are as follows:
+
+- **Architecture Design**
+
+  - **Management Cluster**: Responsible for the core management of the platform, providing cluster, tenant management, and global scheduling. After the management cluster is installed, business clusters can be added or created as needed.
+  - **Business Cluster**: Specifically designed to bear business workloads and supports horizontal scaling. Business clusters can be independently deployed or connected through existing clusters that meet version requirements.
+
+- **Design Principles**
+
+  1. **Control Plane Isolation Deployment**
+     When installing the management cluster, dedicated physical resources must be used and not shared with business clusters to ensure the stability and security of the control plane.
+  2. **Hybrid Deployment Compatibility**
+     In development and testing environments or resource-constrained situations, it is allowed to run business workloads simultaneously on the management cluster (i.e., the global cluster), enabling co-location of management and business functionality.
+  3. **Standardized Access Specifications**
+     Two methods for accessing business clusters are supported:
+     - New business cluster (recommended)
+     - Connecting to existing clusters that meet version requirements (pre-inspection required)
+
+- **Architecture Diagram**
+
+  ```mermaid
+  graph TD
+      A[Management Cluster] --> B(Business Cluster 1)
+      A --> C(Business Cluster 2)
+      A --> D(Business Cluster N)
+  ```

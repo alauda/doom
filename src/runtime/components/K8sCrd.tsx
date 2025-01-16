@@ -3,7 +3,7 @@
  */
 
 import { Badge, Button, getCustomMDXComponent } from '@rspress/core/theme'
-import { OpenAPIV3_1 } from 'openapi-types'
+import type { OpenAPIV3_1 } from 'openapi-types'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { useTranslation } from '../hooks/index.js'

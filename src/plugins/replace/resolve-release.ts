@@ -3,7 +3,7 @@ import { render } from 'ejs'
 import type { Content, List, ListItem, PhrasingContent } from 'mdast'
 import { cyan, red } from 'yoctocolors'
 
-import { JiraIssue } from './types.js'
+import type { JiraIssue } from './types.js'
 import { isCI } from './utils.js'
 
 const releaseCache = new Map<

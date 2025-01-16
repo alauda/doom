@@ -1,0 +1,363 @@
+---
+weight: 30
+i18n:
+  title:
+    en: Prerequisites
+sourceSHA: e979db6a3efc2611f8c586ac2f456ed08db6cce38c0f30dd5082ac3f3462f010
+title: Prerequisites
+---
+
+# Prerequisites
+
+**Note:** The platform currently **does not support direct installation of the management cluster in an existing Kubernetes environment**. Please prepare virtual or physical machines that meet the requirements in advance, and strictly follow the prerequisites outlined below for deployment preparation.
+
+The following content details the hardware, network, operating system, and kernel requirements for installing the management cluster, as well as the node preprocessing steps.
+
+### 1. Machine Resource Requirements
+
+**Tip:** This section describes the minimum hardware requirements for building a highly available management cluster. If you have completed capacity planning, please refer to [Capacity Planning](#scale) to prepare the necessary resources, or expand as needed post-installation.
+
+#### 1.1 Basic Configuration Requirements
+
+At least **3** physical or virtual machines must be provided as control nodes for the management cluster, with the following minimum configurations for each node:
+
+| **Category** | **Minimum Requirements**                                                       |
+| ------------ | ------------------------------------------------------------------------------ |
+| **CPU**      | ≥ 8 cores, clock speed ≥ 2.5GHz<br />No overselling; disable power saving mode |
+| **Memory**   | ≥ 16GB<br />No overselling; at least six-channel DDR4 is recommended           |
+| **Disk**     | Single device IOPS ≥ 2000<br />Throughput ≥ 200MB/s<br />Must use SSD          |
+
+#### 1.2 ARM Architecture Requirements
+
+For ARM architecture (e.g., Kunpeng 920), it is recommended to increase the minimum configuration to **twice** that of x86, but not less than **1.5 times**.
+For example: If the x86 requirement is 8 cores and 16GB, the minimum for ARM should be 12 cores and 24GB, with a recommended configuration of 16 cores and 32GB.
+
+#### 1.3 Special Environment Description
+
+- **Single Node Deployment:** If only 1 machine is provided, a single-node management cluster can be installed, but **it is limited to non-production environments**. Production environments must be configured with at least 3 machines for high availability.
+
+---
+
+### 2. Supported Operating Systems and Kernels
+
+#### 2.1 x86 Architecture
+
+**Red Hat Enterprise Linux (RHEL)**
+
+- **Supported Versions and Kernels:**
+  - RHEL 7.8: `3.10.0-1127.el7.x86_64`
+  - RHEL 8.0 to 8.6: `4.18.0-80.el8.x86_64` to `4.18.0-372.9.1.el8.x86_64`
+- **Note:** RHEL 7.8 does not support **Calico Vxlan IPv6**.
+
+**CentOS**
+
+- **Supported Versions and Kernels:**
+  - CentOS 7.6 to 7.9: `3.10.0-1127` to `3.11`
+- **Note:** Does not support **Calico Vxlan IPv6**.
+
+**Ubuntu**
+
+- **Supported Versions and Kernels:**
+  - Ubuntu 20.04 LTS: `5.4.0-124-generic`
+  - Ubuntu 22.04 LTS: `5.15.0-56-generic`
+- **Note:** Does not support Ubuntu HWE (Hardware Enablement) versions.
+
+**Kylin Linux (Kylin Linux Advanced Server)**
+
+- **Supported Versions and Kernels:**
+  - Kylin V10: `4.19.90-11.ky10.x86_64`
+  - Kylin V10 SP1: `4.19.90-23.8.v2101.ky10.x86_64`
+  - Kylin V10 SP2: `4.19.90-24.4.v2101.ky10.x86_64`
+  - Kylin V10 SP3: `4.19.90-52.22.v2207.ky10.x86_64`
+- **Important Note:** There are known kernel issues in Kylin V10, V10-SP1, and V10-SP2 that may cause **NodePort network access failures**; it is recommended to upgrade to **Kylin V10-SP3**.
+
+---
+
+#### 2.2 ARM Architecture (Kunpeng 920)
+
+**Kylin Linux (Kylin Linux Advanced Server)**
+
+- **Supported Versions and Kernels:**
+  - Kylin V10: `4.19.90-11.ky10.aarch64`
+  - Kylin V10 SP1: `4.19.90-17.ky10.aarch64`
+  - Kylin V10 SP2: `4.19.90-24.4.v2101.ky10.aarch64`
+  - Kylin V10 SP3: `4.19.90-52.22.v2207.ky10.aarch64`
+- **Important Note:** It is also recommended to upgrade to **Kylin V10-SP3** to avoid NodePort network access issues.
+
+---
+
+#### 2.3 Other Important Notes
+
+1. **Kernel Version Requirements:**
+   The above kernel versions are official releases that have been tested and verified by the platform. During actual deployment, ensure that the **A.B.C major version number** is consistent; subsequent parts may allow differences.
+
+2. **Unsupported Environments:**
+   If the operating system, kernel version, or CPU architecture does not meet the requirements, please contact technical support.
+
+3. **Custom System Deployment:**
+   If using a custom system or deploying in a special environment, please complete compatibility testing and adjust according to actual conditions.
+
+4. **Ceph Deployment Requirements:**
+   If planning to install Ceph, please ensure the kernel version is at least `4.11`.
+
+---
+
+### 3. Machine Preprocessing
+
+Before installing the management cluster, all nodes (control nodes and compute nodes) must complete the preprocessing tasks.
+
+#### 3.1 Execute Quick Configuration Script
+
+**Preparation**
+Confirm that the installation package has been unpacked and ensure you have `root` privileges.
+
+**Execution**
+Run the script located at `res/init.sh`:
+
+```bash
+bash res/init.sh
+```
+
+**Verification**
+Check the script logs to confirm that the system configuration items have been set as required.
+
+**Note:** The `init.sh` script cannot guarantee that all the following checks are handled properly; you still need to continue with the following steps to confirm that each machine meets all check item requirements.
+
+#### 3.2 Check Local Requirements
+
+Check the following requirements item by item to ensure that the local environment meets the installation needs:
+
+- **Operating System and Kernel Configuration:**
+
+  - [x] The grub boot configuration includes the `transparent_hugepage=never` parameter.
+  - \[!] CentOS 7.x systems must add the `cgroup.memory=nokmem` parameter in the grub configuration.
+  - [x] When the kernel version is below 4.19.0 (or RHEL below 4.18.0), ensure that the `nf_conntrack_ipv4` and (for IPv6) `nf_conntrack_ipv6` modules are enabled.
+  - \[!] If using `Kube-OVN` CNI, the `geneve` and `openvswitch` modules must be enabled.
+  - [x] Check the load status of the `ip_vs`, `ip_vs_rr`, `ip_vs_wrr`, and `ip_vs_sh` modules.
+  - [x] Disable apparmor/selinux and firewall functions.
+  - [x] Disable swap.
+
+- **User and Permission Settings:**
+
+  - [x] SSH users have `root` privileges and can use `sudo` without a password.
+  - [x] The `UseDNS` and `UsePAM` parameters in `/etc/ssh/sshd_config` are set to `no`.
+  - [x] `systemctl show --property=DefaultTasksMax` returns `infinity` or a very large value; if not, adjust `/etc/systemd/system.conf`.
+
+- **Network and Hostname:**
+
+  - [x] Hostname requirements: No more than 36 characters, starting and ending with letters or numbers, only containing lowercase letters, numbers, `-`, and `.` (must not contain `.-`, `..`, or `-.`).
+  - [x] `localhost` in `/etc/hosts` should resolve to `127.0.0.1`.
+  - [x] The `/etc/resolv.conf` file exists and contains the `nameserver` configuration, but must not include addresses starting with 172 (disable systemd-resolved).
+  - \[!] The `/etc/resolv.conf` file should not configure a search domain (if configuration is necessary, refer to [Configure Search Domain](#config_search)).
+  - [x] IP addresses must not be loopback, multicast, link-local, all-zero, or broadcast addresses.
+  - [x] The output of `ip route` must include a default route or a route pointing to `0.0.0.0`.
+  - [x] Management cluster nodes must not occupy the following ports:
+    - **Control Nodes:** 2379, 2380, 6443, 10249-10256
+    - **Installer Nodes:** 8080, 12080, 12443, 16443, and all control node ports
+    - **Compute Nodes:** 10249-10256
+  - [x] If using **Kube-OVN** or **Calico**, ensure the following ports are not occupied:
+    - **Kube-OVN:** 6641, 6642
+    - **Calico:** 179
+  - \[!] Ensure the Docker-required range of 172.16.x.x to 172.32.x.x is not occupied; if there are conflicts, please contact technical support.
+
+- **Software and Directory Requirements:**
+  - [x] Ensure the system has the `ip`, `ss`, `tar`, `swapoff`, `modprobe`, `sysctl`, `md5sum`, and `scp` or `sftp` commands installed.
+  - \[!] If using a local storage solution (such as TopoLVM or Rook), please install `lvm2`.
+  - [x] The file `/etc/systemd/system/kubelet.service` must not exist.
+  - [x] Clean up files in the following directories:
+    - `/var/lib/docker`
+    - `/var/lib/containerd`
+    - `/var/log/pods`
+    - `/var/lib/kubelet/pki`
+  - [x] Check if there is sufficient available space in `/var/lib`.
+  - [x] Mount parameters for `/tmp` must not include `noexec`.
+  - [x] Remove potentially conflicting software packages with platform components (see [Remove Conflicting Packages](#remove_conflicting_packages) for details).
+
+#### 3.3 Cross-Node Checks
+
+- There must be no network firewall restrictions between nodes.
+- The hostname of each node must be unique.
+- All nodes must have synchronized time zones, and the time synchronization error must not exceed 10 seconds.
+
+---
+
+### 4. Appendix
+
+#### 4.1 Remove Conflicting Packages <a id="remove_conflicting_packages" />
+
+Please use the following commands to check and uninstall any packages that may conflict with platform components according to your operating system.
+
+**_CentOS / RedHat_**
+
+**Check Command:**
+
+```bash
+for x in \
+    docker docker-client docker-common docker-latest \
+    podman-docker podman \
+    runc \
+    containernetworking-plugins \
+    apptainer \
+    kubernetes kubernetes-master kubernetes-node kubernetes-client; do
+    rpm -qa | grep -F "$x"
+done
+```
+
+**Uninstall Command:**
+
+```bash
+for x in \
+    docker docker-client docker-common docker-latest \
+    podman-docker podman \
+    runc \
+    containernetworking-plugins \
+    apptainer \
+    kubernetes kubernetes-master kubernetes-node kubernetes-client; do
+    yum remove "$x"
+done
+```
+
+**_Ubuntu_**
+
+**Check Command:**
+
+```bash
+for x in \
+    docker.io \
+    podman-docker \
+    containerd \
+    rootlesskit \
+    rkt \
+    containernetworking-plugins \
+    kubernetes; do
+    dpkg-query -l | grep -F "$x"
+done
+
+for x in \
+    kubernetes-worker \
+    kubectl kube-proxy kube-scheduler kube-controller-manager kube-apiserver \
+    k8s microk8s \
+    kubeadm kubelet; do
+    snap list | grep -F "$x"
+done
+```
+
+**Uninstall Command:**
+
+```bash
+for x in \
+    docker.io \
+    podman-docker \
+    containerd \
+    rootlesskit \
+    rkt \
+    containernetworking-plugins \
+    kubernetes; do
+    apt-get purge "$x"
+done
+
+for x in \
+    kubernetes-worker \
+    kubectl kube-proxy kube-scheduler kube-controller-manager kube-apiserver \
+    k8s microk8s \
+    kubeadm kubelet; do
+    snap remove --purge "$x"
+done
+```
+
+**_KylinOS_**
+
+**Check Command:**
+
+```bash
+for x in \
+    docker docker-client docker-common \
+    docker-engine docker-proxy docker-runc \
+    podman-docker podman \
+    containernetworking-plugins \
+    apptainer \
+    containerd \
+    kubernetes kubernetes-master kubernetes-node kubernetes-client kubernetes-kubeadm; do
+    rpm -qa | grep -F "$x"
+done
+```
+
+**Uninstall Command:**
+
+```bash
+for x in \
+    docker docker-client docker-common \
+    docker-engine docker-proxy docker-runc \
+    podman-docker podman \
+    containernetworking-plugins \
+    apptainer \
+    containerd \
+    kubernetes kubernetes-master kubernetes-node kubernetes-client kubernetes-kubeadm; do
+    yum remove "$x"
+done
+```
+
+---
+
+#### 4.2 Configure Search Domain <a id="config_search" />
+
+In the `/etc/resolv.conf` file, the `search` line specifies the DNS query search path, and the configuration requirements are as follows:
+
+- **Number of Domains:** The number of search domains for the host should be less than `domainCountLimit - 3` (the default `domainCountLimit` is 32).
+- **Total Character Length:** The total number of characters for all domain names and spaces must not exceed `MaxDNSSearchListChar` (usually 2048).
+- **Individual Domain Length:** Each domain name must not exceed 253 characters.
+
+Failure to meet these requirements may lead to DNS query failures or reduced performance; please contact a maintenance engineer for adjustments.
+
+---
+
+### 5. Network Resource Requirements
+
+Before installing the management cluster, the following network resources must be configured in advance. If hardware LoadBalancer cannot be provided, the installer supports configuring **haproxy + keepalived** as a soft load balancer, but it may affect performance and reliability.
+
+#### 5.1 Network Resource Configuration
+
+| **Resource**    | **Mandatory** | **Quantity** | **Description**                                                                                                                                                                                                                                                  |
+| --------------- | ------------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Global VIP**  | Required      | 1            | Used for accessing kube-apiserver from all nodes in the management cluster, configured on the load balancing device to ensure high availability. If the management cluster and service cluster are on the same network, this IP will be the unique access point. |
+| **External IP** | Optional      | 1            | Used for accessing the management cluster across networks (e.g., hybrid cloud), configured on the load balancing device; can also serve as the access address for the platform Web UI.                                                                           |
+| **Domain**      | Optional      | 1            | If access to the management cluster or platform Web UI via a domain name is required, please provide it in advance and ensure the domain resolves correctly.                                                                                                     |
+| **Certificate** | Optional      | 1            | It is recommended to use a trusted certificate to avoid browser security warnings; if not provided, the installer will generate a self-signed certificate, which may prompt security risks when using HTTPS.                                                     |
+
+**Special Note**
+A domain name must be provided in the following cases:
+
+1. To support IPv6 access to the management cluster;
+2. To implement disaster recovery solutions for the management cluster.
+
+#### 5.2 Network Configuration Requirements
+
+| **Type**             | **Requirements Description**                                                                                                                                                                                                                                                                                 |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Network Rate**     | The speed between the management cluster and the service cluster within the same network should be ≥ 1Gbps (recommended 10Gbps); across networks, speed should be ≥ 100Mbps (recommended 1Gbps). Insufficient speed will affect log and audit query performance.                                             |
+| **Network Latency**  | Latency within the same network ≤ 2ms; across networks ≤ 100ms (recommended ≤ 30ms).                                                                                                                                                                                                                         |
+| **Network Policy**   | It is recommended that there are no firewall restrictions between the management cluster and service cluster; if there are restrictions, please refer to [Port Forwarding Rules](#port-forward) to ensure necessary ports are open; when using Calico CNI, ensure that the **IP-in-IP** protocol is enabled. |
+| **IP Address Range** | Management cluster nodes should avoid using the 172.16-32 range; if already used, please adjust Docker configuration (by adding the bip parameter) to avoid conflicts.                                                                                                                                       |
+
+#### 5.3 Port Forwarding Rules <a id="port-forward" />
+
+To ensure that the management cluster can receive external traffic forwarded by the LoadBalancer, please configure the following rules:
+
+| **Source of Access/Source IP** | **Forwarding Protocol** | **Destination IP**          | **Destination Port** | **Remarks**                                                                                                                          |
+| ------------------------------ | ----------------------- | --------------------------- | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| User PC or `any`               | TCP                     | Installer execution node IP | 8080                 | Browser access to the installation management cluster's Web UI; this rule can be deleted after installation.                         |
+| LoadBalancer                   | TCP                     | Control node IP             | 443                  | Default HTTPS port for platform Web UI, image repository, and external access to apiserver; supports custom installation parameters. |
+
+**Other Configuration Requirements:**
+
+1. **LoadBalancer Configuration:**
+
+   - Please refer to the relevant documentation for specific configuration methods.
+   - It is recommended to configure health checks to monitor port status.
+
+2. **Disaster Recovery Solutions:**
+
+   - If planning for disaster recovery, port 2379 must be open for all control nodes to synchronize ETCD data between the primary cluster and disaster recovery cluster.
+
+3. **HTTP Support:**
+   - The platform by default only supports HTTPS; if HTTP support is needed, please additionally configure port 80 (or a custom port), with rules identical to those for HTTPS configuration.

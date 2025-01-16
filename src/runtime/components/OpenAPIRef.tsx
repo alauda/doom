@@ -1,7 +1,7 @@
 import { usePageData } from '@rspress/core/runtime'
 import { getCustomMDXComponent } from '@rspress/core/theme'
-import { OpenAPIV3_1 } from 'openapi-types'
-import { ReactNode, useMemo, useState } from 'react'
+import type { OpenAPIV3_1 } from 'openapi-types'
+import { type ReactNode, useMemo, useState } from 'react'
 
 import { modelName, omitRoutePathRefs, resolveRef } from '../utils.js'
 import { HeadingTitle } from './_HeadingTitle.js'
