@@ -1,5 +1,6 @@
 import { useSiteOverrides } from '../hooks/index.js'
 import type { SiteBrand } from '../types.js'
+import { handleCJKWhitespaces } from '../utils.js'
 
 export interface BrandBaseProps {
   type: keyof SiteBrand
@@ -7,5 +8,5 @@ export interface BrandBaseProps {
 
 export const BrandBase = ({ type }: BrandBaseProps) => {
   const { brand } = useSiteOverrides()
-  return <>{brand?.[type]}</>
+  return <>{handleCJKWhitespaces(brand?.[type])}</>
 }

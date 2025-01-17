@@ -43,7 +43,10 @@ export const omitRoutePathRefs = (
 
 export const CJK_PATTERN = /\p{sc=Han}/u
 
-export const handleCJKWhitespaces = (text: string) => {
+export const handleCJKWhitespaces = (text?: string) => {
+  if (!text) {
+    return ''
+  }
   text = text.at(0)?.match(CJK_PATTERN) ? text : ` ${text}`
   return text.at(-1)?.match(CJK_PATTERN) ? text : `${text} `
 }

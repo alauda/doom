@@ -1,10 +1,8 @@
-import { addTrailingSlash } from '@rspress/shared'
 import { isProduction, useLang, usePageData } from '@rspress/core/runtime'
 import { useEffect, useMemo, useState } from 'react'
 import { parse } from 'yaml'
 
 import { ExtendedPageData, SiteBrand } from '../types.js'
-import { normalizeVersion } from '../../shared/helpers.js'
 import { DoomSite } from '../../shared/types.js'
 
 export interface SiteOverrides {
@@ -15,6 +13,19 @@ export interface SiteOverrides {
 
 export type SiteOverridesWithLangs = {
   [K in keyof SiteOverrides]: Record<string, SiteOverrides[K]>
+}
+
+const DEFAULT_SITE_BRAND: Record<'en' | 'zh', SiteBrand> = {
+  en: {
+    company: 'Alauda',
+    product: 'Alauda Container Platform',
+    productShort: 'ACP',
+  },
+  zh: {
+    company: '灵雀云',
+    product: '灵雀云容器平台',
+    productShort: 'ACP',
+  },
 }
 
 let siteOverrides: SiteOverridesWithLangs | undefined
@@ -29,9 +40,10 @@ const fetchSiteOverrides = async (
     return promise
   }
 
-  const acpSiteOverridesUrl = acpSite
-    ? `${addTrailingSlash(acpSite.base || '/container-platform')}${version ? normalizeVersion(acpSite.version) + '/' : ''}overrides.yaml`
-    : null
+  const acpSiteOverridesUrl =
+    acpSite && isProduction()
+      ? `${acpSite.base}${version ? acpSite.version + '/' : ''}overrides.yaml`
+      : null
   const siteOverridesUrl = `${isProduction() ? base : '/'}overrides.yaml`
 
   const urls = [acpSiteOverridesUrl]
@@ -57,7 +69,7 @@ const fetchSiteOverrides = async (
   ).then(
     ([acpSiteOverrides, siteOverrides]) =>
       (siteOverrides = {
-        brand: acpSiteOverrides?.brand,
+        brand: acpSiteOverrides?.brand ?? DEFAULT_SITE_BRAND,
         ...siteOverrides,
       }),
   )).catch(() => ({}))

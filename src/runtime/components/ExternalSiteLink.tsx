@@ -7,7 +7,6 @@ import {
 import clsx from 'clsx'
 import { AnchorHTMLAttributes, ReactNode, useMemo } from 'react'
 
-import { normalizeVersion } from '../../shared/index.js'
 import { ExtendedPageData } from '../types.js'
 import { Directive } from './Directive.js'
 
@@ -42,16 +41,10 @@ export const ExternalSiteLink = ({
     return <Directive type="danger">Invalid href `{href}` found</Directive>
   }
 
-  const siteBase = addTrailingSlash(
-    site.base || (site.name === 'acp' ? '/container-platform' : ''),
-  )
-
   return (
     <a
       href={
-        (page.v
-          ? addTrailingSlash(siteBase + normalizeVersion(site.version))
-          : siteBase) +
+        (page.v ? addTrailingSlash(site.base + site.version) : site.base) +
         (lang ? `${lang}/` : '') +
         removeLeadingSlash(href)
       }

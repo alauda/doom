@@ -1,6 +1,6 @@
 {
   "name": "@alauda/doom",
-  "version": "0.8.4",
+  "version": "0.8.5",
   "type": "module",
   "description": "Doctor Doom making docs.",
   "repository": {
@@ -75,7 +75,7 @@
     "@types/swagger2openapi": "^7.0.4",
     "@unts/patch-package": "^8.0.0",
     "eslint": "^9.18.0",
-    "lint-staged": "^15.4.0",
+    "lint-staged": "^15.4.1",
     "npm-run-all2": "^7.0.2",
     "prettier": "^3.4.2",
     "prettier-plugin-pkg": "^0.18.1",

@@ -1,10 +1,11 @@
 import fs from 'node:fs'
 import path from 'node:path'
 
-import type { RspressPlugin } from '@rspress/core'
+import { addTrailingSlash, type RspressPlugin } from '@rspress/core'
 
 import type { DoomSite } from '../../shared/types.js'
 import { baseResolve, pkgResolve } from '../../utils/index.js'
+import { normalizeVersion } from '../../shared/helpers.js'
 
 const globalComponentsDir = baseResolve('global')
 const componentsDir = baseResolve('runtime/components')
@@ -40,7 +41,13 @@ export const globalPlugin = ({
         .map((file) => path.resolve(componentsDir, file)),
     },
     extendPageData(pageData) {
-      pageData.sites = sites
+      pageData.sites = sites?.map((site) => ({
+        ...site,
+        base: addTrailingSlash(
+          site.base || (site.name === 'acp' ? '/container-platform' : ''),
+        ),
+        version: normalizeVersion(site.version),
+      }))
       pageData.v = version === 'unversioned' ? undefined : version
     },
   }

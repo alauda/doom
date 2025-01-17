@@ -1,56 +1,54 @@
 diff --git a/node_modules/unist-util-visit-parents/lib/complex-types.d.ts b/node_modules/unist-util-visit-parents/lib/complex-types.d.ts
-index ef06b3a..a5d43be 100644
+index ef06b3a..171081c 100644
 --- a/node_modules/unist-util-visit-parents/lib/complex-types.d.ts
 +++ b/node_modules/unist-util-visit-parents/lib/complex-types.d.ts
-@@ -4,18 +4,48 @@ import type {Node, Parent} from 'unist'
+@@ -4,19 +4,41 @@ import type {Node, Parent} from 'unist'
  import type {Test} from 'unist-util-is'
  import type {Visitor} from './index.js'
  
-+type LessThan<
-+  A extends number,
-+  B extends number,
-+  S extends any[] = []
-+> = S['length'] extends B
-+  ? false
-+  : S['length'] extends A
-+  ? true
-+  : LessThan<A, B, [...S, any]>
++export type Uint = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
 +
-+type Subtract<
-+  A extends number,
-+  B extends number,
-+  I extends any[] = [],
-+  O extends any[] = []
-+> = LessThan<A, B> extends true
-+  ? never
-+  : LessThan<I['length'], A> extends true
-+  ? Subtract<
-+      A,
-+      B,
-+      [...I, any],
-+      LessThan<I['length'], B> extends true ? O : [...O, any]
-+    >
-+  : O['length']
++export type Increment<I extends Uint = 0> = I extends 0
++  ? 1
++  : I extends 1
++  ? 2
++  : I extends 2
++  ? 3
++  : I extends 3
++  ? 4
++  : I extends 4
++  ? 5
++  : I extends 5
++  ? 6
++  : I extends 6
++  ? 7
++  : I extends 7
++  ? 8
++  : I extends 8
++  ? 9
++  : 10
 +
  /**
   * Internal utility to collect all descendants of in `Tree`.
   */
  export type InclusiveDescendant<
-   Tree extends Node = never,
+-  Tree extends Node = never,
 -  Found = void
--> = Tree extends Parent
-+  Found = void,
-+  Depth extends number = 5
-+> = Depth extends 0
-+  ? Tree
-+  : Tree extends Parent
-   ?
-       | Tree
-       | InclusiveDescendant<
-           Exclude<Tree['children'][number], Found | Tree>,
++  Tree extends Node,
++  Max extends Uint = 10,
++  Depth extends Uint = 0
+ > = Tree extends Parent
+-  ?
+-      | Tree
+-      | InclusiveDescendant<
+-          Exclude<Tree['children'][number], Found | Tree>,
 -          Found | Tree
-+          Found | Tree,
-+          Subtract<Depth, 1>
-         >
+-        >
++  ? Depth extends Max
++    ? Tree
++    :
++        | Tree
++        | InclusiveDescendant<Tree['children'][number], Max, Increment<Depth>>
    : Tree
  
+ /**
