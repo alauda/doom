@@ -47,6 +47,7 @@ import {
   YAML_EXTENSIONS,
 } from './constants.js'
 import { replacePlugin } from '../plugins/replace/index.js'
+import { mermaidPlugin } from '../plugins/mermaid/index.js'
 
 const DEFAULT_LOGO = '/logo.svg'
 
@@ -123,6 +124,7 @@ const getCommonConfig = (
         sites: config.sites,
         version,
       }),
+      mermaidPlugin(),
       replacePlugin({
         root,
         lang: fallbackToZh ? null : (config.lang ?? 'en'),
@@ -132,16 +134,26 @@ const getCommonConfig = (
         releaseNotes: config.releaseNotes,
       }),
       shikiPlugin({
-        langs: ['dockerfile', 'html', 'go', 'jsonc'],
+        langs: ['dockerfile', 'html', 'go', 'jsonc', 'mermaid'],
         transformers: [
           // builtin transformers
           transformerMetaHighlight(),
           transformerMetaWordHighlight(),
-          transformerNotationDiff(),
-          transformerNotationErrorLevel(),
-          transformerNotationFocus(),
-          transformerNotationHighlight(),
-          transformerNotationWordHighlight(),
+          transformerNotationDiff({
+            matchAlgorithm: 'v3',
+          }),
+          transformerNotationErrorLevel({
+            matchAlgorithm: 'v3',
+          }),
+          transformerNotationFocus({
+            matchAlgorithm: 'v3',
+          }),
+          transformerNotationHighlight({
+            matchAlgorithm: 'v3',
+          }),
+          transformerNotationWordHighlight({
+            matchAlgorithm: 'v3',
+          }),
           transformerRemoveNotationEscape(),
 
           // custom transformers
