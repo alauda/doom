@@ -68,16 +68,14 @@ const getCommonConfig = (
   ignore?: boolean,
   force?: boolean,
 ): DoomConfig => {
-  const fallbackToZh = 'lang' in config && config.lang == null
+  const fallbackToZh = 'lang' in config && !config.lang
   const root = resolveDocRoot(CWD, cliRoot, config.root)
-
   const localBasePath = configFilePath ? path.dirname(configFilePath) : root
-
   const excludeRoutes = (ignore && config.internalRoutes) || []
 
   return {
     root,
-    lang: fallbackToZh ? 'zh' : config.lang,
+    lang: fallbackToZh ? 'zh' : config.lang || 'en',
     title: '',
     route: {
       exclude: [
