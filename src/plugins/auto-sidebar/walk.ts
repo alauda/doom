@@ -71,11 +71,24 @@ const processSideMeta = (
       let filePart: string | undefined
 
       if (
-        !acc.index &&
         (filePart = curr._fileKey.split('/').at(-1)) &&
         extensions.some((ext) => filePart === `index${ext}`)
       ) {
-        acc.index = curr
+        if (acc.index?._fileKey) {
+          // zh/development/component-quickstart/index.md vs zh/development/index.mdx
+          const relative = path.relative(
+            path.dirname(acc.index._fileKey),
+            path.dirname(curr._fileKey),
+          )
+          if (relative === '..' || relative.endsWith('/..')) {
+            acc.others.unshift(acc.index)
+            acc.index = curr
+          } else {
+            acc.others.push(curr)
+          }
+        } else {
+          acc.index = curr
+        }
         if (ignored) {
           curr.link = ''
         }
