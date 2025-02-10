@@ -1,10 +1,12 @@
-import type { NavItem } from '@rspress/shared'
-import fs from '@rspress/shared/fs-extra'
-import { logger } from '@rspress/shared/logger'
-import { loadFrontMatter } from '@rspress/shared/node-utils'
+import fs from 'node:fs/promises'
 import path from 'node:path'
 
+import type { NavItem } from '@rspress/shared'
+import { logger } from '@rspress/shared/logger'
+import { loadFrontMatter } from '@rspress/shared/node-utils'
+
 import { DoomSidebar } from './walk.js'
+import { pathExists } from '../../utils/index.js'
 
 export async function detectFilePath(rawPath: string, extensions: string[]) {
   // The params doesn't have extension name, so we need to try to find the file with the extension name.
@@ -15,7 +17,7 @@ export async function detectFilePath(rawPath: string, extensions: string[]) {
   if (!extensions.includes(fileExtname)) {
     const pathWithExtension = extensions.map((ext) => `${rawPath}${ext}`)
     const pathExistInfo = await Promise.all(
-      pathWithExtension.map((p) => fs.pathExists(p)),
+      pathWithExtension.map((p) => pathExists(p)),
     )
     const findPath = pathWithExtension.find((_, i) => pathExistInfo[i])
     // file may be public resource, see issue: https://github.com/web-infra-dev/rspress/issues/1052
@@ -85,15 +87,9 @@ export function combineWalkResult(
 ) {
   return walks.reduce(
     (acc, cur, curIndex) => ({
-      nav: {
-        ...acc.nav,
-        [versions[curIndex] || 'default']: cur.nav,
-      },
+      nav: { ...acc.nav, [versions[curIndex] || 'default']: cur.nav },
       sidebar: { ...acc.sidebar, ...cur.sidebar },
     }),
-    {
-      nav: {},
-      sidebar: {},
-    },
+    { nav: {}, sidebar: {} },
   )
 }

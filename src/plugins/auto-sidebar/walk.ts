@@ -1,3 +1,4 @@
+import fs from 'node:fs/promises'
 import path from 'node:path'
 
 import {
@@ -11,13 +12,13 @@ import {
   slash,
   withBase,
 } from '@rspress/shared'
-import fs from '@rspress/shared/fs-extra'
 import { logger } from '@rspress/shared/logger'
 import { unset } from 'es-toolkit/compat'
 import picomatch from 'picomatch'
 
 import type { SideMeta } from './type.js'
 import { detectFilePath, extractInfoFromFrontmatter } from './utils.js'
+import { pathExists, readJson } from '../../utils/index.js'
 
 export interface DoomSidebarItem extends SidebarItem {
   weight?: number
@@ -101,7 +102,7 @@ export async function scanSideMeta(
   ignoredDirs: string[],
   excludeRoutes: string[],
 ) {
-  if (!(await fs.exists(workDir))) {
+  if (!(await pathExists(workDir))) {
     logger.error(
       '[plugin-auto-sidebar]',
       `Generate sidebar meta error: ${workDir} not exists`,
@@ -117,7 +118,7 @@ export async function scanSideMeta(
   // Get the sidebar config from the `_meta.json` file
   try {
     // Don't use require to avoid require cache, which make hmr not work.
-    sideMeta = (await fs.readJSON(metaFile, 'utf8')) as SideMeta
+    sideMeta = await readJson<SideMeta>(metaFile)
   } catch {
     // If the `_meta.json` file doesn't exist, we will generate the sidebar config from the directory structure.
     let subItems = await fs.readdir(workDir)
@@ -159,9 +160,9 @@ export async function scanSideMeta(
               label = title
             }
 
-            if (fs.existsSync(mdxFilePath)) {
+            if (await pathExists(mdxFilePath)) {
               await setLabelFromFilePath(mdxFilePath)
-            } else if (fs.existsSync(mdFilePath)) {
+            } else if (await pathExists(mdFilePath)) {
               await setLabelFromFilePath(mdFilePath)
             }
 
