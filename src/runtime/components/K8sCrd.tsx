@@ -23,8 +23,6 @@ export interface K8sCrdProps {
   crdPath?: string
 }
 
-const X = getCustomMDXComponent()
-
 export const K8sCrdSchemaPart = ({
   name,
   parent,
@@ -36,6 +34,7 @@ export const K8sCrdSchemaPart = ({
   schema: OpenAPIV3_1.SchemaObject
   expandAll: boolean
 }) => {
+  const [X] = useState(getCustomMDXComponent)
   const [open, setOpen] = useState(expandAll)
 
   const onToggle = useCallback((open: boolean) => {
@@ -106,6 +105,7 @@ export const K8sCrdSchema = ({
   schema: OpenAPIV3_1.SchemaObject
   version: string
 }) => {
+  const [X] = useState(getCustomMDXComponent)
   const { description, properties } = schema
 
   const t = useTranslation()
@@ -162,6 +162,7 @@ export const K8sCrdSchema = ({
 }
 
 export const K8sCrd = ({ name, crdPath }: K8sCrdProps) => {
+  const [X] = useState(getCustomMDXComponent)
   const { page } = usePageData() as ExtendedPageData
 
   const [, crd] = useMemo(

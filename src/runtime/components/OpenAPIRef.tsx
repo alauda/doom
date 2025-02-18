@@ -1,7 +1,7 @@
 import { usePageData } from '@rspress/core/runtime'
 import { getCustomMDXComponent } from '@rspress/core/theme'
 import { OpenAPIV3_1 } from 'openapi-types'
-import { ReactNode, useMemo } from 'react'
+import { ReactNode, useMemo, useState } from 'react'
 
 import { ExtendedPageData } from '../types.js'
 import {
@@ -26,8 +26,6 @@ export interface OpenAPIRefProps {
   collectRefs?: boolean
 }
 
-const X = getCustomMDXComponent()
-
 export const OpenAPIProperties = ({
   properties,
   openapi,
@@ -38,6 +36,7 @@ export const OpenAPIProperties = ({
   >
   openapi: OpenAPIV3_1.Document
 }) => {
+  const [X] = useState(getCustomMDXComponent)
   return (
     <X.ul>
       {Object.entries(properties).map(([name, prop], index) => {

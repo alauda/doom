@@ -1,7 +1,7 @@
 import { useLang, usePageData } from '@rspress/core/runtime'
 import { getCustomMDXComponent } from '@rspress/core/theme'
 import { intersection, sortBy } from 'es-toolkit'
-import { Fragment, useMemo } from 'react'
+import { Fragment, useMemo, useState } from 'react'
 
 import type {
   FunctionResource,
@@ -37,8 +37,6 @@ const DISPLAY_NAME_EN = 'cpaas.io/display-name.en'
 const TEXT_CENTER_STYLE = { textAlign: 'center' } as const
 const TEXT_NO_WRAP_STYLE = { whiteSpace: 'nowrap' } as const
 
-const X = getCustomMDXComponent()
-
 const RolesPermission = ({
   functionResource,
   roleTemplates,
@@ -48,6 +46,7 @@ const RolesPermission = ({
   roleTemplates: RoleTemplate[]
   verb: Verb
 }) => {
+  const [X] = useState(getCustomMDXComponent)
   const functionResourceName = functionResource.metadata.name
   const actions = functionResource.metadata.annotations['auth.cpaas.io/actions']
   return roleTemplates.map(({ metadata: { name }, spec: { rules } }) => {
@@ -79,6 +78,7 @@ const RolesPermission = ({
 }
 
 export const K8sPermissionTable = ({ functions }: K8sPermissionTableProps) => {
+  const [X] = useState(getCustomMDXComponent)
   const { page } = usePageData() as ExtendedPageData
 
   const functionResourcesMap = useMemo(

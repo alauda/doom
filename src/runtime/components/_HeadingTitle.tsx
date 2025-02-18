@@ -1,6 +1,6 @@
 import { getCustomMDXComponent } from '@rspress/core/theme'
 import BananaSlug from 'github-slugger'
-import { Children, type ReactNode, useMemo } from 'react'
+import { Children, type ReactNode, useMemo, useState } from 'react'
 
 export interface HeadingTitleProps {
   slug?: string
@@ -15,7 +15,7 @@ export const HeadingTitle = ({
   level,
   children,
 }: HeadingTitleProps) => {
-  const X = useMemo(getCustomMDXComponent, [])
+  const [X] = useState(getCustomMDXComponent)
   const HeadingComponents = useMemo(() => {
     return [null, X.h1, X.h2, X.h3, X.h4, X.h5, X.h6] as const
   }, [X])

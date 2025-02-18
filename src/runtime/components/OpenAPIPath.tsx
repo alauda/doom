@@ -2,7 +2,7 @@ import { usePageData } from '@rspress/core/runtime'
 import { Badge, getCustomMDXComponent } from '@rspress/core/theme'
 import BananaSlug from 'github-slugger'
 import { OpenAPIV3, type OpenAPIV3_1 } from 'openapi-types'
-import { ReactNode, useMemo } from 'react'
+import { ReactNode, useMemo, useState } from 'react'
 
 import { ExtendedPageData } from '../types.js'
 import { DEFAULT_COMMON_REFS, omitRoutePathRefs, resolveRef } from '../utils.js'
@@ -26,8 +26,6 @@ export interface OpenAPIPathProps {
   pathPrefix?: string
 }
 
-const X = getCustomMDXComponent()
-
 export const OpenAPIParameters = ({
   parameters,
   openapi,
@@ -35,6 +33,7 @@ export const OpenAPIParameters = ({
   parameters: Array<OpenAPIV3_1.ReferenceObject | OpenAPIV3_1.ParameterObject>
   openapi: OpenAPIV3_1.Document
 }) => {
+  const [X] = useState(getCustomMDXComponent)
   return (
     <X.ul>
       {parameters.map((param, index) => {
@@ -71,6 +70,7 @@ export const OpenAPIResponses = ({
   responses: OpenAPIV3_1.ResponsesObject
   openapi: OpenAPIV3_1.Document
 }) => {
+  const [X] = useState(getCustomMDXComponent)
   return (
     <X.ul>
       {Object.entries(responses).map(([code, response], index) => {
@@ -145,6 +145,7 @@ export const OpenAPIPath = ({
   openapiPath: openapiPath_,
   pathPrefix: pathPrefix_,
 }: OpenAPIPathProps) => {
+  const [X] = useState(getCustomMDXComponent)
   const { page } = usePageData() as ExtendedPageData
 
   const pathPrefix = pathPrefix_ ?? (page.pathPrefix || '')

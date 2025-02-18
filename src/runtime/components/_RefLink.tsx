@@ -2,15 +2,14 @@ import { getCustomMDXComponent } from '@rspress/core/theme'
 import { DEFAULT_COMMON_REFS, modelName } from '../utils.js'
 import { usePageData } from '@rspress/core/runtime'
 import { ExtendedPageData } from '../types.js'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 
 export interface RefLinkProps {
   $ref?: string
 }
 
-const X = getCustomMDXComponent()
-
 export const RefLink = ({ $ref }: RefLinkProps) => {
+  const [X] = useState(getCustomMDXComponent)
   const { page } = usePageData() as ExtendedPageData
   const references: Record<string, string> = useMemo(
     () => ({
