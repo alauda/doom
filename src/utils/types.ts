@@ -2,6 +2,7 @@ import { UserConfig } from '@rspress/core'
 
 import type { ApiPluginOptions } from '../plugins/api/types.js'
 import type { AutoSidebarPluginOptions } from '../plugins/index.js'
+import type { PermissionPluginOptions } from '../plugins/permission/types.js'
 import type {
   ReferenceItem,
   ReleaseNotesOptions,
@@ -19,6 +20,7 @@ export interface GlobalCliOptions {
 export interface DoomConfig extends UserConfig {
   api?: ApiPluginOptions
   sites?: DoomSite[]
+  permission?: PermissionPluginOptions
   reference?: ReferenceItem[]
   sidebar?: AutoSidebarPluginOptions
   releaseNotes?: ReleaseNotesOptions

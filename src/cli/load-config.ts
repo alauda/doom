@@ -48,6 +48,7 @@ import {
 } from './constants.js'
 import { replacePlugin } from '../plugins/replace/index.js'
 import { mermaidPlugin } from '../plugins/mermaid/index.js'
+import { permissionPlugin } from '../plugins/permission/index.js'
 
 const DEFAULT_LOGO = '/logo.svg'
 
@@ -123,6 +124,10 @@ const getCommonConfig = (
         version,
       }),
       mermaidPlugin(),
+      permissionPlugin({
+        ...config.permission,
+        localBasePath,
+      }),
       replacePlugin({
         root,
         lang: fallbackToZh ? null : (config.lang ?? 'en'),
@@ -137,21 +142,11 @@ const getCommonConfig = (
           // builtin transformers
           transformerMetaHighlight(),
           transformerMetaWordHighlight(),
-          transformerNotationDiff({
-            matchAlgorithm: 'v3',
-          }),
-          transformerNotationErrorLevel({
-            matchAlgorithm: 'v3',
-          }),
-          transformerNotationFocus({
-            matchAlgorithm: 'v3',
-          }),
-          transformerNotationHighlight({
-            matchAlgorithm: 'v3',
-          }),
-          transformerNotationWordHighlight({
-            matchAlgorithm: 'v3',
-          }),
+          transformerNotationDiff(),
+          transformerNotationErrorLevel(),
+          transformerNotationFocus(),
+          transformerNotationHighlight(),
+          transformerNotationWordHighlight(),
           transformerRemoveNotationEscape(),
 
           // custom transformers

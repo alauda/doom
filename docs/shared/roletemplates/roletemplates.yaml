@@ -1,0 +1,3065 @@
+apiVersion: v1
+items:
+  - apiVersion: auth.alauda.io/v1beta1
+    kind: RoleTemplate
+    metadata:
+      annotations:
+        auth.cpaas.io/role.id: '6'
+        cpaas.io/creator: system
+        cpaas.io/description: 负责集群内的管理、维护工作，具备集群下所有资源的全部权限。
+        cpaas.io/description.en: Responsible for managing relevant business clusters.
+        cpaas.io/display-name: 集群管理员
+        cpaas.io/display-name.en: Cluster Administrator
+        helm.sh/chart-version: v3.18.0-beta.5.gd1c1c910
+        helm.sh/original-name: cluster-admin-system
+      creationTimestamp: '2024-07-01T08:26:24Z'
+      generation: 1
+      labels:
+        auth.cpaas.io/creator.email: ''
+        auth.cpaas.io/roletemplate.level: cluster
+        auth.cpaas.io/roletemplate.official: 'true'
+        helm.sh/chart-name: auth-manager
+        helm.sh/release-name: auth-manager
+        helm.sh/release-namespace: cpaas-system
+      name: cluster-admin-system
+      resourceVersion: '4958'
+      uid: c99d419c-7503-40a0-861e-169bec660c76
+    spec:
+      rules:
+        - functionResourceRef: platform-manage-accesstokeninfoes
+          verbs:
+            - get
+            - list
+            - watch
+            - delete
+            - deletecollection
+        - functionResourceRef: views-platformview
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: infrastructure-clusters
+          verbs:
+            - get
+            - list
+            - watch
+            - update
+            - patch
+        - functionResourceRef: infrastructure-moduleinfo
+          verbs:
+            - '*'
+        - functionResourceRef: infrastructure-clustermodules
+          verbs:
+            - get
+            - list
+            - watch
+            - update
+            - patch
+        - functionResourceRef: infrastructure-clusterviews
+          verbs:
+            - list
+            - watch
+        - functionResourceRef: infrastructure-clusternodes
+          verbs:
+            - '*'
+        - functionResourceRef: infrastructure-crd
+          verbs:
+            - '*'
+        - functionResourceRef: infrastructure-nodesmanage
+          verbs:
+            - '*'
+        - functionResourceRef: acp-subnet
+          verbs:
+            - '*'
+        - functionResourceRef: acp-loadbalance-use
+          verbs:
+            - '*'
+        - functionResourceRef: acp-networkpolicies
+          verbs:
+            - '*'
+        - functionResourceRef: acp-user-configmap
+          verbs:
+            - '*'
+        - functionResourceRef: acp-user-secret
+          verbs:
+            - '*'
+        - functionResourceRef: acp-clusternetworkpolicies
+          verbs:
+            - '*'
+        - functionResourceRef: infrastructure-storageclasses
+          verbs:
+            - '*'
+        - functionResourceRef: aiops-logs
+          verbs:
+            - '*'
+        - functionResourceRef: aiops-events
+          verbs:
+            - '*'
+        - functionResourceRef: aiops-alerts
+          verbs:
+            - '*'
+        - functionResourceRef: aiops-alerthistories
+          verbs:
+            - '*'
+        - functionResourceRef: acp-nodegroups
+          verbs:
+            - '*'
+        - functionResourceRef: platform-manage-certificates
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: aiops-audits
+          verbs:
+            - '*'
+        - functionResourceRef: acp-appmarket
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-apphelm
+          verbs:
+            - '*'
+        - functionResourceRef: acp-batchaction
+          verbs:
+            - '*'
+        - functionResourceRef: acp-imagewhitelist
+          verbs:
+            - '*'
+        - functionResourceRef: acp-operator-backed
+          verbs:
+            - '*'
+        - functionResourceRef: acp-provider-networks
+          verbs:
+            - '*'
+        - functionResourceRef: acp-vlan
+          verbs:
+            - '*'
+        - functionResourceRef: acp-builtinstorage
+          verbs:
+            - '*'
+        - functionResourceRef: acp-localstorage
+          verbs:
+            - '*'
+        - functionResourceRef: acp-namespace-import
+          verbs:
+            - '*'
+        - functionResourceRef: platform-manage-featuregates
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: platform-manage-userpolicies
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: platform-manage-userbindings
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: infrastructure-plugin
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: platform-manage-projectbinding
+          verbs:
+            - get
+            - list
+            - watch
+            - delete
+            - create
+        - functionResourceRef: acp-interconnectionsubnets
+          verbs:
+            - get
+            - list
+            - watch
+            - update
+            - patch
+        - functionResourceRef: aiops-alerttemplate
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: infrastructure-regions
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: infrastructure-backupandrestore
+          verbs:
+            - '*'
+        - functionResourceRef: infrastructure-backupstoragelocationrepo
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-metallb
+          verbs:
+            - '*'
+        - functionResourceRef: aiops-monitoring-metrics
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: aiops-monitoring-dashboard
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: aiops-notifications
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-app-package-management
+          verbs:
+            - '*'
+        - functionResourceRef: devops-devopstools
+          verbs:
+            - '*'
+        - functionResourceRef: devops-toolsinstances
+          verbs:
+            - '*'
+        - functionResourceRef: devops-tektonpipeline
+          verbs:
+            - '*'
+        - functionResourceRef: devops-katanomi
+          verbs:
+            - '*'
+        - functionResourceRef: devops-knative
+          verbs:
+            - '*'
+        - functionResourceRef: acp-gatewayapi
+          verbs:
+            - '*'
+        - functionResourceRef: acp-gatewayapigatewayclass
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-ingressclass
+          verbs:
+            - '*'
+        - functionResourceRef: acp-virtualmachine
+          verbs:
+            - '*'
+        - functionResourceRef: infrastructure-iass-machinepool
+          verbs:
+            - '*'
+  - apiVersion: auth.alauda.io/v1beta1
+    kind: RoleTemplate
+    metadata:
+      annotations:
+        auth.cpaas.io/role.id: '4'
+        cpaas.io/creator: system
+        cpaas.io/description: 负责给命名空间添加成员以及设置角色。
+        cpaas.io/description.en:
+          Responsible for adding members to the namespace and
+          setting roles.
+        cpaas.io/display-name: 命名空间管理员
+        cpaas.io/display-name.en: Namespace Administrator
+        helm.sh/chart-version: v3.18.0-beta.5.gd1c1c910
+        helm.sh/original-name: namespace-admin-system
+      creationTimestamp: '2024-07-01T08:26:24Z'
+      generation: 1
+      labels:
+        auth.cpaas.io/creator.email: ''
+        auth.cpaas.io/roletemplate.level: namespace
+        auth.cpaas.io/roletemplate.official: 'true'
+        helm.sh/chart-name: auth-manager
+        helm.sh/release-name: auth-manager
+        helm.sh/release-namespace: cpaas-system
+      name: namespace-admin-system
+      resourceVersion: '4959'
+      uid: 68ad2a34-d03d-47b1-bc90-f16b635f8fc4
+    spec:
+      rules:
+        - functionResourceRef: platform-manage-usersmanage
+          verbs:
+            - get
+        - functionResourceRef: platform-manage-usergroupsmanage
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: platform-manage-rolesmanage
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: platform-manage-userbindings
+          verbs:
+            - '*'
+        - functionResourceRef: platform-manage-projectmanage
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: project-manage-projectmembers
+          verbs:
+            - get
+        - functionResourceRef: platform-manage-projectbinding
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: platform-manage-productlist
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: platform-manage-featuregates
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: platform-manage-portal
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: views-projectview
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: views-devops-userview
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: views-dataservices-userview
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: views-asm-userview
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: views-acp-userview
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: infrastructure-clusters
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: infrastructure-regions
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: infrastructure-nodesmanage
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: infrastructure-domains
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: infrastructure-loadbalance
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: infrastructure-persistentvolumes
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: infrastructure-storageclasses
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: aiops-notificationsmanage
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: aiops-logs
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: aiops-alerts
+          verbs:
+            - '*'
+        - functionResourceRef: aiops-alerttemplate
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: aiops-events
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-app
+          verbs:
+            - '*'
+        - functionResourceRef: acp-oamapp
+          verbs:
+            - '*'
+        - functionResourceRef: acp-virtualmachine
+          verbs:
+            - '*'
+        - functionResourceRef: acp-virtualmachineimagetemplates
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-loadbalance-use
+          verbs:
+            - '*'
+        - functionResourceRef: acp-rules
+          verbs:
+            - '*'
+        - functionResourceRef: acp-openshiftroutes
+          verbs:
+            - '*'
+        - functionResourceRef: acp-networkpolicies
+          verbs:
+            - '*'
+        - functionResourceRef: acp-subnet
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-configmap
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-namespaceoverviews
+          verbs:
+            - '*'
+        - functionResourceRef: acp-namespace-resource-ratio
+          verbs:
+            - '*'
+        - functionResourceRef: acp-alertsquery
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-namespaces
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-resourcequotas
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-limitranges
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-k8sresource
+          verbs:
+            - '*'
+        - functionResourceRef: acp-user-configmap
+          verbs:
+            - '*'
+        - functionResourceRef: acp-user-secret
+          verbs:
+            - '*'
+        - functionResourceRef: acp-podsexec
+          verbs:
+            - '*'
+        - functionResourceRef: acp-rootexec
+          verbs:
+            - '*'
+        - functionResourceRef: acp-podslog
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-appmarket
+          verbs:
+            - '*'
+        - functionResourceRef: acp-apphelm
+          verbs:
+            - '*'
+        - functionResourceRef: acp-batchaction
+          verbs:
+            - '*'
+        - functionResourceRef: acp-imagewhitelist
+          verbs:
+            - '*'
+        - functionResourceRef: acp-autoscalers
+          verbs:
+            - '*'
+        - functionResourceRef: acp-namespaceaudits
+          verbs:
+            - '*'
+        - functionResourceRef: acp-serviceaccounts
+          verbs:
+            - '*'
+        - functionResourceRef: acp-nodegroups
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-volumesnapshot
+          verbs:
+            - '*'
+        - functionResourceRef: acp-cosi
+          verbs:
+            - '*'
+        - functionResourceRef: acp-vpa
+          verbs:
+            - '*'
+        - functionResourceRef: devops-devopstools
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: devops-toolbindings
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: devops-toolresource
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: devops-artifactpromotions
+          verbs:
+            - '*'
+        - functionResourceRef: devops-artifactpromotionruns
+          verbs:
+            - '*'
+        - functionResourceRef: devops-artifactpromotionapprovals
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: devops-clusterpromotionpolicies
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: devops-clusterpipelinetasktemplates
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: devops-clusterpipelinetemplates
+          verbs:
+            - '*'
+        - functionResourceRef: devops-pipelinetasktemplates
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: devops-pipelinetemplates
+          verbs:
+            - '*'
+        - functionResourceRef: devops-pipelinetemplatesyncs
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: devops-clusterpipelinetemplatesyncs
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: devops-pipelineconfigs
+          verbs:
+            - '*'
+        - functionResourceRef: devops-pipelines
+          verbs:
+            - '*'
+        - functionResourceRef: devops-templaterenders
+          verbs:
+            - '*'
+        - functionResourceRef: devops-policies
+          verbs:
+            - '*'
+        - functionResourceRef: devops-policyruns
+          verbs:
+            - '*'
+        - functionResourceRef: devops-builds-ns
+          verbs:
+            - '*'
+        - functionResourceRef: devops-buildruns-ns
+          verbs:
+            - '*'
+        - functionResourceRef: devops-tekton
+          verbs:
+            - '*'
+        - functionResourceRef: devops-clusterstages
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: devops-deliveries
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: devops-deliveryruns
+          verbs:
+            - '*'
+        - functionResourceRef: devops-stages
+          verbs:
+            - '*'
+        - functionResourceRef: devops-stageruns
+          verbs:
+            - get
+            - list
+            - watch
+            - patch
+        - functionResourceRef: devops-integrationclasses
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: devops-integrations
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: devops-virtualartifacts
+          verbs:
+            - get
+            - list
+            - watch
+            - patch
+            - create
+            - delete
+        - functionResourceRef: devops-virtualartifactsfiles
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: devops-virtualrepositories
+          verbs:
+            - get
+            - list
+        - functionResourceRef: devops-projects
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: devops-gitrepositories
+          verbs:
+            - '*'
+        - functionResourceRef: devops-gitbranches
+          verbs:
+            - get
+            - list
+            - watch
+            - patch
+        - functionResourceRef: devops-gitcommits
+          verbs:
+            - '*'
+        - functionResourceRef: devops-gitrepositorytags
+          verbs:
+            - '*'
+        - functionResourceRef: devops-codequalities
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: devops-secret
+          verbs:
+            - '*'
+        - functionResourceRef: devops-projectsettings
+          verbs:
+            - '*'
+        - functionResourceRef: devops-virtualissuebranches
+          verbs:
+            - '*'
+        - functionResourceRef: devops-virtualissues
+          verbs:
+            - '*'
+        - functionResourceRef: devops-virtualusers
+          verbs:
+            - '*'
+        - functionResourceRef: devops-testplans
+          verbs:
+            - '*'
+        - functionResourceRef: devops-testmodules
+          verbs:
+            - '*'
+        - functionResourceRef: devops-testcases
+          verbs:
+            - '*'
+        - functionResourceRef: devops-testcaseexecutions
+          verbs:
+            - '*'
+        - functionResourceRef: devops-versionschemes
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: devops-versionstreams
+          verbs:
+            - '*'
+        - functionResourceRef: devops-versionrequests
+          verbs:
+            - '*'
+        - functionResourceRef: devops-clustergitsources
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: devops-gitsources
+          verbs:
+            - '*'
+        - functionResourceRef: devops-variables
+          verbs:
+            - '*'
+        - functionResourceRef: devops-clustertemplates
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: devops-virtualartifactuploads
+          verbs:
+            - '*'
+        - functionResourceRef: devops-storageplugins
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: devops-clusterpolicies
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-gateways
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-serviceentries
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-virtualservices
+          verbs:
+            - '*'
+        - functionResourceRef: asm-envoyfilters
+          verbs:
+            - '*'
+        - functionResourceRef: asm-asmloadbalancers
+          verbs:
+            - '*'
+        - functionResourceRef: asm-appconfigs
+          verbs:
+            - '*'
+        - functionResourceRef: asm-routerules
+          verbs:
+            - '*'
+        - functionResourceRef: asm-apiattributes
+          verbs:
+            - '*'
+        - functionResourceRef: asm-istioproxyupdatetasks
+          verbs:
+            - '*'
+        - functionResourceRef: asm-istiocanaryupdates
+          verbs:
+            - '*'
+        - functionResourceRef: asm-canaryevents
+          verbs:
+            - '*'
+        - functionResourceRef: asm-policies
+          verbs:
+            - '*'
+        - functionResourceRef: asm-gatewaygroups
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-jwtpolicies
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-ingressgateways
+          verbs:
+            - '*'
+        - functionResourceRef: asm-errorchecks
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-clusterconfig
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-domains
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-envoyfiltertemplates
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-envoyfiltertemplatesyncs
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-gatewaydeploys
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-gatewayprojectbindings
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-envoyfilterbindings
+          verbs:
+            - '*'
+        - functionResourceRef: asm-connectionpools
+          verbs:
+            - '*'
+        - functionResourceRef: asm-manualgrayevents
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-manualgrayreleases
+          verbs:
+            - '*'
+        - functionResourceRef: asm-microservices
+          verbs:
+            - '*'
+        - functionResourceRef: asm-microservicepolicies
+          verbs:
+            - '*'
+        - functionResourceRef: asm-whitelists
+          verbs:
+            - '*'
+        - functionResourceRef: asm-outlierdetections
+          verbs:
+            - '*'
+        - functionResourceRef: asm-servicemeshs
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-casemonitors
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-asmk8sresource
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-authorizationpolicy
+          verbs:
+            - '*'
+        - functionResourceRef: asm-istiosecurity
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-istioauthentication
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-istiorbac
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-istioconfig
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-istionetworking
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-canarydeliveries
+          verbs:
+            - '*'
+        - functionResourceRef: asm-canarytemplates
+          verbs:
+            - '*'
+        - functionResourceRef: asm-wasmmoduletemplates
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-wasmmoduleinstalls
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-wasmmoduledeployments
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: aiops-alerthistories
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-servicemeshgroups
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-isolatepods
+          verbs:
+            - '*'
+        - functionResourceRef: asm-globalratelimiters
+          verbs:
+            - '*'
+        - functionResourceRef: asm-sidecarbypasses
+          verbs:
+            - '*'
+        - functionResourceRef: asm-serviceregistries
+          verbs:
+            - '*'
+        - functionResourceRef: acp-middleware-mysql
+          verbs:
+            - '*'
+        - functionResourceRef: acp-middleware-mysqluser
+          verbs:
+            - '*'
+        - functionResourceRef: acp-middleware-mysqlrestore
+          verbs:
+            - '*'
+        - functionResourceRef: acp-middleware-mysql-mgr
+          verbs:
+            - '*'
+        - functionResourceRef: acp-middleware-mysqlmgr-backup-restore
+          verbs:
+            - '*'
+        - functionResourceRef: acp-middleware-redis
+          verbs:
+            - '*'
+        - functionResourceRef: acp-middleware-redisbackup
+          verbs:
+            - '*'
+        - functionResourceRef: acp-middleware-redisfailover
+          verbs:
+            - '*'
+        - functionResourceRef: acp-middleware-redisuser
+          verbs:
+            - '*'
+        - functionResourceRef: acp-middleware-kafka
+          verbs:
+            - '*'
+        - functionResourceRef: acp-middleware-kafka-tools
+          verbs:
+            - '*'
+        - functionResourceRef: acp-middleware-kafkatopic
+          verbs:
+            - '*'
+        - functionResourceRef: acp-middleware-kafkauser
+          verbs:
+            - '*'
+        - functionResourceRef: acp-middleware-mongo
+          verbs:
+            - '*'
+        - functionResourceRef: acp-middleware-mongo-backup-restore
+          verbs:
+            - '*'
+        - functionResourceRef: acp-middleware-postgresql
+          verbs:
+            - '*'
+        - functionResourceRef: acp-middleware-rabbitmq
+          verbs:
+            - '*'
+        - functionResourceRef: acp-middleware-rocketmq
+          verbs:
+            - '*'
+        - functionResourceRef: acp-middleware-mysql-para-template
+          verbs:
+            - '*'
+        - functionResourceRef: acp-middleware-alertcenter
+          verbs:
+            - '*'
+        - functionResourceRef: acp-middleware-inspection
+          verbs:
+            - '*'
+        - functionResourceRef: acp-middleware-inspectionjob
+          verbs:
+            - '*'
+        - functionResourceRef: acp-middleware-backupstorage
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-middleware-paramdefinition
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-middleware-paramtemplate-system
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-middleware-paramtemplate-project
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-middleware-imageversions
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-middleware-backupstat
+          verbs:
+            - get
+            - list
+            - watch
+            - delete
+            - deletecollection
+        - functionResourceRef: platform-manage-accesstokeninfoes
+          verbs:
+            - get
+            - list
+            - watch
+            - delete
+            - deletecollection
+        - functionResourceRef: acp-operator-backed
+          verbs:
+            - '*'
+        - functionResourceRef: platform-manage-commonconfigs
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-namespace-resource-manage
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: product-management
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: infrastructure-crd
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-provider-networks
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-vlan
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-localstorage
+          verbs:
+            - '*'
+        - functionResourceRef: acp-builtinstorage
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-interconnectionsubnets
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: infrastructure-moduleinfo
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-metallb
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: aiops-monitoring-metrics
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: aiops-monitoring-dashboard
+          verbs:
+            - '*'
+        - functionResourceRef: aiops-audits
+          verbs:
+            - get
+            - list
+        - functionResourceRef: acp-gatewayapi
+          verbs:
+            - '*'
+        - functionResourceRef: acp-gatewayapigatewayclass
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-ingressclass
+          verbs:
+            - get
+            - list
+            - watch
+  - apiVersion: auth.alauda.io/v1beta1
+    kind: RoleTemplate
+    metadata:
+      annotations:
+        auth.cpaas.io/role.id: '5'
+        cpaas.io/creator: system
+        cpaas.io/description: 负责在该命名空间下开发、部署以及维护应用。
+        cpaas.io/description.en:
+          Responsible for developing, deploying and maintaining
+          applications in this namespace.
+        cpaas.io/display-name: 开发人员
+        cpaas.io/display-name.en: Developers
+        helm.sh/chart-version: v3.18.0-beta.5.gd1c1c910
+        helm.sh/original-name: namespace-developer-system
+      creationTimestamp: '2024-07-01T08:26:24Z'
+      generation: 1
+      labels:
+        auth.cpaas.io/creator.email: ''
+        auth.cpaas.io/roletemplate.level: namespace
+        auth.cpaas.io/roletemplate.official: 'true'
+        helm.sh/chart-name: auth-manager
+        helm.sh/release-name: auth-manager
+        helm.sh/release-namespace: cpaas-system
+      name: namespace-developer-system
+      resourceVersion: '4960'
+      uid: 261821d5-0f24-408a-abf7-9829c22c722e
+    spec:
+      rules:
+        - functionResourceRef: platform-manage-usersmanage
+          verbs:
+            - get
+        - functionResourceRef: platform-manage-usergroupsmanage
+          verbs:
+            - get
+            - list
+        - functionResourceRef: platform-manage-rolesmanage
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: platform-manage-userbindings
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: platform-manage-projectmanage
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: project-manage-projectmembers
+          verbs:
+            - get
+        - functionResourceRef: platform-manage-projectbinding
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: platform-manage-productlist
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: platform-manage-featuregates
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: platform-manage-portal
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: views-devops-userview
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: views-dataservices-userview
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: views-asm-userview
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: views-acp-userview
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: infrastructure-clusters
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: infrastructure-regions
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: infrastructure-nodesmanage
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: infrastructure-domains
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: infrastructure-loadbalance
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: infrastructure-persistentvolumes
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: infrastructure-storageclasses
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: aiops-notificationsmanage
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: aiops-logs
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: aiops-alerts
+          verbs:
+            - '*'
+        - functionResourceRef: aiops-alerttemplate
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: aiops-events
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-app
+          verbs:
+            - '*'
+        - functionResourceRef: acp-oamapp
+          verbs:
+            - '*'
+        - functionResourceRef: acp-virtualmachine
+          verbs:
+            - '*'
+        - functionResourceRef: acp-virtualmachineimagetemplates
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-loadbalance-use
+          verbs:
+            - '*'
+        - functionResourceRef: acp-rules
+          verbs:
+            - '*'
+        - functionResourceRef: acp-openshiftroutes
+          verbs:
+            - '*'
+        - functionResourceRef: acp-networkpolicies
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-subnet
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-configmap
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-namespaceoverviews
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-alertsquery
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-namespaces
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-resourcequotas
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-limitranges
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-k8sresource
+          verbs:
+            - '*'
+        - functionResourceRef: acp-user-configmap
+          verbs:
+            - '*'
+        - functionResourceRef: acp-user-secret
+          verbs:
+            - '*'
+        - functionResourceRef: acp-podsexec
+          verbs:
+            - '*'
+        - functionResourceRef: acp-rootexec
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-podslog
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-appmarket
+          verbs:
+            - '*'
+        - functionResourceRef: acp-apphelm
+          verbs:
+            - '*'
+        - functionResourceRef: acp-batchaction
+          verbs:
+            - '*'
+        - functionResourceRef: acp-imagewhitelist
+          verbs:
+            - '*'
+        - functionResourceRef: acp-autoscalers
+          verbs:
+            - '*'
+        - functionResourceRef: acp-namespaceaudits
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-serviceaccounts
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-nodegroups
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-volumesnapshot
+          verbs:
+            - '*'
+        - functionResourceRef: acp-cosi
+          verbs:
+            - '*'
+        - functionResourceRef: acp-vpa
+          verbs:
+            - '*'
+        - functionResourceRef: devops-devopstools
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: devops-toolbindings
+          verbs:
+            - '*'
+        - functionResourceRef: devops-toolresource
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: devops-clusterpipelinetasktemplates
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: devops-artifactpromotions
+          verbs:
+            - '*'
+        - functionResourceRef: devops-artifactpromotionruns
+          verbs:
+            - '*'
+        - functionResourceRef: devops-artifactpromotionapprovals
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: devops-clusterpromotionpolicies
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: devops-clusterpipelinetemplates
+          verbs:
+            - '*'
+        - functionResourceRef: devops-pipelinetasktemplates
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: devops-pipelinetemplates
+          verbs:
+            - '*'
+        - functionResourceRef: devops-pipelineconfigs
+          verbs:
+            - '*'
+        - functionResourceRef: devops-pipelines
+          verbs:
+            - '*'
+        - functionResourceRef: devops-templaterenders
+          verbs:
+            - '*'
+        - functionResourceRef: devops-policies
+          verbs:
+            - '*'
+        - functionResourceRef: devops-policyruns
+          verbs:
+            - '*'
+        - functionResourceRef: devops-builds-ns
+          verbs:
+            - '*'
+        - functionResourceRef: devops-buildruns-ns
+          verbs:
+            - '*'
+        - functionResourceRef: devops-tekton
+          verbs:
+            - '*'
+        - functionResourceRef: devops-clusterstages
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: devops-deliveries
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: devops-deliveryruns
+          verbs:
+            - '*'
+        - functionResourceRef: devops-stages
+          verbs:
+            - '*'
+        - functionResourceRef: devops-stageruns
+          verbs:
+            - get
+            - list
+            - watch
+            - patch
+        - functionResourceRef: devops-integrationclasses
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: devops-integrations
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: devops-virtualartifacts
+          verbs:
+            - get
+            - list
+            - watch
+            - create
+            - patch
+        - functionResourceRef: devops-virtualartifactsfiles
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: devops-virtualrepositories
+          verbs:
+            - get
+            - list
+        - functionResourceRef: devops-secret
+          verbs:
+            - '*'
+        - functionResourceRef: devops-environments
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: devops-virtualissuebranches
+          verbs:
+            - '*'
+        - functionResourceRef: devops-virtualissues
+          verbs:
+            - '*'
+        - functionResourceRef: devops-virtualusers
+          verbs:
+            - '*'
+        - functionResourceRef: devops-projects
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: devops-gitrepositories
+          verbs:
+            - '*'
+        - functionResourceRef: devops-gitbranches
+          verbs:
+            - get
+            - list
+            - watch
+            - patch
+        - functionResourceRef: devops-gitcommits
+          verbs:
+            - '*'
+        - functionResourceRef: devops-gitrepositorytags
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: devops-codequalities
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: devops-testplans
+          verbs:
+            - '*'
+        - functionResourceRef: devops-testmodules
+          verbs:
+            - '*'
+        - functionResourceRef: devops-testcases
+          verbs:
+            - '*'
+        - functionResourceRef: devops-testcaseexecutions
+          verbs:
+            - '*'
+        - functionResourceRef: devops-versionschemes
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: devops-versionstreams
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: devops-versionrequests
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: devops-clustergitsources
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: devops-gitsources
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: devops-variables
+          verbs:
+            - '*'
+        - functionResourceRef: devops-clustertemplates
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: devops-virtualartifactuploads
+          verbs:
+            - '*'
+        - functionResourceRef: devops-storageplugins
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: devops-clusterpolicies
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-gateways
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-serviceentries
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-virtualservices
+          verbs:
+            - '*'
+        - functionResourceRef: asm-envoyfilters
+          verbs:
+            - '*'
+        - functionResourceRef: asm-asmloadbalancers
+          verbs:
+            - '*'
+        - functionResourceRef: asm-apiattributes
+          verbs:
+            - '*'
+        - functionResourceRef: asm-gatewaygroups
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-jwtpolicies
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-ingressgateways
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-istioproxyupdatetasks
+          verbs:
+            - '*'
+        - functionResourceRef: asm-istiocanaryupdates
+          verbs:
+            - '*'
+        - functionResourceRef: asm-canaryevents
+          verbs:
+            - '*'
+        - functionResourceRef: asm-appconfigs
+          verbs:
+            - '*'
+        - functionResourceRef: asm-routerules
+          verbs:
+            - '*'
+        - functionResourceRef: asm-policies
+          verbs:
+            - '*'
+        - functionResourceRef: asm-errorchecks
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-clusterconfig
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-domains
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-envoyfiltertemplates
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-envoyfiltertemplatesyncs
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-gatewaydeploys
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-gatewayprojectbindings
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-envoyfilterbindings
+          verbs:
+            - '*'
+        - functionResourceRef: asm-connectionpools
+          verbs:
+            - '*'
+        - functionResourceRef: asm-manualgrayevents
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-manualgrayreleases
+          verbs:
+            - '*'
+        - functionResourceRef: asm-microservices
+          verbs:
+            - '*'
+        - functionResourceRef: asm-microservicepolicies
+          verbs:
+            - '*'
+        - functionResourceRef: asm-whitelists
+          verbs:
+            - '*'
+        - functionResourceRef: asm-outlierdetections
+          verbs:
+            - '*'
+        - functionResourceRef: asm-servicemeshs
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-casemonitors
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-asmk8sresource
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-wasmmoduletemplates
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-wasmmoduleinstalls
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-wasmmoduledeployments
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-authorizationpolicy
+          verbs:
+            - '*'
+        - functionResourceRef: asm-istiosecurity
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-istioauthentication
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-istiorbac
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-istioconfig
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-istionetworking
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-canarydeliveries
+          verbs:
+            - '*'
+        - functionResourceRef: asm-canarytemplates
+          verbs:
+            - '*'
+        - functionResourceRef: asm-isolatepods
+          verbs:
+            - '*'
+        - functionResourceRef: asm-globalratelimiters
+          verbs:
+            - '*'
+        - functionResourceRef: asm-sidecarbypasses
+          verbs:
+            - '*'
+        - functionResourceRef: asm-serviceregistries
+          verbs:
+            - '*'
+        - functionResourceRef: aiops-alerthistories
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-middleware-mysql
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-middleware-mysqluser
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-middleware-mysqlrestore
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-middleware-mysql-mgr
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-middleware-mysqlmgr-backup-restore
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-middleware-redis
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-middleware-redisbackup
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-middleware-redisfailover
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-middleware-redisuser
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-middleware-kafka
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-middleware-kafka-tools
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-middleware-kafkatopic
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-middleware-kafkauser
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-middleware-mongo
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-middleware-mongo-backup-restore
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-middleware-postgresql
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-middleware-rabbitmq
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-middleware-rocketmq
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-middleware-mysql-para-template
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-middleware-alertcenter
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-middleware-inspection
+          verbs:
+            - get
+            - list
+            - watch
+            - create
+            - update
+            - delete
+        - functionResourceRef: acp-middleware-inspectionjob
+          verbs:
+            - get
+            - list
+            - watch
+            - create
+            - delete
+        - functionResourceRef: acp-middleware-backupstorage
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-middleware-backupstat
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-middleware-paramdefinition
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-middleware-paramtemplate-system
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-middleware-paramtemplate-project
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-middleware-imageversions
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: platform-manage-accesstokeninfoes
+          verbs:
+            - get
+            - list
+            - watch
+            - delete
+            - deletecollection
+        - functionResourceRef: acp-operator-backed
+          verbs:
+            - '*'
+        - functionResourceRef: asm-servicemeshgroups
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: platform-manage-commonconfigs
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-namespace-resource-manage
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: product-management
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: infrastructure-crd
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-provider-networks
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-vlan
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-localstorage
+          verbs:
+            - '*'
+        - functionResourceRef: acp-builtinstorage
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-interconnectionsubnets
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: infrastructure-moduleinfo
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-metallb
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: aiops-monitoring-metrics
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: aiops-monitoring-dashboard
+          verbs:
+            - '*'
+        - functionResourceRef: aiops-audits
+          verbs:
+            - get
+            - list
+        - functionResourceRef: acp-gatewayapi
+          verbs:
+            - '*'
+        - functionResourceRef: acp-gatewayapigatewayclass
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-ingressclass
+          verbs:
+            - get
+            - list
+            - watch
+  - apiVersion: auth.alauda.io/v1beta1
+    kind: RoleTemplate
+    metadata:
+      annotations:
+        auth.cpaas.io/role.id: '1'
+        cpaas.io/creator: system
+        cpaas.io/description: 具备平台所有业务及资源的全部权限。
+        cpaas.io/description.en:
+          Have full authority for all business and resources
+          of the platform
+        cpaas.io/display-name: 平台管理员
+        cpaas.io/display-name.en: Platform Administrator
+        helm.sh/chart-version: v3.18.0-beta.5.gd1c1c910
+        helm.sh/original-name: platform-admin-system
+      creationTimestamp: '2024-07-01T08:26:24Z'
+      generation: 1
+      labels:
+        auth.cpaas.io/creator.email: ''
+        auth.cpaas.io/roletemplate.level: platform
+        auth.cpaas.io/roletemplate.official: 'true'
+        helm.sh/chart-name: auth-manager
+        helm.sh/release-name: auth-manager
+        helm.sh/release-namespace: cpaas-system
+      name: platform-admin-system
+      resourceVersion: '4961'
+      uid: 8fea10a4-db53-401b-9a1f-5344e9760fa4
+    spec:
+      rules:
+        - functionResourceRef: '*'
+          verbs:
+            - '*'
+  - apiVersion: auth.alauda.io/v1beta1
+    kind: RoleTemplate
+    metadata:
+      annotations:
+        auth.cpaas.io/role.id: '2'
+        cpaas.io/creator: system
+        cpaas.io/description: 负责整个平台的审计工作，可查看平台所有资源与操作记录，没有查看外的其他操作权限。
+        cpaas.io/description.en:
+          Responsible for the audit work of the whole platform,
+          you can view all resources and operation records of the platform, without
+          any other operation privileges.
+        cpaas.io/display-name: 平台审计人员
+        cpaas.io/display-name.en: Platform auditors
+        helm.sh/chart-version: v3.18.0-beta.5.gd1c1c910
+        helm.sh/original-name: platform-auditor-system
+      creationTimestamp: '2024-07-01T08:26:24Z'
+      generation: 1
+      labels:
+        auth.cpaas.io/creator.email: ''
+        auth.cpaas.io/roletemplate.level: platform
+        auth.cpaas.io/roletemplate.official: 'true'
+        helm.sh/chart-name: auth-manager
+        helm.sh/release-name: auth-manager
+        helm.sh/release-namespace: cpaas-system
+      name: platform-auditor-system
+      resourceVersion: '4962'
+      uid: 4529aa70-d220-4c03-b13e-dfffbe3d7238
+    spec:
+      rules:
+        - functionResourceRef: '*'
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: platform-manage-accesstokeninfoes
+          verbs:
+            - get
+            - list
+            - watch
+            - delete
+            - deletecollection
+        - functionResourceRef: acp-middleware-inspectionjob
+          verbs:
+            - get
+            - list
+            - watch
+            - create
+        - functionResourceRef: acp-middleware-backupstorage
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-middleware-backupstat
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-manualgrayevents
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-manualgrayreleases
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-app-package-management
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: aiops-monitoring-dashboard
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: aiops-costs
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-gatewayapi
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-gatewayapigatewayclass
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-ingressclass
+          verbs:
+            - get
+            - list
+            - watch
+  - apiVersion: auth.alauda.io/v1beta1
+    kind: RoleTemplate
+    metadata:
+      annotations:
+        auth.cpaas.io/role.id: '3'
+        cpaas.io/creator: system
+        cpaas.io/description: 负责绑定/解绑命名空间管理员，以及管理命名空间配额。
+        cpaas.io/description.en:
+          Responsible for binding/unbinding namespace administrators
+          and managing namespace quotas.
+        cpaas.io/display-name: 项目管理员
+        cpaas.io/display-name.en: Project Manager
+        helm.sh/chart-version: v3.18.0-beta.5.gd1c1c910
+        helm.sh/original-name: project-admin-system
+      creationTimestamp: '2024-07-01T08:26:24Z'
+      generation: 1
+      labels:
+        auth.cpaas.io/creator.email: ''
+        auth.cpaas.io/roletemplate.level: project
+        auth.cpaas.io/roletemplate.official: 'true'
+        helm.sh/chart-name: auth-manager
+        helm.sh/release-name: auth-manager
+        helm.sh/release-namespace: cpaas-system
+      name: project-admin-system
+      resourceVersion: '4964'
+      uid: 13418110-83a8-475d-afc9-04d65cafa963
+    spec:
+      rules:
+        - functionResourceRef: platform-manage-usersmanage
+          verbs:
+            - get
+        - functionResourceRef: platform-manage-usergroupsmanage
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: platform-manage-rolesmanage
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: platform-manage-userbindings
+          verbs:
+            - '*'
+        - functionResourceRef: platform-manage-projectmanage
+          verbs:
+            - get
+            - list
+            - watch
+            - update
+            - patch
+        - functionResourceRef: project-manage-projectmembers
+          verbs:
+            - '*'
+        - functionResourceRef: platform-manage-projectbinding
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: platform-manage-productlist
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: platform-manage-featuregates
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: platform-manage-portal
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: views-projectview
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: views-devops-userview
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: views-dataservices-userview
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: views-devops-manageview
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: views-asm-userview
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: views-acp-userview
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: views-cec-userview
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: infrastructure-clusters
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: infrastructure-regions
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: infrastructure-nodesmanage
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: infrastructure-domains
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: infrastructure-loadbalance
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: infrastructure-persistentvolumes
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: infrastructure-storageclasses
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: aiops-notificationsmanage
+          verbs:
+            - '*'
+        - functionResourceRef: aiops-logs
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: aiops-alerts
+          verbs:
+            - '*'
+        - functionResourceRef: aiops-alerttemplate
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: aiops-events
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-app
+          verbs:
+            - '*'
+        - functionResourceRef: acp-oamapp
+          verbs:
+            - '*'
+        - functionResourceRef: acp-virtualmachine
+          verbs:
+            - '*'
+        - functionResourceRef: acp-virtualmachineimagetemplates
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-nodegroups
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-loadbalance-use
+          verbs:
+            - '*'
+        - functionResourceRef: acp-rules
+          verbs:
+            - '*'
+        - functionResourceRef: acp-openshiftroutes
+          verbs:
+            - '*'
+        - functionResourceRef: acp-networkpolicies
+          verbs:
+            - '*'
+        - functionResourceRef: acp-subnet
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-configmap
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-namespaceoverviews
+          verbs:
+            - '*'
+        - functionResourceRef: acp-namespace-resource-ratio
+          verbs:
+            - '*'
+        - functionResourceRef: acp-alertsquery
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-namespaces
+          verbs:
+            - '*'
+        - functionResourceRef: acp-resourcequotas
+          verbs:
+            - '*'
+        - functionResourceRef: acp-limitranges
+          verbs:
+            - '*'
+        - functionResourceRef: acp-k8sresource
+          verbs:
+            - '*'
+        - functionResourceRef: acp-user-configmap
+          verbs:
+            - '*'
+        - functionResourceRef: acp-user-secret
+          verbs:
+            - '*'
+        - functionResourceRef: acp-podsexec
+          verbs:
+            - '*'
+        - functionResourceRef: acp-rootexec
+          verbs:
+            - '*'
+        - functionResourceRef: acp-podslog
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-appmarket
+          verbs:
+            - '*'
+        - functionResourceRef: acp-apphelm
+          verbs:
+            - '*'
+        - functionResourceRef: acp-batchaction
+          verbs:
+            - '*'
+        - functionResourceRef: acp-imagewhitelist
+          verbs:
+            - '*'
+        - functionResourceRef: acp-autoscalers
+          verbs:
+            - '*'
+        - functionResourceRef: acp-namespaceaudits
+          verbs:
+            - '*'
+        - functionResourceRef: acp-serviceaccounts
+          verbs:
+            - '*'
+        - functionResourceRef: acp-volumesnapshot
+          verbs:
+            - '*'
+        - functionResourceRef: acp-cosi
+          verbs:
+            - '*'
+        - functionResourceRef: acp-vpa
+          verbs:
+            - '*'
+        - functionResourceRef: acp-gitops-app
+          verbs:
+            - '*'
+        - functionResourceRef: devops-artifactcleanuppolicies
+          verbs:
+            - '*'
+        - functionResourceRef: devops-artifactcleanupruns
+          verbs:
+            - '*'
+        - functionResourceRef: devops-artifactretainpolicies
+          verbs:
+            - '*'
+        - functionResourceRef: devops-artifactpromotions
+          verbs:
+            - '*'
+        - functionResourceRef: devops-artifactpromotionruns
+          verbs:
+            - '*'
+        - functionResourceRef: devops-artifactpromotionapprovals
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: devops-clusterpromotionpolicies
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: devops-devopstools
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: devops-toolbindings
+          verbs:
+            - '*'
+        - functionResourceRef: devops-toolresource
+          verbs:
+            - '*'
+        - functionResourceRef: devops-clusterpipelinetasktemplates
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: devops-clusterpipelinetemplates
+          verbs:
+            - '*'
+        - functionResourceRef: devops-pipelinetasktemplates
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: devops-pipelinetemplates
+          verbs:
+            - '*'
+        - functionResourceRef: devops-pipelinetemplatesyncs
+          verbs:
+            - '*'
+        - functionResourceRef: devops-clusterpipelinetemplatesyncs
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: devops-pipelineconfigs
+          verbs:
+            - '*'
+        - functionResourceRef: devops-pipelines
+          verbs:
+            - '*'
+        - functionResourceRef: devops-templaterenders
+          verbs:
+            - '*'
+        - functionResourceRef: devops-policies
+          verbs:
+            - '*'
+        - functionResourceRef: devops-policyruns
+          verbs:
+            - '*'
+        - functionResourceRef: devops-builds
+          verbs:
+            - '*'
+        - functionResourceRef: devops-buildruns
+          verbs:
+            - '*'
+        - functionResourceRef: devops-tekton
+          verbs:
+            - '*'
+        - functionResourceRef: devops-clusterstages
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: devops-deliveries
+          verbs:
+            - '*'
+        - functionResourceRef: devops-deliveryruns
+          verbs:
+            - '*'
+        - functionResourceRef: devops-stages
+          verbs:
+            - '*'
+        - functionResourceRef: devops-stageruns
+          verbs:
+            - '*'
+        - functionResourceRef: devops-integrationclasses
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: devops-integrations
+          verbs:
+            - '*'
+        - functionResourceRef: devops-virtualartifacts
+          verbs:
+            - '*'
+        - functionResourceRef: devops-virtualartifactsfiles
+          verbs:
+            - '*'
+        - functionResourceRef: devops-virtualrepositories
+          verbs:
+            - '*'
+        - functionResourceRef: devops-secret
+          verbs:
+            - '*'
+        - functionResourceRef: devops-projectsettings
+          verbs:
+            - '*'
+        - functionResourceRef: devops-environments
+          verbs:
+            - '*'
+        - functionResourceRef: devops-virtualissuebranches
+          verbs:
+            - '*'
+        - functionResourceRef: devops-virtualissues
+          verbs:
+            - '*'
+        - functionResourceRef: devops-virtualusers
+          verbs:
+            - '*'
+        - functionResourceRef: devops-projects
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: devops-variables
+          verbs:
+            - '*'
+        - functionResourceRef: devops-gitrepositories
+          verbs:
+            - '*'
+        - functionResourceRef: devops-gitbranches
+          verbs:
+            - get
+            - list
+            - watch
+            - patch
+        - functionResourceRef: devops-gitcommits
+          verbs:
+            - '*'
+        - functionResourceRef: devops-gitrepositorytags
+          verbs:
+            - '*'
+        - functionResourceRef: devops-codequalities
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: devops-testplans
+          verbs:
+            - '*'
+        - functionResourceRef: devops-testmodules
+          verbs:
+            - '*'
+        - functionResourceRef: devops-testcases
+          verbs:
+            - '*'
+        - functionResourceRef: devops-testcaseexecutions
+          verbs:
+            - '*'
+        - functionResourceRef: devops-versionschemes
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: devops-versionstreams
+          verbs:
+            - '*'
+        - functionResourceRef: devops-versionrequests
+          verbs:
+            - '*'
+        - functionResourceRef: devops-clustergitsources
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: devops-gitsources
+          verbs:
+            - '*'
+        - functionResourceRef: devops-clustertemplates
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: devops-virtualartifactuploads
+          verbs:
+            - '*'
+        - functionResourceRef: devops-storageplugins
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: devops-clusterpolicies
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-gateways
+          verbs:
+            - '*'
+        - functionResourceRef: asm-gatewaydeploys
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-gatewayprojectbindings
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-serviceentries
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-virtualservices
+          verbs:
+            - '*'
+        - functionResourceRef: asm-envoyfilters
+          verbs:
+            - '*'
+        - functionResourceRef: asm-asmloadbalancers
+          verbs:
+            - '*'
+        - functionResourceRef: asm-apiattributes
+          verbs:
+            - '*'
+        - functionResourceRef: asm-gatewaygroups
+          verbs:
+            - '*'
+        - functionResourceRef: asm-jwtpolicies
+          verbs:
+            - '*'
+        - functionResourceRef: asm-ingressgateways
+          verbs:
+            - '*'
+        - functionResourceRef: asm-istioproxyupdatetasks
+          verbs:
+            - '*'
+        - functionResourceRef: asm-istiocanaryupdates
+          verbs:
+            - '*'
+        - functionResourceRef: asm-canaryevents
+          verbs:
+            - '*'
+        - functionResourceRef: asm-appconfigs
+          verbs:
+            - '*'
+        - functionResourceRef: asm-routerules
+          verbs:
+            - '*'
+        - functionResourceRef: asm-policies
+          verbs:
+            - '*'
+        - functionResourceRef: asm-errorchecks
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-clusterconfig
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-domains
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-envoyfiltertemplates
+          verbs:
+            - '*'
+        - functionResourceRef: asm-envoyfiltertemplatesyncs
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-envoyfilterbindings
+          verbs:
+            - '*'
+        - functionResourceRef: asm-connectionpools
+          verbs:
+            - '*'
+        - functionResourceRef: asm-manualgrayevents
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-manualgrayreleases
+          verbs:
+            - '*'
+        - functionResourceRef: asm-microservices
+          verbs:
+            - '*'
+        - functionResourceRef: asm-microservicepolicies
+          verbs:
+            - '*'
+        - functionResourceRef: asm-whitelists
+          verbs:
+            - '*'
+        - functionResourceRef: asm-outlierdetections
+          verbs:
+            - '*'
+        - functionResourceRef: asm-servicemeshs
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-casemonitors
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-asmk8sresource
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-authorizationpolicy
+          verbs:
+            - '*'
+        - functionResourceRef: asm-istiosecurity
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-istioauthentication
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-istiorbac
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-istioconfig
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-istionetworking
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-canarydeliveries
+          verbs:
+            - '*'
+        - functionResourceRef: asm-canarytemplates
+          verbs:
+            - '*'
+        - functionResourceRef: asm-wasmmoduletemplates
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-wasmmoduleinstalls
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-wasmmoduledeployments
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: aiops-alerthistories
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-servicemeshgroups
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: asm-isolatepods
+          verbs:
+            - '*'
+        - functionResourceRef: asm-globalratelimiters
+          verbs:
+            - '*'
+        - functionResourceRef: asm-sidecarbypasses
+          verbs:
+            - '*'
+        - functionResourceRef: asm-serviceregistries
+          verbs:
+            - '*'
+        - functionResourceRef: acp-middleware-mysql
+          verbs:
+            - '*'
+        - functionResourceRef: acp-middleware-mysql-para-template
+          verbs:
+            - '*'
+        - functionResourceRef: acp-middleware-mysqluser
+          verbs:
+            - '*'
+        - functionResourceRef: acp-middleware-mysqlrestore
+          verbs:
+            - '*'
+        - functionResourceRef: acp-middleware-mysql-mgr
+          verbs:
+            - '*'
+        - functionResourceRef: acp-middleware-mysqlmgr-backup-restore
+          verbs:
+            - '*'
+        - functionResourceRef: acp-middleware-redis
+          verbs:
+            - '*'
+        - functionResourceRef: acp-middleware-redisbackup
+          verbs:
+            - '*'
+        - functionResourceRef: acp-middleware-redisfailover
+          verbs:
+            - '*'
+        - functionResourceRef: acp-middleware-redisuser
+          verbs:
+            - '*'
+        - functionResourceRef: acp-middleware-kafka
+          verbs:
+            - '*'
+        - functionResourceRef: acp-middleware-kafka-tools
+          verbs:
+            - '*'
+        - functionResourceRef: acp-middleware-kafkatopic
+          verbs:
+            - '*'
+        - functionResourceRef: acp-middleware-kafkauser
+          verbs:
+            - '*'
+        - functionResourceRef: acp-middleware-mongo
+          verbs:
+            - '*'
+        - functionResourceRef: acp-middleware-mongo-backup-restore
+          verbs:
+            - '*'
+        - functionResourceRef: acp-middleware-postgresql
+          verbs:
+            - '*'
+        - functionResourceRef: acp-middleware-rabbitmq
+          verbs:
+            - '*'
+        - functionResourceRef: acp-middleware-rocketmq
+          verbs:
+            - '*'
+        - functionResourceRef: acp-middleware-alertcenter
+          verbs:
+            - '*'
+        - functionResourceRef: acp-middleware-inspection
+          verbs:
+            - '*'
+        - functionResourceRef: acp-middleware-inspectionjob
+          verbs:
+            - '*'
+        - functionResourceRef: acp-middleware-backupstorage
+          verbs:
+            - '*'
+        - functionResourceRef: acp-middleware-backupstat
+          verbs:
+            - '*'
+        - functionResourceRef: acp-middleware-paramdefinition
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-middleware-paramtemplate-system
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-middleware-paramtemplate-project
+          verbs:
+            - '*'
+        - functionResourceRef: acp-middleware-imageversions
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: platform-manage-accesstokeninfoes
+          verbs:
+            - get
+            - list
+            - watch
+            - delete
+            - deletecollection
+        - functionResourceRef: acp-operator-backed
+          verbs:
+            - '*'
+        - functionResourceRef: platform-manage-commonconfigs
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-namespace-resource-manage
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: product-management
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: infrastructure-crd
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-provider-networks
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-vlan
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-localstorage
+          verbs:
+            - '*'
+        - functionResourceRef: acp-builtinstorage
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-interconnectionsubnets
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: infrastructure-moduleinfo
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-metallb
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-multicluster-namespaces
+          verbs:
+            - get
+            - list
+            - watch
+            - create
+            - update
+            - delete
+            - patch
+        - functionResourceRef: acp-cloudedge
+          verbs:
+            - '*'
+        - functionResourceRef: aiops-monitoring-metrics
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: aiops-monitoring-dashboard
+          verbs:
+            - '*'
+        - functionResourceRef: aiops-audits
+          verbs:
+            - get
+            - list
+        - functionResourceRef: acp-gatewayapi
+          verbs:
+            - '*'
+        - functionResourceRef: acp-gatewayapigatewayclass
+          verbs:
+            - get
+            - list
+            - watch
+        - functionResourceRef: acp-ingressclass
+          verbs:
+            - get
+            - list
+            - watch
+kind: List
+metadata:
+  resourceVersion: ''

@@ -8,6 +8,11 @@ api:
     - docs/shared/openapis/*.json
   references:
     v1alpha1.CodeQualityBranch: /apis/references/CodeQualityBranch#CodeQualityBranch
+permission:
+  functionresources:
+    - docs/shared/functionresources/*.yaml
+  roletemplates:
+    - docs/shared/roletemplates/*.yaml
 reference:
   - sources:
       - name: ref

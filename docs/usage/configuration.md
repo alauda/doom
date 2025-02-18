@@ -47,6 +47,21 @@ api:
 
 文档编写参考 [API 文档](./api)
 
+## 权限说明文档配置
+
+```yaml
+# 以下资源文件路径，相对于 doom.config.* 所在目录，支持 glob 匹配，json/yaml 文件
+permission:
+  functionresources:
+    # `kubectl get functionresources`
+    - docs/shared/functionresources/*.yaml
+  roletemplates:
+    # `kubectl get roletemplates -l auth.cpaas.io/roletemplate.official=true`
+    - docs/shared/roletemplates/*.yaml
+```
+
+文档编写参考[权限说明文档](./permission)
+
 ## 引用文档配置
 
 ```yaml

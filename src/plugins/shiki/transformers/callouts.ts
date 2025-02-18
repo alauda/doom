@@ -18,7 +18,6 @@ export const createTransformerCallouts = (
         callout: classActiveLine,
       },
       classActivePre,
-      matchAlgorithm: 'v3',
     },
     'shiki-transformer:callouts',
   )
