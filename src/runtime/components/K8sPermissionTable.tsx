@@ -50,23 +50,29 @@ const RolesPermission = ({
   const functionResourceName = functionResource.metadata.name
   const actions = functionResource.metadata.annotations['auth.cpaas.io/actions']
   return roleTemplates.map(({ metadata: { name }, spec: { rules } }) => {
-    const found = rules.find(
-      (r) => r.functionResourceRef === functionResourceName,
+    const found = rules.find((r) =>
+      ['*', functionResourceName].includes(r.functionResourceRef),
     )
     let hasPermission = false
     if (found) {
-      if (found.verbs.includes('*')) {
-        hasPermission = true
-      } else {
-        const verbs = actions
-          ? intersection(
-              found.verbs,
-              actions.split(',') as RoleTemplateRuleVerb[],
-            )
-          : found.verbs
-        if (VerbsMap[verb].every((v) => verbs.includes(v))) {
-          hasPermission = true
+      let verbs: RoleTemplateRuleVerb[]
+
+      if (actions) {
+        const actionsVerbs = actions.split(',') as RoleTemplateRuleVerb[]
+        if (found.verbs.includes('*')) {
+          verbs = actionsVerbs
+        } else {
+          verbs = intersection(found.verbs, actionsVerbs)
         }
+      } else {
+        verbs = found.verbs
+      }
+
+      if (
+        verbs.includes('*') ||
+        VerbsMap[verb].every((v) => verbs.includes(v))
+      ) {
+        hasPermission = true
       }
     }
     return (
