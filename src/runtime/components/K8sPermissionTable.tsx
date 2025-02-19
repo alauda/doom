@@ -1,4 +1,4 @@
-import { useLang, usePageData } from '@rspress/core/runtime'
+import { useLang } from '@rspress/core/runtime'
 import { getCustomMDXComponent } from '@rspress/core/theme'
 import { intersection, sortBy } from 'es-toolkit'
 import { Fragment, useMemo, useState } from 'react'
@@ -9,7 +9,9 @@ import type {
   RoleTemplateRuleVerb,
 } from '../../plugins/permission/types.js'
 import { useTranslation } from '../hooks/index.js'
-import type { ExtendedPageData } from '../types.js'
+
+import functionResourcesMap from 'doom-@permission-functionResourcesMap'
+import roleTemplatesMap from 'doom-@permission-roleTemplatesMap'
 
 export interface K8sPermissionTableProps {
   functions: string[]
@@ -85,11 +87,10 @@ const RolesPermission = ({
 
 export const K8sPermissionTable = ({ functions }: K8sPermissionTableProps) => {
   const [X] = useState(getCustomMDXComponent)
-  const { page } = usePageData() as ExtendedPageData
 
-  const functionResourcesMap = useMemo(
+  const allFunctionResources = useMemo(
     () =>
-      Object.values(page.functionResourcesMap || {}).reduce<
+      Object.values(functionResourcesMap).reduce<
         Partial<Record<string, FunctionResource>>
       >(
         (acc, curr) =>
@@ -99,12 +100,12 @@ export const K8sPermissionTable = ({ functions }: K8sPermissionTableProps) => {
           ) as Partial<Record<string, FunctionResource>>,
         {},
       ),
-    [page.functionResourcesMap],
+    [],
   )
 
   const functionResources = useMemo(() => {
     return functions.flatMap((name) => {
-      const matched = functionResourcesMap[name]
+      const matched = allFunctionResources[name]
       if (!matched) {
         console.error(`FunctionResource \`${name}\` not found!\n`)
         return []
@@ -115,7 +116,7 @@ export const K8sPermissionTable = ({ functions }: K8sPermissionTableProps) => {
 
   const roleTemplates = useMemo(
     () =>
-      sortBy(Object.values(page.roleTemplatesMap || {}).flat(), [
+      sortBy(Object.values(roleTemplatesMap).flat(), [
         (it) => it.metadata.annotations['auth.cpaas.io/role.id'],
       ]),
     [],

@@ -2,15 +2,15 @@
  * modified based on @see https://github.com/crdsdev/doc/blob/main/template/doc.html
  */
 
-import { usePageData } from '@rspress/core/runtime'
 import { Badge, Button, getCustomMDXComponent } from '@rspress/core/theme'
 import { OpenAPIV3_1 } from 'openapi-types'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { useTranslation } from '../hooks/index.js'
-import { ExtendedPageData } from '../types.js'
 import { Directive } from './Directive.js'
 import { Markdown } from './_Markdown.js'
+
+import crdsMap from 'doom-@api-crdsMap'
 
 export interface K8sCrdProps {
   /**
@@ -163,17 +163,16 @@ export const K8sCrdSchema = ({
 
 export const K8sCrd = ({ name, crdPath }: K8sCrdProps) => {
   const [X] = useState(getCustomMDXComponent)
-  const { page } = usePageData() as ExtendedPageData
 
   const [, crd] = useMemo(
     () =>
-      Object.entries(page.crdsMap || {}).find(([pathname, crd]) => {
+      Object.entries(crdsMap).find(([pathname, crd]) => {
         if (crdPath && pathname !== crdPath) {
           return false
         }
         return crd.metadata.name === name
       }) || [],
-    [page],
+    [],
   )
 
   if (!crd) {
@@ -189,6 +188,7 @@ export const K8sCrd = ({ name, crdPath }: K8sCrdProps) => {
       </X.p>
       {crd.spec.versions.map((version) => (
         <K8sCrdSchema
+          key={version.name}
           schema={version.schema.openAPIV3Schema}
           version={version.name}
         />

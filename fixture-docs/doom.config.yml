@@ -1,6 +1,11 @@
 lang: zh
 title: Fixture Docs
 logoText: Fixture Docs
+api:
+  crds:
+    - shared/crds/*.yaml
+  openapis:
+    - shared/openapis/*.json
 reference:
   - sources:
       - name: other

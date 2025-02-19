@@ -1,52 +1,53 @@
-import path from 'node:path'
-
 import { RspressPlugin } from '@rspress/core'
-import { glob } from 'tinyglobby'
+
+import { K8sTypeList } from '../../shared/types.js'
+import { generateRuntimeModule } from '../../utils/index.js'
 import type {
   FunctionResource,
   PermissionPluginOptions,
   RoleTemplate,
 } from './types.js'
-import { resolveStaticConfig } from '../../utils/index.js'
-import { K8sTypeList } from '../../shared/types.js'
+
+// @internal
+declare module 'doom-@permission-functionResourcesMap' {
+  const functionResourcesMap: Record<string, FunctionResource[]>
+}
+
+// @internal
+declare module 'doom-@permission-roleTemplatesMap' {
+  const roleTemplatesMap: Record<string, RoleTemplate[]>
+}
 
 export const permissionPlugin = ({
-  functionresources,
   localBasePath,
-  roletemplates,
+  functionresources = [],
+  roletemplates = [],
 }: PermissionPluginOptions): RspressPlugin => {
   return {
-    async extendPageData(pageData) {
-      const functionResourcesMap: Record<string, FunctionResource[]> = {}
-      const roleTemplatesMap: Record<string, RoleTemplate[]> = {}
-
-      if (functionresources) {
-        for (const file of await glob(functionresources, {
-          cwd: localBasePath,
-        })) {
-          functionResourcesMap[file] = (
-            await resolveStaticConfig<K8sTypeList<FunctionResource>>(
-              path.resolve(localBasePath, file),
-            )
-          ).items
-        }
-      }
-
-      if (roletemplates) {
-        for (const file of await glob(roletemplates, {
-          cwd: localBasePath,
-        })) {
-          roleTemplatesMap[file] = (
-            await resolveStaticConfig<K8sTypeList<RoleTemplate>>(
-              path.resolve(localBasePath, file),
-            )
-          ).items
-        }
-      }
-
-      pageData.functionResourcesMap = functionResourcesMap
-      pageData.roleTemplatesMap = roleTemplatesMap
-    },
     name: 'doom-permission',
+    async addRuntimeModules(_, isProd) {
+      return {
+        ...(await generateRuntimeModule<
+          K8sTypeList<FunctionResource>,
+          FunctionResource[]
+        >(
+          functionresources,
+          'permission-functionResources',
+          localBasePath,
+          isProd,
+          ({ items }) => items,
+        )),
+        ...(await generateRuntimeModule<
+          K8sTypeList<RoleTemplate>,
+          RoleTemplate[]
+        >(
+          roletemplates,
+          'permission-roleTemplates',
+          localBasePath,
+          isProd,
+          ({ items }) => items,
+        )),
+      }
+    },
   }
 }

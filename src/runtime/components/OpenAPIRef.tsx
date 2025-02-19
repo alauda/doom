@@ -14,6 +14,8 @@ import { HeadingTitle } from './_HeadingTitle.js'
 import { Markdown } from './_Markdown.js'
 import { RefLink } from './_RefLink.js'
 
+import openapisMap from 'doom-@api-openapisMap'
+
 export interface OpenAPIRefProps {
   /**
    * The schema name under the OpenAPI schema `definitions` (swagger 2.0) or `components/schemas` (openapi 3.x).
@@ -130,7 +132,7 @@ export const OpenAPIRef = ({
   const { page } = usePageData() as ExtendedPageData
 
   const [schemaItem, openapi, openapiPath] = useMemo(() => {
-    for (const [pathname, openapi] of Object.entries(page.openapisMap || {})) {
+    for (const [pathname, openapi] of Object.entries(openapisMap)) {
       if (openapiPath_ && pathname !== openapiPath_) {
         continue
       }

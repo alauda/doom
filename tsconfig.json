@@ -13,7 +13,8 @@
     "paths": {
       "@alauda/doom/config": ["./src/config.ts"],
       "@alauda/doom/runtime": ["./src/runtime/index.ts"]
-    }
+    },
+    "stripInternal": true
   },
   "mdx": {
     "checkMdx": true

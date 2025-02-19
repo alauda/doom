@@ -7,9 +7,11 @@ import { ReactNode, useMemo, useState } from 'react'
 import { ExtendedPageData } from '../types.js'
 import { DEFAULT_COMMON_REFS, omitRoutePathRefs, resolveRef } from '../utils.js'
 import { HeadingTitle } from './_HeadingTitle.js'
+import { Markdown } from './_Markdown.js'
 import { RefLink } from './_RefLink.js'
 import OpenAPIRef from './OpenAPIRef.js'
-import { Markdown } from './_Markdown.js'
+
+import openapisMap from 'doom-@api-openapisMap'
 
 export interface OpenAPIPathProps {
   /**
@@ -153,7 +155,7 @@ export const OpenAPIPath = ({
   const slugger = useMemo(() => new BananaSlug(), [])
 
   const [pathItem, openapi, openapiPath, refs] = useMemo(() => {
-    for (const [pathname, openapi] of Object.entries(page.openapisMap || {})) {
+    for (const [pathname, openapi] of Object.entries(openapisMap)) {
       if (openapiPath_ && pathname !== openapiPath_) {
         continue
       }
@@ -178,7 +180,7 @@ export const OpenAPIPath = ({
       }
     }
     return []
-  }, [page.openapiMap])
+  }, [])
 
   if (!pathItem || !openapi) {
     console.error(`No OpenAPI path definition found for ${path}`)
