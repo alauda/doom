@@ -34,10 +34,7 @@ export const resolveStaticConfig = async <T = unknown>(
   throw new Error(`Unsupported file extension: ${extname}`)
 }
 
-export async function generateRuntimeModule<
-  T,
-  R = T | void, // eslint-disable-line @typescript-eslint/no-invalid-void-type
->(
+export async function generateRuntimeModule<T, R = T>(
   patterns: string[],
   kind: string,
   cwd: string,

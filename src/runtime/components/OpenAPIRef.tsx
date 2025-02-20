@@ -145,7 +145,7 @@ export const OpenAPIRef = ({
   }, [])
 
   if (!schemaItem || !openapi) {
-    console.error(`No OpenAPI schema definition found for ${schema}`)
+    console.error(`No OpenAPI schema definition found for ${schema}\n`)
     return null
   }
 
@@ -177,9 +177,9 @@ export const OpenAPIRef = ({
           openapi={openapi}
         />
       )}
-      {refs?.map((schema, index) => (
+      {refs?.map((schema) => (
         <OpenAPIRef
-          key={index}
+          key={schema}
           schema={schema}
           openapiPath={openapiPath}
           collectRefs={false}

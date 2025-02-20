@@ -2,7 +2,7 @@ import { usePageData } from '@rspress/core/runtime'
 import { Badge, getCustomMDXComponent } from '@rspress/core/theme'
 import BananaSlug from 'github-slugger'
 import { OpenAPIV3, type OpenAPIV3_1 } from 'openapi-types'
-import { ReactNode, useMemo, useState } from 'react'
+import { Fragment, ReactNode, useMemo, useState } from 'react'
 
 import { ExtendedPageData } from '../types.js'
 import { DEFAULT_COMMON_REFS, omitRoutePathRefs, resolveRef } from '../utils.js'
@@ -229,7 +229,7 @@ export const OpenAPIPath = ({
           : undefined
 
         return (
-          <>
+          <Fragment key={method}>
             <HeadingTitle slugger={slugger} level={3}>
               <X.code>{method}</X.code>
               {summary}
@@ -263,14 +263,14 @@ export const OpenAPIPath = ({
                 <OpenAPIResponses responses={responses} openapi={openapi} />
               </>
             )}
-          </>
+          </Fragment>
         )
       })}
 
-      {refs?.map((ref, index) => {
+      {refs?.map((ref) => {
         return (
           <OpenAPIRef
-            key={index}
+            key={ref}
             schema={ref}
             openapiPath={openapiPath}
             collectRefs={false}

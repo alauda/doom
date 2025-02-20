@@ -54,6 +54,8 @@ export const apiPlugin = ({
               doc = openapiSchemaToJsonSchema(doc) as OpenAPIV3_1.Document
               doc.openapi = '3.1.0'
             }
+
+            return doc
           },
         )),
       }
