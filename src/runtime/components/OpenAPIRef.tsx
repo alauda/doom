@@ -3,13 +3,7 @@ import { getCustomMDXComponent } from '@rspress/core/theme'
 import { OpenAPIV3_1 } from 'openapi-types'
 import { ReactNode, useMemo, useState } from 'react'
 
-import { ExtendedPageData } from '../types.js'
-import {
-  DEFAULT_COMMON_REFS,
-  modelName,
-  omitRoutePathRefs,
-  resolveRef,
-} from '../utils.js'
+import { modelName, omitRoutePathRefs, resolveRef } from '../utils.js'
 import { HeadingTitle } from './_HeadingTitle.js'
 import { Markdown } from './_Markdown.js'
 import { RefLink } from './_RefLink.js'
@@ -73,16 +67,16 @@ export const OpenAPIProperties = ({
               </code>
             )
           } else {
-            typeNode = <X.code>{type}</X.code>
+            typeNode = <code>{type}</code>
           }
         } else if (typeof type === 'string') {
-          typeNode = <X.code>{type}</X.code>
+          typeNode = <code>{type}</code>
         } else if ('$ref' in prop) {
           typeNode = <RefLink $ref={prop.$ref} />
         }
         return (
           <X.li key={index}>
-            <X.code>{name}</X.code>: {typeNode}
+            <code>{name}</code>: {typeNode}
             <Markdown>{propObj.description}</Markdown>
           </X.li>
         )
@@ -129,7 +123,7 @@ export const OpenAPIRef = ({
   openapiPath: openapiPath_,
   collectRefs = true,
 }: OpenAPIRefProps) => {
-  const { page } = usePageData() as ExtendedPageData
+  const { page } = usePageData()
 
   const [schemaItem, openapi, openapiPath] = useMemo(() => {
     for (const [pathname, openapi] of Object.entries(openapisMap)) {
@@ -154,13 +148,7 @@ export const OpenAPIRef = ({
       return getRefsForSchema(
         openapi,
         schema,
-        omitRoutePathRefs(
-          {
-            ...page.references,
-            ...DEFAULT_COMMON_REFS,
-          },
-          page.routePath,
-        ),
+        omitRoutePathRefs(page.routePath),
       )
     }
   }, [collectRefs, openapi, page.routePath, schema])

@@ -8,8 +8,9 @@ import { type FC, useEffect, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { parse } from 'yaml'
 
-import { ExtendedPageData } from '../../runtime/types.js'
 import { NavMenuGroup } from './NavMenuGroup.js'
+
+import virtual from 'doom-@global-virtual'
 
 const getNavMenu = () => {
   if (typeof document === 'undefined') {
@@ -19,18 +20,18 @@ const getNavMenu = () => {
 }
 
 export const VersionsNav: FC = () => {
-  const { siteData, page } = usePageData() as ExtendedPageData
+  const { siteData } = usePageData()
 
   const [versionsBase, version] = useMemo(() => {
-    if (!page.v) {
+    if (!virtual.version) {
       return []
     }
 
     return [
-      removeTrailingSlash(siteData.base).slice(0, -page.v.length - 1),
-      page.v,
+      removeTrailingSlash(siteData.base).slice(0, -virtual.version.length - 1),
+      virtual.version,
     ]
-  }, [siteData.base, page.v])
+  }, [siteData.base])
 
   const [navMenu, setNavMenu] = useState(getNavMenu)
 

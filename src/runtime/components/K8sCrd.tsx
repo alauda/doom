@@ -34,7 +34,6 @@ export const K8sCrdSchemaPart = ({
   schema: OpenAPIV3_1.SchemaObject
   expandAll: boolean
 }) => {
-  const [X] = useState(getCustomMDXComponent)
   const [open, setOpen] = useState(expandAll)
 
   const onToggle = useCallback((open: boolean) => {
@@ -73,7 +72,7 @@ export const K8sCrdSchemaPart = ({
         title={
           <>
             {name}
-            {type && <X.code>{type}</X.code>}
+            {type && <code>{type}</code>}
             {required && <Badge>required</Badge>}
           </>
         }
@@ -105,7 +104,6 @@ export const K8sCrdSchema = ({
   schema: OpenAPIV3_1.SchemaObject
   version: string
 }) => {
-  const [X] = useState(getCustomMDXComponent)
   const { description, properties } = schema
 
   const t = useTranslation()
@@ -121,7 +119,7 @@ export const K8sCrdSchema = ({
       <Markdown>{description}</Markdown>
       <div className="flex items-center">
         <span>
-          <X.code>{version}</X.code>
+          <code>{version}</code>
           <Badge>version</Badge>
         </span>
         {properties != null && (
@@ -183,7 +181,7 @@ export const K8sCrd = ({ name, crdPath }: K8sCrdProps) => {
   return (
     <>
       <X.p>
-        <X.code>{crd.spec.group}</X.code>
+        <code>{crd.spec.group}</code>
         <Badge>group</Badge>
       </X.p>
       {crd.spec.versions.map((version) => (

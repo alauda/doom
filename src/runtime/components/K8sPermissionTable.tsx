@@ -156,7 +156,7 @@ export const K8sPermissionTable = ({ functions }: K8sPermissionTableProps) => {
                     ? annotations[FUNCTION_DISPLAY_NAME_ZH]
                     : annotations[FUNCTION_DISPLAY_NAME_EN]}
                   <br />
-                  <X.code>{name}</X.code>
+                  <code>{name}</code>
                 </X.td>
                 <X.td>{t('view')}</X.td>
                 <RolesPermission

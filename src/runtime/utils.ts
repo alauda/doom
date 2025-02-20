@@ -1,6 +1,8 @@
 import { last, upperFirst } from 'es-toolkit'
 import { get } from 'es-toolkit/compat'
-import { OpenAPIV3_1 } from 'openapi-types'
+import type { OpenAPIV3_1 } from 'openapi-types'
+
+import virtual from 'doom-@api-virtual'
 
 export const modelName = (ref: string) => upperFirst(last(ref.split('.'))!)
 
@@ -17,26 +19,26 @@ export const resolveRef = <
   return get(openapi, ref.slice(2).split('/')) as T
 }
 
-const DEFAULT_COMMON_REFS_ = {
+const DEFAULT_COMMON_REFS = {
   'v1alpha1.ListMeta': 'common-definitions/list-meta/#ListMeta',
   'v1.ObjectMeta': 'common-definitions/object-meta/#ObjectMeta',
 }
 
 const K8S_DOC_PREFIX = 'https://kubernetes.io/docs/reference/kubernetes-api/'
 
-export const DEFAULT_COMMON_REFS = Object.fromEntries(
-  Object.entries(DEFAULT_COMMON_REFS_).map(([key, value]) => [
-    key,
-    `${K8S_DOC_PREFIX}${value}`,
-  ]),
-)
+export const COMMON_REFS = {
+  ...Object.fromEntries(
+    Object.entries(DEFAULT_COMMON_REFS).map(([key, value]) => [
+      key,
+      `${K8S_DOC_PREFIX}${value}`,
+    ]),
+  ),
+  ...virtual.references,
+}
 
-export const omitRoutePathRefs = (
-  refs: Record<string, string>,
-  routePath: string,
-) =>
+export const omitRoutePathRefs = (routePath: string) =>
   Object.fromEntries(
-    Object.entries(refs).filter(
+    Object.entries(COMMON_REFS).filter(
       ([, value]) => routePath !== value.split('#')[0],
     ),
   )

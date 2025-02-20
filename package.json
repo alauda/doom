@@ -1,6 +1,6 @@
 {
   "name": "@alauda/doom",
-  "version": "0.11.4",
+  "version": "0.11.5",
   "type": "module",
   "description": "Doctor Doom making docs.",
   "repository": {
@@ -58,7 +58,7 @@
     "shiki": "^3.0.0",
     "simple-git": "^3.27.0",
     "swagger2openapi": "^7.0.8",
-    "tinyglobby": "^0.2.11",
+    "tinyglobby": "^0.2.12",
     "type-fest": "^4.35.0",
     "yaml": "^2.7.0",
     "yoctocolors": "^2.1.1"

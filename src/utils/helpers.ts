@@ -37,14 +37,15 @@ export const resolveStaticConfig = async <T = unknown>(
 export async function generateRuntimeModule<T, R = T>(
   patterns: string[],
   kind: string,
+  root: string,
   cwd: string,
   isProd: boolean,
   mapper?: (input: T) => R | Promise<R>,
 ) {
   const runtimeModules: StringMapper = {}
-  const files = await glob(patterns, { cwd })
+  const files = await glob(patterns, { absolute: true, cwd })
   for (const file of files) {
-    const result = await resolveStaticConfig<T>(path.resolve(cwd, file))
+    const result = await resolveStaticConfig<T>(file)
     runtimeModules[`doom-@${kind}/${file}.mjs`] =
       `export default ${JSON.stringify(
         (await mapper?.(result)) ?? result,
@@ -56,6 +57,6 @@ export async function generateRuntimeModule<T, R = T>(
     files
       .map((file, index) => `import _${index} from 'doom-@${kind}/${file}.mjs'`)
       .join('\n') +
-    `\nexport default {${files.map((file, index) => `'${file}':_${index}`).join(',')}}`
+    `\nexport default {${files.map((file, index) => `'${path.relative(root, file)}':_${index}`).join(',')}}`
   return runtimeModules
 }

@@ -1,4 +1,4 @@
-import { useLang, usePageData } from '@rspress/core/runtime'
+import { useLang } from '@rspress/core/runtime'
 import {
   addTrailingSlash,
   isExternalUrl,
@@ -7,8 +7,9 @@ import {
 import clsx from 'clsx'
 import { AnchorHTMLAttributes, ReactNode, useMemo } from 'react'
 
-import { ExtendedPageData } from '../types.js'
 import { Directive } from './Directive.js'
+
+import virtual from 'doom-@global-virtual'
 
 import classes from '../../../styles/link.module.scss'
 
@@ -24,8 +25,7 @@ export const ExternalSiteLink = ({
   className,
   ...props
 }: ExternalSiteLinkProps) => {
-  const { page } = usePageData() as ExtendedPageData
-  const site = useMemo(() => page.sites?.find((s) => s.name === name), [])
+  const site = useMemo(() => virtual.sites?.find((s) => s.name === name), [])
   const lang = useLang()
 
   if (!site) {
@@ -44,7 +44,9 @@ export const ExternalSiteLink = ({
   return (
     <a
       href={
-        (page.v ? addTrailingSlash(site.base + site.version) : site.base) +
+        (virtual.version
+          ? addTrailingSlash(site.base + site.version)
+          : site.base) +
         (lang ? `${lang}/` : '') +
         removeLeadingSlash(href)
       }

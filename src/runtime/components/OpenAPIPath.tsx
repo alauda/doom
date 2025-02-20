@@ -4,14 +4,14 @@ import BananaSlug from 'github-slugger'
 import { OpenAPIV3, type OpenAPIV3_1 } from 'openapi-types'
 import { Fragment, ReactNode, useMemo, useState } from 'react'
 
-import { ExtendedPageData } from '../types.js'
-import { DEFAULT_COMMON_REFS, omitRoutePathRefs, resolveRef } from '../utils.js'
+import { omitRoutePathRefs, resolveRef } from '../utils.js'
 import { HeadingTitle } from './_HeadingTitle.js'
 import { Markdown } from './_Markdown.js'
 import { RefLink } from './_RefLink.js'
 import OpenAPIRef from './OpenAPIRef.js'
 
 import openapisMap from 'doom-@api-openapisMap'
+import virtual from 'doom-@api-virtual'
 
 export interface OpenAPIPathProps {
   /**
@@ -48,14 +48,13 @@ export const OpenAPIParameters = ({
           ('$ref' in paramObj.schema ? paramObj.schema : paramObj.schema.type)
         let typeNode: ReactNode
         if (typeof type === 'string') {
-          typeNode = <X.code>{type}</X.code>
+          typeNode = <code>{type}</code>
         } else if (type) {
           typeNode = <RefLink $ref={type.$ref} />
         }
         return (
           <X.li key={index}>
-            <X.code>{paramObj.name}</X.code>(<em>in {paramObj.in}</em>):{' '}
-            {typeNode}
+            <code>{paramObj.name}</code>(<em>in {paramObj.in}</em>): {typeNode}
             {paramObj.required && <Badge>required</Badge>}
             <Markdown>{paramObj.description}</Markdown>
           </X.li>
@@ -75,7 +74,7 @@ export const OpenAPIResponses = ({
   const [X] = useState(getCustomMDXComponent)
   return (
     <X.ul>
-      {Object.entries(responses).map(([code, response], index) => {
+      {Object.entries(responses).map(([code, response]) => {
         const responseObj =
           '$ref' in response
             ? resolveRef<OpenAPIV3_1.ResponseObject>(openapi, response.$ref)
@@ -90,8 +89,8 @@ export const OpenAPIResponses = ({
           )
         }
         return (
-          <X.li key={index}>
-            <X.code>{code}</X.code>
+          <X.li key={code}>
+            <code>{code}</code>
             {refNode}: {responseObj.description}
           </X.li>
         )
@@ -148,9 +147,9 @@ export const OpenAPIPath = ({
   pathPrefix: pathPrefix_,
 }: OpenAPIPathProps) => {
   const [X] = useState(getCustomMDXComponent)
-  const { page } = usePageData() as ExtendedPageData
+  const { page } = usePageData()
 
-  const pathPrefix = pathPrefix_ ?? (page.pathPrefix || '')
+  const pathPrefix = pathPrefix_ ?? (virtual.pathPrefix || '')
 
   const slugger = useMemo(() => new BananaSlug(), [])
 
@@ -165,17 +164,7 @@ export const OpenAPIPath = ({
           pathItem as OpenAPIV3_1.PathItemObject,
           openapi,
           pathname,
-          getRefsForPath(
-            openapi,
-            path,
-            omitRoutePathRefs(
-              {
-                ...page.references,
-                ...DEFAULT_COMMON_REFS,
-              },
-              page.routePath,
-            ),
-          ),
+          getRefsForPath(openapi, path, omitRoutePathRefs(page.routePath)),
         ]
       }
     }
@@ -231,7 +220,7 @@ export const OpenAPIPath = ({
         return (
           <Fragment key={method}>
             <HeadingTitle slugger={slugger} level={3}>
-              <X.code>{method}</X.code>
+              <code>{method}</code>
               {summary}
             </HeadingTitle>
             <Markdown>{description}</Markdown>

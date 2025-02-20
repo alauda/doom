@@ -53,9 +53,6 @@ const cssVariablesTheme = createCssVariablesTheme({
   fontStyle: true,
 })
 
-/**
- * The plugin is used to add the last updated time to the page.
- */
 export function shikiPlugin({
   theme = 'css-variables',
   langs = [],

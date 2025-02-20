@@ -15,6 +15,11 @@ export interface GlobalPluginOptions {
   version?: string
 }
 
+// @internal
+declare module 'doom-@global-virtual' {
+  const virtual: GlobalPluginOptions
+}
+
 export const globalPlugin = ({
   sites,
   version,
@@ -40,15 +45,23 @@ export const globalPlugin = ({
         })
         .map((file) => path.resolve(componentsDir, file)),
     },
-    extendPageData(pageData) {
-      pageData.sites = sites?.map((site) => ({
-        ...site,
-        base: addTrailingSlash(
-          site.base || (site.name === 'acp' ? '/container-platform' : ''),
-        ),
-        version: normalizeVersion(site.version),
-      }))
-      pageData.v = version === 'unversioned' ? undefined : version
+    addRuntimeModules(_, isProd) {
+      return {
+        'doom-@global-virtual': `export default ${JSON.stringify(
+          {
+            sites: sites?.map((site) => ({
+              ...site,
+              base: addTrailingSlash(
+                site.base || (site.name === 'acp' ? '/container-platform' : ''),
+              ),
+              version: normalizeVersion(site.version),
+            })),
+            version: version === 'unversioned' ? undefined : version,
+          },
+          null,
+          isProd ? 0 : 2,
+        )}`,
+      }
     },
   }
 }

@@ -16,6 +16,11 @@ declare module 'doom-@api-openapisMap' {
   const openapisMap: Record<string, OpenAPIV3_1.Document>
 }
 
+// @internal
+declare module 'doom-@api-virtual' {
+  const virtual: Pick<ApiPluginOptions, 'references' | 'pathPrefix'>
+}
+
 export const apiPlugin = ({
   localBasePath,
   crds = [],
@@ -25,21 +30,20 @@ export const apiPlugin = ({
 }: ApiPluginOptions): RspressPlugin => {
   return {
     name: 'doom-api',
-    extendPageData(pageData) {
-      pageData.references = references
-      pageData.pathPrefix = pathPrefix
-    },
-    async addRuntimeModules(_, isProd) {
+    async addRuntimeModules(config, isProd) {
       return {
+        'doom-@api-virtual': `export default ${JSON.stringify({ references, pathPrefix }, null, isProd ? 0 : 2)}`,
         ...(await generateRuntimeModule(
           crds,
           'api-crds',
+          config.root!,
           localBasePath,
           isProd,
         )),
         ...(await generateRuntimeModule<OpenAPI.Document>(
           openapis,
           'api-openapis',
+          config.root!,
           localBasePath,
           isProd,
           async (doc) => {

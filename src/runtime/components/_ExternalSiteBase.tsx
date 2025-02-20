@@ -1,10 +1,11 @@
 import { useLang, usePageData } from '@rspress/core/runtime'
 import { FC, useMemo } from 'react'
 
-import { ExtendedPageData } from '../types.js'
 import { handleCJKWhitespaces } from '../utils.js'
 import Directive from './Directive.js'
 import ExternalSiteLink from './ExternalSiteLink.js'
+
+import virtual from 'doom-@global-virtual'
 
 export interface ExternalSiteBaseProps {
   name: string
@@ -71,8 +72,8 @@ const ApisOverviewNotes: Notes = {
 }
 
 export const ExternalSiteBase = ({ name, template }: ExternalSiteBaseProps) => {
-  const { siteData, page } = usePageData() as ExtendedPageData
-  const site = useMemo(() => page.sites?.find((s) => s.name === name), [])
+  const { siteData } = usePageData()
+  const site = useMemo(() => virtual.sites?.find((s) => s.name === name), [])
   const lang = useLang() || siteData.lang || 'zh'
 
   const displayName = useMemo(

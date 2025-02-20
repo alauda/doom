@@ -2,8 +2,10 @@ import { isProduction, useLang, usePageData } from '@rspress/core/runtime'
 import { useEffect, useMemo, useState } from 'react'
 import { parse } from 'yaml'
 
-import { ExtendedPageData, SiteBrand } from '../types.js'
+import { SiteBrand } from '../types.js'
 import { DoomSite } from '../../shared/types.js'
+
+import virtual from 'doom-@global-virtual'
 
 export interface SiteOverrides {
   brand?: SiteBrand
@@ -76,20 +78,23 @@ const fetchSiteOverrides = async (
 }
 
 export const useSiteOverrides = (): SiteOverrides => {
-  const { siteData, page } = usePageData() as ExtendedPageData
+  const { siteData } = usePageData()
 
   const [siteOverridesWithLangs, setSiteOverridesWithLangs] =
     useState(siteOverrides)
 
   const lang = useLang() || 'zh'
 
-  const acpSite = useMemo(() => page.sites?.find((s) => s.name === 'acp'), [])
+  const acpSite = useMemo(
+    () => virtual.sites?.find((s) => s.name === 'acp'),
+    [],
+  )
 
   useEffect(() => {
     if (siteOverrides) {
       return
     }
-    void fetchSiteOverrides(siteData.base, page.v, acpSite).then(
+    void fetchSiteOverrides(siteData.base, virtual.version, acpSite).then(
       setSiteOverridesWithLangs,
     )
   }, [])

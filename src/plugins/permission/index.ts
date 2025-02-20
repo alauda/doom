@@ -25,7 +25,7 @@ export const permissionPlugin = ({
 }: PermissionPluginOptions): RspressPlugin => {
   return {
     name: 'doom-permission',
-    async addRuntimeModules(_, isProd) {
+    async addRuntimeModules(config, isProd) {
       return {
         ...(await generateRuntimeModule<
           K8sTypeList<FunctionResource>,
@@ -34,6 +34,7 @@ export const permissionPlugin = ({
           functionresources,
           'permission-functionResources',
           localBasePath,
+          config.root!,
           isProd,
           ({ items }) => items,
         )),
@@ -43,6 +44,7 @@ export const permissionPlugin = ({
         >(
           roletemplates,
           'permission-roleTemplates',
+          config.root!,
           localBasePath,
           isProd,
           ({ items }) => items,
