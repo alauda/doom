@@ -3,7 +3,7 @@ import fs from 'node:fs/promises'
 import type { RspressPlugin } from '@rspress/core'
 import { logger } from '@rspress/shared/logger'
 
-import { remarkJsxTable } from './remark-jsx-table.js'
+import { remarkExplicitJsx } from './remark-explicit-jsx.js'
 import {
   MD_RELEASE_COMMENT_PATTERN,
   MDX_RELEASE_COMMENT_PATTERN,
@@ -43,7 +43,7 @@ export const replacePlugin = ({
             force,
           },
         ],
-        remarkJsxTable,
+        remarkExplicitJsx,
       ],
     },
     async modifySearchIndexData(pages) {
