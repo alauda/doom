@@ -7,6 +7,7 @@ import { loadFrontMatter } from '@rspress/shared/node-utils'
 
 import { DoomSidebar } from './walk.js'
 import { pathExists } from '../../utils/index.js'
+import { extractTextAndId } from '../replace/utils.js'
 
 export async function detectFilePath(rawPath: string, extensions: string[]) {
   // The params doesn't have extension name, so we need to try to find the file with the extension name.
@@ -72,9 +73,12 @@ export async function extractInfoFromFrontmatter(
     context?: string
     weight?: number
   }>(content, filePath, rootDir)
+
   return {
     realPath,
-    title: frontmatter.title || contentTitle || fileNameWithoutExt,
+    title: extractTextAndId(
+      frontmatter.title || contentTitle || fileNameWithoutExt,
+    )[0],
     overviewHeaders: frontmatter.overviewHeaders,
     context: frontmatter.context,
     weight: frontmatter.weight,
