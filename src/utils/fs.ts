@@ -1,8 +1,14 @@
 import fs from 'fs/promises'
 
-export async function pathExists(path: string) {
+export async function pathExists(path: string, type?: 'file' | 'directory') {
   try {
-    await fs.access(path)
+    const stats = await fs.stat(path)
+    if (type === 'file') {
+      return stats.isFile()
+    }
+    if (type === 'directory') {
+      return stats.isDirectory()
+    }
     return true
   } catch {
     return false

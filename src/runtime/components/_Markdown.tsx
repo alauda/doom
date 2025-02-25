@@ -1,5 +1,5 @@
 import { getCustomMDXComponent } from '@rspress/core/theme'
-import { ElementType, useState } from 'react'
+import { type ElementType, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 

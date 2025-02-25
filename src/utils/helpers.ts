@@ -1,12 +1,12 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 
+import { glob } from 'tinyglobby'
 import { parse } from 'yaml'
 
-import { BASE_DIR, PKG_DIR } from './constants.js'
 import { JSON_EXTENSION, YAML_EXTENSIONS } from '../cli/constants.js'
-import { StringMapper } from '../shared/types.js'
-import { glob } from 'tinyglobby'
+import type { StringMapper } from '../shared/types.js'
+import { BASE_DIR, PKG_DIR } from './constants.js'
 
 export const baseResolve = (...paths: string[]) =>
   path.resolve(BASE_DIR, ...paths)

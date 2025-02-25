@@ -1,6 +1,6 @@
 import { clsx } from 'clsx'
 import { upperCase } from 'es-toolkit'
-import { ReactEventHandler, ReactNode, useCallback } from 'react'
+import { type ReactEventHandler, type ReactNode, useCallback } from 'react'
 
 export interface DirectiveProps {
   type?: 'danger' | 'details' | 'info' | 'note' | 'tip' | 'warning'

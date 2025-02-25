@@ -1,0 +1,221 @@
+---
+weight: 40
+i18n:
+  title:
+    en: Installing
+sourceSHA: 28ad87808b61525b1debfb821310ed0b860e6704dc3304caf4b5f30b4b768586
+title: Installing
+---
+
+# Installation
+
+This section outlines the specific steps for installing the management cluster. The following operations follow the "Prepare → Execute → Validate" model, and key parameter descriptions are detailed in the UI configuration.
+
+### Step 1: Download the Installation Package
+
+**Prepare**
+
+- Log in to the **Customer Portal** to obtain the latest installation package and signature files.
+- If you have not registered an account yet, please contact technical support.
+
+**Execute**
+
+- After the download is complete, use the GPG tool to verify the integrity of the installation package.
+- Install GPG tool according to your operating system (refer to the commands below).
+
+```bash
+# Ubuntu
+sudo apt-get install gnupg
+# CentOS
+yum install gnupg
+# Mac
+brew install gpg
+```
+
+**Validate**
+Follow the steps below to validate:
+
+#### 1.1 Download and Verify the Public Key
+
+```bash
+curl -O https://www.alauda.cn/download/verify-key.pub
+md5sum verify-key.pub
+```
+
+- The output MD5 value should be: `2eaddfab97d2951a8915f327acb53562`.
+
+#### 1.2 Import Public Key and Verify Fingerprint
+
+```bash
+gpg --import verify-key.pub
+gpg --fingerprint BB097AE6
+```
+
+- The fingerprint should match exactly:
+  ```
+  09EE E7B9 A30C F4B3 5E31 A91B 2704 1C16 BB09 7AE6
+  ```
+
+#### 1.3 Verify the Installation Package Signature
+
+```bash
+gpg --verify <signature file> <installation package>
+```
+
+For example:
+
+```bash
+gpg --verify cpaas-devops-2.14.0.tgz.sig cpaas-devops-2.14.0.tgz
+```
+
+- A normal output should display "Good signature" information.
+
+---
+
+### Step 2: Upload the Installation Package to the Control Node
+
+**Prepare**
+
+- Ensure the target control node is network accessible and has sufficient storage (at least 100GB after extraction).
+
+**Execute**
+
+- Upload the installation package to the suggested directory on the control node `/root/cpaas-install`, and extract it:
+
+```shell
+tar -xvf {path_to_installation_package}/{installation_package_name} -C /root/cpaas-install
+cd /root/cpaas-install/installer || exit 1
+```
+
+**Validate**
+
+- Check if the extracted directory structure is complete.
+
+---
+
+### Step 3: Start the Installer
+
+**Prepare**
+
+- Ensure the control node is network accessible and the PC can access its IP.
+- Check that dependencies are configured as per prerequisites.
+
+**Execute**
+
+- Start the installer by default (using the Kube-OVN network plugin):
+
+```bash
+bash setup.sh
+```
+
+- To use the Calico network plugin, execute:
+
+```bash
+bash setup.sh --network-mode calico
+```
+
+- To specify IPv6 or dual-stack mode, you can add the parameters `--ip-family ipv6` or `--ip-family dual`.
+
+**Validate**
+
+- After starting the installer, the command-line terminal will output the Web UI access address; wait about 5 minutes and access the page on the PC to confirm it loads correctly.
+
+---
+
+### Step 4: Install the Management Cluster (Configure UI Parameters)
+
+**Prepare**
+In the Web UI, configure the key parameters for installing the management cluster as prompted, with details as follows:
+
+- **Kubernetes Version**
+
+  - All optional versions have been strictly tested.
+  - It is recommended to choose the latest version for optimal features and support.
+
+- **Cluster Network Protocol**
+
+  - Supports IPv4 single-stack, IPv6 single-stack, and IPv4/IPv6 dual-stack.
+  - Note: When selecting dual-stack mode, all nodes must be correctly configured with IPv6 addresses; the network protocol setting cannot be changed once configured.
+
+- **Cluster Address**
+
+  - Enter the prepared `global VIP` for external access to the kube-apiserver.
+  - If a LoadBalancer is configured, please fill in its VIP address and disable "Self-built VIP"; otherwise, enable "Self-built VIP" and enter the requested VIP, the installer will automatically deploy keepalived.
+
+- **Platform Access Address**
+
+  - Enter the prepared `External IP` or domain name.
+  - HTTPS access is enabled by default; if HTTP is needed, enable it in the advanced settings.
+  - Supports multiple address configurations: you can fill in internal addresses and add external addresses in "Other Settings > Other Platform Access Addresses."
+
+- **Certificate**
+
+  - Defaults to using self-signed certificates to support HTTPS.
+  - To customize the certificate, please upload the existing certificate.
+
+- **Image Repository**
+
+  - Defaults to using the platform-deployed image repository, which includes all component images.
+  - If you need to use an external image repository, please contact technical support to obtain an image synchronization plan for configuration.
+
+- **Container Network**
+
+  - The default subnet and Service range for the management cluster must not overlap.
+  - When using the Kube-OVN Overlay network, ensure the container network and host network are not in the same subnet to prevent network anomalies.
+
+- **Node Name**
+
+  - If you choose "Use Hostname as Node Name," please ensure all node hostnames are unique.
+
+- **Global Cluster Platform Node Isolation**
+
+  - Enable this when planning to run workloads on the management cluster.
+  - Once enabled, nodes can be set to "Platform Exclusive," meaning they will only run platform components; DaemonSet types are an exception.
+
+- **Add Node**
+  - **Control Node**:
+    - You can add 1 or 3 control nodes (3 is for high availability configuration).
+    - If "Platform Exclusive" is enabled, disable "Deployable Apps," and the control nodes will only run platform components; otherwise, you can choose whether to enable "Deployable Apps."
+  - **Compute Node**:
+    - If "Platform Exclusive" is enabled, disable "Deployable Apps"; otherwise, it must be enabled.
+  - When using Kube-OVN, you can specify the node network card by entering the gateway name.
+  - If the node availability check fails, please adjust as prompted on the page and re-add.
+
+**Execute**
+
+- Fill out the configuration parameters in accordance with the Web UI prompts, then start the installation wizard for installation.
+
+**Validate**
+
+- Once the installation is complete, the page will display the platform access address and installation status; if there are errors, please make adjustments as indicated.
+
+---
+
+### Step 5: Verify the Installation Success
+
+**Prepare**
+
+- Log into the platform Web UI and confirm the management cluster status.
+
+**Execute**
+
+- In the "Platform Management" view, click on "Cluster Management > Cluster," and find the cluster named `global`;
+- Select "CLI Tools" from the drop-down menu on the right and execute the following commands to check the status:
+
+```shell
+# Check for any failed Charts
+kubectl get apprelease --all-namespaces
+# Check for any failed Pods
+kubectl get pod --all-namespaces | awk '{if ($4 != "Running" && $4 != "Completed")print}' | awk -F'[/ ]+' '{if ($3 != $4)print}'
+```
+
+**Validate**
+
+- Verify that the output results contain no anomalies or failures.
+- If there are exceptions, please refer to the troubleshooting guide for resolution.
+
+**Browser Compatibility Notice**
+It is recommended to access the platform using the following browsers:
+
+- **Google Chrome**: Version 93 and above
+- **Firefox**: Version 92 and above

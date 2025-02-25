@@ -5,7 +5,7 @@ import {
   removeLeadingSlash,
 } from '@rspress/shared'
 import clsx from 'clsx'
-import { AnchorHTMLAttributes, ReactNode, useMemo } from 'react'
+import { type AnchorHTMLAttributes, type ReactNode, useMemo } from 'react'
 
 import { Directive } from './Directive.js'
 

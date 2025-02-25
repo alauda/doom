@@ -7,16 +7,17 @@
 import module from 'node:module'
 import path from 'node:path'
 
-import { ServerConfig, logger } from '@rsbuild/core'
+import { type ServerConfig, logger } from '@rsbuild/core'
 import { build, dev, serve } from '@rspress/core'
 import { type FSWatcher, watch } from 'chokidar'
-import { program, type Command } from 'commander'
+import { type Command, program } from 'commander'
 import { green } from 'yoctocolors'
 
+import type { GlobalCliOptions } from '../utils/types.js'
 import { CWD, DEFAULT_CONFIGS, I18N_FILE, SITES_FILE } from './constants.js'
 import { loadConfig } from './load-config.js'
 import { newCommand } from './new.js'
-import { GlobalCliOptions } from '../utils/types.js'
+import { translateCommand } from './translate.js'
 
 const META_FILE = '_meta.json'
 
@@ -152,7 +153,7 @@ program
   .command('build')
   .description('Build the documentation')
   .argument('[root]', 'Root directory of the documentation')
-  .action(async function (this: Command, root: string) {
+  .action(async function (root?: string) {
     setNodeEnv('production')
 
     const { config } = await loadConfig(
@@ -184,7 +185,7 @@ program
   .argument('[root]', 'Root directory of the documentation')
   .option('--host [host]', 'Host name')
   .option('--port [port]', 'Port number', '4173')
-  .action(async function (this: Command, root: string) {
+  .action(async function (root?: string) {
     setNodeEnv('production')
 
     const { port, host, ...globalOptions } = this.optsWithGlobals<
@@ -201,10 +202,12 @@ program
   })
 
 program.addCommand(newCommand)
+program.addCommand(translateCommand)
 
 program.parseAsync().catch((err: unknown) => {
   if (err instanceof Error && err.name === 'ExitPromptError') {
     return
   }
   logger.error(err)
+  process.exit(1)
 })

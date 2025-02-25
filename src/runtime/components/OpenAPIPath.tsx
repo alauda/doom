@@ -2,7 +2,7 @@ import { usePageData } from '@rspress/core/runtime'
 import { Badge, getCustomMDXComponent } from '@rspress/core/theme'
 import BananaSlug from 'github-slugger'
 import { OpenAPIV3, type OpenAPIV3_1 } from 'openapi-types'
-import { Fragment, ReactNode, useMemo, useState } from 'react'
+import { Fragment, useMemo, useState, type ReactNode } from 'react'
 
 import { omitRoutePathRefs, resolveRef } from '../utils.js'
 import { HeadingTitle } from './_HeadingTitle.js'

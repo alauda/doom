@@ -1,4 +1,4 @@
-import { K8sTypeMeta } from '../../shared/types.js'
+import type { K8sTypeMeta } from '../../shared/types.js'
 
 export interface FunctionResource extends K8sTypeMeta {
   kind: 'FunctionResource'

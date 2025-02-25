@@ -20,13 +20,15 @@ export const normalizeImgSrc = (
     sourceBase,
     targetBase,
     force,
+    translating,
   }: {
-    refSource: NormalizedReferenceSource
+    refSource?: NormalizedReferenceSource
     localPublicBase: string
-    publicBase: string
+    publicBase?: string
     sourceBase: string
     targetBase: string
     force?: boolean
+    translating?: string
   },
 ) => {
   content = cloneDeep(content)
@@ -36,24 +38,23 @@ export const normalizeImgSrc = (
       return src
     }
 
-    if (refSource.repo) {
+    if (refSource?.repo) {
       const targetDir = path.resolve(
         localPublicBase,
         '_remotes',
         refSource.name,
       )
       let sourcePath: string
-      let targetPath: string
       let imageSrc: string
       if (RELATIVE_URL_PATTERN.test(src)) {
         sourcePath = path.resolve(sourceBase, src)
         imageSrc = path.relative(sourceBase, sourcePath)
-        targetPath = path.resolve(targetDir, imageSrc)
       } else {
         imageSrc = removeLeadingSlash(src)
-        sourcePath = path.resolve(publicBase, imageSrc)
-        targetPath = path.resolve(targetDir, imageSrc)
+        sourcePath = path.resolve(publicBase!, imageSrc)
       }
+
+      const targetPath = path.resolve(targetDir, imageSrc)
 
       fs.mkdirSync(path.dirname(targetPath), { recursive: true })
 
@@ -63,6 +64,19 @@ export const normalizeImgSrc = (
 
       return `/_remotes/${refSource.name}/${imageSrc}`
     } else if (!RELATIVE_URL_PATTERN.test(src)) {
+      if (
+        translating &&
+        src.startsWith('/zh/') &&
+        fs.existsSync(
+          path.resolve(localPublicBase, translating, src.replace('/zh/', '')),
+        )
+      ) {
+        return src.replace('/zh/', `/${translating}/`)
+      }
+      return src
+    }
+
+    if (translating && fs.existsSync(path.resolve(targetBase, src))) {
       return src
     }
 

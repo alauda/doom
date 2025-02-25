@@ -1,6 +1,6 @@
-import { RspressPlugin } from '@rspress/core'
+import type { RspressPlugin } from '@rspress/core'
 
-import { K8sTypeList } from '../../shared/types.js'
+import type { K8sTypeList } from '../../shared/types.js'
 import { generateRuntimeModule } from '../../utils/index.js'
 import type {
   FunctionResource,

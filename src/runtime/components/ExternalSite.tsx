@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import type { FC } from 'react'
 
 import { ExternalSiteBase } from './_ExternalSiteBase.js'
 

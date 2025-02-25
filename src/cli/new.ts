@@ -9,7 +9,7 @@ import { glob } from 'tinyglobby'
 import { cyan, magenta } from 'yoctocolors'
 
 import { resolveStaticConfig } from '../utils/helpers.js'
-import { ContentProcessor } from '../utils/types.js'
+import type { ContentProcessor } from '../utils/types.js'
 import { resolveRepo } from '../utils/index.js'
 
 export const DEFAULT_PATH = 'templates/scaffolding.yaml'
