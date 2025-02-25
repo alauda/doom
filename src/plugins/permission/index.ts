@@ -33,8 +33,8 @@ export const permissionPlugin = ({
         >(
           functionresources,
           'permission-functionResources',
-          localBasePath,
           config.root!,
+          localBasePath,
           isProd,
           ({ items }) => items,
         )),
