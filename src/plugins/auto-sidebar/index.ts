@@ -217,7 +217,6 @@ export const autoSidebarPlugin = ({
       const root = config.root!
       const langs = config.themeConfig.locales.map((locale) => locale.lang)
       const hasLocales = langs.length > 0
-      const hasLang = Boolean(config.lang)
       const versions = config.multiVersion?.versions || []
       const defaultLang = config.lang || ''
       const { default: defaultVersion = '' } = config.multiVersion || {}
@@ -240,9 +239,6 @@ export const autoSidebarPlugin = ({
           }),
         )
       } else {
-        if (hasLang) {
-          return config
-        }
         const walks = versions.length
           ? await Promise.all(
               versions.map((version) => {
