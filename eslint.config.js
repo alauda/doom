@@ -5,14 +5,7 @@ import { config, configs } from 'typescript-eslint'
 
 export default config(
   {
-    ignores: [
-      '.yarn',
-      'dist',
-      'lib',
-      'node_modules',
-      'test',
-      'src/cli/merge-pdfs/pyodide',
-    ],
+    ignores: ['.yarn', 'dist', 'lib', 'node_modules', 'test', 'pyodide'],
   },
   eslint.configs.recommended,
   configs.eslintRecommended,

@@ -1,6 +1,6 @@
 {
   "name": "@alauda/doom",
-  "version": "0.13.0",
+  "version": "0.13.1",
   "type": "module",
   "description": "Doctor Doom making docs.",
   "repository": {
@@ -21,6 +21,7 @@
     "assets",
     "global.d.ts",
     "lib",
+    "pyodide",
     "styles",
     "!lib/*.tsbuildinfo"
   ],
