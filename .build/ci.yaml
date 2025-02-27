@@ -31,7 +31,7 @@ spec:
           workspace: cache
       taskSpec:
         steps:
-          - image: build-harbor.alauda.cn/frontend/builder-nodejs:lts-iron
+          - image: build-harbor.alauda.cn/frontend/playwright-runner:doom
             name: install
             imagePullPolicy: IfNotPresent
             workingDir: $(workspaces.source.path)
@@ -47,7 +47,6 @@ spec:
               export COREPACK_NPM_REGISTRY=https://registry.npmmirror.com
               export YARN_GLOBAL_FOLDER=/workspace/yarn_cache/global
 
-              corepack enable
               yarn config set npmRegistryServer https://internal-mirrors.alauda.cn/repository/npm
               yarn --immutable
               git reset --hard
@@ -59,7 +58,7 @@ spec:
           workspace: source
       taskSpec:
         steps:
-          - image: build-harbor.alauda.cn/frontend/builder-nodejs:lts-iron
+          - image: build-harbor.alauda.cn/frontend/playwright-runner:doom
             name: build
             imagePullPolicy: IfNotPresent
             workingDir: $(workspaces.source.path)

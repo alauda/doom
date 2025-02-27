@@ -64,3 +64,6 @@ export async function generateRuntimeModule<T, R = T>(
 export const setNodeEnv = (env: 'development' | 'production') => {
   process.env.NODE_ENV = env
 }
+
+export const removeBothEndsSlashes = (str: string) =>
+  str.replace(/^\/|\/$/g, '')

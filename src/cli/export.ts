@@ -12,6 +12,7 @@ import { Command } from 'commander'
 import { autoSidebar } from '../plugins/index.js'
 import {
   pathExists,
+  removeBothEndsSlashes,
   setNodeEnv,
   type GlobalCliOptions,
   type ServeOptions,
@@ -19,24 +20,17 @@ import {
 import { loadConfig } from './load-config.js'
 import type { DoomSidebar } from '../plugins/auto-sidebar/walk.js'
 
-export interface ExportCommandOptions extends GlobalCliOptions, ServeOptions {
-  name?: string
-}
-
 export const exportCommand = new Command('export')
   .description('Export the documentation as PDF')
   .argument('[root]', 'Root directory of the documentation')
   .option('-H, --host [host]', 'Serve host name')
-  .option('-p, --port [port]', 'Serve port number', '4173')
-  .option(
-    '-n, --name <name>',
-    'Output PDF name prefix, the final name will be <name>-<lang>.pdf',
-  )
+  .option('-P, --port [port]', 'Serve port number', '4173')
   .action(async function (root?: string) {
     setNodeEnv('production')
 
-    const { port, host, name, ...globalOptions } =
-      this.optsWithGlobals<ExportCommandOptions>()
+    const { port, host, ...globalOptions } = this.optsWithGlobals<
+      ServeOptions & GlobalCliOptions
+    >()
 
     let { config } = await loadConfig(root, globalOptions)
 
@@ -119,7 +113,7 @@ export const exportCommand = new Command('export')
     ) => {
       await generatePdf({
         pages: collectPages(sidebarItems),
-        outFile: `${name || config.title}-${lang}.pdf`,
+        outFile: `${removeBothEndsSlashes(config.base!) || config.title}-${lang}.pdf`,
         ...commonOptions,
       })
     }

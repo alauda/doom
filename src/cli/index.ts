@@ -64,7 +64,7 @@ program
   .description('Start the development server')
   .argument('[root]', 'Root directory of the documentation')
   .option('-H, --host [host]', 'Dev server host name')
-  .option('-p, --port [port]', 'Dev server port number')
+  .option('-P, --port [port]', 'Dev server port number')
   .action(async function (this: Command, root?: string) {
     setNodeEnv('development')
 
@@ -185,7 +185,7 @@ program
   .description('Preview the built documentation')
   .argument('[root]', 'Root directory of the documentation')
   .option('-H, --host [host]', 'Serve host name')
-  .option('-p, --port [port]', 'Serve port number', '4173')
+  .option('-P, --port [port]', 'Serve port number', '4173')
   .action(async function (root?: string) {
     setNodeEnv('production')
 
