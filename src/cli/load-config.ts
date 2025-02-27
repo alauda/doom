@@ -29,11 +29,11 @@ import {
   createTransformerCallouts,
   directivesPlugin,
   globalPlugin,
+  mermaidPlugin,
+  permissionPlugin,
+  replacePlugin,
   shikiPlugin,
 } from '../plugins/index.js'
-import { mermaidPlugin } from '../plugins/mermaid/index.js'
-import { permissionPlugin } from '../plugins/permission/index.js'
-import { replacePlugin } from '../plugins/replace/index.js'
 import { type DoomSite, normalizeVersion } from '../shared/index.js'
 import {
   type DoomConfig,
@@ -137,7 +137,7 @@ const getCommonConfig = (
         releaseNotes: config.releaseNotes,
       }),
       shikiPlugin({
-        langs: ['dockerfile', 'html', 'go', 'jsonc', 'mermaid'],
+        langs: ['dockerfile', 'dotenv', 'html', 'go', 'jsonc', 'mermaid'],
         transformers: [
           // builtin transformers
           transformerMetaHighlight(),

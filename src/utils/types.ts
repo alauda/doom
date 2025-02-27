@@ -1,4 +1,4 @@
-import type { UserConfig } from '@rspress/core'
+import type { serve, UserConfig } from '@rspress/core'
 
 import type { ApiPluginOptions } from '../plugins/api/types.js'
 import type { AutoSidebarPluginOptions } from '../plugins/index.js'
@@ -8,6 +8,10 @@ import type {
   ReleaseNotesOptions,
 } from '../plugins/replace/types.js'
 import type { DoomSite } from '../shared/index.js'
+
+export type BaseServeOptions = Parameters<typeof serve>[0]
+
+export type ServeOptions = Omit<BaseServeOptions, 'config'>
 
 export interface GlobalCliOptions {
   config?: string

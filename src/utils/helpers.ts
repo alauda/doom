@@ -60,3 +60,7 @@ export async function generateRuntimeModule<T, R = T>(
     `\nexport default {${files.map((file, index) => `'${path.relative(root, file)}':_${index}`).join(',')}}`
   return runtimeModules
 }
+
+export const setNodeEnv = (env: 'development' | 'production') => {
+  process.env.NODE_ENV = env
+}

@@ -1,0 +1,5 @@
+.yarn
+dist
+lib
+node_modules
+src/cli/merge-pdfs/pyodide

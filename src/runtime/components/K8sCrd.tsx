@@ -6,7 +6,7 @@ import { Badge, Button, getCustomMDXComponent } from '@rspress/core/theme'
 import type { OpenAPIV3_1 } from 'openapi-types'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
-import { useTranslation } from '../hooks/index.js'
+import { useIsPrint, useTranslation } from '../hooks/index.js'
 import { Directive } from './Directive.js'
 import { Markdown } from './_Markdown.js'
 
@@ -106,9 +106,11 @@ export const K8sCrdSchema = ({
 }) => {
   const { description, properties } = schema
 
+  const isPrint = useIsPrint()
+
   const t = useTranslation()
 
-  const [expandAll, setExpandAll] = useState(false)
+  const [expandAll, setExpandAll] = useState(isPrint)
 
   const toggleExpandAll = useCallback(() => {
     setExpandAll((all) => !all)
@@ -122,7 +124,7 @@ export const K8sCrdSchema = ({
           <code>{version}</code>
           <Badge>version</Badge>
         </span>
-        {properties != null && (
+        {!isPrint && properties != null && (
           <Button
             className="ml-auto doom-btn"
             type="button"

@@ -89,3 +89,33 @@ td {
     }
   }
 }
+
+@mixin print {
+  .rspress {
+    &-nav,
+    &-sidebar-menu,
+    &-doc-footer {
+      display: none;
+    }
+
+    &-doc-container {
+      padding: 0;
+    }
+
+    &-directive-title::marker {
+      content: none;
+    }
+  }
+
+  [class^='scroll-to-top_'] {
+    display: none;
+  }
+}
+
+.print:root {
+  @include print;
+}
+
+@media print {
+  @include print;
+}

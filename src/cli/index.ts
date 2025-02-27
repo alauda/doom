@@ -7,25 +7,26 @@
 import module from 'node:module'
 import path from 'node:path'
 
-import { type ServerConfig, logger } from '@rsbuild/core'
+import { logger } from '@rsbuild/core'
 import { build, dev, serve } from '@rspress/core'
 import { type FSWatcher, watch } from 'chokidar'
 import { type Command, program } from 'commander'
 import { green } from 'yoctocolors'
 
-import type { GlobalCliOptions } from '../utils/types.js'
 import { CWD, DEFAULT_CONFIGS, I18N_FILE, SITES_FILE } from './constants.js'
 import { loadConfig } from './load-config.js'
 import { newCommand } from './new.js'
 import { translateCommand } from './translate.js'
+import { exportCommand } from './export.js'
+import {
+  type GlobalCliOptions,
+  type ServeOptions,
+  setNodeEnv,
+} from '../utils/index.js'
 
 const META_FILE = '_meta.json'
 
 const CONFIG_FILES = [...DEFAULT_CONFIGS, I18N_FILE, SITES_FILE]
-
-const setNodeEnv = (env: 'development' | 'production') => {
-  process.env.NODE_ENV = env
-}
 
 const cjsRequire = module.createRequire(import.meta.url)
 
@@ -62,8 +63,8 @@ program
   .command('dev', { isDefault: true })
   .description('Start the development server')
   .argument('[root]', 'Root directory of the documentation')
-  .option('--host [host]', 'Host name')
-  .option('--port [port]', 'Port number')
+  .option('-H, --host [host]', 'Dev server host name')
+  .option('-p, --port [port]', 'Dev server port number')
   .action(async function (this: Command, root?: string) {
     setNodeEnv('development')
 
@@ -71,7 +72,7 @@ program
     let cliWatcher: FSWatcher
 
     const { port, host, ...globalOptions } = this.optsWithGlobals<
-      ServerConfig & GlobalCliOptions
+      ServeOptions & GlobalCliOptions
     >()
 
     const startDevServer = async () => {
@@ -183,26 +184,23 @@ program
   .alias('serve')
   .description('Preview the built documentation')
   .argument('[root]', 'Root directory of the documentation')
-  .option('--host [host]', 'Host name')
-  .option('--port [port]', 'Port number', '4173')
+  .option('-H, --host [host]', 'Serve host name')
+  .option('-p, --port [port]', 'Serve port number', '4173')
   .action(async function (root?: string) {
     setNodeEnv('production')
 
     const { port, host, ...globalOptions } = this.optsWithGlobals<
-      ServerConfig & GlobalCliOptions
+      ServeOptions & GlobalCliOptions
     >()
 
     const { config } = await loadConfig(root, globalOptions)
 
-    await serve({
-      config,
-      host,
-      port,
-    })
+    await serve({ config, host, port })
   })
 
 program.addCommand(newCommand)
 program.addCommand(translateCommand)
+program.addCommand(exportCommand)
 
 program.parseAsync().catch((err: unknown) => {
   if (err instanceof Error && err.name === 'ExitPromptError') {

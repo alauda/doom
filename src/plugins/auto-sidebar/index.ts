@@ -1,4 +1,8 @@
-import { addTrailingSlash, type RspressPlugin } from '@rspress/core'
+import {
+  addTrailingSlash,
+  type RspressPlugin,
+  type UserConfig,
+} from '@rspress/core'
 import path from 'node:path'
 
 import { combineWalkResult } from './utils.js'
@@ -203,66 +207,72 @@ export interface AutoSidebarPluginOptions {
   collapsed?: boolean
 }
 
-export const autoSidebarPlugin = ({
-  excludeRoutes,
-  collapsed,
-}: AutoSidebarPluginOptions = {}): RspressPlugin => {
+export const autoSidebar = async (
+  config: UserConfig,
+  { excludeRoutes, collapsed }: AutoSidebarPluginOptions,
+) => {
+  config.themeConfig = config.themeConfig || {}
+  config.themeConfig.locales =
+    config.themeConfig.locales || config.locales || []
+  const root = config.root!
+  const langs = config.themeConfig.locales.map((locale) => locale.lang)
+  const hasLocales = langs.length > 0
+  const versions = config.multiVersion?.versions || []
+  const defaultLang = config.lang || ''
+  const { default: defaultVersion = '' } = config.multiVersion || {}
+  const { extensions = defaultExtensions } = config.route || {}
+  if (hasLocales) {
+    const metaInfo = await processLocales(
+      langs,
+      versions,
+      root,
+      defaultLang,
+      defaultVersion,
+      extensions,
+      excludeRoutes,
+      collapsed,
+    )
+    config.themeConfig.locales = config.themeConfig.locales.map(
+      (item, index) => ({
+        ...item,
+        ...metaInfo[index],
+      }),
+    )
+  } else {
+    const walks = versions.length
+      ? await Promise.all(
+          versions.map((version) => {
+            const routePrefix = addTrailingSlash(
+              version === defaultVersion ? '' : `/${version}`,
+            )
+            return walk(
+              path.join(root, version),
+              routePrefix,
+              config.root!,
+              extensions,
+              excludeRoutes,
+              collapsed,
+            )
+          }),
+        )
+      : [await walk(root, '/', root, extensions, excludeRoutes, collapsed)]
+
+    const combined = combineWalkResult(walks, versions)
+
+    config.themeConfig = { ...config.themeConfig, ...combined }
+  }
+
+  return config
+}
+
+export const autoSidebarPlugin = (
+  options: AutoSidebarPluginOptions = {},
+): RspressPlugin => {
   return {
     name: 'doom-auto-sidebar',
     async config(config, utils) {
       utils.removePlugin('auto-nav-sidebar')
-      config.themeConfig = config.themeConfig || {}
-      config.themeConfig.locales =
-        config.themeConfig.locales || config.locales || []
-      const root = config.root!
-      const langs = config.themeConfig.locales.map((locale) => locale.lang)
-      const hasLocales = langs.length > 0
-      const versions = config.multiVersion?.versions || []
-      const defaultLang = config.lang || ''
-      const { default: defaultVersion = '' } = config.multiVersion || {}
-      const { extensions = defaultExtensions } = config.route || {}
-      if (hasLocales) {
-        const metaInfo = await processLocales(
-          langs,
-          versions,
-          root,
-          defaultLang,
-          defaultVersion,
-          extensions,
-          excludeRoutes,
-          collapsed,
-        )
-        config.themeConfig.locales = config.themeConfig.locales.map(
-          (item, index) => ({
-            ...item,
-            ...metaInfo[index],
-          }),
-        )
-      } else {
-        const walks = versions.length
-          ? await Promise.all(
-              versions.map((version) => {
-                const routePrefix = addTrailingSlash(
-                  version === defaultVersion ? '' : `/${version}`,
-                )
-                return walk(
-                  path.join(root, version),
-                  routePrefix,
-                  config.root!,
-                  extensions,
-                  excludeRoutes,
-                  collapsed,
-                )
-              }),
-            )
-          : [await walk(root, '/', root, extensions, excludeRoutes, collapsed)]
-
-        const combined = combineWalkResult(walks, versions)
-
-        config.themeConfig = { ...config.themeConfig, ...combined }
-      }
-
-      return config
+      return autoSidebar(config, options)
     },
   }
 }

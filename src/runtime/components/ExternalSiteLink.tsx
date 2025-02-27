@@ -1,4 +1,4 @@
-import { useLang } from '@rspress/core/runtime'
+import { NoSSR, useLang } from '@rspress/core/runtime'
 import {
   addTrailingSlash,
   isExternalUrl,
@@ -12,6 +12,7 @@ import { Directive } from './Directive.js'
 import virtual from 'doom-@global-virtual'
 
 import classes from '../../../styles/link.module.scss'
+import { useIsPrint } from '../hooks/index.js'
 
 export interface ExternalSiteLinkProps
   extends AnchorHTMLAttributes<HTMLAnchorElement> {
@@ -25,6 +26,8 @@ export const ExternalSiteLink = ({
   className,
   ...props
 }: ExternalSiteLinkProps) => {
+  const isPrint = useIsPrint()
+
   const site = useMemo(() => virtual.sites?.find((s) => s.name === name), [])
   const lang = useLang()
 
@@ -42,19 +45,22 @@ export const ExternalSiteLink = ({
   }
 
   return (
-    <a
-      href={
-        (virtual.version
-          ? addTrailingSlash(site.base + site.version)
-          : site.base) +
-        (lang ? `${lang}/` : '') +
-        removeLeadingSlash(href)
-      }
-      target="_blank"
-      rel="noopener noreferrer"
-      className={clsx(classes.link, 'cursor-pointer', className)}
-      {...props}
-    />
+    <NoSSR>
+      <a
+        href={
+          (isPrint ? 'https://docs.alauda.io' : '') +
+          (virtual.version
+            ? addTrailingSlash(site.base + site.version)
+            : site.base) +
+          (lang ? `${lang}/` : '') +
+          removeLeadingSlash(href)
+        }
+        target="_blank"
+        rel="noopener noreferrer"
+        className={clsx(classes.link, 'cursor-pointer', className)}
+        {...props}
+      />
+    </NoSSR>
   )
 }
 
