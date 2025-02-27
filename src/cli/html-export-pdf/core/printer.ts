@@ -1,10 +1,11 @@
 import EventEmitter from 'node:events'
 import path from 'node:path'
 import process from 'node:process'
+
 import { PDFDocument } from 'pdf-lib'
-import { chromium } from 'playwright'
-import { red } from 'colorette'
 import type { Browser, BrowserContext, LaunchOptions, Page } from 'playwright'
+import { chromium } from 'playwright'
+import { red } from 'yoctocolors'
 
 import {
   getOutlineNodes,
@@ -13,11 +14,9 @@ import {
 } from './outline.js'
 import { setMetadata, type Meta } from './postprocesser.js'
 
-export type PDFOptions = Exclude<Parameters<Page['pdf']>[0], undefined> & {
-  lang?: string
-}
+export type PDFOptions = Exclude<Parameters<Page['pdf']>[0], undefined>
 
-export type { Browser, Page, LaunchOptions }
+export type { Browser, LaunchOptions, Page }
 
 export type PageInitScriptFn = Page['addInitScript']
 
