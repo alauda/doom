@@ -43,9 +43,9 @@ export async function generateRuntimeModule<T, R = T>(
   mapper?: (input: T) => R | Promise<R>,
 ) {
   const runtimeModules: StringMapper = {}
-  const files = await glob(patterns, { absolute: true, cwd })
+  const files = await glob(patterns, { cwd })
   for (const file of files) {
-    const result = await resolveStaticConfig<T>(file)
+    const result = await resolveStaticConfig<T>(path.resolve(cwd, file))
     runtimeModules[`doom-@${kind}/${file}.mjs`] =
       `export default ${JSON.stringify(
         (await mapper?.(result)) ?? result,
