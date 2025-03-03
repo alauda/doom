@@ -1,43 +1,58 @@
-import { isProduction, useLang, usePageData } from '@rspress/core/runtime'
+import { isProduction, usePageData } from '@rspress/core/runtime'
+import { merge } from 'es-toolkit/compat'
 import { useEffect, useMemo, useState } from 'react'
 import { parse } from 'yaml'
 
 import type { DoomSite } from '../../shared/types.js'
-import type { SiteBrand } from '../types.js'
+import { namedTerms, type NamedTerms, type TermName } from '../../terms.js'
+import type { Locale } from '../translation.js'
+import { useLocale } from './useTranslation.js'
 
 import virtual from 'doom-@global-virtual'
 
-export interface SiteOverrides {
-  brand?: SiteBrand
+export type SiteOverridesTerms = Record<TermName, string>
+
+export interface SiteOverridesItem {
   title?: string
   logoText?: string
+  terms?: SiteOverridesTerms
 }
 
-export type SiteOverridesWithLangs = {
-  [K in keyof SiteOverrides]: Record<string, SiteOverrides[K]>
+export type SiteOverrides = {
+  [K in Exclude<keyof SiteOverridesItem, 'terms'>]?: Partial<
+    Record<Locale, SiteOverridesItem[K]>
+  >
+} & {
+  terms?: NamedTerms
 }
 
-const DEFAULT_SITE_BRAND: Record<'en' | 'zh', SiteBrand> = {
-  en: {
-    company: 'Alauda',
-    product: 'Alauda Container Platform',
-    productShort: 'ACP',
-  },
-  zh: {
-    company: '灵雀云',
-    product: '灵雀云容器平台',
-    productShort: 'ACP',
-  },
-}
+export type NormalizedSiteOverrides = Record<Locale, SiteOverridesItem>
 
-let siteOverrides: SiteOverridesWithLangs | undefined
-let promise: Promise<SiteOverridesWithLangs> | undefined
+const normalizeOverrides = <K extends string, T>(
+  origin: Partial<Record<K, Partial<Record<Locale, T>>>>,
+) =>
+  Object.keys(origin).reduce(
+    (acc, key_) => {
+      const key = key_ as K
+      const term = origin[key]
+      if (!term) {
+        return acc
+      }
+      acc.en[key] = term.en!
+      acc.zh[key] = term.zh || acc.en[key]
+      return acc
+    },
+    { en: {}, zh: {} } as Record<Locale, Record<K, T>>,
+  )
+
+let normalizedSiteOverrides: NormalizedSiteOverrides | undefined
+let promise: Promise<NormalizedSiteOverrides> | undefined
 
 const fetchSiteOverrides = async (
   base: string,
   version?: string,
   acpSite?: DoomSite,
-): Promise<SiteOverridesWithLangs> => {
+): Promise<NormalizedSiteOverrides> => {
   if (promise) {
     return promise
   }
@@ -63,27 +78,38 @@ const fetchSiteOverrides = async (
         return
       }
       try {
-        return parse(await res.text()) as SiteOverridesWithLangs
+        return parse(await res.text()) as SiteOverrides
       } catch {
         //
       }
     }),
-  ).then(
-    ([acpSiteOverrides, siteOverrides]) =>
-      (siteOverrides = {
-        brand: acpSiteOverrides?.brand ?? DEFAULT_SITE_BRAND,
-        ...siteOverrides,
-      }),
-  )).catch(() => ({}))
+  )
+    .then(([acpSiteOverrides, siteOverrides]) => ({
+      ...siteOverrides,
+      terms: merge(
+        {},
+        namedTerms,
+        acpSiteOverrides?.terms,
+        siteOverrides?.terms,
+      ),
+    }))
+    .catch(() => ({ terms: namedTerms }))
+    .then(({ terms, ...siteOverrides }) => {
+      const normalizedSiteOverrides = normalizeOverrides(siteOverrides)
+      const normalizedTerms = normalizeOverrides(terms)
+      return {
+        en: { ...normalizedSiteOverrides.en, terms: normalizedTerms.en },
+        zh: { ...normalizedSiteOverrides.zh, terms: normalizedTerms.zh },
+      }
+    }))
 }
 
-export const useSiteOverrides = (): SiteOverrides => {
+export const useSiteOverrides = (): SiteOverridesItem => {
   const { siteData } = usePageData()
 
-  const [siteOverridesWithLangs, setSiteOverridesWithLangs] =
-    useState(siteOverrides)
+  const [siteOverrides, setSiteOverrides] = useState(normalizedSiteOverrides)
 
-  const lang = useLang() || 'zh'
+  const lang = useLocale()
 
   const acpSite = useMemo(
     () => virtual.sites?.find((s) => s.name === 'acp'),
@@ -91,30 +117,13 @@ export const useSiteOverrides = (): SiteOverrides => {
   )
 
   useEffect(() => {
-    if (siteOverrides) {
+    if (normalizedSiteOverrides) {
       return
     }
     void fetchSiteOverrides(siteData.base, virtual.version, acpSite).then(
-      setSiteOverridesWithLangs,
+      setSiteOverrides,
     )
   }, [])
 
-  return useMemo(() => {
-    if (!siteOverridesWithLangs) {
-      return {}
-    }
-
-    return Object.entries(siteOverridesWithLangs).reduce<SiteOverrides>(
-      (acc, [key, value]) => {
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-        if (!value) {
-          return acc
-        }
-        // @ts-expect-error - don't waste time on typing
-        acc[key] = value[lang] || value.en
-        return acc
-      },
-      {},
-    )
-  }, [siteOverridesWithLangs, lang])
+  return siteOverrides?.[lang] || {}
 }

@@ -1,4 +1,4 @@
-import { useLang, usePageData } from '@rspress/core/runtime'
+import { useLang } from '@rspress/core/runtime'
 import { type FC, useMemo } from 'react'
 
 import { handleCJKWhitespaces } from '../utils.js'
@@ -72,9 +72,8 @@ const ApisOverviewNotes: Notes = {
 }
 
 export const ExternalSiteBase = ({ name, template }: ExternalSiteBaseProps) => {
-  const { siteData } = usePageData()
   const site = useMemo(() => virtual.sites?.find((s) => s.name === name), [])
-  const lang = useLang() || siteData.lang || 'zh'
+  const lang = useLang()
 
   const displayName = useMemo(
     () =>

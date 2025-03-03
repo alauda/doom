@@ -124,7 +124,7 @@ export const K8sPermissionTable = ({ functions }: K8sPermissionTableProps) => {
 
   const t = useTranslation()
 
-  const lang = useLang() || 'zh'
+  const lang = useLang()
 
   const isZh = lang === 'zh'
 

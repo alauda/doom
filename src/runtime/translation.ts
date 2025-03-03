@@ -8,6 +8,12 @@ const en = {
   create: 'Create',
   update: 'Update',
   delete: 'Delete',
+  name: 'Name',
+  chinese: 'Chinese',
+  english: 'English',
+  description: 'Description',
+  chinese_bad_cases: 'Chinese Bad Cases',
+  english_bad_cases: 'English Bad Cases',
 }
 
 const zh: typeof en = {
@@ -20,6 +26,12 @@ const zh: typeof en = {
   create: '创建',
   update: '更新',
   delete: '删除',
+  name: '名称',
+  chinese: '中文',
+  english: '英文',
+  description: '描述',
+  chinese_bad_cases: '中文反例',
+  english_bad_cases: '英文反例',
 }
 
 export const TRANSLATIONS = { en, zh }

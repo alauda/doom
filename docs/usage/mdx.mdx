@@ -157,19 +157,40 @@ import { SourceCode } from '@rspress/core/theme'
 
 <ExternalApisOverview name="connectors" />
 
-### Brand
+### Term
 
-品牌信息组件，纯文本，动态挂载注入
+术语组件，纯文本，动态挂载注入
 
 ```mdx
-<CompanyBrand />
-<ProductBrand />
-<ProductShortBrand />
+<Term name="company" textCase="capitalize" />
+<Term name="product" textCase="lower" />
+<Term name="productShort" textCase="upper" />
 ```
 
-<CompanyBrand />
-<ProductBrand />
-<ProductShortBrand />
+<Term name="company" textCase="capitalize" />
+<Term name="product" textCase="lower" />
+<Term name="productShort" textCase="upper" />
+
+#### `props`
+
+- `name`: 内置术语名称，参考[动态挂载配置文件](./deploy.md#overrides)
+- `textCase`: 文本大小写转换，可选值为`lower`, `upper`, `capitalize`
+
+### `TermsTable`
+
+内置术语列表展示组件
+
+```mdx
+<TermsTable />
+<TermsTable named />
+<TermsTable named={false} />
+```
+
+<TermsTable />
+
+#### `props`
+
+- `named`: `true` 时只显示命名术语，`false` 时只显示未命名术语，默认显示全部
 
 ### `JsonViewer`
 

@@ -78,19 +78,20 @@ doom build -v unversioned # 构建无版本号的文档，产物输出到 dist/u
 </html>
 ```
 
-#### 动态挂载配置文件
+#### 动态挂载配置文件 \{#overrides}
 
 ```yaml title="overrides.yaml"
-# 品牌信息，只需要挂载到 console-platform 一个入口即可，以下为无动态挂载的默认配置
-brand:
-  en:
-    company: Alauda
-    product: Alauda Container Platform
-    productShort: ACP
-  zh:
-    company: 灵雀云
-    product: 灵雀云容器平台
-    productShort: ACP
+# 术语信息，只需要挂载到 console-platform 一个入口即可，以下为无动态挂载的默认配置
+# https://gitlab-ce.alauda.cn/idp/Doom/-/blob/master/src/terms.ts#L11
+terms:
+  company:
+    en: Alauda
+    zh: 灵雀云
+  product:
+    en: Alauda Container Platform
+    zh: 灵雀云容器平台
+  productShort:
+    en: ACP
 
 # 文档信息，每个文档都可以挂载覆盖默认配置
 title:

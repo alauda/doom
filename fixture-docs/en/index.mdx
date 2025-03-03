@@ -1,23 +1,19 @@
 ---
-sourceSHA: 2275635eb37a507e2fcecd68bd37fd508ffb67073553af0d88e78c7a334d3982
+sourceSHA: 605fda15f2f8161acb697c190706819ef50d864c4a75b01a43b0c7fbd04ea9bf
 ---
 
 import { useI18n } from '@rspress/core/runtime'
 
 # {useI18n()('prod_intro')}
 
-<CompanyBrand />
+<Term name="company" /> <Term name="product" /> <Term name="productShort" />
 
-<ProductBrand />
+The following specifications must be followed during the internationalization translation process:
 
-<ProductShortBrand />
-
-When performing internationalization translations, the following guidelines must be observed:
-
-- The directory structure of multilingual documents (`doc/en`) must exactly match that of the documents in the `doc/zh` directory, ensuring that the links to the multilingual documents are identical except for the language identifier.
+- The directory structure of the multilingual documents (`doc/en`) must be identical to the documents under the `doc/zh` directory, ensuring that the links to the multilingual documents are exactly the same except for the language identifier.
 
   ::: danger
-  If automated translation tools are being used, this issue can be disregarded, as these tools will automatically generate the directory structure for the target language documents based on `doc/zh`.
+  If an automated translation tool is used for the translation, there is no need to be concerned about this issue, as the automated translation tool will automatically generate the directory structure for the target language documents based on `doc/zh`.
   :::
 
 <AcpApisOverview />
