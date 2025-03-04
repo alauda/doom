@@ -308,7 +308,7 @@ export async function loadConfig(
     mergedConfig.outDir =
       addTrailingSlash(mergedConfig.outDir) + normalizedVersion
   } else {
-    mergedConfig.outDir = `dist${normalizedVersion === 'unversioned' ? `/unversioned${base}` : base}`
+    mergedConfig.outDir = `dist${normalizedVersion === 'unversioned' ? `${base}unversioned` : base}`
   }
 
   if (mergedConfig.builderConfig?.server?.open === true) {
