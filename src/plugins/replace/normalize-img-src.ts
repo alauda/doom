@@ -11,6 +11,16 @@ import type { NormalizedReferenceSource } from './types.js'
 
 const RELATIVE_URL_PATTERN = /^\.\.?\//
 
+export interface NormalizeImgSrcOptions {
+  refSource?: NormalizedReferenceSource
+  localPublicBase: string
+  publicBase?: string
+  sourceBase: string
+  targetBase: string
+  force?: boolean
+  translating?: readonly [string, string]
+}
+
 export const normalizeImgSrc = (
   content: Content,
   {
@@ -21,15 +31,7 @@ export const normalizeImgSrc = (
     targetBase,
     force,
     translating,
-  }: {
-    refSource?: NormalizedReferenceSource
-    localPublicBase: string
-    publicBase?: string
-    sourceBase: string
-    targetBase: string
-    force?: boolean
-    translating?: string
-  },
+  }: NormalizeImgSrcOptions,
 ) => {
   content = cloneDeep(content)
 
@@ -64,14 +66,21 @@ export const normalizeImgSrc = (
 
       return `/_remotes/${refSource.name}/${imageSrc}`
     } else if (!RELATIVE_URL_PATTERN.test(src)) {
-      if (
-        translating &&
-        src.startsWith('/zh/') &&
-        fs.existsSync(
-          path.resolve(localPublicBase, translating, src.replace('/zh/', '')),
-        )
-      ) {
-        return src.replace('/zh/', `/${translating}/`)
+      if (translating) {
+        const [source, target] = translating
+        const sourcePrefix = `/${source}/`
+        if (
+          src.startsWith(sourcePrefix) &&
+          fs.existsSync(
+            path.resolve(
+              localPublicBase,
+              target,
+              src.replace(sourcePrefix, ''),
+            ),
+          )
+        ) {
+          return src.replace(sourcePrefix, `/${target}/`)
+        }
       }
       return src
     }

@@ -1,6 +1,6 @@
 {
   "name": "@alauda/doom",
-  "version": "0.14.0",
+  "version": "0.14.1",
   "type": "module",
   "description": "Doctor Doom making docs.",
   "repository": {
@@ -83,7 +83,7 @@
     "@types/cli-progress": "^3.11.6",
     "@types/ejs": "^3.1.5",
     "@types/fs-extra": "^11.0.4",
-    "@types/node": "^18.19.78",
+    "@types/node": "^18.19.79",
     "@types/picomatch": "^3.0.2",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
@@ -96,7 +96,7 @@
     "prettier-plugin-pkg": "^0.18.1",
     "simple-git-hooks": "^2.11.1",
     "typescript": "^5.8.2",
-    "typescript-eslint": "^8.25.0"
+    "typescript-eslint": "^8.26.0"
   },
   "publishConfig": {
     "access": "public"

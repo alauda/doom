@@ -9,16 +9,17 @@ import { AzureOpenAI } from 'openai'
 import { pRateLimit } from 'p-ratelimit'
 import { cyan } from 'yoctocolors'
 
+import {
+  normalizeImgSrc,
+  type NormalizeImgSrcOptions,
+} from '../plugins/replace/normalize-img-src.js'
+import { mdProcessor, mdxProcessor } from '../plugins/replace/utils.js'
 import { pathExists, type GlobalCliOptions } from '../utils/index.js'
 import { loadConfig } from './load-config.js'
-import { mdProcessor, mdxProcessor } from '../plugins/replace/utils.js'
-import { normalizeImgSrc } from '../plugins/replace/normalize-img-src.js'
 
 export interface I18nFrontmatter {
   i18n?: {
-    title?: {
-      en?: string
-    }
+    title?: Record<string, string>
     additionalPrompts?: string
     disableAutoTranslation?: boolean
   }
@@ -26,13 +27,26 @@ export interface I18nFrontmatter {
   title?: string
 }
 
+const LANGUAGE_CODES: Record<string, string> = {
+  zh: '中文',
+  en: '英文',
+}
+
 let openai: AzureOpenAI | undefined
 
-export const translate = async (
-  zhContent: string,
-  enContent = '',
-  additionalPrompts = '',
-) => {
+export const translate = async ({
+  source,
+  sourceContent,
+  target,
+  targetContent = '',
+  additionalPrompts,
+}: {
+  source: string
+  sourceContent: string
+  target: string
+  targetContent?: string
+  additionalPrompts?: string
+}) => {
   if (!openai) {
     openai = new AzureOpenAI({
       endpoint:
@@ -43,16 +57,19 @@ export const translate = async (
     })
   }
 
+  const sourceLang = LANGUAGE_CODES[source]
+  const targetLang = LANGUAGE_CODES[target]
+
   const { choices } = await openai.beta.chat.completions.parse({
     messages: [
       {
         role: 'system',
         content: `
 ## 角色
-你是一位专业的技术文档工程师，擅长写作高质量的英文技术分档。请你帮我准确地将以下中文翻译成英文，风格与英文技术文档保持一致。
+你是一位专业的技术文档工程师，擅长写作高质量的${targetLang}技术分档。请你帮我准确地将以下${sourceLang}翻译成${targetLang}，风格与${targetLang}技术文档保持一致。
 
 ## 规则
-- 第一条消息为需要翻译的最新中文内容，第二条消息为之前翻译过的但内容可能过期的英文内容，如果没有翻译过则为空
+- 第一条消息为需要翻译的最新${sourceLang}内容，第二条消息为之前翻译过的但内容可能过期的${targetLang}内容，如果没有翻译过则为空
 - 输入格式为 MDX 格式，输出格式也必须保留原始 MDX 格式，且不要额外包装在不必要的代码块中
 - 文档中的资源链接不要翻译和替换
 - MDX 组件中包含的内容需要翻译，MDX 组件参数的值不需要翻译，但以下这些特殊的 MDX 组件参数值需要翻译
@@ -65,13 +82,13 @@ export const translate = async (
 
 ## 策略
 分四步进行翻译工作，并打印每步的结果：
-1. 根据中文内容直译成英文，保持原有格式，不要遗漏任何信息
+1. 根据${sourceLang}内容直译成${targetLang}，保持原有格式，不要遗漏任何信息
 2. 根据第一步直译的结果，指出其中存在的具体问题，要准确描述，不宜笼统的表示，也不需要增加原文不存在的内容或格式，包括不仅限于
- - 不符合英文表达习惯，明确指出不符合的地方
+ - 不符合${targetLang}表达习惯，明确指出不符合的地方
  - 语句不通顺，指出位置，不需要给出修改意见，意译时修复
  - 晦涩难懂，模棱两可，不易理解，可以尝试给出解释
-3. 根据第一步直译的结果和第二步指出的问题，重新进行意译，保证内容的原意的基础上，使其更易于理解，更符合英文技术文档的表达习惯，同时保持原有的格式不变
-4. 当存在之前翻译的英文内容时，将第三步的结果按句子与之前的英文内容细致地比较，如果翻译结果意思相近，仅仅表达方式不同的，只需要保留之前的英文内容即可，不需要重复翻译
+3. 根据第一步直译的结果和第二步指出的问题，重新进行意译，保证内容的原意的基础上，使其更易于理解，更符合${targetLang}技术文档的表达习惯，同时保持原有的格式不变
+4. 当存在之前翻译的${targetLang}内容时，将第三步的结果按句子与之前的${targetLang}内容细致地比较，如果翻译结果意思相近，仅仅表达方式不同的，只需要保留之前的${targetLang}内容即可，不需要重复翻译
 
 最终只需要输出最后一步的结果，不需要输出之前步骤的结果。
 
@@ -80,11 +97,11 @@ ${additionalPrompts}
       },
       {
         role: 'user',
-        content: zhContent,
+        content: sourceContent,
       },
       {
         role: 'user',
-        content: enContent,
+        content: targetContent,
       },
     ],
     model: 'gpt-4o-mini',
@@ -108,24 +125,39 @@ const limit = pRateLimit({
 export const translateCommand = new Command('translate')
   .description('Translate the documentation')
   .argument('[root]', 'Root directory of the documentation')
+  .option('-s, --source <language>', 'Document source language', 'zh')
+  .option('-t, --target <language>', 'Document target language', 'en')
   .action(async function (root?: string) {
-    const { config } = await loadConfig(
-      root,
-      this.optsWithGlobals<GlobalCliOptions>(),
-    )
+    const { source, target, ...globalOptions } = this.optsWithGlobals<
+      { source: string; target: string } & GlobalCliOptions
+    >()
 
-    const docsDir = config.root!
-
-    const zhDir = path.resolve(docsDir, 'zh')
-    const enDir = path.resolve(docsDir, 'en')
-
-    if (!(await pathExists(zhDir, 'directory'))) {
-      console.error(`The directory "${cyan(zhDir)}" does not exist.`)
+    if (
+      !Object.hasOwn(LANGUAGE_CODES, source) ||
+      !Object.hasOwn(LANGUAGE_CODES, target) ||
+      source === target
+    ) {
+      console.error(
+        `Translate from language \`${cyan(source)}\` to \`${cyan(target)}\` is not supported.`,
+      )
       process.exitCode = 1
       return
     }
 
-    const dirents = await fs.readdir(zhDir, {
+    const { config } = await loadConfig(root, globalOptions)
+
+    const docsDir = config.root!
+
+    const sourceDir = path.resolve(docsDir, source)
+    const targetDir = path.resolve(docsDir, target)
+
+    if (!(await pathExists(sourceDir, 'directory'))) {
+      console.error(`The directory "${cyan(sourceDir)}" does not exist.`)
+      process.exitCode = 1
+      return
+    }
+
+    const dirents = await fs.readdir(sourceDir, {
       recursive: true,
       withFileTypes: true,
     })
@@ -136,93 +168,96 @@ export const translateCommand = new Command('translate')
           return
         }
 
-        const zhFilePath = path.resolve(
+        const sourceFilePath = path.resolve(
           d.parentPath ||
             // eslint-disable-next-line @typescript-eslint/no-deprecated
             d.path,
           d.name,
         )
 
-        const zhContent = await fs.readFile(zhFilePath, 'utf-8')
+        const sourceContent = await fs.readFile(sourceFilePath, 'utf-8')
 
-        const zhFrontmatter = matter(zhContent).data as I18nFrontmatter
+        const sourceFrontmatter = matter(sourceContent).data as I18nFrontmatter
 
-        if (zhFrontmatter.i18n?.disableAutoTranslation) {
+        if (sourceFrontmatter.i18n?.disableAutoTranslation) {
           return
         }
 
         const sourceSHA = crypto
           .createHash('sha256')
-          .update(zhContent)
+          .update(sourceContent)
           .digest('hex')
 
-        const enFilePath = zhFilePath.replace(zhDir, enDir)
+        const targetFilePath = sourceFilePath.replace(sourceDir, targetDir)
 
-        let enContent: string | undefined
+        let targetContent: string | undefined
 
-        let enFrontmatter: I18nFrontmatter | undefined
+        let targetFrontmatter: I18nFrontmatter | undefined
 
-        if (await pathExists(enFilePath, 'file')) {
-          enContent = await fs.readFile(enFilePath, 'utf-8')
+        if (await pathExists(targetFilePath, 'file')) {
+          targetContent = await fs.readFile(targetFilePath, 'utf-8')
 
-          enFrontmatter = matter(enContent).data
+          targetFrontmatter = matter(targetContent).data
 
           if (
-            enFrontmatter.i18n?.disableAutoTranslation ||
-            enFrontmatter.sourceSHA === sourceSHA
+            targetFrontmatter.i18n?.disableAutoTranslation ||
+            targetFrontmatter.sourceSHA === sourceSHA
           ) {
             return
           }
         }
 
         await limit(async () => {
-          const relativePath = path.relative(docsDir, zhFilePath)
+          const relativePath = path.relative(docsDir, sourceFilePath)
 
           logger.info(`Translating ${cyan(relativePath)}`)
 
-          const isMdx = zhFilePath.endsWith('.mdx')
+          const isMdx = sourceFilePath.endsWith('.mdx')
 
           const processor = isMdx ? mdxProcessor : mdProcessor
 
-          const ast = processor.parse(zhContent)
+          const ast = processor.parse(sourceContent)
 
-          const normalizeImgSrcOptions = {
+          const normalizeImgSrcOptions: NormalizeImgSrcOptions = {
             localPublicBase: path.resolve(docsDir, 'public'),
-            sourceBase: path.dirname(zhFilePath),
-            targetBase: path.dirname(enFilePath),
-            translating: 'en',
+            sourceBase: path.dirname(sourceFilePath),
+            targetBase: path.dirname(targetFilePath),
+            translating: [source, target] as const,
           }
 
-          enContent = await translate(
-            processor.stringify({
+          targetContent = await translate({
+            source,
+            sourceContent: processor.stringify({
               ...ast,
               children: ast.children.map((it) =>
                 normalizeImgSrc(it, normalizeImgSrcOptions),
               ),
             }),
-            enContent,
-            enFrontmatter?.i18n?.additionalPrompts ??
-              zhFrontmatter.i18n?.additionalPrompts,
-          )
+            target,
+            targetContent,
+            additionalPrompts:
+              targetFrontmatter?.i18n?.additionalPrompts ??
+              sourceFrontmatter.i18n?.additionalPrompts,
+          })
 
-          const { data, content } = matter(enContent)
+          const { data, content } = matter(targetContent)
 
-          const newFrontmatter = { ...enFrontmatter, ...data }
+          const newFrontmatter = { ...targetFrontmatter, ...data }
 
           newFrontmatter.sourceSHA = sourceSHA
 
-          if (zhFrontmatter.i18n?.title?.en) {
-            newFrontmatter.title = zhFrontmatter.i18n.title.en
+          if (sourceFrontmatter.i18n?.title?.[target]) {
+            newFrontmatter.title = sourceFrontmatter.i18n.title[target]
           }
 
-          enContent = matter.stringify(
+          targetContent = matter.stringify(
             content.startsWith('\n') ? content : '\n' + content,
             newFrontmatter,
           )
 
-          await fs.mkdir(path.dirname(enFilePath), { recursive: true })
+          await fs.mkdir(path.dirname(targetFilePath), { recursive: true })
 
-          await fs.writeFile(enFilePath, enContent)
+          await fs.writeFile(targetFilePath, targetContent)
 
           logger.info(`${cyan(relativePath)} translated`)
         })

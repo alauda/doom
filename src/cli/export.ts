@@ -32,6 +32,8 @@ export const exportCommand = new Command('export')
       ServeOptions & GlobalCliOptions
     >()
 
+    const { base } = globalOptions
+
     let { config } = await loadConfig(root, globalOptions)
 
     const outDir = config.outDir!
@@ -113,7 +115,7 @@ export const exportCommand = new Command('export')
     ) => {
       await generatePdf({
         pages: collectPages(sidebarItems),
-        outFile: `${removeBothEndsSlashes(config.base!) || config.title}-${lang}.pdf`,
+        outFile: `${removeBothEndsSlashes(base || config.base!) || config.title}-${lang}.pdf`,
         ...commonOptions,
       })
     }
