@@ -99,8 +99,13 @@ export const VersionsNav = () => {
     [versionsBase, versions],
   )
 
-  if (!versions?.length && !virtual.download) {
-    return null
+  let finalNavMenu: Element | null
+
+  if (
+    (!versions?.length && !virtual.download) ||
+    !(finalNavMenu = getNavMenu())
+  ) {
+    return
   }
 
   return createPortal(
@@ -117,7 +122,7 @@ export const VersionsNav = () => {
         />
       )}
     </>,
-    getNavMenu()!,
+    finalNavMenu,
   )
 }
 
