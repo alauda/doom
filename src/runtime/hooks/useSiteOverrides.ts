@@ -59,7 +59,7 @@ const fetchSiteOverrides = async (
 
   const acpSiteOverridesUrl =
     acpSite && isProduction()
-      ? `${acpSite.base}${version ? acpSite.version + '/' : ''}overrides.yaml`
+      ? `${(virtual.prefix || '') + acpSite.base}${version ? acpSite.version + '/' : ''}overrides.yaml`
       : null
   const siteOverridesUrl = `${isProduction() ? base : '/'}overrides.yaml`
 
@@ -85,7 +85,7 @@ const fetchSiteOverrides = async (
     }),
   )
     .then(([acpSiteOverrides, siteOverrides]) => ({
-      ...siteOverrides,
+      ...(urls.length === 1 ? acpSiteOverrides : siteOverrides),
       terms: merge(
         {},
         namedTerms,

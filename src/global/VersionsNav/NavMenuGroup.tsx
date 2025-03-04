@@ -1,10 +1,11 @@
 import { Tag } from '@rspress/core/theme'
 import {
+  isExternalUrl,
+  withoutBase,
   type NavItem,
   type NavItemWithChildren,
   type NavItemWithLink,
   type NavItemWithLinkAndChildren,
-  withoutBase,
 } from '@rspress/shared'
 import { useState, type ReactNode } from 'react'
 
@@ -48,7 +49,11 @@ function ActiveGroupItem({ item }: { item: NavItemWithLink }) {
 function NormalGroupItem({ item }: { item: NavItemWithLink }) {
   return (
     <div key={item.link} className="font-medium my-1">
-      <a href={item.link}>
+      <a
+        href={item.link}
+        target={isExternalUrl(item.link) ? '_blank' : undefined}
+        rel="noopener noreferrer"
+      >
         <div
           className="rounded-2xl hover:bg-mute"
           style={{
@@ -146,13 +151,11 @@ export function NavMenuGroup(item: NavMenuGroupItem) {
           }}
         >
           {/* The item could be a link or a sub group */}
-          {groupItems.map((item) => {
-            return (
-              <div key={item.text}>
-                {'items' in item ? renderGroup(item) : renderLinkItem(item)}
-              </div>
-            )
-          })}
+          {groupItems.map((item) => (
+            <div key={item.text}>
+              {'items' in item ? renderGroup(item) : renderLinkItem(item)}
+            </div>
+          ))}
         </div>
       </div>
     </div>

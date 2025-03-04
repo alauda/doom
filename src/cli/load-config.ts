@@ -274,7 +274,7 @@ export async function loadConfig(
   })
 
   if (base && prefix) {
-    mergedConfig.base = normalizeSlash(prefix) + base
+    mergedConfig.base = (mergedConfig.prefix = normalizeSlash(prefix)) + base
   }
 
   let ensureDefaultLogo = false

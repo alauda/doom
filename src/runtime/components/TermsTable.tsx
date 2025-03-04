@@ -1,13 +1,13 @@
-import { useState } from 'react'
-import { useTranslation } from '../hooks/index.js'
 import { getCustomMDXComponent } from '@rspress/core/theme'
+import { useState } from 'react'
 
 import {
   allTermItems,
   namedTermItems,
   unnamedTermItems,
-  type NamedTermItem,
+  type NormalizedTermItem,
 } from '../../terms.js'
+import { useTranslation } from '../hooks/index.js'
 
 export interface TermsTableProps {
   named?: boolean
@@ -17,7 +17,7 @@ export const TermsTable = ({ named }: TermsTableProps) => {
   const [X] = useState(getCustomMDXComponent)
   const t = useTranslation()
   const noNamed = named === false
-  const terms: NamedTermItem[] = named
+  const terms: NormalizedTermItem[] = named
     ? namedTermItems
     : noNamed
       ? unnamedTermItems

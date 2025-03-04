@@ -25,6 +25,7 @@ export interface GlobalCliOptions {
 
 declare module '@rspress/shared' {
   interface UserConfig {
+    prefix?: string
     userBase?: string
     api?: Omit<ApiPluginOptions, 'localBasePath'>
     sites?: DoomSite[]

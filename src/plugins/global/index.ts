@@ -3,8 +3,12 @@ import path from 'node:path'
 
 import { addTrailingSlash, type RspressPlugin } from '@rspress/core'
 
+import {
+  ACP_BASE,
+  normalizeVersion,
+  type DoomSite,
+} from '../../shared/index.js'
 import { baseResolve, pkgResolve } from '../../utils/index.js'
-import { normalizeVersion, type DoomSite } from '../../shared/index.js'
 
 const globalComponentsDir = baseResolve('global')
 const componentsDir = baseResolve('runtime/components')
@@ -16,6 +20,7 @@ export interface GlobalPluginOptions {
 
 export interface GlobalVirtual extends GlobalPluginOptions {
   userBase?: string
+  prefix?: string
   sites?: DoomSite[]
 }
 
@@ -54,12 +59,13 @@ export const globalPlugin = ({
         'doom-@global-virtual': `export default ${JSON.stringify(
           {
             userBase: config.userBase,
+            prefix: config.prefix,
             version: version === 'unversioned' ? undefined : version,
             download,
             sites: config.sites?.map((site) => ({
               ...site,
               base: addTrailingSlash(
-                site.base || (site.name === 'acp' ? '/container-platform' : ''),
+                site.base || (site.name === 'acp' ? ACP_BASE : ''),
               ),
               version: normalizeVersion(site.version),
             })),

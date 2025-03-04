@@ -80,8 +80,6 @@ export const SiteOverrides = () => {
       setNavBarSpans(logoText)
     })
   }, [logoText])
-
-  return null
 }
 
 export default SiteOverrides

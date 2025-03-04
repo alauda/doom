@@ -103,8 +103,8 @@ logoText:
 ```
 
 ```yaml title="versions.yaml"
-- v4.0
 - v4.1
+- v4.0
 ```
 
 ### 随产品发布的文档

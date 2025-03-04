@@ -1,3 +1,5 @@
+import type { SetOptional } from 'type-fest'
+
 export interface TermItem {
   en: string
   zh?: string
@@ -32,8 +34,10 @@ export type TermName = keyof typeof terms
 export type NamedTerms = Record<TermName, TermItem>
 
 export interface NamedTermItem extends TermItem {
-  name?: TermName
+  name: TermName
 }
+
+export type NormalizedTermItem = SetOptional<NamedTermItem, 'name'>
 
 export const namedTerms: NamedTerms = terms
 
@@ -47,4 +51,7 @@ export const namedTermItems: NamedTermItem[] = Object.keys(terms).map(
   },
 )
 
-export const allTermItems = [...namedTermItems, ...unnamedTermItems]
+export const allTermItems: NormalizedTermItem[] = [
+  ...namedTermItems,
+  ...unnamedTermItems,
+]

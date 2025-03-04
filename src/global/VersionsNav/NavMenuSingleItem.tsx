@@ -1,5 +1,9 @@
 import { Tag } from '@rspress/core/theme'
-import { withoutBase, type NavItemWithLink } from '@rspress/shared'
+import {
+  isExternalUrl,
+  withoutBase,
+  type NavItemWithLink,
+} from '@rspress/shared'
 import { useMemo, type ReactNode } from 'react'
 
 import styles from '../../../styles/versions-nav.module.scss'
@@ -33,7 +37,13 @@ export function NavMenuSingleItem({
   )
 
   return (
-    <a href={link} download={download}>
+    <a
+      key={link}
+      href={link}
+      download={download}
+      target={isExternalUrl(link) ? '_blank' : undefined}
+      rel="noopener noreferrer"
+    >
       <div
         className={`rspress-nav-menu-item ${styles.singleItem} ${
           isActive ? styles.activeItem : ''

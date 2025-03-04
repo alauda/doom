@@ -1,16 +1,18 @@
 import { useTranslation } from '@alauda/doom/runtime'
 import {
   isProduction,
+  NoSSR,
   removeTrailingSlash,
   useLang,
   usePageData,
 } from '@rspress/core/runtime'
+import type { NavItem } from '@rspress/shared'
 import { noop } from 'es-toolkit'
 import { useEffect, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { parse } from 'yaml'
 
-import { getPdfName } from '../../shared/index.js'
+import { ACP_BASE, getPdfName } from '../../shared/index.js'
 import { NavMenuGroup } from './NavMenuGroup.js'
 import { NavMenuSingleItem } from './NavMenuSingleItem.js'
 
@@ -23,7 +25,20 @@ const getNavMenu = () => {
   return document.querySelector('.rspress-nav-menu')
 }
 
-export const VersionsNav = () => {
+const LEGACY_VERSIONS = ['v3.18.1', 'v3.18.0', 'v3.16', 'v3.14']
+
+const LEGACY_NAV_ITEMS = LEGACY_VERSIONS.map((v) => ({
+  text: v,
+  link: `https://docs.alauda.io/document/release-notes?version=${v}`,
+}))
+
+const ALLOW_LEGACY_DOMAINS = ['docs.alauda.cn', 'docs.alauda.io']
+
+if (!isProduction()) {
+  ALLOW_LEGACY_DOMAINS.push('localhost')
+}
+
+const VersionsNav_ = () => {
   const { siteData } = usePageData()
 
   const lang = useLang()
@@ -61,16 +76,19 @@ export const VersionsNav = () => {
       const res = await fetch(
         `${isProduction() ? versionsBase : ''}/versions.yaml`,
       )
+      if (!res.ok) {
+        return
+      }
       const text = await res.text()
-      setNavMenu(getNavMenu())
       const versions = parse(text) as string[]
       if (version && !versions.includes(version)) {
         versions.unshift(version)
       }
       setVersions(versions)
+      setNavMenu(getNavMenu)
     }
 
-    fetchVersions().catch(noop)
+    void fetchVersions().catch(noop)
   }, [])
 
   // hack way to detect nav menu recreation on theme change
@@ -89,20 +107,25 @@ export const VersionsNav = () => {
     }
   }, [navMenu])
 
-  const versionItems = useMemo(
-    () =>
-      versions?.map((v) => ({
-        text: v,
-        link: `${versionsBase}/${v}/`,
-        activeMatch: v,
-      })),
-    [versionsBase, versions],
-  )
+  const navItems = useMemo(() => {
+    const versionItems: NavItem[] = (versions || []).map((v) => ({
+      text: v,
+      link: `${versionsBase}/${v}/`,
+      activeMatch: v,
+    }))
+    if (
+      ALLOW_LEGACY_DOMAINS.includes(location.hostname) &&
+      virtual.userBase === ACP_BASE
+    ) {
+      versionItems.push(...LEGACY_NAV_ITEMS)
+    }
+    return versionItems
+  }, [versionsBase, versions])
 
   let finalNavMenu: Element | null
 
   if (
-    (!versions?.length && !virtual.download) ||
+    (!navItems.length && !virtual.download) ||
     !(finalNavMenu = getNavMenu())
   ) {
     return
@@ -111,13 +134,17 @@ export const VersionsNav = () => {
   return createPortal(
     <>
       {downloadLink && (
-        <NavMenuSingleItem text={t('download')} link={downloadLink} download />
+        <NavMenuSingleItem
+          text={t('download_pdf')}
+          link={downloadLink}
+          download
+        />
       )}
-      {!versionItems?.length || (
+      {!navItems.length || (
         <NavMenuGroup
           text={version}
           base={versionsBase}
-          items={versionItems}
+          items={navItems}
           pathname={siteData.base}
         />
       )}
@@ -125,5 +152,11 @@ export const VersionsNav = () => {
     finalNavMenu,
   )
 }
+
+export const VersionsNav = () => (
+  <NoSSR>
+    <VersionsNav_ />
+  </NoSSR>
+)
 
 export default VersionsNav
