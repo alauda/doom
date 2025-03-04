@@ -35,7 +35,7 @@ export const resolveStaticConfig = async <T = unknown>(
 }
 
 export async function generateRuntimeModule<T, R = T>(
-  patterns: string[],
+  patterns: string[] = [],
   kind: string,
   root: string,
   cwd: string,
@@ -43,7 +43,7 @@ export async function generateRuntimeModule<T, R = T>(
   mapper?: (input: T) => R | Promise<R>,
 ) {
   const runtimeModules: StringMapper = {}
-  const files = await glob(patterns, { cwd })
+  const files = patterns.length ? await glob(patterns, { cwd }) : []
   for (const file of files) {
     const result = await resolveStaticConfig<T>(path.resolve(cwd, file))
     runtimeModules[`doom-@${kind}/${file}.mjs`] =
@@ -64,6 +64,3 @@ export async function generateRuntimeModule<T, R = T>(
 export const setNodeEnv = (env: 'development' | 'production') => {
   process.env.NODE_ENV = env
 }
-
-export const removeBothEndsSlashes = (str: string) =>
-  str.replace(/^\/|\/$/g, '')

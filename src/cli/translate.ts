@@ -10,11 +10,13 @@ import { pRateLimit } from 'p-ratelimit'
 import { cyan } from 'yoctocolors'
 
 import {
+  mdProcessor,
+  mdxProcessor,
   normalizeImgSrc,
   type NormalizeImgSrcOptions,
-} from '../plugins/replace/normalize-img-src.js'
-import { mdProcessor, mdxProcessor } from '../plugins/replace/utils.js'
-import { pathExists, type GlobalCliOptions } from '../utils/index.js'
+} from '../plugins/index.js'
+import type { GlobalCliOptions } from '../types.js'
+import { pathExists } from '../utils/index.js'
 import { loadConfig } from './load-config.js'
 
 export interface I18nFrontmatter {

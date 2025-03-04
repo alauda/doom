@@ -1,3 +1,3 @@
-import type { DoomConfig } from './utils/index.js'
+import type { Config } from '@rspress/core'
 
-export const defineConfig = (config: DoomConfig) => config
+export const defineConfig = (config: Config) => config

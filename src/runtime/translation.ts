@@ -14,6 +14,7 @@ const en = {
   description: 'Description',
   chinese_bad_cases: 'Chinese Bad Cases',
   english_bad_cases: 'English Bad Cases',
+  download: 'Download PDF',
 }
 
 const zh: typeof en = {
@@ -32,6 +33,7 @@ const zh: typeof en = {
   description: '描述',
   chinese_bad_cases: '中文反例',
   english_bad_cases: '英文反例',
+  download: '下载 PDF',
 }
 
 export const TRANSLATIONS = { en, zh }

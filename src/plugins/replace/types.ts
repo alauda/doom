@@ -1,4 +1,4 @@
-import type { ContentProcessor } from '../../utils/types.js'
+import type { ContentProcessor } from '../../types.js'
 
 export interface ReferenceItemSource {
   name: string

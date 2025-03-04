@@ -1,7 +1,6 @@
+import { useSiteOverrides } from '@alauda/doom/runtime'
 import { usePageData } from '@rspress/core/runtime'
-import { type FC, useEffect } from 'react'
-
-import { useSiteOverrides } from '../../runtime/hooks/index.js'
+import { useEffect } from 'react'
 
 const setNavBarSpans = (logoText: string) => {
   const navBarLinks = document.querySelectorAll('[class^=navBarTitle] > a')
@@ -33,7 +32,7 @@ const concatTitle = (title: string, suffix?: string) => {
   return `${title} ${suffix}`
 }
 
-export const SiteOverrides: FC = () => {
+export const SiteOverrides = () => {
   const { siteData, page } = usePageData()
   const {
     pageType,

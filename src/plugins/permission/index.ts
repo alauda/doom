@@ -8,6 +8,8 @@ import type {
   RoleTemplate,
 } from './types.js'
 
+export type * from './types.js'
+
 // @internal
 declare module 'doom-@permission-functionResourcesMap' {
   const functionResourcesMap: Record<string, FunctionResource[]>
@@ -20,8 +22,6 @@ declare module 'doom-@permission-roleTemplatesMap' {
 
 export const permissionPlugin = ({
   localBasePath,
-  functionresources = [],
-  roletemplates = [],
 }: PermissionPluginOptions): RspressPlugin => {
   return {
     name: 'doom-permission',
@@ -31,7 +31,7 @@ export const permissionPlugin = ({
           K8sTypeList<FunctionResource>,
           FunctionResource[]
         >(
-          functionresources,
+          config.permission?.functionresources,
           'permission-functionResources',
           config.root!,
           localBasePath,
@@ -42,7 +42,7 @@ export const permissionPlugin = ({
           K8sTypeList<RoleTemplate>,
           RoleTemplate[]
         >(
-          roletemplates,
+          config.permission?.roletemplates,
           'permission-roleTemplates',
           config.root!,
           localBasePath,

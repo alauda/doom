@@ -7,7 +7,7 @@ import type {
   FunctionResource,
   RoleTemplate,
   RoleTemplateRuleVerb,
-} from '../../plugins/permission/types.js'
+} from '../../plugins/index.js'
 import { useTranslation } from '../hooks/index.js'
 
 import functionResourcesMap from 'doom-@permission-functionResourcesMap'

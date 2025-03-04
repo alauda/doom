@@ -1,24 +1,19 @@
 import path from 'node:path'
 
+import { removeLeadingSlash, serve } from '@rspress/core'
+import { logger } from '@rspress/shared/logger'
+import { Command } from 'commander'
+
+import { autoSidebar, type DoomSidebar } from '../plugins/index.js'
+import { getPdfName } from '../shared/index.js'
+import type { GlobalCliOptions, ServeOptions } from '../types.js'
+import { pathExists, setNodeEnv } from '../utils/index.js'
 import {
   generatePdf,
   type GeneratePdfOptions,
   type Page,
 } from './export-pdf-core/index.js'
-import { removeLeadingSlash, serve } from '@rspress/core'
-import { logger } from '@rspress/shared/logger'
-import { Command } from 'commander'
-
-import { autoSidebar } from '../plugins/index.js'
-import {
-  pathExists,
-  removeBothEndsSlashes,
-  setNodeEnv,
-  type GlobalCliOptions,
-  type ServeOptions,
-} from '../utils/index.js'
 import { loadConfig } from './load-config.js'
-import type { DoomSidebar } from '../plugins/auto-sidebar/walk.js'
 
 export const exportCommand = new Command('export')
   .description('Export the documentation as PDF')
@@ -32,8 +27,6 @@ export const exportCommand = new Command('export')
       ServeOptions & GlobalCliOptions
     >()
 
-    const { base } = globalOptions
-
     let { config } = await loadConfig(root, globalOptions)
 
     const outDir = config.outDir!
@@ -44,7 +37,6 @@ export const exportCommand = new Command('export')
     }
 
     config = await autoSidebar(config, {
-      ...config.sidebar,
       excludeRoutes: (globalOptions.ignore && config.internalRoutes) || [],
     })
 
@@ -115,7 +107,7 @@ export const exportCommand = new Command('export')
     ) => {
       await generatePdf({
         pages: collectPages(sidebarItems),
-        outFile: `${removeBothEndsSlashes(base || config.base!) || config.title}-${lang}.pdf`,
+        outFile: getPdfName(lang, config.userBase, config.title),
         ...commonOptions,
       })
     }

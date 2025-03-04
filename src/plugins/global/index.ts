@@ -3,27 +3,31 @@ import path from 'node:path'
 
 import { addTrailingSlash, type RspressPlugin } from '@rspress/core'
 
-import type { DoomSite } from '../../shared/types.js'
 import { baseResolve, pkgResolve } from '../../utils/index.js'
-import { normalizeVersion } from '../../shared/helpers.js'
+import { normalizeVersion, type DoomSite } from '../../shared/index.js'
 
 const globalComponentsDir = baseResolve('global')
 const componentsDir = baseResolve('runtime/components')
 
 export interface GlobalPluginOptions {
-  sites?: DoomSite[]
   version?: string
+  download?: boolean
+}
+
+export interface GlobalVirtual extends GlobalPluginOptions {
+  userBase?: string
+  sites?: DoomSite[]
 }
 
 // @internal
 declare module 'doom-@global-virtual' {
-  const virtual: GlobalPluginOptions
+  const virtual: GlobalVirtual
 }
 
 export const globalPlugin = ({
-  sites,
   version,
-}: GlobalPluginOptions = {}): RspressPlugin => {
+  download,
+}: GlobalPluginOptions): RspressPlugin => {
   return {
     name: 'doom-global',
     globalStyles: pkgResolve('styles/global.scss'),
@@ -45,18 +49,20 @@ export const globalPlugin = ({
         })
         .map((file) => path.resolve(componentsDir, file)),
     },
-    addRuntimeModules(_, isProd) {
+    addRuntimeModules(config, isProd) {
       return {
         'doom-@global-virtual': `export default ${JSON.stringify(
           {
-            sites: sites?.map((site) => ({
+            userBase: config.userBase,
+            version: version === 'unversioned' ? undefined : version,
+            download,
+            sites: config.sites?.map((site) => ({
               ...site,
               base: addTrailingSlash(
                 site.base || (site.name === 'acp' ? '/container-platform' : ''),
               ),
               version: normalizeVersion(site.version),
             })),
-            version: version === 'unversioned' ? undefined : version,
           },
           null,
           isProd ? 0 : 2,

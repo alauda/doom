@@ -4,11 +4,11 @@ import path from 'node:path'
 import { nodeTypes } from '@mdx-js/mdx'
 import {
   type LocaleConfig,
+  type UserConfig,
   addLeadingSlash,
   addTrailingSlash,
   normalizeSlash,
   removeLeadingSlash,
-  removeTrailingSlash,
 } from '@rspress/core'
 import { logger } from '@rspress/shared/logger'
 import {
@@ -35,12 +35,8 @@ import {
   shikiPlugin,
 } from '../plugins/index.js'
 import { type DoomSite, normalizeVersion } from '../shared/index.js'
-import {
-  type DoomConfig,
-  type GlobalCliOptions,
-  pkgResolve,
-  resolveStaticConfig,
-} from '../utils/index.js'
+import type { GlobalCliOptions } from '../types.js'
+import { pkgResolve, resolveStaticConfig } from '../utils/index.js'
 import {
   CWD,
   DEFAULT_CONFIG_NAME,
@@ -61,21 +57,42 @@ const zhLocaleConfig: Omit<LocaleConfig, 'lang' | 'label'> = {
   nextPageText: '下一页',
 }
 
-const getCommonConfig = (
-  config: DoomConfig,
-  cliRoot?: string,
-  configFilePath?: string,
-  version?: string,
-  ignore?: boolean,
-  force?: boolean,
-): DoomConfig => {
+const getCommonConfig = ({
+  config,
+  root,
+  configFilePath,
+  base,
+  version,
+  download,
+  ignore,
+  force,
+}: {
+  config: UserConfig
+  configFilePath?: string
+  root?: string
+  base?: string
+  version?: string
+  download?: boolean
+  ignore?: boolean
+  force?: boolean
+}): UserConfig => {
   const fallbackToZh = 'lang' in config && !config.lang
-  const root = resolveDocRoot(CWD, cliRoot, config.root)
+  root = resolveDocRoot(CWD, root, config.root)
   const localBasePath = configFilePath ? path.dirname(configFilePath) : root
   const excludeRoutes = (ignore && config.internalRoutes) || []
 
+  const userBase = (base = addLeadingSlash(
+    addTrailingSlash(base || config.base || '/'),
+  ))
+
+  if (version && version !== 'unversioned') {
+    base = userBase + `${version}/`
+  }
+
   return {
+    userBase,
     root,
+    base: addTrailingSlash(base),
     lang: fallbackToZh ? 'zh' : config.lang || 'en',
     title: '',
     route: {
@@ -111,30 +128,21 @@ const getCommonConfig = (
     },
     plugins: [
       apiPlugin({
-        ...config.api,
         localBasePath,
       }),
       autoSidebarPlugin({
-        ...config.sidebar,
         excludeRoutes,
       }),
       directivesPlugin(),
-      globalPlugin({
-        sites: config.sites,
-        version,
-      }),
+      globalPlugin({ version, download }),
       mermaidPlugin(),
       permissionPlugin({
-        ...config.permission,
         localBasePath,
       }),
       replacePlugin({
-        root,
         lang: fallbackToZh ? null : (config.lang ?? 'en'),
         localBasePath,
-        items: config.reference,
         force,
-        releaseNotes: config.releaseNotes,
       }),
       shikiPlugin({
         langs: ['dockerfile', 'dotenv', 'html', 'go', 'jsonc', 'mermaid'],
@@ -182,11 +190,12 @@ export async function loadConfig(
     base,
     prefix,
     v: version,
+    download,
     ignore,
     force,
   }: GlobalCliOptions = {},
 ): Promise<{
-  config: DoomConfig
+  config: UserConfig
   filepath?: string
 }> {
   let configFilePath: string | undefined
@@ -206,7 +215,7 @@ export async function loadConfig(
     }
   }
 
-  let config: DoomConfig | undefined | null
+  let config: UserConfig | undefined | null
 
   const { loadConfig, mergeRsbuildConfig } = await import('@rsbuild/core')
 
@@ -219,13 +228,13 @@ export async function loadConfig(
           path.extname(configFilePath),
         )
       ) {
-        config = await resolveStaticConfig<DoomConfig>(configFilePath)
+        config = await resolveStaticConfig<UserConfig>(configFilePath)
       } else {
         const { content } = await loadConfig({
           cwd: path.dirname(configFilePath),
           path: configFilePath,
         })
-        config = content as DoomConfig
+        config = content as UserConfig
       }
     } catch {
       logger.error(`Failed to load config from ${configFilePath}`)
@@ -245,29 +254,26 @@ export async function loadConfig(
 
   const normalizedVersion = normalizeVersion(version)
 
-  const commonConfig = getCommonConfig(
+  const commonConfig = getCommonConfig({
     config,
-    root,
     configFilePath,
-    normalizedVersion,
+    root,
+    base,
+    version: normalizedVersion,
+    download,
     ignore,
     force,
-  )
+  })
+
+  base = commonConfig.base
 
   const mergedConfig = mergeRsbuildConfig(commonConfig, config, {
+    base,
     lang: commonConfig.lang,
     root: commonConfig.root,
   })
 
-  base = addLeadingSlash(base || mergedConfig.base || '/')
-
-  if (normalizedVersion && normalizedVersion !== 'unversioned') {
-    base = removeTrailingSlash(base) + `/${normalizedVersion}`
-  }
-
-  mergedConfig.base = base = addTrailingSlash(base)
-
-  if (prefix) {
+  if (base && prefix) {
     mergedConfig.base = normalizeSlash(prefix) + base
   }
 

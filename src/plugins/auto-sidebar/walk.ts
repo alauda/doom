@@ -3,6 +3,7 @@ import path from 'node:path'
 
 import {
   isExternalUrl,
+  type NavItem,
   removeLeadingSlash,
   removeTrailingSlash,
   type SidebarDivider,
@@ -345,8 +346,10 @@ export async function walk(
     sidebarConfig[simpleRoutePrefix] = sidebars
   }
 
+  const nav: NavItem[] = []
+
   return {
-    nav: [],
+    nav,
     sidebar: sidebarConfig,
   }
 }

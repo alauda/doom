@@ -21,7 +21,7 @@ export const extractTextAndId = (title: string) => {
   return [text, customId]
 }
 
-export const normalizeReferenceItems = (items: ReferenceItem[]) =>
+export const normalizeReferenceItems = (items: ReferenceItem[] = []) =>
   items.reduce<Record<string, NormalizedReferenceSource>>((acc, curr) => {
     for (const source of curr.sources) {
       if (source.name in acc) {

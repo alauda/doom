@@ -1,14 +1,18 @@
+import { useTranslation } from '@alauda/doom/runtime'
 import {
   isProduction,
   removeTrailingSlash,
+  useLang,
   usePageData,
 } from '@rspress/core/runtime'
 import { noop } from 'es-toolkit'
-import { type FC, useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { parse } from 'yaml'
 
+import { getPdfName } from '../../shared/index.js'
 import { NavMenuGroup } from './NavMenuGroup.js'
+import { NavMenuSingleItem } from './NavMenuSingleItem.js'
 
 import virtual from 'doom-@global-virtual'
 
@@ -19,8 +23,20 @@ const getNavMenu = () => {
   return document.querySelector('.rspress-nav-menu')
 }
 
-export const VersionsNav: FC = () => {
+export const VersionsNav = () => {
   const { siteData } = usePageData()
+
+  const lang = useLang()
+
+  const t = useTranslation()
+
+  const downloadLink = useMemo(() => {
+    if (!virtual.download) {
+      return
+    }
+
+    return siteData.base + getPdfName(lang, virtual.userBase, siteData.title)
+  }, [lang, siteData.base, siteData.title])
 
   const [versionsBase, version] = useMemo(() => {
     if (!virtual.version) {
@@ -73,21 +89,34 @@ export const VersionsNav: FC = () => {
     }
   }, [navMenu])
 
-  if (!versions?.length) {
+  const versionItems = useMemo(
+    () =>
+      versions?.map((v) => ({
+        text: v,
+        link: `${versionsBase}/${v}/`,
+        activeMatch: v,
+      })),
+    [versionsBase, versions],
+  )
+
+  if (!versions?.length && !virtual.download) {
     return null
   }
 
   return createPortal(
-    <NavMenuGroup
-      text={version}
-      base={versionsBase}
-      items={versions.map((v) => ({
-        text: v,
-        link: `${versionsBase}/${v}/`,
-        activeMatch: v,
-      }))}
-      pathname={siteData.base}
-    />,
+    <>
+      {downloadLink && (
+        <NavMenuSingleItem text={t('download')} link={downloadLink} download />
+      )}
+      {!versionItems?.length || (
+        <NavMenuGroup
+          text={version}
+          base={versionsBase}
+          items={versionItems}
+          pathname={siteData.base}
+        />
+      )}
+    </>,
     getNavMenu()!,
   )
 }

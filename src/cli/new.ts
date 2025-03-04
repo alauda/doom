@@ -8,9 +8,8 @@ import { render } from 'ejs'
 import { glob } from 'tinyglobby'
 import { cyan, magenta } from 'yoctocolors'
 
-import { resolveStaticConfig } from '../utils/helpers.js'
-import type { ContentProcessor } from '../utils/types.js'
-import { resolveRepo } from '../utils/index.js'
+import type { ContentProcessor } from '../types.js'
+import { resolveRepo, resolveStaticConfig } from '../utils/index.js'
 
 export const DEFAULT_PATH = 'templates/scaffolding.yaml'
 

@@ -13,16 +13,13 @@ import { type FSWatcher, watch } from 'chokidar'
 import { type Command, program } from 'commander'
 import { green } from 'yoctocolors'
 
+import type { GlobalCliOptions, ServeOptions } from '../types.js'
+import { setNodeEnv } from '../utils/index.js'
 import { CWD, DEFAULT_CONFIGS, I18N_FILE, SITES_FILE } from './constants.js'
+import { exportCommand } from './export.js'
 import { loadConfig } from './load-config.js'
 import { newCommand } from './new.js'
 import { translateCommand } from './translate.js'
-import { exportCommand } from './export.js'
-import {
-  type GlobalCliOptions,
-  type ServeOptions,
-  setNodeEnv,
-} from '../utils/index.js'
 
 const META_FILE = '_meta.json'
 
@@ -58,6 +55,12 @@ program
   .option(
     '-i, --ignore [boolean]',
     'Ignore internal routes',
+    (value) => !!value && value !== 'false',
+    false,
+  )
+  .option(
+    '-d, --download [boolean]',
+    'Display download pdf link on nav bar',
     (value) => !!value && value !== 'false',
     false,
   )

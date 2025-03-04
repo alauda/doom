@@ -1,4 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/triple-slash-reference
+/// <reference path="../../shim.d.ts" />
+// eslint-disable-next-line @typescript-eslint/triple-slash-reference
 /// <reference path="../../global.d.ts" preserve="true" />
 
 export * from '../terms.js'

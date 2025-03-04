@@ -6,14 +6,17 @@ import {
   type NavItemWithLinkAndChildren,
   withoutBase,
 } from '@rspress/shared'
-import { useState } from 'react'
+import { useState, type ReactNode } from 'react'
 
 import { SvgDown } from './Down.js'
-import { NavMenuSingleItem } from './NavMenuSingleItem.js'
+import {
+  NavMenuSingleItem,
+  type NavMenuSingleItemProps,
+} from './NavMenuSingleItem.js'
 import { SvgWrapper } from './SvgWrapper.js'
 
 export interface NavMenuGroupItem {
-  text?: string | React.ReactElement
+  text?: string | ReactNode
   link?: string
   items: NavItem[]
   tag?: string
@@ -63,13 +66,7 @@ function NormalGroupItem({ item }: { item: NavItemWithLink }) {
 }
 
 export function NavMenuGroup(item: NavMenuGroupItem) {
-  const {
-    activeValue,
-    items: groupItems,
-    base = '',
-    link = '',
-    pathname = '',
-  } = item
+  const { activeValue, items: groupItems, base = '', pathname = '' } = item
   const [isOpen, setIsOpen] = useState(false)
   const renderLinkItem = (item: NavItemWithLink) => {
     const isLinkActive = new RegExp(item.activeMatch || item.link).test(
@@ -86,7 +83,7 @@ export function NavMenuGroup(item: NavMenuGroupItem) {
     return (
       <div>
         {'link' in item ? (
-          renderLinkItem(item as NavItemWithLink)
+          renderLinkItem(item)
         ) : (
           <p className="font-bold text-gray-400 my-1 not:first:border">
             {item.text}
@@ -109,10 +106,9 @@ export function NavMenuGroup(item: NavMenuGroupItem) {
         }}
         className="rspress-nav-menu-group-button flex-center items-center font-medium text-sm text-text-1 hover:text-text-2 transition-colors duration-200"
       >
-        {link ? (
-          // @ts-expect-error item.text may be ReactElement
+        {item.link ? (
           <NavMenuSingleItem
-            {...item}
+            {...(item as NavMenuSingleItemProps)}
             rightIcon={<SvgWrapper icon={SvgDown} />}
           />
         ) : (

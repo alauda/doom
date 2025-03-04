@@ -1,6 +1,6 @@
 import fs from 'node:fs/promises'
 
-import type { RspressPlugin } from '@rspress/core'
+import type { RspressPlugin, UserConfig } from '@rspress/core'
 import { logger } from '@rspress/shared/logger'
 
 import { remarkExplicitJsx } from './remark-explicit-jsx.js'
@@ -9,42 +9,46 @@ import {
   MDX_RELEASE_COMMENT_PATTERN,
   remarkReplace,
 } from './remark-replace.js'
-import type { ReferenceItem, ReleaseNotesOptions } from './types.js'
 import { mdProcessor, mdxProcessor, normalizeReferenceItems } from './utils.js'
+import type { NormalizedReferenceSource } from './types.js'
+
+export * from './normalize-img-src.js'
+export type * from './types.js'
+export * from './utils.js'
 
 export const replacePlugin = ({
-  root,
   lang,
   localBasePath,
-  items = [],
   force,
-  releaseNotes,
 }: {
-  root: string
   lang: string | null
   localBasePath: string
-  items?: ReferenceItem[]
   force?: boolean
-  releaseNotes?: ReleaseNotesOptions
 }): RspressPlugin => {
-  const normalizedItems = normalizeReferenceItems(items)
+  let userConfig: UserConfig
+  let normalizedItems: Record<string, NormalizedReferenceSource>
   return {
     name: 'doom-replace',
-    markdown: {
-      remarkPlugins: [
+    config(config) {
+      config.markdown = config.markdown ?? {}
+      config.markdown.remarkPlugins = config.markdown.remarkPlugins ?? []
+      config.markdown.remarkPlugins.push(
         [
           remarkReplace,
           {
             lang,
             localBasePath,
-            root,
-            items: normalizedItems,
-            releaseNotes,
+            root: config.root,
+            items: (normalizedItems = normalizeReferenceItems(
+              config.reference,
+            )),
+            releaseNotes: config.releaseNotes,
             force,
           },
         ],
         remarkExplicitJsx,
-      ],
+      )
+      return (userConfig = config)
     },
     async modifySearchIndexData(pages) {
       const results = await Promise.allSettled(
@@ -71,10 +75,10 @@ export const replacePlugin = ({
           const compiler = processor().data('pageMeta', {}).use(remarkReplace, {
             lang,
             localBasePath,
-            root,
-            items: normalizedItems,
+            root: userConfig.root!,
+            items: normalizedItems!,
             force,
-            releaseNotes,
+            releaseNotes: userConfig.releaseNotes,
           })
 
           const vfile = await compiler.process({

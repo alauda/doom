@@ -8,6 +8,9 @@ import path from 'node:path'
 import { combineWalkResult } from './utils.js'
 import { walk } from './walk.js'
 
+export type * from './walk.js'
+export type * from './type.js'
+
 // Scan all the directories and files in the work directory(such as `docs`), and then generate the nav and sidebar configuration according to the directory structure.
 // We will do as follows:
 // 1. scan the directory structure, and extract all the `_meta.json` files.
@@ -209,7 +212,7 @@ export interface AutoSidebarPluginOptions {
 
 export const autoSidebar = async (
   config: UserConfig,
-  { excludeRoutes, collapsed }: AutoSidebarPluginOptions,
+  { excludeRoutes }: AutoSidebarPluginOptions,
 ) => {
   config.themeConfig = config.themeConfig || {}
   config.themeConfig.locales =
@@ -221,6 +224,7 @@ export const autoSidebar = async (
   const defaultLang = config.lang || ''
   const { default: defaultVersion = '' } = config.multiVersion || {}
   const { extensions = defaultExtensions } = config.route || {}
+  const collapsed = config.sidebar?.collapsed
   if (hasLocales) {
     const metaInfo = await processLocales(
       langs,
