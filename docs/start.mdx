@@ -27,7 +27,10 @@ mkdir docs/zh && echo '# 你好世界' > docs/zh/index.md
   "scripts": {
     "dev": "doom dev",
     "build": "doom build",
-    "serve": "doom serve"
+    "new": "doom new",
+    "serve": "doom serve",
+    "translate": "doom translate",
+    "export": "doom export"
   }
 }
 ```
@@ -99,23 +102,40 @@ Commands:
 
 ### 启动开发服务 \{#dev}
 
-执行 `yarn doom dev` 启动开发服务，浏览器会自动打开文档首页
+执行 `yarn dev` 启动开发服务，浏览器会自动打开文档首页
 
 ### 生产环境构建 \{#build}
 
-执行 `yarn doom build` 构建生产环境代码，构建完成后会在 `dist` 目录生成静态文件
+执行 `yarn build` 构建生产环境代码，构建完成后会在 `dist` 目录生成静态文件
 
 ### 本地预览 \{#serve}
 
-执行 `yarn doom serve` 预览构建后的静态文件，注意如果使用了 `-b`, `-p` 参数构建，预览时也需要使用 `-b`, `-p` 参数
+执行 `yarn serve` 预览构建后的静态文件，注意如果使用了 `-b`, `-p` 参数构建，预览时也需要使用 `-b`, `-p` 参数
 
 ### 使用脚手架模板 \{#new}
 
-执行 `yarn doom new` 使用脚手架模板生成项目、模块或文档
+执行 `yarn new` 使用脚手架模板生成项目、模块或文档
 
 ### 翻译文档 \{#translate}
 
-执行 `yarn doom translate` 将 `<root>/zh` 中文文档自动翻译到 `<root>/en`
+```bash
+doom translate -h
+
+# output
+Usage: doom translate [options] [root]
+
+Translate the documentation
+
+Arguments:
+  root                     Root directory of the documentation
+
+Options:
+  -s, --source <language>  Document source language (default: "zh")
+  -t, --target <language>  Document target language (default: "en")
+  -h, --help               display help for command
+```
+
+执行 `yarn translate` 将 `<root>/<source>` 源语言文档自动翻译到 `<root>/<target>` 目标语言文档
 
 :::warning
 目前需要在本地配置 `AZURE_OPENAI_API_KEY` 环境变量，请联系 IDP 文档团队获取
@@ -137,10 +157,10 @@ title: DevOps 连接器
 ### 导出 PDF \{#export}
 
 :::warning
-请在执行导出操作前先执行 `yarn doom build` 构建操作
+请在执行导出操作前先执行 `yarn build` 构建操作
 :::
 
-执行 `yarn doom export` 导出文档为 PDF 文件，注意如果使用了 `-b`, `-p` 参数构建，导出时也需要使用 `-b`, `-p` 参数
+执行 `yarn export` 导出文档为 PDF 文件，注意如果使用了 `-b`, `-p` 参数构建，导出时也需要使用 `-b`, `-p` 参数
 
 导出功能依赖 [`playwright`](https://playwright.dev)，流水线请使用 `build-harbor.alauda.cn/frontend/playwright-runner:doom` 作为依赖安装和文档构建的基础镜像，
 本地可以设置如下环境变量加速下载：
