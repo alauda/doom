@@ -15,6 +15,7 @@ export type ServeOptions = Omit<BaseServeOptions, 'config'>
 
 export interface GlobalCliOptions {
   config?: string
+  base?: string
   prefix?: string
   v?: string
   ignore?: boolean

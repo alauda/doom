@@ -44,6 +44,7 @@ program
   })
   .option('-c, --config <config>', 'Specify the path to the config file')
   .option('-v <version>', 'Specify the version of the documentation')
+  .option('-b, --base <base>', 'Override the base of the documentation')
   .option(
     '-p, --prefix <prefix>',
     'Specify the prefix of the documentation base',

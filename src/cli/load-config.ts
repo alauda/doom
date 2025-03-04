@@ -179,6 +179,7 @@ export async function loadConfig(
   root?: string,
   {
     config: configFile,
+    base,
     prefix,
     v: version,
     ignore,
@@ -258,7 +259,7 @@ export async function loadConfig(
     root: commonConfig.root,
   })
 
-  let base = addLeadingSlash(mergedConfig.base || '/')
+  base = addLeadingSlash(base || mergedConfig.base || '/')
 
   if (normalizedVersion && normalizedVersion !== 'unversioned') {
     base = removeTrailingSlash(base) + `/${normalizedVersion}`

@@ -81,6 +81,7 @@ Options:
   -V, --version                   output the version number
   -c, --config <config>           Specify the path to the config file
   -v <version>                    Specify the version of the documentation
+  -b, --base <base>               Override the base of the documentation
   -p, --prefix <prefix>           Specify the prefix of the documentation base
   -f, --force [boolean]           Force to fetch latest reference remotes or scaffolding templates, otherwise use local cache (default: false)
   -i, --ignore [boolean]          Ignore internal routes (default: false)
@@ -106,7 +107,7 @@ Commands:
 
 ### 本地预览 \{#serve}
 
-执行 `yarn doom serve` 预览构建后的静态文件，注意如果使用了 `-p` 参数构建，预览时也需要使用 `-p` 参数
+执行 `yarn doom serve` 预览构建后的静态文件，注意如果使用了 `-b`, `-p` 参数构建，预览时也需要使用 `-b`, `-p` 参数
 
 ### 使用脚手架模板 \{#new}
 
@@ -139,7 +140,7 @@ title: DevOps 连接器
 请在执行导出操作前先执行 `yarn doom build` 构建操作
 :::
 
-执行 `yarn doom export` 导出文档为 PDF 文件，注意如果使用了 `-p` 参数构建，导出时也需要使用 `-p` 参数
+执行 `yarn doom export` 导出文档为 PDF 文件，注意如果使用了 `-b`, `-p` 参数构建，导出时也需要使用 `-b`, `-p` 参数
 
 导出功能依赖 [`playwright`](https://playwright.dev)，流水线请使用 `build-harbor.alauda.cn/frontend/playwright-runner:doom` 作为依赖安装和文档构建的基础镜像，
 本地可以设置如下环境变量加速下载：
