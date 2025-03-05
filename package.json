@@ -1,13 +1,13 @@
 {
   "name": "@alauda/doom",
-  "version": "0.14.5",
+  "version": "0.14.6",
   "type": "module",
   "description": "Doctor Doom making docs.",
   "repository": {
     "type": "git",
     "url": "git+https://gitlab-ce.alauda.cn/idp/Doom.git"
   },
-  "packageManager": "yarn@4.6.0",
+  "packageManager": "yarn@4.7.0",
   "engines": {
     "node": ">=18.17.0 <20 || >=20.1.0"
   },
@@ -73,14 +73,14 @@
     "simple-git": "^3.27.0",
     "swagger2openapi": "^7.0.8",
     "tinyglobby": "^0.2.12",
-    "type-fest": "^4.36.0",
+    "type-fest": "^4.37.0",
     "yaml": "^2.7.0",
     "yoctocolors": "^2.1.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
     "@swc-node/register": "^1.10.9",
-    "@swc/core": "1.11.5",
+    "@swc/core": "1.11.7",
     "@types/cli-progress": "^3.11.6",
     "@types/ejs": "^3.1.5",
     "@types/fs-extra": "^11.0.4",

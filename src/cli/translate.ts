@@ -7,6 +7,7 @@ import { Command } from 'commander'
 import matter from 'gray-matter'
 import { AzureOpenAI } from 'openai'
 import { pRateLimit } from 'p-ratelimit'
+import { glob } from 'tinyglobby'
 import { cyan } from 'yoctocolors'
 
 import {
@@ -15,6 +16,7 @@ import {
   normalizeImgSrc,
   type NormalizeImgSrcOptions,
 } from '../plugins/index.js'
+import { isDoc } from '../shared/index.js'
 import type { GlobalCliOptions } from '../types.js'
 import { pathExists } from '../utils/index.js'
 import { loadConfig } from './load-config.js'
@@ -129,9 +131,15 @@ export const translateCommand = new Command('translate')
   .argument('[root]', 'Root directory of the documentation')
   .option('-s, --source <language>', 'Document source language', 'zh')
   .option('-t, --target <language>', 'Document target language', 'en')
+  .option('-g, --glob <path...>', 'Glob pattern for source files')
   .action(async function (root?: string) {
-    const { source, target, ...globalOptions } = this.optsWithGlobals<
-      { source: string; target: string } & GlobalCliOptions
+    const {
+      source,
+      target,
+      glob: globs,
+      ...globalOptions
+    } = this.optsWithGlobals<
+      { source: string; target: string; glob?: string[] } & GlobalCliOptions
     >()
 
     if (
@@ -159,23 +167,44 @@ export const translateCommand = new Command('translate')
       return
     }
 
-    const dirents = await fs.readdir(sourceDir, {
-      recursive: true,
-      withFileTypes: true,
-    })
+    let sourceFilePaths: string[]
+
+    if (globs?.length) {
+      sourceFilePaths = await glob(
+        globs.map((g) =>
+          g.split('/').at(-1)!.includes('.') ? g : `${g}.md{,x}`,
+        ),
+        {
+          absolute: true,
+          cwd: sourceDir,
+        },
+      )
+    } else {
+      const dirents = await fs.readdir(sourceDir, {
+        recursive: true,
+        withFileTypes: true,
+      })
+      sourceFilePaths = dirents.reduce<string[]>((acc, d) => {
+        if (!d.isFile() || !isDoc(d.name)) {
+          return acc
+        }
+        acc.push(
+          path.resolve(
+            d.parentPath ||
+              // eslint-disable-next-line @typescript-eslint/no-deprecated
+              d.path,
+            d.name,
+          ),
+        )
+        return acc
+      }, [])
+    }
 
     await Promise.all(
-      dirents.map(async (d) => {
-        if (!d.isFile() || !/\.mdx?$/.test(d.name)) {
+      sourceFilePaths.map(async (sourceFilePath) => {
+        if (!isDoc(sourceFilePath)) {
           return
         }
-
-        const sourceFilePath = path.resolve(
-          d.parentPath ||
-            // eslint-disable-next-line @typescript-eslint/no-deprecated
-            d.path,
-          d.name,
-        )
 
         const sourceContent = await fs.readFile(sourceFilePath, 'utf-8')
 

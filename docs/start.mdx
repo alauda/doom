@@ -133,10 +133,14 @@ Arguments:
 Options:
   -s, --source <language>  Document source language (default: "zh")
   -t, --target <language>  Document target language (default: "en")
+  -g, --glob <path...>     Glob pattern for source files
   -h, --help               display help for command
 ```
 
-执行 `yarn translate` 将 `<root>/<source>` 源语言文档自动翻译到 `<root>/<target>` 目标语言文档
+`-g, --glob` 参数可以指定需要翻译的文件路径，支持 `glob` 语法（`.md,.mdx` 后缀可省略），注意参数值必须带引号否则会被命令行解析造成非预期行为
+
+例如 `yarn translate -g 'abc/**/*' 'xyz/**/*'`，将在 `<root>/<source>/abc`, `<root>/<source>/xyz`
+目录下的所有文件翻译到 `<root>/<target>/abc`, `<root>/<target>/xyz` 目录下，未指定时默认翻译整个 `<root>/<source>` 目录
 
 :::warning
 目前需要在本地配置 `AZURE_OPENAI_API_KEY` 环境变量，请联系 IDP 文档团队获取
