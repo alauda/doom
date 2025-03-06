@@ -18,7 +18,11 @@ export interface NormalizeImgSrcOptions {
   sourceBase: string
   targetBase: string
   force?: boolean
-  translating?: readonly [string, string]
+  translating?: {
+    source: string
+    target: string
+    copy?: boolean
+  }
 }
 
 export const normalizeImgSrc = (
@@ -46,8 +50,10 @@ export const normalizeImgSrc = (
         '_remotes',
         refSource.name,
       )
+
       let sourcePath: string
       let imageSrc: string
+
       if (RELATIVE_URL_PATTERN.test(src)) {
         sourcePath = path.resolve(sourceBase, src)
         imageSrc = path.relative(sourceBase, sourcePath)
@@ -58,38 +64,66 @@ export const normalizeImgSrc = (
 
       const targetPath = path.resolve(targetDir, imageSrc)
 
-      fs.mkdirSync(path.dirname(targetPath), { recursive: true })
-
       if (force || !fs.existsSync(targetPath)) {
+        fs.mkdirSync(path.dirname(targetPath), { recursive: true })
         fs.copyFileSync(sourcePath, targetPath)
       }
 
       return `/_remotes/${refSource.name}/${imageSrc}`
     } else if (!RELATIVE_URL_PATTERN.test(src)) {
       if (translating) {
-        const [source, target] = translating
+        const { source, target, copy } = translating
         const sourcePrefix = `/${source}/`
-        if (
-          src.startsWith(sourcePrefix) &&
-          fs.existsSync(
-            path.resolve(
-              localPublicBase,
-              target,
-              src.replace(sourcePrefix, ''),
-            ),
-          )
-        ) {
-          return src.replace(sourcePrefix, `/${target}/`)
+        if (src.startsWith(sourcePrefix)) {
+          const filename = src.slice(sourcePrefix.length)
+          const targetPath = path.resolve(localPublicBase, target, filename)
+          let targetExisted = fs.existsSync(targetPath)
+          if (!targetExisted && copy) {
+            fs.mkdirSync(path.dirname(targetPath), { recursive: true })
+            fs.copyFileSync(
+              path.resolve(localPublicBase, source, filename),
+              targetPath,
+            )
+            targetExisted = true
+          }
+          if (targetExisted) {
+            return `/${target}/${filename}`
+          }
         }
       }
       return src
     }
 
-    if (translating && fs.existsSync(path.resolve(targetBase, src))) {
-      return src
+    let sourcePath = path.resolve(sourceBase, src)
+    let targetPath = path.resolve(targetBase, src)
+
+    if (translating) {
+      const { source, target, copy } = translating
+
+      const assetsSourcePrefix = `./assets/${source}/`
+      if (src.startsWith(assetsSourcePrefix)) {
+        const filename = src.slice(assetsSourcePrefix.length)
+        const targetSrc = `./assets/${target}/${filename}`
+        const sourceTargetPath = path.resolve(sourceBase, targetSrc)
+        if (fs.existsSync(sourceTargetPath)) {
+          src = targetSrc
+          sourcePath = sourceTargetPath
+          targetPath = path.resolve(targetBase, src)
+        }
+      }
+
+      let targetExisted = fs.existsSync(targetPath)
+      if (!targetExisted && copy) {
+        fs.mkdirSync(path.dirname(targetPath), { recursive: true })
+        fs.copyFileSync(sourcePath, targetPath)
+        targetExisted = true
+      }
+      if (targetExisted) {
+        return src
+      }
     }
 
-    const targetSrc = path.relative(targetBase, path.resolve(sourceBase, src))
+    const targetSrc = path.relative(targetBase, sourcePath)
     return RELATIVE_URL_PATTERN.test(targetSrc) ? targetSrc : `./${targetSrc}`
   }
 

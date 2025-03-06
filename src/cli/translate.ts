@@ -126,21 +126,33 @@ const limit = pRateLimit({
   concurrency: 10,
 })
 
+export interface TranslateCommandOptions {
+  source: string
+  target: string
+  glob: string[]
+  copy?: boolean
+}
+
 export const translateCommand = new Command('translate')
   .description('Translate the documentation')
   .argument('[root]', 'Root directory of the documentation')
   .option('-s, --source <language>', 'Document source language', 'zh')
   .option('-t, --target <language>', 'Document target language', 'en')
-  .option('-g, --glob <path...>', 'Glob pattern for source files')
+  .requiredOption('-g, --glob <path...>', 'Glob patterns for source dirs/files')
+  .option(
+    '-C, --copy [boolean]',
+    'Wether to copy relative assets to the target directory instead of following links',
+    (value) => !!value && value !== 'false',
+    false,
+  )
   .action(async function (root?: string) {
     const {
       source,
       target,
       glob: globs,
+      copy,
       ...globalOptions
-    } = this.optsWithGlobals<
-      { source: string; target: string; glob?: string[] } & GlobalCliOptions
-    >()
+    } = this.optsWithGlobals<TranslateCommandOptions & GlobalCliOptions>()
 
     if (
       !Object.hasOwn(LANGUAGE_CODES, source) ||
@@ -167,45 +179,31 @@ export const translateCommand = new Command('translate')
       return
     }
 
-    let sourceFilePaths: string[]
+    const matched = await glob(globs, {
+      absolute: true,
+      cwd: sourceDir,
+      onlyFiles: false,
+    })
 
-    if (globs?.length) {
-      sourceFilePaths = await glob(
-        globs.map((g) =>
-          g.split('/').at(-1)!.includes('.') ? g : `${g}.md{,x}`,
-        ),
-        {
-          absolute: true,
-          cwd: sourceDir,
-        },
-      )
-    } else {
-      const dirents = await fs.readdir(sourceDir, {
-        recursive: true,
-        withFileTypes: true,
-      })
-      sourceFilePaths = dirents.reduce<string[]>((acc, d) => {
-        if (!d.isFile() || !isDoc(d.name)) {
-          return acc
+    const sourceFilePaths = await Promise.all(
+      matched.map(async (it) => {
+        const stat = await fs.stat(it)
+
+        if (stat.isDirectory()) {
+          return glob('**/*.md{,x}', {
+            absolute: true,
+            cwd: it,
+          })
         }
-        acc.push(
-          path.resolve(
-            d.parentPath ||
-              // eslint-disable-next-line @typescript-eslint/no-deprecated
-              d.path,
-            d.name,
-          ),
-        )
-        return acc
-      }, [])
-    }
+        if (stat.isFile() && isDoc(it)) {
+          return it
+        }
+        return []
+      }),
+    )
 
     await Promise.all(
-      sourceFilePaths.map(async (sourceFilePath) => {
-        if (!isDoc(sourceFilePath)) {
-          return
-        }
-
+      sourceFilePaths.flat().map(async (sourceFilePath) => {
         const sourceContent = await fs.readFile(sourceFilePath, 'utf-8')
 
         const sourceFrontmatter = matter(sourceContent).data as I18nFrontmatter
@@ -253,7 +251,7 @@ export const translateCommand = new Command('translate')
             localPublicBase: path.resolve(docsDir, 'public'),
             sourceBase: path.dirname(sourceFilePath),
             targetBase: path.dirname(targetFilePath),
-            translating: [source, target] as const,
+            translating: { source, target, copy },
           }
 
           targetContent = await translate({
