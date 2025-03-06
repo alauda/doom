@@ -142,11 +142,14 @@ Options:
   1. `yarn translate -g abc xyz`，将把 `<root>/<source>/abc`, `<root>/<source>/xyz`
      目录下的所有文档翻译到 `<root>/<target>/abc`, `<root>/<target>/xyz` 目录下
   2. `yarn translate -g '*'` 将翻译 `<root>/<source>` 下的所有文档文件
-- `-C, --copy` 参数可选，是否复制本地路径的资源文件到目标目录，默认为 `false`，即改变资源文件的引用路径为引用源路径。示例：
-  1. `/zh/abc.jpg` 翻译时将复制 `<root>/public/zh/abc.jpg` 到 `<root>/public/en/abc.jpg`，并修改文档中的引用路径为 `/en/abc.jpg`
-  2. `<root>/<source>/abc.mdx` 文档中的 `./assets/xyz.jpg` 翻译时将复制 `<root>/<source>/assets/xyz.jpg` 到 `<root>/<target>/assets/xyz.jpg`，图片引用路径保持不变
-  3. `<root>/<source>/abc.mdx` 文档中的 `./assets/<source>/xyz.jpg` 翻译时将复制 `<root>/<source>/assets/<source>/xyz.jpg` 到 `<root>/<target>/assets/<target>/xyz.jpg`，并修改文档中的引用路径为 `./assets/<target>/xyz.jpg`
-  4. 如果没有启用 `-C, --copy` 参数, `<root>/<source>/abc.mdx` 文档中的 `./assets/<source>/xyz.jpg` 翻译时，将修改文档中的引用路径为 `../<source>/assets/<target>/xyz.jpg`
+- `-C, --copy` 参数可选，是否在目标文件不存在时复制本地路径的资源文件到目标目录，默认为 `false`，即改变资源文件的引用路径为引用源路径。示例：
+  - 当启动此参数
+    1. `/<source>/abc.jpg` 翻译时将复制 `<root>/public/<source>/abc.jpg` 到 `<root>/public/<target>/abc.jpg`，并修改文档中的引用路径为 `/<target>/abc.jpg`
+    2. `<root>/<source>/abc.mdx` 文档中的 `./assets/xyz.jpg` 翻译时将复制 `<root>/<source>/assets/xyz.jpg` 到 `<root>/<target>/assets/xyz.jpg`，图片引用路径保持不变
+    3. `<root>/<source>/abc.mdx` 文档中的 `./assets/<source>/xyz.jpg` 翻译时将复制 `<root>/<source>/assets/<source>/xyz.jpg` 到 `<root>/<target>/assets/<target>/xyz.jpg`，并修改文档中的引用路径为 `./assets/<target>/xyz.jpg`
+  - 当没有启用此参数：
+    1. `/<source>/abc.jpg` 翻译时如果 `<root>/public/<target>/abc.jpg` 已存在，将修改文档中的引用路径为 `/<target>/abc.jpg`，否则保持图片引用路径保持不变
+    2. `<root>/<source>/abc.mdx` 文档中的 `./assets/<source>/xyz.jpg` 翻译时，如果 `<root>/<target>/assets/<target>/xyz.jpg` 已存在，将修改文档中的引用路径为 `./assets/<target>/xyz.jpg`，否则将修改为 `../<source>/assets/<target>/xyz.jpg`
 
 :::warning
 目前需要在本地配置 `AZURE_OPENAI_API_KEY` 环境变量，请联系 IDP 文档团队获取
