@@ -4,6 +4,7 @@ import path from 'node:path'
 
 import { logger } from '@rspress/shared/logger'
 import { Command } from 'commander'
+import { render } from 'ejs'
 import matter from 'gray-matter'
 import { AzureOpenAI } from 'openai'
 import { pRateLimit } from 'p-ratelimit'
@@ -17,7 +18,7 @@ import {
   type NormalizeImgSrcOptions,
 } from '../plugins/index.js'
 import { isDoc } from '../shared/index.js'
-import type { GlobalCliOptions } from '../types.js'
+import type { GlobalCliOptions, TranslateOptions } from '../types.js'
 import { pathExists } from '../utils/index.js'
 import { loadConfig } from './load-config.js'
 
@@ -36,21 +37,55 @@ const LANGUAGE_CODES: Record<string, string> = {
   en: '英文',
 }
 
+const DEFAULT_SYSTEM_PROMPT = `
+## 角色
+你是一位专业的技术文档工程师，擅长写作高质量的<%= targetLang %>技术分档。请你帮我准确地将以下<%= sourceLang %>翻译成<%= targetLang %>，风格与<%= targetLang %>技术文档保持一致。
+
+## 规则
+- 第一条消息为需要翻译的最新<%= sourceLang %>内容，第二条消息为之前翻译过的但内容可能过期的<%= targetLang %>内容，如果没有翻译过则为空
+- 输入格式为 MDX 格式，输出格式也必须保留原始 MDX 格式，且不要额外包装在不必要的代码块中
+- 文档中的资源链接不要翻译和替换
+- MDX 组件中包含的内容需要翻译，MDX 组件参数的值不需要翻译，但以下这些特殊的 MDX 组件参数值需要翻译
+  * 组件示例： <Tab label="参数值">组件包含的内容</Tab>，label 是 key 不用翻译，"参数值" 需要翻译
+- 以下是常见的相关术语词汇对应表（中文 -> English）
+  * ACP -> ACP
+  * 灵雀云 -> Alauda
+- 移除 {/* reference-start */}, {/* reference-end */}, <!-- reference-start --> 和 <!-- reference-end --> 相关的注释
+- 翻译过程中务必保留原文中的 \\< 转义字符不要做任何转义变更
+
+## 策略
+分四步进行翻译工作，并打印每步的结果：
+1. 根据<%= sourceLang %>内容直译成<%= targetLang %>，保持原有格式，不要遗漏任何信息
+2. 根据第一步直译的结果，指出其中存在的具体问题，要准确描述，不宜笼统的表示，也不需要增加原文不存在的内容或格式，包括不仅限于
+ - 不符合<%= targetLang %>表达习惯，明确指出不符合的地方
+ - 语句不通顺，指出位置，不需要给出修改意见，意译时修复
+ - 晦涩难懂，模棱两可，不易理解，可以尝试给出解释
+3. 根据第一步直译的结果和第二步指出的问题，重新进行意译，保证内容的原意的基础上，使其更易于理解，更符合<%= targetLang %>技术文档的表达习惯，同时保持原有的格式不变
+4. 当存在之前翻译的<%= targetLang %>内容时，将第三步的结果按句子与之前的<%= targetLang %>内容细致地比较，如果翻译结果意思相近，仅仅表达方式不同的，只需要保留之前的<%= targetLang %>内容即可，不需要重复翻译
+
+最终只需要输出最后一步的结果，不需要输出之前步骤的结果。
+
+<%= additionalPrompts %>
+`.trim()
+
 let openai: AzureOpenAI | undefined
+
+export interface InternalTranslateOptions extends TranslateOptions {
+  source: string
+  sourceContent: string
+  target: string
+  targetContent?: string
+  additionalPrompts?: string
+}
 
 export const translate = async ({
   source,
   sourceContent,
   target,
   targetContent = '',
-  additionalPrompts,
-}: {
-  source: string
-  sourceContent: string
-  target: string
-  targetContent?: string
-  additionalPrompts?: string
-}) => {
+  systemPrompt,
+  additionalPrompts = '',
+}: InternalTranslateOptions) => {
   if (!openai) {
     openai = new AzureOpenAI({
       endpoint:
@@ -68,36 +103,11 @@ export const translate = async ({
     messages: [
       {
         role: 'system',
-        content: `
-## 角色
-你是一位专业的技术文档工程师，擅长写作高质量的${targetLang}技术分档。请你帮我准确地将以下${sourceLang}翻译成${targetLang}，风格与${targetLang}技术文档保持一致。
-
-## 规则
-- 第一条消息为需要翻译的最新${sourceLang}内容，第二条消息为之前翻译过的但内容可能过期的${targetLang}内容，如果没有翻译过则为空
-- 输入格式为 MDX 格式，输出格式也必须保留原始 MDX 格式，且不要额外包装在不必要的代码块中
-- 文档中的资源链接不要翻译和替换
-- MDX 组件中包含的内容需要翻译，MDX 组件参数的值不需要翻译，但以下这些特殊的 MDX 组件参数值需要翻译
-  * 组件示例： <Tab label="参数值">组件包含的内容</Tab>，label 是 key 不用翻译，"参数值" 需要翻译
-- 以下是常见的相关术语词汇对应表（中文 -> English）
-  * ACP -> ACP
-  * 灵雀云 -> Alauda
-- 移除 {/* reference-start */}, {/* reference-end */}, <!-- reference-start --> 和 <!-- reference-end --> 相关的注释
-- 翻译过程中务必保留原文中的 \\< 转义字符不要做任何转义变更
-
-## 策略
-分四步进行翻译工作，并打印每步的结果：
-1. 根据${sourceLang}内容直译成${targetLang}，保持原有格式，不要遗漏任何信息
-2. 根据第一步直译的结果，指出其中存在的具体问题，要准确描述，不宜笼统的表示，也不需要增加原文不存在的内容或格式，包括不仅限于
- - 不符合${targetLang}表达习惯，明确指出不符合的地方
- - 语句不通顺，指出位置，不需要给出修改意见，意译时修复
- - 晦涩难懂，模棱两可，不易理解，可以尝试给出解释
-3. 根据第一步直译的结果和第二步指出的问题，重新进行意译，保证内容的原意的基础上，使其更易于理解，更符合${targetLang}技术文档的表达习惯，同时保持原有的格式不变
-4. 当存在之前翻译的${targetLang}内容时，将第三步的结果按句子与之前的${targetLang}内容细致地比较，如果翻译结果意思相近，仅仅表达方式不同的，只需要保留之前的${targetLang}内容即可，不需要重复翻译
-
-最终只需要输出最后一步的结果，不需要输出之前步骤的结果。
-
-${additionalPrompts}
-`.trim(),
+        content: await render(
+          systemPrompt?.trim() || DEFAULT_SYSTEM_PROMPT,
+          { sourceLang, targetLang, additionalPrompts },
+          { async: true },
+        ),
       },
       {
         role: 'user',
@@ -255,6 +265,7 @@ export const translateCommand = new Command('translate')
           }
 
           targetContent = await translate({
+            ...config.translate,
             source,
             sourceContent: processor.stringify({
               ...ast,

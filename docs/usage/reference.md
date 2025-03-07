@@ -26,7 +26,7 @@ weight: 7
 
 <!-- reference-start#ref -->
 
-## 引用文档配置
+## 引用文档配置 {#reference}
 
 ```yaml
 reference:

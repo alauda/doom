@@ -47,9 +47,9 @@ spec:
               export COREPACK_NPM_REGISTRY=https://registry.npmmirror.com
               export YARN_GLOBAL_FOLDER=/workspace/yarn_cache/global
 
-              # yarn config set npmRegistryServer https://internal-mirrors.alauda.cn/repository/npm
+              yarn config set npmRegistryServer https://internal-mirrors.alauda.cn/repository/npm
               yarn --immutable
-              # git reset --hard
+              git reset --hard
     - name: build-docs
       runAfter:
         - install-dependencies

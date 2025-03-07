@@ -23,6 +23,10 @@ export interface GlobalCliOptions {
   force?: boolean
 }
 
+export interface TranslateOptions {
+  systemPrompt?: string
+}
+
 declare module '@rspress/shared' {
   interface UserConfig {
     prefix?: string
@@ -34,6 +38,7 @@ declare module '@rspress/shared' {
     sidebar?: Omit<AutoSidebarPluginOptions, 'download' | 'excludeRoutes'>
     releaseNotes?: ReleaseNotesOptions
     internalRoutes?: string[]
+    translate?: TranslateOptions
   }
 }
 

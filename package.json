@@ -1,6 +1,6 @@
 {
   "name": "@alauda/doom",
-  "version": "0.14.8",
+  "version": "0.14.9",
   "type": "module",
   "description": "Doctor Doom making docs.",
   "repository": {
@@ -46,7 +46,7 @@
     "@inquirer/prompts": "^7.3.2",
     "@openapi-contrib/openapi-schema-to-json-schema": "^5.1.0",
     "@playwright/browser-chromium": "^1.50.1",
-    "@rspress/core": "1.42.1",
+    "@rspress/core": "1.43.1",
     "@shikijs/transformers": "^3.1.0",
     "chokidar": "^4.0.3",
     "cli-progress": "^3.12.0",
