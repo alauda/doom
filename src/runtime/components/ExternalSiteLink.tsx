@@ -20,7 +20,7 @@ export interface ExternalSiteLinkProps
   children: ReactNode
 }
 
-export const ExternalSiteLink = ({
+const ExternalSiteLink_ = ({
   name,
   href = '',
   className,
@@ -45,23 +45,28 @@ export const ExternalSiteLink = ({
   }
 
   return (
-    <NoSSR>
-      <a
-        href={
-          (isPrint ? 'https://docs.alauda.io' : '') +
-          (virtual.version
-            ? addTrailingSlash(site.base + site.version)
-            : site.base) +
-          (lang ? `${lang}/` : '') +
-          removeLeadingSlash(href)
-        }
-        target="_blank"
-        rel="noopener noreferrer"
-        className={clsx(classes.link, 'cursor-pointer', className)}
-        {...props}
-      />
-    </NoSSR>
+    <a
+      href={
+        (isPrint ? 'https://docs.alauda.io' : '') +
+        (virtual.prefix || '') +
+        (virtual.version
+          ? addTrailingSlash(site.base + site.version)
+          : site.base) +
+        (lang ? addTrailingSlash(lang) : '') +
+        removeLeadingSlash(href)
+      }
+      target="_blank"
+      rel="noopener noreferrer"
+      className={clsx(classes.link, 'cursor-pointer', className)}
+      {...props}
+    />
   )
 }
+
+export const ExternalSiteLink = (props: ExternalSiteLinkProps) => (
+  <NoSSR>
+    <ExternalSiteLink_ {...props} />
+  </NoSSR>
+)
 
 export default ExternalSiteLink
