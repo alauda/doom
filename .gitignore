@@ -8,6 +8,7 @@ dist
 lib
 node_modules
 **/public/_remotes
+/.npmrc
 /test
 /test.*
 *.log
