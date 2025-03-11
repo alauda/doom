@@ -166,6 +166,7 @@ translate:
 - 以下是常见的相关术语词汇对应表（中文 -> English）
   * ACP -> ACP
   * 灵雀云 -> Alauda
+  * 容器组 -> Pods
 - 移除 {/* reference-start */}, {/* reference-end */}, <!-- reference-start --> 和 <!-- reference-end --> 相关的注释
 - 翻译过程中务必保留原文中的 \\< 转义字符不要做任何转义变更
 
