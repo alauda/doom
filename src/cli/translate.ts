@@ -2,6 +2,7 @@ import crypto from 'node:crypto'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 
+import { removeLeadingSlash } from '@rspress/shared'
 import { logger } from '@rspress/shared/logger'
 import { Command } from 'commander'
 import { render } from 'ejs'
@@ -161,6 +162,7 @@ export const translateCommand = new Command('translate')
       target,
       glob: globs,
       copy,
+      force,
       ...globalOptions
     } = this.optsWithGlobals<TranslateCommandOptions & GlobalCliOptions>()
 
@@ -189,7 +191,7 @@ export const translateCommand = new Command('translate')
       return
     }
 
-    const matched = await glob(globs, {
+    const matched = await glob(globs.map(removeLeadingSlash), {
       absolute: true,
       cwd: sourceDir,
       onlyFiles: false,
@@ -240,7 +242,7 @@ export const translateCommand = new Command('translate')
 
           if (
             targetFrontmatter.i18n?.disableAutoTranslation ||
-            targetFrontmatter.sourceSHA === sourceSHA
+            (!force && targetFrontmatter.sourceSHA === sourceSHA)
           ) {
             return
           }
@@ -274,7 +276,7 @@ export const translateCommand = new Command('translate')
               ),
             }),
             target,
-            targetContent,
+            targetContent: force ? '' : targetContent,
             additionalPrompts:
               targetFrontmatter?.i18n?.additionalPrompts ??
               sourceFrontmatter.i18n?.additionalPrompts,

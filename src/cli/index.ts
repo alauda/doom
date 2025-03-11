@@ -48,7 +48,9 @@ program
   )
   .option(
     '-f, --force [boolean]',
-    'Force to fetch latest reference remotes or scaffolding templates, otherwise use local cache',
+    `Force to
+1. fetch latest reference remotes or scaffolding templates, otherwise use local cache
+2. translate ignore hash equality check and original text`,
     (value) => !!value && value !== 'false',
     false,
   )

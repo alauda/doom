@@ -1,6 +1,6 @@
 {
   "name": "@alauda/doom",
-  "version": "0.14.11",
+  "version": "0.14.12",
   "type": "module",
   "description": "Doctor Doom making docs.",
   "repository": {
@@ -45,8 +45,8 @@
   "dependencies": {
     "@inquirer/prompts": "^7.3.3",
     "@openapi-contrib/openapi-schema-to-json-schema": "^5.1.0",
-    "@playwright/browser-chromium": "^1.50.1",
-    "@rspress/core": "1.43.1",
+    "@playwright/browser-chromium": "^1.51.0",
+    "@rspress/core": "1.43.2",
     "@shikijs/transformers": "^3.1.0",
     "chokidar": "^4.0.3",
     "cli-progress": "^3.12.0",
@@ -63,7 +63,7 @@
     "pdf-lib": "^1.17.1",
     "pdf-merger-js": "^5.1.2",
     "picomatch": "^4.0.2",
-    "playwright": "^1.50.1",
+    "playwright": "^1.51.0",
     "react-markdown": "^8.0.7",
     "rehype-raw": "^6.1.1",
     "remark-directive": "^2.0.1",
@@ -97,7 +97,7 @@
     "prettier-plugin-pkg": "^0.18.1",
     "simple-git-hooks": "^2.11.1",
     "typescript": "^5.8.2",
-    "typescript-eslint": "^8.26.0"
+    "typescript-eslint": "^8.26.1"
   },
   "publishConfig": {
     "access": "public"
