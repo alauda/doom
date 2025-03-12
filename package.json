@@ -1,6 +1,6 @@
 {
   "name": "@alauda/doom",
-  "version": "0.14.13",
+  "version": "0.14.14",
   "type": "module",
   "description": "Doctor Doom making docs.",
   "repository": {
@@ -46,8 +46,8 @@
     "@inquirer/prompts": "^7.3.3",
     "@openapi-contrib/openapi-schema-to-json-schema": "^5.1.0",
     "@playwright/browser-chromium": "^1.51.0",
-    "@rspress/core": "1.43.2",
-    "@shikijs/transformers": "^3.1.0",
+    "@rspress/core": "1.43.3",
+    "@shikijs/transformers": "^3.2.1",
     "chokidar": "^4.0.3",
     "cli-progress": "^3.12.0",
     "clsx": "^2.1.1",
@@ -69,7 +69,7 @@
     "remark-directive": "^2.0.1",
     "remark-frontmatter": "^4.0.1",
     "remark-gfm": "^3.0.1",
-    "shiki": "^3.1.0",
+    "shiki": "^3.2.1",
     "simple-git": "^3.27.0",
     "swagger2openapi": "^7.0.8",
     "tinyglobby": "^0.2.12",
