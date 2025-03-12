@@ -25,7 +25,7 @@ export const Term = ({ name, textCase }: TermProps) => {
         return origin.toUpperCase()
       }
       case 'capitalize': {
-        return capitalize(origin)
+        return origin.split(/\b/).map(capitalize).join('')
       }
       default: {
         return origin
