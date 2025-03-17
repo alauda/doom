@@ -34,7 +34,7 @@ COPY . dist
 
 ```bash
 # 一般由分支名确定，如 release-4.0 对应 4.0 版本
-doom build -v 4.0 # 构建 v4.0 版本，产物输出到 dist/v4.0，文档访问路径为 {base}/v4.0
+doom build -v 4.0 # 构建 v4.0 版本，产物输出到 dist/4.0，文档访问路径为 {base}/4.0
 doom build -v master # 构建 master 版本，产物输出到 dist/master，文档访问路径为 {base}/master
 doom build -v {other} # 构建其他版本，产物输出到 dist/{other}，文档访问路径为 {base}/{other}
 
@@ -46,20 +46,20 @@ doom build -v unversioned # 构建无版本号的文档，产物输出到 dist/u
 
 ```sh
 ├── console-platform
-│   ├── v4.0
-│   ├── v4.1
+│   ├── 4.0
+│   ├── 4.1
 │   ├── index.html
 │   ├── overrides.yaml
 |   └── versions.yaml
 │── console-devops-docs
-│   ├── v4.0
-│   ├── v4.1
+│   ├── 4.0
+│   ├── 4.1
 │   ├── index.html
 │   ├── overrides.yaml
 |   └── versions.yaml
 │── console-tekton-docs
-│   ├── v1.0
-│   ├── v1.1
+│   ├── 1.0
+│   ├── 1.1
 │   ├── index.html
 │   ├── overrides.yaml
 |   └── versions.yaml
@@ -70,10 +70,10 @@ doom build -v unversioned # 构建无版本号的文档，产物输出到 dist/u
 <html>
   <head>
     <title>Redirecting...</title>
-    <meta http-equiv="refresh" content="0; url=/console-docs/v4.1" />
+    <meta http-equiv="refresh" content="0; url=/console-docs/4.1" />
   </head>
   <body>
-    <p>Redirecting to <a href="/console-docs/v4.1">/console-docs/v4.1</a></p>
+    <p>Redirecting to <a href="/console-docs/4.1">/console-docs/4.1</a></p>
   </body>
 </html>
 ```
@@ -103,8 +103,8 @@ logoText:
 ```
 
 ```yaml title="versions.yaml"
-- v4.1
-- v4.0
+- '4.1'
+- '4.0'
 ```
 
 ### 随产品发布的文档

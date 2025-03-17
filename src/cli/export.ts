@@ -124,6 +124,6 @@ export const exportCommand = new Command('export')
       await exportPdf(sidebarItems)
     }
 
-    // close the server
+    logger.ready('Closing the server')
     process.exit(0)
   })

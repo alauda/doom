@@ -34,7 +34,7 @@ import {
   replacePlugin,
   shikiPlugin,
 } from '../plugins/index.js'
-import { type DoomSite, normalizeVersion } from '../shared/index.js'
+import { type DoomSite } from '../shared/index.js'
 import type { GlobalCliOptions } from '../types.js'
 import { pkgResolve, resolveStaticConfig } from '../utils/index.js'
 import {
@@ -252,14 +252,14 @@ export async function loadConfig(
     }
   }
 
-  const normalizedVersion = normalizeVersion(version)
+  version ||= ''
 
   const commonConfig = getCommonConfig({
     config,
     configFilePath,
     root,
     base,
-    version: normalizedVersion,
+    version,
     download,
     ignore,
     force,
@@ -311,10 +311,9 @@ export async function loadConfig(
   }
 
   if (mergedConfig.outDir) {
-    mergedConfig.outDir =
-      addTrailingSlash(mergedConfig.outDir) + normalizedVersion
+    mergedConfig.outDir = addTrailingSlash(mergedConfig.outDir) + version
   } else {
-    mergedConfig.outDir = `dist${normalizedVersion === 'unversioned' ? `${base}unversioned` : base}`
+    mergedConfig.outDir = `dist${version === 'unversioned' ? `${base}unversioned` : base}`
   }
 
   if (mergedConfig.builderConfig?.server?.open === true) {

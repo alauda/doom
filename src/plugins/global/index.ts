@@ -3,11 +3,7 @@ import path from 'node:path'
 
 import { addTrailingSlash, type RspressPlugin } from '@rspress/core'
 
-import {
-  ACP_BASE,
-  normalizeVersion,
-  type DoomSite,
-} from '../../shared/index.js'
+import { ACP_BASE, type DoomSite } from '../../shared/index.js'
 import { baseResolve, pkgResolve } from '../../utils/index.js'
 
 const globalComponentsDir = baseResolve('global')
@@ -67,7 +63,7 @@ export const globalPlugin = ({
               base: addTrailingSlash(
                 site.base || (site.name === 'acp' ? ACP_BASE : ''),
               ),
-              version: normalizeVersion(site.version),
+              version: site.version,
             })),
           },
           null,
