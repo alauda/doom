@@ -126,6 +126,19 @@ internalRoutes: # 可选，支持 glob 匹配，相对于 docs 目录，匹配�
   - '*/internal/**/*'
 ```
 
+## 语言高亮插件配置 \{#highlight}
+
+```yaml
+shiki:
+  theme: # optional, https://shiki.style/themes
+  langs: # optional, https://shiki.style/languages
+  transformers: # optional, only available in js/ts config, https://shiki.style/guide/transformers
+```
+
+:::warning
+未配置的语言将在命令行提示告警，并回退到 `plaintext` 渲染
+:::
+
 ## `sites.yaml` 配置 \{#sites}
 
 `sites.yaml` 配置文件用于配置当前文档站点关联的子站点信息，[引用外部站点组件](./mdx#externalsite)和构建单版本文档时会用到此处定义的信息。

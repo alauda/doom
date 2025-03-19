@@ -66,6 +66,10 @@ program
     (value) => !!value && value !== 'false',
     false,
   )
+  .option(
+    '--no-open [boolean]',
+    'Do not open the browser after starting the server',
+  )
   .command('dev', { isDefault: true })
   .description('Start the development server')
   .argument('[root]', 'Root directory of the documentation')

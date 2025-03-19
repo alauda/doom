@@ -4,6 +4,7 @@ import type {
   ApiPluginOptions,
   AutoSidebarPluginOptions,
   PermissionPluginOptions,
+  PluginShikiOptions,
   ReferenceItem,
   ReleaseNotesOptions,
 } from './plugins/index.js'
@@ -21,6 +22,7 @@ export interface GlobalCliOptions {
   download?: boolean
   ignore?: boolean
   force?: boolean
+  open?: boolean
 }
 
 export interface TranslateOptions {
@@ -39,6 +41,7 @@ declare module '@rspress/shared' {
     releaseNotes?: ReleaseNotesOptions
     internalRoutes?: string[]
     translate?: TranslateOptions
+    shiki?: PluginShikiOptions
   }
 }
 

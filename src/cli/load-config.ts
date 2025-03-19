@@ -67,6 +67,7 @@ const getCommonConfig = ({
   download,
   ignore,
   force,
+  open,
 }: {
   config: UserConfig
   configFilePath?: string
@@ -76,6 +77,7 @@ const getCommonConfig = ({
   download?: boolean
   ignore?: boolean
   force?: boolean
+  open?: boolean
 }): UserConfig => {
   const fallbackToZh = 'lang' in config && !config.lang
   root = resolveDocRoot(CWD, root, config.root)
@@ -146,7 +148,18 @@ const getCommonConfig = ({
         force,
       }),
       shikiPlugin({
-        langs: ['dockerfile', 'dotenv', 'html', 'go', 'jsonc', 'mermaid'],
+        theme: config.shiki?.theme,
+        langs: [
+          'dockerfile',
+          'dotenv',
+          'html',
+          'go',
+          'jsonc',
+          'mermaid',
+          'java',
+          'python',
+          ...(config.shiki?.langs ?? []),
+        ],
         transformers: [
           // builtin transformers
           transformerMetaHighlight(),
@@ -160,13 +173,15 @@ const getCommonConfig = ({
 
           // custom transformers
           createTransformerCallouts(),
+
+          ...(config.shiki?.transformers ?? []),
         ],
       }),
     ],
     builderConfig: {
       plugins: [pluginYaml()],
       server: {
-        open: true,
+        open,
       },
       tools: {
         rspack: {
@@ -195,6 +210,7 @@ export async function loadConfig(
     download,
     ignore,
     force,
+    open,
   }: GlobalCliOptions = {},
 ): Promise<{
   config: UserConfig
@@ -265,6 +281,7 @@ export async function loadConfig(
     download,
     ignore,
     force,
+    open,
   })
 
   base = commonConfig.base

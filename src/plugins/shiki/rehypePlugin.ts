@@ -3,6 +3,7 @@ import type { Plugin } from 'unified'
 import type { Element, Text, Root, ElementContent } from 'hast'
 import { fromHtml } from 'hast-util-from-html'
 import type { BuiltinTheme, Highlighter } from 'shiki'
+import { logger } from '@rspress/shared/logger'
 
 interface Options {
   highlighter: Highlighter
@@ -30,13 +31,26 @@ export const rehypePluginShiki: Plugin<[Options], Root> =
         if (!lang) {
           return
         }
-        const highlightedCode = highlighter.codeToHtml(codeContent, {
-          lang,
-          theme,
-          meta: {
-            __raw: codeMeta,
-          },
-        })
+        let highlightedCode: string
+        try {
+          highlightedCode = highlighter.codeToHtml(codeContent, {
+            lang,
+            theme,
+            meta: {
+              __raw: codeMeta,
+            },
+          })
+        } catch (err) {
+          logger.error(`render with \`${lang}\` results error`, err)
+          logger.warn('fallback to `plaintext`')
+          highlightedCode = highlighter.codeToHtml(codeContent, {
+            lang: 'plaintext',
+            theme,
+            meta: {
+              __raw: codeMeta,
+            },
+          })
+        }
         const fragmentAst = fromHtml(highlightedCode, { fragment: true })
         const preElement = fragmentAst.children[0] as Element
         const codeElement = preElement.children[0] as Element
