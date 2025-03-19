@@ -8,5 +8,8 @@ export const useLocale = () => useLang() as Locale
 export const useTranslation = () => {
   const lang = useLocale()
   const translations = TRANSLATIONS[lang]
-  return useCallback((key: keyof typeof translations) => translations[key], [])
+  return useCallback(
+    (key: keyof typeof translations) => translations[key],
+    [translations],
+  )
 }
