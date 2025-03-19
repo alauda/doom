@@ -1,6 +1,6 @@
 {
   "name": "@alauda/doom",
-  "version": "0.15.0",
+  "version": "0.15.1",
   "type": "module",
   "description": "Doctor Doom making docs.",
   "repository": {
@@ -36,7 +36,7 @@
     "lint": "run-p 'lint:*'",
     "lint:es": "eslint .",
     "lint:tsc": "tsc -b",
-    "prepare": "simple-git-hooks && patch-package",
+    "prepare": "simple-git-hooks && patch-package && yarn-berry-deduplicate",
     "prepublishOnly": "yarn build",
     "serve": "yarn doom serve",
     "swc-node": "node --enable-source-maps --import @swc-node/register/esm-register",
@@ -47,7 +47,7 @@
     "@openapi-contrib/openapi-schema-to-json-schema": "^5.1.0",
     "@playwright/browser-chromium": "^1.51.0",
     "@rsbuild/plugin-yaml": "^1.0.2",
-    "@rspress/core": "1.43.5",
+    "@rspress/core": "1.43.7",
     "@shikijs/transformers": "^3.2.1",
     "chokidar": "^4.0.3",
     "cli-progress": "^3.12.0",
@@ -81,7 +81,7 @@
   "devDependencies": {
     "@eslint/js": "^9.22.0",
     "@swc-node/register": "^1.10.10",
-    "@swc/core": "1.11.9",
+    "@swc/core": "1.11.11",
     "@types/cli-progress": "^3.11.6",
     "@types/ejs": "^3.1.5",
     "@types/fs-extra": "^11.0.4",
@@ -98,7 +98,8 @@
     "prettier-plugin-pkg": "^0.18.1",
     "simple-git-hooks": "^2.11.1",
     "typescript": "^5.8.2",
-    "typescript-eslint": "^8.26.1"
+    "typescript-eslint": "^8.26.1",
+    "yarn-berry-deduplicate": "^6.1.1"
   },
   "publishConfig": {
     "access": "public"

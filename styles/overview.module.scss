@@ -1,3 +1,8 @@
+:global(.rspress-doc-container):has(:global(.overview-index))
+  [class^='aside-container'] {
+  display: none;
+}
+
 .overview-groups a {
   display: block;
   font-size: 15px;
