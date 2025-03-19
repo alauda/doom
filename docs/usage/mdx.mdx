@@ -182,15 +182,13 @@ import { SourceCode } from '@rspress/core/theme'
 
 ```mdx
 <TermsTable />
-<TermsTable named />
-<TermsTable named={false} />
 ```
 
 <TermsTable />
 
 #### `props`
 
-- `named`: `true` 时只显示命名术语，`false` 时只显示未命名术语，默认显示全部
+- `terms`: `NormalizedTermItem[]`，可选，自定义术语列表，方便内部文档渲染自定义术语时复用
 
 ### `JsonViewer`
 

@@ -1,27 +1,20 @@
 import { getCustomMDXComponent } from '@rspress/core/theme'
 import { useState } from 'react'
 
-import {
-  allTermItems,
-  namedTermItems,
-  unnamedTermItems,
-  type NormalizedTermItem,
-} from '../../terms.js'
+import { namedTermItems, type NormalizedTermItem } from '../../terms.js'
 import { useTranslation } from '../hooks/index.js'
 
 export interface TermsTableProps {
-  named?: boolean
+  terms?: NormalizedTermItem[]
 }
 
-export const TermsTable = ({ named }: TermsTableProps) => {
+export const TermsTable = ({ terms }: TermsTableProps) => {
   const [X] = useState(getCustomMDXComponent)
   const t = useTranslation()
-  const noNamed = named === false
-  const terms: NormalizedTermItem[] = named
-    ? namedTermItems
-    : noNamed
-      ? unnamedTermItems
-      : allTermItems
+
+  const normalized: NormalizedTermItem[] = terms ?? namedTermItems
+
+  const withName = normalized.some(({ name }) => name)
 
   const renderBadCases = (list?: string[]) =>
     list?.length ? (
@@ -38,7 +31,7 @@ export const TermsTable = ({ named }: TermsTableProps) => {
     <X.table>
       <thead>
         <X.tr>
-          {noNamed || <X.th>{t('name')}</X.th>}
+          {withName && <X.th>{t('name')}</X.th>}
           <X.th>{t('chinese')}</X.th>
           <X.th>{t('chinese_bad_cases')}</X.th>
           <X.th>{t('english')}</X.th>
@@ -47,9 +40,9 @@ export const TermsTable = ({ named }: TermsTableProps) => {
         </X.tr>
       </thead>
       <tbody>
-        {terms.map((term, index) => (
+        {normalized.map((term, index) => (
           <X.tr key={term.name || index}>
-            {noNamed || <X.td>{term.name || '-'}</X.td>}
+            {withName && <X.td>{term.name || '-'}</X.td>}
             <X.td>{term.zh || term.en}</X.td>
             <X.td>{renderBadCases(term.badCases?.zh)}</X.td>
             <X.td>{term.en}</X.td>

@@ -10,8 +10,6 @@ export interface TermItem {
   }
 }
 
-export const unnamedTermItems: TermItem[] = []
-
 const terms = {
   company: {
     en: 'Alauda',
@@ -50,8 +48,3 @@ export const namedTermItems: NamedTermItem[] = Object.keys(terms).map(
     }
   },
 )
-
-export const allTermItems: NormalizedTermItem[] = [
-  ...namedTermItems,
-  ...unnamedTermItems,
-]
