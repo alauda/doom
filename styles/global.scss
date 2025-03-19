@@ -90,7 +90,7 @@ td {
   }
 }
 
-[class^='aside-container']:has(.hidden) {
+[class^='aside-container_']:has(.hidden) {
   display: none;
 }
 

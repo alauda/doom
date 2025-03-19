@@ -1,5 +1,5 @@
 :global(.rspress-doc-container):has(:global(.overview-index))
-  [class^='aside-container'] {
+  [class^='aside-container_'] {
   display: none;
 }
 
