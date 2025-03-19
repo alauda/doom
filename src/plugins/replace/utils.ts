@@ -11,6 +11,8 @@ import { red } from 'yoctocolors'
 
 import type { NormalizedReferenceSource, ReferenceItem } from './types.js'
 
+export const RELATIVE_URL_PATTERN = /^\.\.?\//
+
 /**
  * hello world {#custom-id} -> { text: 'hello world', id: 'custom-id' }
  */

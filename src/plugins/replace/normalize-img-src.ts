@@ -8,8 +8,7 @@ import type { MdxJsxFlowElement, MdxJsxTextElement } from 'mdast-util-mdx-jsx'
 import { visit } from 'unist-util-visit'
 
 import type { NormalizedReferenceSource } from './types.js'
-
-const RELATIVE_URL_PATTERN = /^\.\.?\//
+import { RELATIVE_URL_PATTERN } from './utils.js'
 
 export interface NormalizeImgSrcOptions {
   refSource?: NormalizedReferenceSource
