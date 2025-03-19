@@ -2,6 +2,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 
 import { nodeTypes } from '@mdx-js/mdx'
+import { pluginYaml } from '@rsbuild/plugin-yaml'
 import {
   type LocaleConfig,
   type UserConfig,
@@ -163,6 +164,7 @@ const getCommonConfig = ({
       }),
     ],
     builderConfig: {
+      plugins: [pluginYaml()],
       server: {
         open: true,
       },

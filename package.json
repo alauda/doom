@@ -1,6 +1,6 @@
 {
   "name": "@alauda/doom",
-  "version": "0.14.18",
+  "version": "0.14.19",
   "type": "module",
   "description": "Doctor Doom making docs.",
   "repository": {
@@ -79,6 +79,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.22.0",
+    "@rsbuild/plugin-yaml": "^1.0.2",
     "@swc-node/register": "^1.10.10",
     "@swc/core": "1.11.9",
     "@types/cli-progress": "^3.11.6",

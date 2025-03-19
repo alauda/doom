@@ -13,6 +13,7 @@ __metadata:
     "@inquirer/prompts": "npm:^7.4.0"
     "@openapi-contrib/openapi-schema-to-json-schema": "npm:^5.1.0"
     "@playwright/browser-chromium": "npm:^1.51.0"
+    "@rsbuild/plugin-yaml": "npm:^1.0.2"
     "@rspress/core": "npm:1.43.5"
     "@shikijs/transformers": "npm:^3.2.1"
     "@swc-node/register": "npm:^1.10.10"
@@ -992,6 +993,18 @@ __metadata:
   peerDependencies:
     "@rsbuild/core": 1.x
   checksum: 10c0/50ea06a00ccf367e159eab03f71c73dcddb50f7cdd49d51880a6cd785083d4450e2069bf3cc18248bc7ac9f26ca1ab14c96d33d1316db85e441108efb057ed3d
+  languageName: node
+  linkType: hard
+
+"@rsbuild/plugin-yaml@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "@rsbuild/plugin-yaml@npm:1.0.2"
+  peerDependencies:
+    "@rsbuild/core": 1.x || ^1.0.1-beta.0
+  peerDependenciesMeta:
+    "@rsbuild/core":
+      optional: true
+  checksum: 10c0/5062bd2501239729d4c2ea05cc3585361177a54f745329d81a75279fb1af4760de70de0cc9bc75b2b7764355fb961a0080b12a0adc47a1d300c0acb9e01337e5
   languageName: node
   linkType: hard
 
