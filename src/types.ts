@@ -33,7 +33,7 @@ declare module '@rspress/shared' {
     userBase?: string
     api?: Omit<ApiPluginOptions, 'localBasePath'>
     sites?: DoomSite[]
-    permission?: PermissionPluginOptions
+    permission?: Omit<PermissionPluginOptions, 'localBasePath'>
     reference?: ReferenceItem[]
     sidebar?: Omit<AutoSidebarPluginOptions, 'download' | 'excludeRoutes'>
     releaseNotes?: ReleaseNotesOptions
