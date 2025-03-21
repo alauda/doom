@@ -1,9 +1,9 @@
-import { visit } from 'unist-util-visit'
-import type { Plugin } from 'unified'
+import { logger } from '@rspress/shared/logger'
 import type { Element, Text, Root, ElementContent } from 'hast'
 import { fromHtml } from 'hast-util-from-html'
 import type { BuiltinTheme, Highlighter } from 'shiki'
-import { logger } from '@rspress/shared/logger'
+import type { Plugin } from 'unified'
+import { visit } from 'unist-util-visit'
 
 interface Options {
   highlighter: Highlighter

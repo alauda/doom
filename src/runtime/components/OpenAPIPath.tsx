@@ -1,17 +1,17 @@
 import { usePageData } from '@rspress/core/runtime'
 import { Badge, getCustomMDXComponent } from '@rspress/core/theme'
+import openapisMap from 'doom-@api-openapisMap'
+import virtual from 'doom-@api-virtual'
 import BananaSlug from 'github-slugger'
 import { OpenAPIV3, type OpenAPIV3_1 } from 'openapi-types'
 import { Fragment, useMemo, useState, type ReactNode } from 'react'
 
 import { omitRoutePathRefs, resolveRef } from '../utils.js'
+
+import { OpenAPIRef } from './OpenAPIRef.js'
 import { HeadingTitle } from './_HeadingTitle.js'
 import { Markdown } from './_Markdown.js'
 import { RefLink } from './_RefLink.js'
-import OpenAPIRef from './OpenAPIRef.js'
-
-import openapisMap from 'doom-@api-openapisMap'
-import virtual from 'doom-@api-virtual'
 
 export interface OpenAPIPathProps {
   /**

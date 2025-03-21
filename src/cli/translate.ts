@@ -21,6 +21,7 @@ import {
 import { isDoc } from '../shared/index.js'
 import type { GlobalCliOptions, TranslateOptions } from '../types.js'
 import { pathExists } from '../utils/index.js'
+
 import { loadConfig } from './load-config.js'
 
 export interface I18nFrontmatter {

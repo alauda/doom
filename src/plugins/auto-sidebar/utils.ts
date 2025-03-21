@@ -7,6 +7,7 @@ import { loadFrontMatter } from '@rspress/shared/node-utils'
 
 import { pathExists } from '../../utils/index.js'
 import { extractTextAndId } from '../replace/utils.js'
+
 import type { DoomSidebar } from './walk.js'
 
 export async function detectFilePath(rawPath: string, extensions: string[]) {

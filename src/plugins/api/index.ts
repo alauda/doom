@@ -4,6 +4,7 @@ import type { OpenAPI, OpenAPIV3_1 } from 'openapi-types'
 import { convertObj } from 'swagger2openapi'
 
 import { generateRuntimeModule } from '../../utils/index.js'
+
 import type { ApiPluginOptions, CustomResourceDefinition } from './types.js'
 
 export type * from './types.js'

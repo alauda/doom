@@ -17,9 +17,10 @@ import { logger } from '@rspress/shared/logger'
 import { unset } from 'es-toolkit/compat'
 import picomatch from 'picomatch'
 
+import { pathExists, readJson } from '../../utils/index.js'
+
 import type { SideMeta } from './type.js'
 import { detectFilePath, extractInfoFromFrontmatter } from './utils.js'
-import { pathExists, readJson } from '../../utils/index.js'
 
 export interface DoomSidebarItem extends SidebarItem {
   weight?: number

@@ -3,14 +3,14 @@
  */
 
 import { Badge, Button, getCustomMDXComponent } from '@rspress/core/theme'
+import crdsMap from 'doom-@api-crdsMap'
 import type { OpenAPIV3_1 } from 'openapi-types'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { useIsPrint, useTranslation } from '../hooks/index.js'
+
 import { Directive } from './Directive.js'
 import { Markdown } from './_Markdown.js'
-
-import crdsMap from 'doom-@api-crdsMap'
 
 export interface K8sCrdProps {
   /**

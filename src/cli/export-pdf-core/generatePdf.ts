@@ -1,7 +1,7 @@
+import fs from 'node:fs/promises'
 import path from 'node:path'
 import process from 'node:process'
 
-import fse from 'fs-extra'
 import { red, yellow } from 'yoctocolors'
 
 import {
@@ -11,6 +11,7 @@ import {
   writeFileSafe,
   type PrinterOptions,
 } from '../html-export-pdf/index.js'
+
 import type { LaunchOptions, Page, PDFOptions } from './types.js'
 import {
   getUrlLink,
@@ -49,7 +50,7 @@ export async function generatePdf({
   launchOptions,
   printerOptions,
 }: GeneratePdfOptions) {
-  fse.ensureDirSync(tempDir)
+  await fs.mkdir(tempDir, { recursive: true })
 
   const isValidUrlOrigin = isValidUrl(urlOrigin ?? '')
 
@@ -145,6 +146,6 @@ export async function generatePdf({
   const message = `\nExported to ${yellow(exportedPath)}\n`
   process.stdout.write(message)
 
-  fse.removeSync(tempDir)
+  await fs.rm(tempDir, { force: true, recursive: true })
   return exportedPath
 }

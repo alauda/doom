@@ -1,4 +1,4 @@
-import ExternalApisOverview from './ExternalApisOverview.js'
+import { ExternalApisOverview } from './ExternalApisOverview.js'
 
 export const AcpApisOverview = () => <ExternalApisOverview name="acp" />
 

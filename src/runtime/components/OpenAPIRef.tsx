@@ -1,14 +1,14 @@
 import { usePageData } from '@rspress/core/runtime'
 import { getCustomMDXComponent } from '@rspress/core/theme'
+import openapisMap from 'doom-@api-openapisMap'
 import type { OpenAPIV3_1 } from 'openapi-types'
 import { type ReactNode, useMemo, useState } from 'react'
 
 import { modelName, omitRoutePathRefs, resolveRef } from '../utils.js'
+
 import { HeadingTitle } from './_HeadingTitle.js'
 import { Markdown } from './_Markdown.js'
 import { RefLink } from './_RefLink.js'
-
-import openapisMap from 'doom-@api-openapisMap'
 
 export interface OpenAPIRefProps {
   /**

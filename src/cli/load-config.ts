@@ -38,6 +38,7 @@ import {
 import { type DoomSite } from '../shared/index.js'
 import type { GlobalCliOptions } from '../types.js'
 import { pkgResolve, resolveStaticConfig } from '../utils/index.js'
+
 import {
   CWD,
   DEFAULT_CONFIG_NAME,

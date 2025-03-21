@@ -13,9 +13,9 @@ import type {
 } from '@rspress/shared'
 import { Fragment, useMemo } from 'react'
 
-import { findItemByRoutePath } from './_utils.js'
-
 import classes from '../../../styles/overview.module.scss'
+
+import { findItemByRoutePath } from './_utils.js'
 
 interface GroupItem {
   text: string

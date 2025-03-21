@@ -9,10 +9,10 @@ import { parse, stringify } from 'yaml'
 import { cyan, red } from 'yoctocolors'
 
 import { normalizeImgSrc } from './normalize-img-src.js'
-import type { NormalizedReferenceSource, ReleaseNotesOptions } from './types.js'
-import { getFrontmatterNode, isCI, mdProcessor, mdxProcessor } from './utils.js'
 import { resolveReference } from './resolve-reference.js'
 import { resolveRelease } from './resolve-release.js'
+import type { NormalizedReferenceSource, ReleaseNotesOptions } from './types.js'
+import { getFrontmatterNode, isCI, mdProcessor, mdxProcessor } from './utils.js'
 
 const MD_REF_START_COMMENT_PATTERN = /<!-{2,} *reference-start#(.+) *-{2,}>/
 const MDX_REF_START_COMMENT_PATTERN = /{\/\*+ *reference-start#(.+) *\*+\/}/

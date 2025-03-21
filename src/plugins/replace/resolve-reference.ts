@@ -7,10 +7,11 @@ import { render } from 'ejs'
 import type { Content } from 'mdast'
 import { red } from 'yoctocolors'
 
+import { resolveRepo } from '../../utils/index.js'
+
 import { parseToc } from './parse-toc.js'
 import type { NormalizedReferenceSource } from './types.js'
 import { getFrontmatterNode, mdProcessor, mdxProcessor } from './utils.js'
-import { resolveRepo } from '../../utils/index.js'
 
 export interface ResolveReferenceResult {
   publicBase: string

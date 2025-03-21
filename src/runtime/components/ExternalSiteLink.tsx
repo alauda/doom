@@ -4,15 +4,14 @@ import {
   isExternalUrl,
   removeLeadingSlash,
 } from '@rspress/shared'
-import clsx from 'clsx'
-import { type AnchorHTMLAttributes, type ReactNode, useMemo } from 'react'
-
-import { Directive } from './Directive.js'
-
+import { clsx } from 'clsx'
 import virtual from 'doom-@global-virtual'
+import { type AnchorHTMLAttributes, type ReactNode, useMemo } from 'react'
 
 import classes from '../../../styles/link.module.scss'
 import { useIsPrint } from '../hooks/index.js'
+
+import { Directive } from './Directive.js'
 
 export interface ExternalSiteLinkProps
   extends AnchorHTMLAttributes<HTMLAnchorElement> {

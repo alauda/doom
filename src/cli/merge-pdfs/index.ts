@@ -1,8 +1,10 @@
 import { readFileSync } from 'node:fs'
+
 import { yellowBright } from 'yoctocolors'
 
 import _pyodide from '../../../pyodide/pyodide.js'
 import { pkgResolve } from '../../utils/helpers.js'
+
 import { formatDate } from './formatDate.js'
 
 /**

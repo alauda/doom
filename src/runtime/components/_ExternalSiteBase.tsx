@@ -1,11 +1,11 @@
 import { useLang } from '@rspress/core/runtime'
+import virtual from 'doom-@global-virtual'
 import { type FC, useMemo } from 'react'
 
 import { handleCJKWhitespaces } from '../utils.js'
-import Directive from './Directive.js'
-import ExternalSiteLink from './ExternalSiteLink.js'
 
-import virtual from 'doom-@global-virtual'
+import { Directive } from './Directive.js'
+import { ExternalSiteLink } from './ExternalSiteLink.js'
 
 export interface ExternalSiteBaseProps {
   name: string

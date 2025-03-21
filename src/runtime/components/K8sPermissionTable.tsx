@@ -1,5 +1,7 @@
 import { useLang } from '@rspress/core/runtime'
 import { getCustomMDXComponent } from '@rspress/core/theme'
+import functionResourcesMap from 'doom-@permission-functionResourcesMap'
+import roleTemplatesMap from 'doom-@permission-roleTemplatesMap'
 import { intersection, sortBy } from 'es-toolkit'
 import { Fragment, useMemo, useState } from 'react'
 
@@ -9,9 +11,6 @@ import type {
   RoleTemplateRuleVerb,
 } from '../../plugins/index.js'
 import { useTranslation } from '../hooks/index.js'
-
-import functionResourcesMap from 'doom-@permission-functionResourcesMap'
-import roleTemplatesMap from 'doom-@permission-roleTemplatesMap'
 
 export interface K8sPermissionTableProps {
   functions: string[]

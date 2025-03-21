@@ -1,5 +1,5 @@
 import { useDark } from '@rspress/core/runtime'
-import clsx from 'clsx'
+import { clsx } from 'clsx'
 import mermaid from 'mermaid'
 import type { FC } from 'react'
 import { useEffect, useId, useRef } from 'react'

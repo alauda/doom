@@ -1,5 +1,5 @@
-import { Link } from '@rspress/core/theme'
 import { normalizeImagePath } from '@rspress/core/runtime'
+import { Link } from '@rspress/core/theme'
 
 import classes from '../../../styles/quick-nav.module.scss'
 

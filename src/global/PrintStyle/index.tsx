@@ -1,5 +1,6 @@
-import { useIsPrintQuery } from '@alauda/doom/runtime'
 import { useEffect } from 'react'
+
+import { useIsPrintQuery } from '@alauda/doom/runtime'
 
 export const PrintStyle = () => {
   const isPrint = useIsPrintQuery()

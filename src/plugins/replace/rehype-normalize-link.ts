@@ -1,8 +1,9 @@
-import type { Plugin } from 'unified'
-import type { Root } from 'hast'
-import { visit } from 'unist-util-visit'
 import { isExternalUrl } from '@rspress/core'
+import type { Root } from 'hast'
 import type { MdxjsEsm } from 'mdast-util-mdxjs-esm'
+import type { Plugin } from 'unified'
+import { visit } from 'unist-util-visit'
+
 import { getASTNodeImport } from './utils.js'
 
 const getMdxSrcAttribute = (tempVar: string) => {

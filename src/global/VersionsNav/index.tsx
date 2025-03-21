@@ -1,4 +1,3 @@
-import { useTranslation } from '@alauda/doom/runtime'
 import {
   isProduction,
   NoSSR,
@@ -7,16 +6,18 @@ import {
   usePageData,
 } from '@rspress/core/runtime'
 import type { NavItem } from '@rspress/shared'
+import virtual from 'doom-@global-virtual'
 import { noop } from 'es-toolkit'
 import { useEffect, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { parse } from 'yaml'
 
 import { ACP_BASE, getPdfName } from '../../shared/index.js'
+
 import { NavMenuGroup } from './NavMenuGroup.js'
 import { NavMenuSingleItem } from './NavMenuSingleItem.js'
 
-import virtual from 'doom-@global-virtual'
+import { useTranslation } from '@alauda/doom/runtime'
 
 const getNavMenu = () => {
   if (typeof document === 'undefined') {

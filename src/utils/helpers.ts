@@ -6,6 +6,7 @@ import { parse } from 'yaml'
 
 import { JSON_EXTENSION, YAML_EXTENSIONS } from '../cli/constants.js'
 import type { StringMapper } from '../shared/types.js'
+
 import { BASE_DIR, PKG_DIR } from './constants.js'
 
 export const baseResolve = (...paths: string[]) =>

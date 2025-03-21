@@ -1,8 +1,7 @@
+import virtual from 'doom-@api-virtual'
 import { last, upperFirst } from 'es-toolkit'
 import { get } from 'es-toolkit/compat'
 import type { OpenAPIV3_1 } from 'openapi-types'
-
-import virtual from 'doom-@api-virtual'
 
 export const modelName = (ref: string) => upperFirst(last(ref.split('.'))!)
 

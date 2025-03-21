@@ -1,6 +1,7 @@
-import { useSiteOverrides } from '@alauda/doom/runtime'
 import { usePageData } from '@rspress/core/runtime'
 import { useEffect } from 'react'
+
+import { useSiteOverrides } from '@alauda/doom/runtime'
 
 const setNavBarSpans = (logoText: string) => {
   const navBarLinks = document.querySelectorAll('[class^=navBarTitle] > a')

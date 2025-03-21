@@ -1,4 +1,5 @@
 import { isProduction, usePageData } from '@rspress/core/runtime'
+import virtual from 'doom-@global-virtual'
 import { merge } from 'es-toolkit/compat'
 import { useEffect, useMemo, useState } from 'react'
 import { parse } from 'yaml'
@@ -6,9 +7,8 @@ import { parse } from 'yaml'
 import type { DoomSite } from '../../shared/types.js'
 import { namedTerms, type NamedTerms, type TermName } from '../../terms.js'
 import type { Locale } from '../translation.js'
-import { useLocale } from './useTranslation.js'
 
-import virtual from 'doom-@global-virtual'
+import { useLocale } from './useTranslation.js'
 
 export type SiteOverridesTerms = Record<TermName, string>
 

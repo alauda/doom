@@ -8,6 +8,7 @@ import { autoSidebar, type DoomSidebar } from '../plugins/index.js'
 import { getPdfName } from '../shared/index.js'
 import type { GlobalCliOptions, ServeOptions } from '../types.js'
 import { pathExists, setNodeEnv } from '../utils/index.js'
+
 import {
   generatePdf,
   type GeneratePdfOptions,

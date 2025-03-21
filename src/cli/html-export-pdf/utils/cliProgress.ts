@@ -1,5 +1,5 @@
-import { blue, cyan, dim, green, yellow } from 'yoctocolors'
 import { Presets, SingleBar } from 'cli-progress'
+import { blue, cyan, dim, green, yellow } from 'yoctocolors'
 
 function replaceTitle(title: string) {
   return title.length ? `|| ${title}` : ''

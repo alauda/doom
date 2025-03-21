@@ -1,9 +1,10 @@
+import path from 'node:path'
+
 import {
   addTrailingSlash,
   type RspressPlugin,
   type UserConfig,
 } from '@rspress/core'
-import path from 'node:path'
 
 import { combineWalkResult } from './utils.js'
 import { walk } from './walk.js'

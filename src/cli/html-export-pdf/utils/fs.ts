@@ -1,6 +1,6 @@
-import { dirname } from 'node:path'
 import type { Buffer } from 'node:buffer'
 import { existsSync, promises as fs } from 'node:fs'
+import { dirname } from 'node:path'
 
 /**
  * Write file safely

@@ -1,7 +1,8 @@
-import fse from 'fs-extra'
 import { Buffer } from 'node:buffer'
+import fs from 'node:fs/promises'
 import { join, relative } from 'node:path'
 import process from 'node:process'
+
 import {
   asPDFName,
   PDFArray,
@@ -15,6 +16,7 @@ import { red } from 'yoctocolors'
 
 import type { OutlineNode } from '../../html-export-pdf/index.js'
 import { mergePDFs } from '../../merge-pdfs/index.js'
+
 import { convertPathToPosix } from './convertPathToPosix.js'
 import { getUrlLink } from './getUrlLink.js'
 
@@ -177,7 +179,7 @@ export async function mergePDF(
   const saveDirPath = join(process.cwd(), outDir)
 
   if (outDir) {
-    fse.ensureDirSync(saveDirPath)
+    await fs.mkdir(saveDirPath, { recursive: true })
   }
 
   const saveFilePath = join(saveDirPath, outFile)
@@ -190,7 +192,7 @@ export async function mergePDF(
     )
     process.exit(1)
   } else if (pages.length === 1) {
-    fse.moveSync(pages[0].pagePath, saveFilePath, { overwrite: true })
+    await fs.rename(pages[0].pagePath, saveFilePath)
   } else {
     let pdfData: Buffer | Uint8Array
     if (pdfOutlines.length > 0) {
@@ -209,7 +211,7 @@ export async function mergePDF(
       pdfData = await merger.saveAsBuffer()
     }
 
-    fse.writeFileSync(saveFilePath, pdfData, { encoding: 'binary' })
+    await fs.writeFile(saveFilePath, pdfData)
   }
 
   return relative(process.cwd(), saveFilePath)
