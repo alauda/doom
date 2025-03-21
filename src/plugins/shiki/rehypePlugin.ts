@@ -67,9 +67,6 @@ export const rehypePluginShiki: Plugin<[Options], Root> =
         parent?.children.splice(index!, 1, {
           type: 'element',
           tagName: 'pre',
-          properties: {
-            className: 'code',
-          },
           children: fragmentAst.children as ElementContent[],
         })
       }

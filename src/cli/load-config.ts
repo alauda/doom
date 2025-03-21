@@ -180,6 +180,9 @@ const getCommonConfig = ({
       }),
     ],
     builderConfig: {
+      dev: {
+        lazyCompilation: true,
+      },
       plugins: [pluginYaml()],
       server: {
         open,

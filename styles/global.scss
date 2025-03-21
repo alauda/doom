@@ -1,3 +1,5 @@
+@use "sass:color";
+
 @import url(./shiki.css);
 
 th,
@@ -88,6 +90,22 @@ td {
       }
     }
   }
+}
+
+.doom-tabs {
+  div.language-mdx {
+    margin: 24px 0;
+  }
+
+  .language-mdx {
+    // https://github.com/web-infra-dev/rspress/blob/bbe6476c8394f9c95a98fd791f0614481f89d878/packages/theme-default/src/styles/code.css#L6
+    --rp-code-block-bg: #{color.adjust($color: #f6f8fa, $lightness: -5%)};
+  }
+}
+
+.dark .doom-tabs .language-mdx {
+  // https://github.com/web-infra-dev/rspress/blob/bbe6476c8394f9c95a98fd791f0614481f89d878/packages/theme-default/src/styles/code.css#L17
+  --rp-code-block-bg: #{color.adjust($color: #242424, $lightness: 5%)};
 }
 
 @mixin print {

@@ -22,6 +22,63 @@ export interface OpenAPIRefProps {
   collectRefs?: boolean
 }
 
+export const OpenAPIProperty = ({
+  name,
+  property,
+  openapi,
+}: {
+  name?: string
+  property: OpenAPIV3_1.ReferenceObject | OpenAPIV3_1.SchemaObject
+  openapi: OpenAPIV3_1.Document
+}) => {
+  const propObj =
+    '$ref' in property ? resolveRef(openapi, property.$ref) : property
+  const type = propObj.type
+  let typeNode: ReactNode
+  if (type === 'array') {
+    const { items } = propObj
+    const itemsObj = '$ref' in items ? resolveRef(openapi, items.$ref) : items
+    const itemsType = itemsObj.type
+    typeNode = (
+      <code>
+        []
+        {'$ref' in items ? <RefLink $ref={items.$ref} /> : itemsType}
+      </code>
+    )
+  } else if (type === 'object') {
+    if (typeof propObj.additionalProperties === 'object') {
+      const props = propObj.additionalProperties
+      const propsObj = '$ref' in props ? resolveRef(openapi, props.$ref) : props
+      const propsType = propsObj.type
+      typeNode = (
+        <code>
+          map[string]
+          {typeof propsType === 'string'
+            ? propsType
+            : '$ref' in props && <RefLink $ref={props.$ref} />}
+        </code>
+      )
+    } else {
+      typeNode = <code>{type}</code>
+    }
+  } else if (typeof type === 'string') {
+    typeNode = <code>{type}</code>
+  } else if ('$ref' in property) {
+    typeNode = <RefLink $ref={property.$ref} />
+  }
+  return (
+    <>
+      {name && (
+        <>
+          <code>{name}</code>:{' '}
+        </>
+      )}
+      {typeNode}
+      <Markdown>{propObj.description}</Markdown>
+    </>
+  )
+}
+
 export const OpenAPIProperties = ({
   properties,
   openapi,
@@ -35,52 +92,11 @@ export const OpenAPIProperties = ({
   const [X] = useState(getCustomMDXComponent)
   return (
     <X.ul>
-      {Object.entries(properties).map(([name, prop], index) => {
-        const propObj = '$ref' in prop ? resolveRef(openapi, prop.$ref) : prop
-        const type = propObj.type
-        let typeNode: ReactNode
-        if (type === 'array') {
-          const { items } = propObj
-          const itemsObj =
-            '$ref' in items ? resolveRef(openapi, items.$ref) : items
-          const itemsType = itemsObj.type
-          typeNode = (
-            <code>
-              []
-              {typeof itemsType === 'string'
-                ? itemsType
-                : '$ref' in items && <RefLink $ref={items.$ref} />}
-            </code>
-          )
-        } else if (type === 'object') {
-          if (typeof propObj.additionalProperties === 'object') {
-            const props = propObj.additionalProperties
-            const propsObj =
-              '$ref' in props ? resolveRef(openapi, props.$ref) : props
-            const propsType = propsObj.type
-            typeNode = (
-              <code>
-                map[string]
-                {typeof propsType === 'string'
-                  ? propsType
-                  : '$ref' in props && <RefLink $ref={props.$ref} />}
-              </code>
-            )
-          } else {
-            typeNode = <code>{type}</code>
-          }
-        } else if (typeof type === 'string') {
-          typeNode = <code>{type}</code>
-        } else if ('$ref' in prop) {
-          typeNode = <RefLink $ref={prop.$ref} />
-        }
-        return (
-          <X.li key={index}>
-            <code>{name}</code>: {typeNode}
-            <Markdown>{propObj.description}</Markdown>
-          </X.li>
-        )
-      })}
+      {Object.entries(properties).map(([name, property], index) => (
+        <X.li key={index}>
+          <OpenAPIProperty name={name} property={property} openapi={openapi} />
+        </X.li>
+      ))}
     </X.ul>
   )
 }

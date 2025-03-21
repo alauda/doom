@@ -3,7 +3,10 @@ import { last, upperFirst } from 'es-toolkit'
 import { get } from 'es-toolkit/compat'
 import type { OpenAPIV3_1 } from 'openapi-types'
 
-export const modelName = (ref: string) => upperFirst(last(ref.split('.'))!)
+export const modelName = (ref: string) => {
+  const lastPart = last(ref.split('.'))!
+  return upperFirst(lastPart.startsWith('#') ? lastPart.slice(1) : lastPart)
+}
 
 export const resolveRef = <
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters

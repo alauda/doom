@@ -1,0 +1,1089 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Logging API",
+    "version": "1.0.0",
+    "description": "API for log querying, aggregation, context retrieval, and export with authentication support."
+  },
+  "host": "api.example.com",
+  "basePath": "/",
+  "schemes": ["https"],
+  "paths": {
+    "/platform/logging.alauda.io/v2/logs/search": {
+      "get": {
+        "summary": "Log Search",
+        "description": "Search logs with authentication.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/start"
+          },
+          {
+            "$ref": "#/parameters/end"
+          },
+          {
+            "$ref": "#/parameters/page"
+          },
+          {
+            "$ref": "#/parameters/pageSize"
+          },
+          {
+            "$ref": "#/parameters/ascending"
+          },
+          {
+            "$ref": "#/parameters/clusterQuery"
+          },
+          {
+            "$ref": "#/parameters/logType"
+          },
+          {
+            "$ref": "#/parameters/projects"
+          },
+          {
+            "$ref": "#/parameters/namespaces"
+          },
+          {
+            "$ref": "#/parameters/workloads"
+          },
+          {
+            "$ref": "#/parameters/podNames"
+          },
+          {
+            "$ref": "#/parameters/containerNames"
+          },
+          {
+            "$ref": "#/parameters/nodes"
+          },
+          {
+            "$ref": "#/parameters/paths"
+          },
+          {
+            "$ref": "#/parameters/products"
+          },
+          {
+            "$ref": "#/parameters/components"
+          },
+          {
+            "$ref": "#/parameters/queryParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful log search response",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/LogEntry"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/platform/logging.alauda.io/v2/clusters/{cluster}/logs/search": {
+      "get": {
+        "summary": "Log Search by Cluster",
+        "description": "Search logs by cluster with authentication.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/cluster"
+          },
+          {
+            "$ref": "#/parameters/start"
+          },
+          {
+            "$ref": "#/parameters/end"
+          },
+          {
+            "$ref": "#/parameters/page"
+          },
+          {
+            "$ref": "#/parameters/pageSize"
+          },
+          {
+            "$ref": "#/parameters/ascending"
+          },
+          {
+            "$ref": "#/parameters/logType"
+          },
+          {
+            "$ref": "#/parameters/projects"
+          },
+          {
+            "$ref": "#/parameters/namespaces"
+          },
+          {
+            "$ref": "#/parameters/workloads"
+          },
+          {
+            "$ref": "#/parameters/podNames"
+          },
+          {
+            "$ref": "#/parameters/containerNames"
+          },
+          {
+            "$ref": "#/parameters/nodes"
+          },
+          {
+            "$ref": "#/parameters/paths"
+          },
+          {
+            "$ref": "#/parameters/products"
+          },
+          {
+            "$ref": "#/parameters/components"
+          },
+          {
+            "$ref": "#/parameters/queryParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful log search response",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/LogEntry"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/platform/logging.alauda.io/v2/projects/{project}/clusters/{cluster}/namespaces/{namespace}/logs/search": {
+      "get": {
+        "summary": "Log Search by Project, Cluster and Namespace",
+        "description": "Search logs within a specific project, cluster, and namespace with authentication.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/project"
+          },
+          {
+            "$ref": "#/parameters/cluster"
+          },
+          {
+            "$ref": "#/parameters/namespace"
+          },
+          {
+            "$ref": "#/parameters/start"
+          },
+          {
+            "$ref": "#/parameters/end"
+          },
+          {
+            "$ref": "#/parameters/page"
+          },
+          {
+            "$ref": "#/parameters/pageSize"
+          },
+          {
+            "$ref": "#/parameters/ascending"
+          },
+          {
+            "$ref": "#/parameters/logType"
+          },
+          {
+            "$ref": "#/parameters/projects"
+          },
+          {
+            "$ref": "#/parameters/workloads"
+          },
+          {
+            "$ref": "#/parameters/podNames"
+          },
+          {
+            "$ref": "#/parameters/containerNames"
+          },
+          {
+            "$ref": "#/parameters/namespaces"
+          },
+          {
+            "$ref": "#/parameters/nodes"
+          },
+          {
+            "$ref": "#/parameters/paths"
+          },
+          {
+            "$ref": "#/parameters/products"
+          },
+          {
+            "$ref": "#/parameters/components"
+          },
+          {
+            "$ref": "#/parameters/queryParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful log search response",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/LogEntry"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/platform/logging.alauda.io/v2/logs/aggregation": {
+      "get": {
+        "summary": "Log Aggregation",
+        "description": "Aggregate logs into buckets for chart display with authentication.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/buckets"
+          },
+          {
+            "$ref": "#/parameters/start"
+          },
+          {
+            "$ref": "#/parameters/end"
+          },
+          {
+            "$ref": "#/parameters/clusterQuery"
+          },
+          {
+            "$ref": "#/parameters/logType"
+          },
+          {
+            "$ref": "#/parameters/projects"
+          },
+          {
+            "$ref": "#/parameters/namespaces"
+          },
+          {
+            "$ref": "#/parameters/workloads"
+          },
+          {
+            "$ref": "#/parameters/podNames"
+          },
+          {
+            "$ref": "#/parameters/containerNames"
+          },
+          {
+            "$ref": "#/parameters/nodes"
+          },
+          {
+            "$ref": "#/parameters/paths"
+          },
+          {
+            "$ref": "#/parameters/products"
+          },
+          {
+            "$ref": "#/parameters/components"
+          },
+          {
+            "$ref": "#/parameters/queryParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful aggregation response",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "buckets": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/Bucket"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/platform/logging.alauda.io/v2/clusters/{cluster}/logs/aggregation": {
+      "get": {
+        "summary": "Log Aggregation by Cluster",
+        "description": "Aggregate logs by cluster into buckets with authentication.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/cluster"
+          },
+          {
+            "$ref": "#/parameters/buckets"
+          },
+          {
+            "$ref": "#/parameters/start"
+          },
+          {
+            "$ref": "#/parameters/end"
+          },
+          {
+            "$ref": "#/parameters/logType"
+          },
+          {
+            "$ref": "#/parameters/projects"
+          },
+          {
+            "$ref": "#/parameters/namespaces"
+          },
+          {
+            "$ref": "#/parameters/workloads"
+          },
+          {
+            "$ref": "#/parameters/podNames"
+          },
+          {
+            "$ref": "#/parameters/containerNames"
+          },
+          {
+            "$ref": "#/parameters/nodes"
+          },
+          {
+            "$ref": "#/parameters/paths"
+          },
+          {
+            "$ref": "#/parameters/products"
+          },
+          {
+            "$ref": "#/parameters/components"
+          },
+          {
+            "$ref": "#/parameters/queryParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful aggregation response",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "buckets": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/Bucket"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/platform/logging.alauda.io/v2/projects/{project}/clusters/{cluster}/namespaces/{namespace}/logs/aggregation": {
+      "get": {
+        "summary": "Log Aggregation by Project, Cluster and Namespace",
+        "description": "Aggregate logs within a specific project, cluster, and namespace into buckets with authentication.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/project"
+          },
+          {
+            "$ref": "#/parameters/cluster"
+          },
+          {
+            "$ref": "#/parameters/namespace"
+          },
+          {
+            "$ref": "#/parameters/buckets"
+          },
+          {
+            "$ref": "#/parameters/start"
+          },
+          {
+            "$ref": "#/parameters/end"
+          },
+          {
+            "$ref": "#/parameters/logType"
+          },
+          {
+            "$ref": "#/parameters/workloads"
+          },
+          {
+            "$ref": "#/parameters/podNames"
+          },
+          {
+            "$ref": "#/parameters/containerNames"
+          },
+          {
+            "$ref": "#/parameters/namespaces"
+          },
+          {
+            "$ref": "#/parameters/nodes"
+          },
+          {
+            "$ref": "#/parameters/paths"
+          },
+          {
+            "$ref": "#/parameters/products"
+          },
+          {
+            "$ref": "#/parameters/components"
+          },
+          {
+            "$ref": "#/parameters/queryParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful aggregation response",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "buckets": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/Bucket"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/platform/logging.alauda.io/v2/logs/context": {
+      "get": {
+        "summary": "Log Context",
+        "description": "Retrieve log context with authentication.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/clusterQuery"
+          },
+          {
+            "$ref": "#/parameters/logIndex"
+          },
+          {
+            "$ref": "#/parameters/logId"
+          },
+          {
+            "$ref": "#/parameters/pageSize"
+          },
+          {
+            "$ref": "#/parameters/direction"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful log context response",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/LogEntry"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/platform/logging.alauda.io/v2/clusters/{cluster}/logs/context": {
+      "get": {
+        "summary": "Log Context by Cluster",
+        "description": "Retrieve log context by cluster with authentication.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/cluster"
+          },
+          {
+            "$ref": "#/parameters/logIndex"
+          },
+          {
+            "$ref": "#/parameters/logId"
+          },
+          {
+            "$ref": "#/parameters/pageSize"
+          },
+          {
+            "$ref": "#/parameters/direction"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful log context response",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/LogEntry"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/platform/logging.alauda.io/v2/projects/{project}/clusters/{cluster}/namespaces/{namespace}/logs/context": {
+      "get": {
+        "summary": "Log Context by Project, Cluster and Namespace",
+        "description": "Retrieve log context within a specific project, cluster, and namespace with authentication.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/project"
+          },
+          {
+            "$ref": "#/parameters/cluster"
+          },
+          {
+            "$ref": "#/parameters/namespace"
+          },
+          {
+            "$ref": "#/parameters/logIndex"
+          },
+          {
+            "$ref": "#/parameters/logId"
+          },
+          {
+            "$ref": "#/parameters/pageSize"
+          },
+          {
+            "$ref": "#/parameters/direction"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful log context response",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/LogEntry"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/platform/logging.alauda.io/v2/logs/archive": {
+      "get": {
+        "summary": "Log Archive",
+        "description": "Export logs as a file with authentication.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/start"
+          },
+          {
+            "$ref": "#/parameters/end"
+          },
+          {
+            "$ref": "#/parameters/page"
+          },
+          {
+            "$ref": "#/parameters/pageSize"
+          },
+          {
+            "$ref": "#/parameters/ascending"
+          },
+          {
+            "$ref": "#/parameters/clusterQuery"
+          },
+          {
+            "$ref": "#/parameters/logType"
+          },
+          {
+            "$ref": "#/parameters/projects"
+          },
+          {
+            "$ref": "#/parameters/namespaces"
+          },
+          {
+            "$ref": "#/parameters/workloads"
+          },
+          {
+            "$ref": "#/parameters/podNames"
+          },
+          {
+            "$ref": "#/parameters/containerNames"
+          },
+          {
+            "$ref": "#/parameters/nodes"
+          },
+          {
+            "$ref": "#/parameters/paths"
+          },
+          {
+            "$ref": "#/parameters/products"
+          },
+          {
+            "$ref": "#/parameters/components"
+          },
+          {
+            "$ref": "#/parameters/queryParam"
+          },
+          {
+            "$ref": "#/parameters/fileType"
+          },
+          {
+            "$ref": "#/parameters/fields"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful log export",
+            "schema": {
+              "type": "file"
+            }
+          }
+        }
+      }
+    },
+    "/platform/logging.alauda.io/v2/clusters/{cluster}/logs/archive": {
+      "get": {
+        "summary": "Log Archive by Cluster",
+        "description": "Export logs by cluster as a file with authentication.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/cluster"
+          },
+          {
+            "$ref": "#/parameters/start"
+          },
+          {
+            "$ref": "#/parameters/end"
+          },
+          {
+            "$ref": "#/parameters/page"
+          },
+          {
+            "$ref": "#/parameters/pageSize"
+          },
+          {
+            "$ref": "#/parameters/ascending"
+          },
+          {
+            "$ref": "#/parameters/logType"
+          },
+          {
+            "$ref": "#/parameters/projects"
+          },
+          {
+            "$ref": "#/parameters/namespaces"
+          },
+          {
+            "$ref": "#/parameters/workloads"
+          },
+          {
+            "$ref": "#/parameters/podNames"
+          },
+          {
+            "$ref": "#/parameters/containerNames"
+          },
+          {
+            "$ref": "#/parameters/nodes"
+          },
+          {
+            "$ref": "#/parameters/paths"
+          },
+          {
+            "$ref": "#/parameters/products"
+          },
+          {
+            "$ref": "#/parameters/components"
+          },
+          {
+            "$ref": "#/parameters/queryParam"
+          },
+          {
+            "$ref": "#/parameters/fileType"
+          },
+          {
+            "$ref": "#/parameters/fields"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful log export",
+            "schema": {
+              "type": "file"
+            }
+          }
+        }
+      }
+    },
+    "/platform/logging.alauda.io/v2/projects/{project}/clusters/{cluster}/namespaces/{namespace}/logs/archive": {
+      "get": {
+        "summary": "Log Archive by Project, Cluster and Namespace",
+        "description": "Export logs within a specific project, cluster, and namespace as a file with authentication.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/project"
+          },
+          {
+            "$ref": "#/parameters/cluster"
+          },
+          {
+            "$ref": "#/parameters/namespace"
+          },
+          {
+            "$ref": "#/parameters/start"
+          },
+          {
+            "$ref": "#/parameters/end"
+          },
+          {
+            "$ref": "#/parameters/page"
+          },
+          {
+            "$ref": "#/parameters/pageSize"
+          },
+          {
+            "$ref": "#/parameters/ascending"
+          },
+          {
+            "$ref": "#/parameters/logType"
+          },
+          {
+            "$ref": "#/parameters/workloads"
+          },
+          {
+            "$ref": "#/parameters/podNames"
+          },
+          {
+            "$ref": "#/parameters/containerNames"
+          },
+          {
+            "$ref": "#/parameters/namespaces"
+          },
+          {
+            "$ref": "#/parameters/nodes"
+          },
+          {
+            "$ref": "#/parameters/paths"
+          },
+          {
+            "$ref": "#/parameters/products"
+          },
+          {
+            "$ref": "#/parameters/components"
+          },
+          {
+            "$ref": "#/parameters/queryParam"
+          },
+          {
+            "$ref": "#/parameters/fileType"
+          },
+          {
+            "$ref": "#/parameters/fields"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful log export",
+            "schema": {
+              "type": "file"
+            }
+          }
+        }
+      }
+    }
+  },
+  "parameters": {
+    "start": {
+      "name": "start",
+      "in": "query",
+      "description": "Start time of the time range.",
+      "required": true,
+      "type": "number",
+      "format": "float"
+    },
+    "end": {
+      "name": "end",
+      "in": "query",
+      "description": "End time of the time range.",
+      "required": true,
+      "type": "number",
+      "format": "float"
+    },
+    "page": {
+      "name": "page",
+      "in": "query",
+      "description": "Page number for the query results.",
+      "required": true,
+      "type": "integer"
+    },
+    "pageSize": {
+      "name": "pageSize",
+      "in": "query",
+      "description": "Number of records per page. For export, 0 means export all.",
+      "required": false,
+      "type": "integer"
+    },
+    "ascending": {
+      "name": "ascending",
+      "in": "query",
+      "description": "Sort order. Default is false (descending).",
+      "required": false,
+      "type": "boolean",
+      "default": false
+    },
+    "cluster": {
+      "name": "cluster",
+      "in": "path",
+      "description": "Name of the cluster.",
+      "required": true,
+      "type": "string"
+    },
+    "clusterQuery": {
+      "name": "cluster",
+      "in": "query",
+      "description": "Name of the cluster.",
+      "required": true,
+      "type": "string"
+    },
+    "logType": {
+      "name": "logType",
+      "in": "query",
+      "description": "Type of log. Options: system, platform, kubernetes, workload. Default is workload.",
+      "required": false,
+      "type": "string",
+      "enum": ["system", "platform", "kubernetes", "workload"],
+      "default": "workload"
+    },
+    "projects": {
+      "name": "projects",
+      "in": "query",
+      "description": "Project names for application logs, comma separated.",
+      "required": false,
+      "type": "string"
+    },
+    "namespaces": {
+      "name": "namespaces",
+      "in": "query",
+      "description": "Namespace names for application logs, comma separated.",
+      "required": false,
+      "type": "string"
+    },
+    "workloads": {
+      "name": "workloads",
+      "in": "query",
+      "description": "Workload type and name pairs for application logs, e.g., Deployment:lanaya. Multiple values separated by commas.",
+      "required": false,
+      "type": "string"
+    },
+    "podNames": {
+      "name": "podNames",
+      "in": "query",
+      "description": "Pod names, comma separated.",
+      "required": false,
+      "type": "string"
+    },
+    "containerNames": {
+      "name": "containerNames",
+      "in": "query",
+      "description": "Container names, comma separated.",
+      "required": false,
+      "type": "string"
+    },
+    "nodes": {
+      "name": "nodes",
+      "in": "query",
+      "description": "Node names, comma separated.",
+      "required": false,
+      "type": "string"
+    },
+    "paths": {
+      "name": "paths",
+      "in": "query",
+      "description": "Path names, comma separated.",
+      "required": false,
+      "type": "string"
+    },
+    "products": {
+      "name": "products",
+      "in": "query",
+      "description": "Product names for product logs, comma separated.",
+      "required": false,
+      "type": "string"
+    },
+    "components": {
+      "name": "components",
+      "in": "query",
+      "description": "Component names for product logs or Kubernetes logs, comma separated.",
+      "required": false,
+      "type": "string"
+    },
+    "queryParam": {
+      "name": "query",
+      "in": "query",
+      "description": "Query keywords, supports AND, OR, and escape with backslash.",
+      "required": false,
+      "type": "string"
+    },
+    "buckets": {
+      "name": "buckets",
+      "in": "query",
+      "description": "Number of buckets for aggregation. Default is 30.",
+      "required": false,
+      "type": "integer",
+      "default": 30
+    },
+    "logIndex": {
+      "name": "logIndex",
+      "in": "query",
+      "description": "Name of the log index (ES index or CK table name).",
+      "required": true,
+      "type": "string"
+    },
+    "logId": {
+      "name": "logId",
+      "in": "query",
+      "description": "Log ID.",
+      "required": true,
+      "type": "string"
+    },
+    "direction": {
+      "name": "direction",
+      "in": "query",
+      "description": "Context direction. Either 'before' or 'after'.",
+      "required": false,
+      "type": "string",
+      "enum": ["before", "after"]
+    },
+    "fileType": {
+      "name": "fileType",
+      "in": "query",
+      "description": "File type for export. Options: txt, csv.",
+      "required": false,
+      "type": "string",
+      "enum": ["txt", "csv"]
+    },
+    "fields": {
+      "name": "fields",
+      "in": "query",
+      "description": "Output field names, comma separated.",
+      "required": false,
+      "type": "string"
+    },
+    "project": {
+      "name": "project",
+      "in": "path",
+      "description": "Name of the project.",
+      "required": true,
+      "type": "string"
+    },
+    "namespace": {
+      "name": "namespace",
+      "in": "path",
+      "description": "Name of the namespace.",
+      "required": true,
+      "type": "string"
+    }
+  },
+  "definitions": {
+    "LogEntry": {
+      "type": "object",
+      "properties": {
+        "time": {
+          "type": "number",
+          "description": "Time of the log entry."
+        },
+        "node": {
+          "type": "string",
+          "description": "Name of the node."
+        },
+        "podName": {
+          "type": "string",
+          "description": "Name of the pod."
+        },
+        "podId": {
+          "type": "string",
+          "description": "Identifier of the pod."
+        },
+        "logData": {
+          "type": "string",
+          "description": "Log data as a JSON string."
+        },
+        "logLevel": {
+          "type": "string",
+          "description": "Severity level of the log."
+        },
+        "containerName": {
+          "type": "string",
+          "description": "Name of the container."
+        },
+        "cluster": {
+          "type": "string",
+          "description": "Name of the cluster."
+        },
+        "containerId": {
+          "type": "string",
+          "description": "Identifier of the container."
+        },
+        "containerId8": {
+          "type": "string",
+          "description": "Shortened container identifier."
+        },
+        "@timestamp": {
+          "type": "string",
+          "description": "Timestamp in string format."
+        },
+        "namespace": {
+          "type": "string",
+          "description": "Namespace of the log."
+        },
+        "project": {
+          "type": "string",
+          "description": "Project associated with the log."
+        },
+        "path": {
+          "type": "string",
+          "description": "Log path."
+        },
+        "logId": {
+          "type": "string",
+          "description": "Unique identifier of the log."
+        },
+        "logType": {
+          "type": "string",
+          "description": "Type of the log."
+        },
+        "logIndex": {
+          "type": "string",
+          "description": "Index name for the log."
+        },
+        "component": {
+          "type": "string",
+          "description": "Component related to the log."
+        },
+        "product": {
+          "type": "string",
+          "description": "Product name associated with the log."
+        },
+        "workload": {
+          "type": "string",
+          "description": "Workload details."
+        }
+      }
+    },
+    "Bucket": {
+      "type": "object",
+      "properties": {
+        "time": {
+          "type": "number"
+        },
+        "count": {
+          "type": "integer"
+        }
+      }
+    }
+  }
+}

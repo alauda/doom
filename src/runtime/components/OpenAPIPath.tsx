@@ -8,7 +8,7 @@ import { Fragment, useMemo, useState, type ReactNode } from 'react'
 
 import { omitRoutePathRefs, resolveRef } from '../utils.js'
 
-import { OpenAPIRef } from './OpenAPIRef.js'
+import { OpenAPIProperties, OpenAPIProperty, OpenAPIRef } from './OpenAPIRef.js'
 import { HeadingTitle } from './_HeadingTitle.js'
 import { Markdown } from './_Markdown.js'
 import { RefLink } from './_RefLink.js'
@@ -79,19 +79,45 @@ export const OpenAPIResponses = ({
           '$ref' in response
             ? resolveRef<OpenAPIV3_1.ResponseObject>(openapi, response.$ref)
             : response
-        const schema = responseObj.content?.['application/json'].schema
-        let refNode: ReactNode
-        if (schema && '$ref' in schema) {
-          refNode = (
-            <>
-              (<RefLink $ref={schema.$ref} />)
-            </>
-          )
+        const responseContent = responseObj.content
+        const schema = (
+          responseContent?.['application/json'] ?? responseContent?.['*/*']
+        )?.schema
+        const type = schema && ('$ref' in schema ? schema : schema.type)
+        let typeNode: ReactNode
+        let extraNode: ReactNode
+        if (typeof type === 'string') {
+          typeNode = <code>{type}</code>
+          if (
+            type === 'object' &&
+            'properties' in schema! &&
+            schema.properties
+          ) {
+            extraNode = (
+              <div className="my-4">
+                Properties:
+                <OpenAPIProperties
+                  properties={schema.properties}
+                  openapi={openapi}
+                />
+              </div>
+            )
+          } else if (type === 'array' && 'items' in schema! && schema.items) {
+            extraNode = (
+              <div className="my-4">
+                Items:
+                <OpenAPIProperty property={schema.items} openapi={openapi} />
+              </div>
+            )
+          }
+        } else if (type && '$ref' in type) {
+          typeNode = <RefLink $ref={type.$ref} />
         }
         return (
           <X.li key={code}>
             <code>{code}</code>
-            {refNode}: {responseObj.description}
+            {typeNode}: {responseObj.description}
+            {extraNode}
           </X.li>
         )
       })}
