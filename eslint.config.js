@@ -61,6 +61,7 @@ export default config(
           'newlines-between': 'always',
         },
       ],
+      'prefer-const': ['error', { destructuring: 'all' }],
     },
   },
   {

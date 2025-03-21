@@ -2,8 +2,11 @@ import { NoSSR, useLang } from '@rspress/core/runtime'
 import {
   addTrailingSlash,
   isExternalUrl,
+  normalizeHref,
+  parseUrl,
   removeLeadingSlash,
 } from '@rspress/shared'
+import { DEFAULT_PAGE_EXTENSIONS } from '@rspress/shared/constants'
 import { clsx } from 'clsx'
 import virtual from 'doom-@global-virtual'
 import { type AnchorHTMLAttributes, type ReactNode, useMemo } from 'react'
@@ -43,6 +46,18 @@ const ExternalSiteLink_ = ({
     return <Directive type="danger">Invalid href `{href}` found</Directive>
   }
 
+  let { url, hash } = parseUrl(href)
+
+  const extname = url.split('.').pop()
+
+  if (extname) {
+    if (DEFAULT_PAGE_EXTENSIONS.includes(`.${extname}`)) {
+      url = url.replace(new RegExp(`\\.${extname}$`), '')
+    }
+  }
+
+  url = removeLeadingSlash(normalizeHref(url))
+
   return (
     <a
       href={
@@ -52,7 +67,7 @@ const ExternalSiteLink_ = ({
           ? addTrailingSlash(site.base + site.version)
           : site.base) +
         (lang ? addTrailingSlash(lang) : '') +
-        removeLeadingSlash(href)
+        (hash ? `${url}#${hash}` : url)
       }
       target="_blank"
       rel="noopener noreferrer"
