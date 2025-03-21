@@ -1,6 +1,6 @@
 {
   "name": "@alauda/doom",
-  "version": "0.15.3",
+  "version": "0.15.4",
   "type": "module",
   "description": "Doctor Doom making docs.",
   "repository": {
@@ -45,9 +45,9 @@
   "dependencies": {
     "@inquirer/prompts": "^7.4.0",
     "@openapi-contrib/openapi-schema-to-json-schema": "^5.1.0",
-    "@playwright/browser-chromium": "^1.51.0",
+    "@playwright/browser-chromium": "^1.51.1",
     "@rsbuild/plugin-yaml": "^1.0.2",
-    "@rspress/core": "1.43.7",
+    "@rspress/core": "1.43.8",
     "@shikijs/transformers": "^3.2.1",
     "chokidar": "^4.0.3",
     "cli-progress": "^3.12.0",
@@ -87,7 +87,7 @@
     "@types/fs-extra": "^11.0.4",
     "@types/node": "^18.19.80",
     "@types/picomatch": "^3.0.2",
-    "@types/react": "^18.3.18",
+    "@types/react": "^18.3.19",
     "@types/react-dom": "^18.3.5",
     "@types/swagger2openapi": "^7.0.4",
     "@unts/patch-package": "^8.1.1",
@@ -96,9 +96,9 @@
     "npm-run-all2": "^7.0.2",
     "prettier": "^3.5.3",
     "prettier-plugin-pkg": "^0.18.1",
-    "simple-git-hooks": "^2.11.1",
+    "simple-git-hooks": "^2.12.1",
     "typescript": "^5.8.2",
-    "typescript-eslint": "^8.26.1",
+    "typescript-eslint": "^8.27.0",
     "yarn-berry-deduplicate": "^6.1.1"
   },
   "publishConfig": {

@@ -90,18 +90,6 @@ td {
   }
 }
 
-[class^='aside-container_']:has(.hidden) {
-  display: none;
-}
-
-[class*=' sticky_'] + section .rspress-local-toc-container {
-  margin-top: var(--rp-nav-height);
-}
-
-.rspress-sidebar-menu-container:has(ul:empty) {
-  display: none;
-}
-
 @mixin print {
   .rspress {
     &-nav,
