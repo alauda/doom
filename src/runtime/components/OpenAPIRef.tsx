@@ -35,6 +35,7 @@ export const OpenAPIProperty = ({
     '$ref' in property ? resolveRef(openapi, property.$ref) : property
   const type = propObj.type
   let typeNode: ReactNode
+  let extraNode: ReactNode
   if (type === 'array') {
     const { items } = propObj
     const itemsObj = '$ref' in items ? resolveRef(openapi, items.$ref) : items
@@ -46,6 +47,17 @@ export const OpenAPIProperty = ({
       </code>
     )
   } else if (type === 'object') {
+    if ('properties' in property && property.properties) {
+      extraNode = (
+        <div className="my-4">
+          <em>Properties:</em>
+          <OpenAPIProperties
+            properties={property.properties}
+            openapi={openapi}
+          />
+        </div>
+      )
+    }
     if (typeof propObj.additionalProperties === 'object') {
       const props = propObj.additionalProperties
       const propsObj = '$ref' in props ? resolveRef(openapi, props.$ref) : props
@@ -75,6 +87,7 @@ export const OpenAPIProperty = ({
       )}
       {typeNode}
       <Markdown>{propObj.description}</Markdown>
+      {extraNode}
     </>
   )
 }

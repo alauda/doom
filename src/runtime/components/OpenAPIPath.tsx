@@ -95,7 +95,7 @@ export const OpenAPIResponses = ({
           ) {
             extraNode = (
               <div className="my-4">
-                Properties:
+                <em>Properties:</em>
                 <OpenAPIProperties
                   properties={schema.properties}
                   openapi={openapi}
@@ -105,7 +105,7 @@ export const OpenAPIResponses = ({
           } else if (type === 'array' && 'items' in schema! && schema.items) {
             extraNode = (
               <div className="my-4">
-                Items:
+                <em>Items:</em>
                 <OpenAPIProperty property={schema.items} openapi={openapi} />
               </div>
             )

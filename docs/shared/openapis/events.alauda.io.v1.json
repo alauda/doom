@@ -1,0 +1,384 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "K8s Events API",
+    "description": "API for retrieving Kubernetes events."
+  },
+  "host": "api.example.com",
+  "basePath": "/",
+  "schemes": ["http", "https"],
+  "paths": {
+    "/platform/events.alauda.io/v1/events": {
+      "get": {
+        "summary": "Retrieve Kubernetes events",
+        "description": "Retrieve the k8s events using query parameters.",
+        "parameters": [
+          {
+            "name": "start_time",
+            "in": "query",
+            "description": "Required: Unix timestamp for start time.",
+            "required": true,
+            "type": "number",
+            "format": "int64"
+          },
+          {
+            "name": "end_time",
+            "in": "query",
+            "description": "Required: Unix timestamp for end time.",
+            "required": true,
+            "type": "number",
+            "format": "int64"
+          },
+          {
+            "name": "cluster",
+            "in": "query",
+            "description": "Required: Name of the Kubernetes cluster.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "pageno",
+            "in": "query",
+            "description": "Optional: Page number to retrieve.",
+            "required": false,
+            "type": "number",
+            "format": "int32"
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Optional: Page size, defaults to 30.",
+            "required": false,
+            "type": "number",
+            "default": 30,
+            "format": "int32"
+          },
+          {
+            "name": "project",
+            "in": "query",
+            "description": "Optional: Name of the project.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "namespace",
+            "in": "query",
+            "description": "Optional: Event's namespace. Use comma-separated values for multiple namespaces.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "kind",
+            "in": "query",
+            "description": "Optional: Event related resource kind. Use comma-separated values for multiple kinds.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Optional: Filter events by name (fuzzy matching).",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filters",
+            "in": "query",
+            "description": "Optional: Custom filters.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "description": "Optional: Event type (e.g. Normal, Warning, etc.).",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful retrieval of events.",
+            "schema": {
+              "$ref": "#/definitions/EventsResponse"
+            }
+          }
+        }
+      }
+    },
+    "/platform/events.alauda.io/v1/projects/{project}/clusters/{cluster}/namespaces/{namespace}/events": {
+      "get": {
+        "summary": "Retrieve Kubernetes events for a specific project and namespace",
+        "description": "Retrieve the k8s events with a business view. For these requests, the cluster, project, and namespace fields must be provided.",
+        "parameters": [
+          {
+            "name": "projectName",
+            "in": "path",
+            "description": "Required: Name of the project.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "clusterName",
+            "in": "path",
+            "description": "Required: Name of the cluster.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "namespace",
+            "in": "path",
+            "description": "Required: Namespace for the events.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "start_time",
+            "in": "query",
+            "description": "Required: Unix timestamp for start time.",
+            "required": true,
+            "type": "number",
+            "format": "int64"
+          },
+          {
+            "name": "end_time",
+            "in": "query",
+            "description": "Required: Unix timestamp for end time.",
+            "required": true,
+            "type": "number",
+            "format": "int64"
+          },
+          {
+            "name": "cluster",
+            "in": "query",
+            "description": "Required: Name of the Kubernetes cluster.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "pageno",
+            "in": "query",
+            "description": "Optional: Page number to retrieve.",
+            "required": false,
+            "type": "number",
+            "format": "int32"
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Optional: Page size, defaults to 30.",
+            "required": false,
+            "type": "number",
+            "default": 30,
+            "format": "int32"
+          },
+          {
+            "name": "kind",
+            "in": "query",
+            "description": "Optional: Event related resource kind. Use comma-separated values for multiple kinds.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Optional: Filter events by name (fuzzy matching).",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filters",
+            "in": "query",
+            "description": "Optional: Custom filters.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "description": "Optional: Event type (e.g. Normal, Warning, etc.).",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful retrieval of events.",
+            "schema": {
+              "$ref": "#/definitions/EventsResponse"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "EventsResponse": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "description": "List of event items.",
+          "items": {
+            "$ref": "#/definitions/EventItem"
+          }
+        },
+        "total_items": {
+          "type": "integer",
+          "description": "Total number of event items."
+        },
+        "total_page": {
+          "type": "integer",
+          "description": "Total number of pages."
+        }
+      }
+    },
+    "EventItem": {
+      "type": "object",
+      "properties": {
+        "spec": {
+          "type": "object",
+          "description": "Specification details for the event.",
+          "properties": {
+            "detail": {
+              "type": "object",
+              "description": "Detailed event information.",
+              "properties": {
+                "cluster_name": {
+                  "type": "string",
+                  "description": "Name of the cluster."
+                },
+                "cluster_uuid": {
+                  "type": "string",
+                  "description": "Unique identifier for the cluster."
+                },
+                "event": {
+                  "type": "object",
+                  "description": "Event data.",
+                  "properties": {
+                    "count": {
+                      "type": "integer",
+                      "description": "Number of times the event has occurred."
+                    },
+                    "firstTimestamp": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "Time when the event first occurred."
+                    },
+                    "lastTimestamp": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "Time when the event last occurred."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Event message."
+                    },
+                    "reason": {
+                      "type": "string",
+                      "description": "Reason for the event."
+                    },
+                    "source": {
+                      "type": "object",
+                      "description": "Source of the event.",
+                      "properties": {
+                        "component": {
+                          "type": "string",
+                          "description": "Component that generated the event."
+                        }
+                      }
+                    },
+                    "type": {
+                      "type": "string",
+                      "description": "Event type (e.g. Normal, Warning)."
+                    },
+                    "involvedObject": {
+                      "type": "object",
+                      "description": "The object involved in the event.",
+                      "properties": {
+                        "apiVersion": {
+                          "type": "string"
+                        },
+                        "kind": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "namespace": {
+                          "type": "string"
+                        },
+                        "resourceVersion": {
+                          "type": "string"
+                        },
+                        "uid": {
+                          "type": "string",
+                          "description": "Unique identifier of the object."
+                        }
+                      }
+                    },
+                    "metadata": {
+                      "type": "object",
+                      "description": "Metadata of the event.",
+                      "properties": {
+                        "creationTimestamp": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "Creation time of the event record."
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "namespace": {
+                          "type": "string"
+                        },
+                        "resourceVersion": {
+                          "type": "string"
+                        },
+                        "selfLink": {
+                          "type": "string"
+                        },
+                        "uid": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "operation": {
+                  "type": "string",
+                  "description": "Operation that caused the event."
+                },
+                "operator": {
+                  "type": "string",
+                  "description": "Operator that performed the operation."
+                },
+                "source": {
+                  "type": "string",
+                  "description": "Source of the event (e.g. kubernetes)."
+                }
+              }
+            },
+            "log_level": {
+              "type": "integer",
+              "description": "Log level for the event."
+            },
+            "resource_id": {
+              "type": "string",
+              "description": "Resource identifier for the event."
+            },
+            "resource_type": {
+              "type": "string",
+              "description": "Type of the resource (e.g. Pod)."
+            },
+            "time": {
+              "type": "number",
+              "description": "Timestamp of the event occurrence."
+            }
+          }
+        }
+      }
+    }
+  }
+}
