@@ -1,6 +1,6 @@
 {
   "name": "@alauda/doom",
-  "version": "0.15.11",
+  "version": "0.16.0",
   "type": "module",
   "description": "Doctor Doom making docs.",
   "repository": {
@@ -40,7 +40,7 @@
     "prepublishOnly": "yarn build",
     "serve": "yarn doom serve",
     "swc-node": "node --enable-source-maps --import @swc-node/register/esm-register",
-    "translate": "yarn doom translate fixture-docs"
+    "translate": "yarn doom translate fixture-docs -s en -t zh"
   },
   "dependencies": {
     "@inquirer/prompts": "^7.4.0",

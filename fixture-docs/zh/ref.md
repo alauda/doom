@@ -1,35 +1,29 @@
+---
+sourceSHA: 4290add414c4012a7d7413ba9bdc0a6a48373253e71af90adb81ab421382420b
+---
+
 # xxx
 
-<!-- reference-start#other -->
+## 标题
 
-## Heading
+这是另一段文字。
 
-This is another paragraph.
-
-<!-- reference-end -->
-
-<!-- reference-start#images-md -->
-
-## Absolute
+## 绝对路径
 
 ![](/logo.svg)
 
-text ![](/logo.svg)
+文本 ![](/logo.svg)
 
 <img src="/logo.svg" alt="logo" />
 
-text <img src="/logo.svg" alt="logo" />
+文本 <img src="/logo.svg" alt="logo" />
 
-## Relative
+## 相对路径
 
-![](./assets/alauda.svg)
+![](./assets/Alauda.svg)
 
-text ![](./assets/alauda.svg)
+文本 ![](./assets/Alauda.svg)
 
-<img src="./assets/alauda.svg" alt="alauda" />
+<img src="./assets/Alauda.svg" alt="Alauda" />
 
-text <img src="./assets/alauda.svg" alt="alauda" />
-
-<!-- reference-end -->
-
-<!-- release-notes-for-bugs?template=fixed&project=AIT -->
+文本 <img src="./assets/Alauda.svg" alt="Alauda" />

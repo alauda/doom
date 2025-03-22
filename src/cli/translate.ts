@@ -1,13 +1,14 @@
 import crypto from 'node:crypto'
 import fs from 'node:fs/promises'
 import path from 'node:path'
+import { setTimeout } from 'node:timers/promises'
 
 import { removeLeadingSlash } from '@rspress/shared'
 import { logger } from '@rspress/shared/logger'
 import { Command } from 'commander'
 import { render } from 'ejs'
 import matter from 'gray-matter'
-import { AzureOpenAI } from 'openai'
+import { AzureOpenAI, RateLimitError } from 'openai'
 import { pRateLimit } from 'p-ratelimit'
 import { glob } from 'tinyglobby'
 import { cyan } from 'yoctocolors'
@@ -46,7 +47,7 @@ const DEFAULT_SYSTEM_PROMPT = `
 
 ## 规则
 - 第一条消息为需要翻译的最新<%= sourceLang %>文档，第二条消息为之前翻译过的但内容可能过期的<%= targetLang %>文档，如果没有翻译过则为空
-- 输入格式为 MDX 格式，输出格式也必须保留原始 MDX 格式，且不要额外包装在不必要的代码块中
+- 输入格式为 MDX 格式，输出格式也必须保留原始 MDX 格式，不要翻译其中的 jsx 组件名称，如 <Overview />，且不要额外包装在不必要的代码块中
 - 文档中的资源链接不要翻译和替换
 - MDX 组件中包含的内容需要翻译，MDX 组件参数的值不需要翻译，但以下这些特殊的 MDX 组件参数值需要翻译
   * 组件示例： <Tab label="参数值">组件包含的内容</Tab>，label 是 key 不用翻译，"参数值" 需要翻译
@@ -54,6 +55,7 @@ const DEFAULT_SYSTEM_PROMPT = `
   * ACP -> ACP
   * 灵雀云 -> Alauda
   * 容器组 -> Pods
+  * global 集群 -> global cluster
 - 移除 {/* reference-start */}, {/* reference-end */}, <!-- reference-start --> 和 <!-- reference-end --> 相关的注释
 - 翻译过程中务必保留原文中的 \\< 转义字符不要做任何转义变更
 
@@ -217,95 +219,127 @@ export const translateCommand = new Command('translate')
       }),
     )
 
-    await Promise.all(
-      sourceFilePaths.flat().map(async (sourceFilePath) => {
-        const sourceContent = await fs.readFile(sourceFilePath, 'utf-8')
+    const allSourceFilePaths = new Set(sourceFilePaths.flat())
 
-        const sourceFrontmatter = matter(sourceContent).data as I18nFrontmatter
+    const executor = async () =>
+      await Promise.all(
+        [...allSourceFilePaths].map(async (sourceFilePath) => {
+          const sourceContent = await fs.readFile(sourceFilePath, 'utf-8')
 
-        if (sourceFrontmatter.i18n?.disableAutoTranslation) {
-          return
-        }
+          const sourceFrontmatter = matter(sourceContent)
+            .data as I18nFrontmatter
 
-        const sourceSHA = crypto
-          .createHash('sha256')
-          .update(sourceContent)
-          .digest('hex')
-
-        const targetFilePath = sourceFilePath.replace(sourceDir, targetDir)
-
-        let targetContent: string | undefined
-
-        let targetFrontmatter: I18nFrontmatter | undefined
-
-        if (await pathExists(targetFilePath, 'file')) {
-          targetContent = await fs.readFile(targetFilePath, 'utf-8')
-
-          targetFrontmatter = matter(targetContent).data
-
-          if (
-            targetFrontmatter.i18n?.disableAutoTranslation ||
-            (!force && targetFrontmatter.sourceSHA === sourceSHA)
-          ) {
+          if (sourceFrontmatter.i18n?.disableAutoTranslation) {
+            allSourceFilePaths.delete(sourceFilePath)
             return
           }
+
+          const sourceSHA = crypto
+            .createHash('sha256')
+            .update(sourceContent)
+            .digest('hex')
+
+          const targetFilePath = sourceFilePath.replace(sourceDir, targetDir)
+
+          let targetContent: string | undefined
+
+          let targetFrontmatter: I18nFrontmatter | undefined
+
+          if (await pathExists(targetFilePath, 'file')) {
+            targetContent = await fs.readFile(targetFilePath, 'utf-8')
+
+            targetFrontmatter = matter(targetContent).data
+
+            if (
+              targetFrontmatter.i18n?.disableAutoTranslation ||
+              (!force && targetFrontmatter.sourceSHA === sourceSHA)
+            ) {
+              allSourceFilePaths.delete(sourceFilePath)
+              return
+            }
+          }
+
+          await limit(async () => {
+            const relativePath = path.relative(docsDir, sourceFilePath)
+
+            logger.info(`Translating ${cyan(relativePath)}`)
+
+            const isMdx = sourceFilePath.endsWith('.mdx')
+
+            const processor = isMdx ? mdxProcessor : mdProcessor
+
+            const ast = processor.parse(sourceContent)
+
+            const normalizeImgSrcOptions: NormalizeImgSrcOptions = {
+              localPublicBase: path.resolve(docsDir, 'public'),
+              sourceBase: path.dirname(sourceFilePath),
+              targetBase: path.dirname(targetFilePath),
+              translating: { source, target, copy },
+            }
+
+            targetContent = await translate({
+              ...config.translate,
+              source,
+              sourceContent: processor.stringify({
+                ...ast,
+                children: ast.children.map((it) =>
+                  normalizeImgSrc(it, normalizeImgSrcOptions),
+                ),
+              }),
+              target,
+              targetContent: force ? '' : targetContent,
+              additionalPrompts:
+                targetFrontmatter?.i18n?.additionalPrompts ??
+                sourceFrontmatter.i18n?.additionalPrompts,
+            })
+
+            const { data, content } = matter(targetContent)
+
+            const newFrontmatter = { ...targetFrontmatter, ...data }
+
+            newFrontmatter.sourceSHA = sourceSHA
+
+            if (sourceFrontmatter.i18n?.title?.[target]) {
+              newFrontmatter.title = sourceFrontmatter.i18n.title[target]
+            }
+
+            targetContent = matter.stringify(
+              content.startsWith('\n') ? content : '\n' + content,
+              newFrontmatter,
+            )
+
+            await fs.mkdir(path.dirname(targetFilePath), { recursive: true })
+
+            await fs.writeFile(targetFilePath, targetContent)
+
+            logger.info(`${cyan(relativePath)} translated`)
+
+            allSourceFilePaths.delete(sourceFilePath)
+          })
+        }),
+      )
+
+    let retry = 0
+
+    while (retry < 15) {
+      try {
+        await executor()
+        return
+      } catch (error) {
+        if (error instanceof RateLimitError) {
+          const retryAfter =
+            Number(error.headers.get('retry-after')) || 60 * ++retry
+          logger.warn(`Rate limit exceeded, retrying in ${retryAfter}s...`)
+          await setTimeout(retryAfter)
+          continue
         }
 
-        await limit(async () => {
-          const relativePath = path.relative(docsDir, sourceFilePath)
+        throw error
+      }
+    }
 
-          logger.info(`Translating ${cyan(relativePath)}`)
-
-          const isMdx = sourceFilePath.endsWith('.mdx')
-
-          const processor = isMdx ? mdxProcessor : mdProcessor
-
-          const ast = processor.parse(sourceContent)
-
-          const normalizeImgSrcOptions: NormalizeImgSrcOptions = {
-            localPublicBase: path.resolve(docsDir, 'public'),
-            sourceBase: path.dirname(sourceFilePath),
-            targetBase: path.dirname(targetFilePath),
-            translating: { source, target, copy },
-          }
-
-          targetContent = await translate({
-            ...config.translate,
-            source,
-            sourceContent: processor.stringify({
-              ...ast,
-              children: ast.children.map((it) =>
-                normalizeImgSrc(it, normalizeImgSrcOptions),
-              ),
-            }),
-            target,
-            targetContent: force ? '' : targetContent,
-            additionalPrompts:
-              targetFrontmatter?.i18n?.additionalPrompts ??
-              sourceFrontmatter.i18n?.additionalPrompts,
-          })
-
-          const { data, content } = matter(targetContent)
-
-          const newFrontmatter = { ...targetFrontmatter, ...data }
-
-          newFrontmatter.sourceSHA = sourceSHA
-
-          if (sourceFrontmatter.i18n?.title?.[target]) {
-            newFrontmatter.title = sourceFrontmatter.i18n.title[target]
-          }
-
-          targetContent = matter.stringify(
-            content.startsWith('\n') ? content : '\n' + content,
-            newFrontmatter,
-          )
-
-          await fs.mkdir(path.dirname(targetFilePath), { recursive: true })
-
-          await fs.writeFile(targetFilePath, targetContent)
-
-          logger.info(`${cyan(relativePath)} translated`)
-        })
-      }),
+    logger.error(
+      `Failed to translate after ${retry} retries, please try again later.`,
     )
+    process.exitCode = 1
   })

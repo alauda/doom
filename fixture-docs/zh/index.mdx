@@ -1,3 +1,7 @@
+---
+sourceSHA: 3da8a8ec4158f646d0185c5bea4aaa89d6f1386f27ce675488331a698f14bf30
+---
+
 import { useI18n } from '@rspress/core/runtime'
 
 # {useI18n()('prod_intro')}
@@ -6,11 +10,26 @@ import { useI18n } from '@rspress/core/runtime'
 
 在进行国际化翻译时需要遵循以下规范：
 
-- 多语言文档(`doc/en`)的目录结构需要与 `doc/zh` 目录下的文档完全一致，保证多语言文档的链接除了语言标识外完全相同。
+- 多语言文档(`doc/en`)的目录结构需要与 `doc/zh` 目录下的文档完全一致，确保多语言文档的链接除了语言标识外完全相同。
 
   ::: danger
-  如果是使用自动化翻译工具进行翻译，则无需关心该问题，自动化翻译工具会自动根据`doc/zh` 生成目标语言文档的目录结构。
+  如果使用自动化翻译工具进行翻译，则无需担心此问题，因为自动化翻译工具会自动生成目标语言文档的目录结构，依据 `doc/zh` 目录。
   :::
+
+<Tabs>
+  <Tab label="标签1">
+    ```mdx title="AcpApisOverview"
+    <AcpApisOverview />
+    ```
+
+    <AcpApisOverview />
+
+  </Tab>
+
+  <Tab label="标签2">
+    <AcpApisOverview />
+  </Tab>
+</Tabs>
 
 <AcpApisOverview />
 
