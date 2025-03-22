@@ -18,6 +18,7 @@ import { setNodeEnv } from '../utils/index.js'
 
 import { CWD, DEFAULT_CONFIGS, I18N_FILE, SITES_FILE } from './constants.js'
 import { exportCommand } from './export.js'
+import { parseBoolean } from './helpers.js'
 import { loadConfig } from './load-config.js'
 import { newCommand } from './new.js'
 import { translateCommand } from './translate.js'
@@ -52,19 +53,19 @@ program
     `Force to
 1. fetch latest reference remotes or scaffolding templates, otherwise use local cache
 2. translate ignore hash equality check and original text`,
-    (value) => !!value && value !== 'false',
+    parseBoolean,
     false,
   )
   .option(
     '-i, --ignore [boolean]',
     'Ignore internal routes',
-    (value) => !!value && value !== 'false',
+    parseBoolean,
     false,
   )
   .option(
     '-d, --download [boolean]',
     'Display download pdf link on nav bar',
-    (value) => !!value && value !== 'false',
+    parseBoolean,
     false,
   )
   .option(
@@ -76,7 +77,12 @@ program
   .argument('[root]', 'Root directory of the documentation')
   .option('-H, --host [host]', 'Dev server host name')
   .option('-P, --port [port]', 'Dev server port number')
-  .option('--no-lazy [boolean]', 'Do not enable `lazyCompilation`')
+  .option(
+    '-l, --lazy [boolean]',
+    'Whether to enable `lazyCompilation` which could improve the compilation performance',
+    parseBoolean,
+    false,
+  )
   .action(async function (this: Command, root?: string) {
     setNodeEnv('development')
 

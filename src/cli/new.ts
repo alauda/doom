@@ -218,7 +218,7 @@ export const newCommand = new Command('new')
       const target = path.resolve(render(layout.target, { parameters }))
       const when = layout.when && render(layout.when, { parameters })
 
-      if (['', 'null', 'undefined', 'false'].includes(when!)) {
+      if (['', '0', 'false', 'null', 'undefined'].includes(when!)) {
         continue
       }
 

@@ -22,6 +22,7 @@ import { isDoc } from '../shared/index.js'
 import type { GlobalCliOptions, TranslateOptions } from '../types.js'
 import { pathExists } from '../utils/index.js'
 
+import { parseBoolean } from './helpers.js'
 import { loadConfig } from './load-config.js'
 
 export interface I18nFrontmatter {
@@ -155,7 +156,7 @@ export const translateCommand = new Command('translate')
   .option(
     '-C, --copy [boolean]',
     'Wether to copy relative assets to the target directory instead of following links',
-    (value) => !!value && value !== 'false',
+    parseBoolean,
     false,
   )
   .action(async function (root?: string) {
