@@ -23,6 +23,7 @@ export interface GlobalCliOptions {
   ignore?: boolean
   force?: boolean
   open?: boolean
+  lazy?: boolean
 }
 
 export interface TranslateOptions {

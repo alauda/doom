@@ -76,6 +76,7 @@ program
   .argument('[root]', 'Root directory of the documentation')
   .option('-H, --host [host]', 'Dev server host name')
   .option('-P, --port [port]', 'Dev server port number')
+  .option('--no-lazy [boolean]', 'Do not enable `lazyCompilation`')
   .action(async function (this: Command, root?: string) {
     setNodeEnv('development')
 

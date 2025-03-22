@@ -108,6 +108,24 @@ Commands:
 
 执行 `yarn dev` 启动开发服务，浏览器会自动打开文档首页
 
+```sh
+doom dev -h
+
+# output
+Usage: doom dev [options] [root]
+
+Start the development server
+
+Arguments:
+  root                      Root directory of the documentation
+
+Options:
+  -H, --host [host]         Dev server host name
+  -P, --port [port]         Dev server port number
+  --no-lazy [boolean]       Do not enable `lazyCompilation`
+  -h, --help                display help for command
+```
+
 ### 生产环境构建 \{#build}
 
 执行 `yarn build` 构建生产环境代码，构建完成后会在 `dist` 目录生成静态文件

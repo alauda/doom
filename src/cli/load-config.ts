@@ -69,6 +69,7 @@ const getCommonConfig = ({
   ignore,
   force,
   open,
+  lazy,
 }: {
   config: UserConfig
   configFilePath?: string
@@ -79,6 +80,7 @@ const getCommonConfig = ({
   ignore?: boolean
   force?: boolean
   open?: boolean
+  lazy?: boolean
 }): UserConfig => {
   const fallbackToZh = 'lang' in config && !config.lang
   root = resolveDocRoot(CWD, root, config.root)
@@ -181,7 +183,7 @@ const getCommonConfig = ({
     ],
     builderConfig: {
       dev: {
-        lazyCompilation: true,
+        lazyCompilation: lazy,
       },
       plugins: [pluginYaml()],
       server: {
@@ -215,6 +217,7 @@ export async function loadConfig(
     ignore,
     force,
     open,
+    lazy,
   }: GlobalCliOptions = {},
 ): Promise<{
   config: UserConfig
@@ -286,6 +289,7 @@ export async function loadConfig(
     ignore,
     force,
     open,
+    lazy,
   })
 
   base = commonConfig.base
