@@ -7,6 +7,7 @@ import { removeLeadingSlash } from '@rspress/shared'
 import { logger } from '@rspress/shared/logger'
 import { Command } from 'commander'
 import { render } from 'ejs'
+import { merge } from 'es-toolkit/compat'
 import matter from 'gray-matter'
 import { AzureOpenAI, RateLimitError } from 'openai'
 import { pRateLimit } from 'p-ratelimit'
@@ -57,7 +58,8 @@ const DEFAULT_SYSTEM_PROMPT = `
   * 容器组 -> Pods
   * global 集群 -> global cluster
 - 移除 {/* reference-start */}, {/* reference-end */}, <!-- reference-start --> 和 <!-- reference-end --> 相关的注释
-- 翻译过程中务必保留原文中的 \\< 转义字符不要做任何转义变更
+- 翻译过程中务必保留原文中的 \\< 和 \\{ 转义字符不要做任何转义变更
+- 翻译过程中不要破坏原有的 Markdown 格式，如 frontmatter, 代码块、列表、表格等，其中 frontmatter 的内容不用做任何翻译，只需要原样返回即可
 
 ## 策略
 分四步进行翻译工作：
@@ -277,15 +279,17 @@ export const translateCommand = new Command('translate')
               translating: { source, target, copy },
             }
 
+            const normalizedSourceContent = processor.stringify({
+              ...ast,
+              children: ast.children.map((it) =>
+                normalizeImgSrc(it, normalizeImgSrcOptions),
+              ),
+            })
+
             targetContent = await translate({
               ...config.translate,
               source,
-              sourceContent: processor.stringify({
-                ...ast,
-                children: ast.children.map((it) =>
-                  normalizeImgSrc(it, normalizeImgSrcOptions),
-                ),
-              }),
+              sourceContent: normalizedSourceContent,
               target,
               targetContent: force ? '' : targetContent,
               additionalPrompts:
@@ -295,7 +299,12 @@ export const translateCommand = new Command('translate')
 
             const { data, content } = matter(targetContent)
 
-            const newFrontmatter = { ...targetFrontmatter, ...data }
+            const newFrontmatter = merge(
+              {},
+              sourceFrontmatter,
+              targetFrontmatter,
+              data,
+            )
 
             newFrontmatter.sourceSHA = sourceSHA
 

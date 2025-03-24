@@ -1,12 +1,9 @@
 {
   "name": "@alauda/doom",
-  "version": "0.16.0",
+  "version": "0.16.1",
   "type": "module",
   "description": "Doctor Doom making docs.",
-  "repository": {
-    "type": "git",
-    "url": "git+https://gitlab-ce.alauda.cn/idp/Doom.git"
-  },
+  "repository": "https://gitlab-ce.alauda.cn/idp/Doom.git",
   "packageManager": "yarn@4.7.0",
   "engines": {
     "node": ">=18.17.0 <20 || >=20.1.0"
@@ -47,7 +44,7 @@
     "@openapi-contrib/openapi-schema-to-json-schema": "^5.1.0",
     "@playwright/browser-chromium": "^1.51.1",
     "@rsbuild/plugin-yaml": "^1.0.2",
-    "@rspress/core": "1.43.8",
+    "@rspress/core": "1.43.9",
     "@shikijs/transformers": "^3.2.1",
     "chokidar": "^4.0.3",
     "cli-progress": "^3.12.0",
@@ -73,23 +70,23 @@
     "simple-git": "^3.27.0",
     "swagger2openapi": "^7.0.8",
     "tinyglobby": "^0.2.12",
-    "type-fest": "^4.37.0",
+    "type-fest": "^4.38.0",
     "yaml": "^2.7.0",
     "yoctocolors": "^2.1.1"
   },
   "devDependencies": {
-    "@eslint/js": "^9.22.0",
+    "@eslint/js": "^9.23.0",
     "@swc-node/register": "^1.10.10",
-    "@swc/core": "1.11.11",
+    "@swc/core": "1.11.13",
     "@types/cli-progress": "^3.11.6",
     "@types/ejs": "^3.1.5",
-    "@types/node": "^18.19.80",
+    "@types/node": "^18.19.83",
     "@types/picomatch": "^3.0.2",
-    "@types/react": "^18.3.19",
+    "@types/react": "^18.3.20",
     "@types/react-dom": "^18.3.5",
     "@types/swagger2openapi": "^7.0.4",
     "@unts/patch-package": "^8.1.1",
-    "eslint": "^9.22.0",
+    "eslint": "^9.23.0",
     "eslint-import-resolver-typescript": "^4.2.2",
     "eslint-plugin-import-x": "^4.9.1",
     "lint-staged": "^15.5.0",
