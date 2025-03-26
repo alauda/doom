@@ -187,7 +187,7 @@ export function Overview(props: {
     }, [overviewSidebarGroups, routePath, frontmatter])
 
   return (
-    <div className="overview-index mx-auto">
+    <div className="overview-index doom-overview-index mx-auto">
       {content}
       {groups.map((group) => (
         <Fragment key={group.name}>
@@ -202,13 +202,11 @@ export function Overview(props: {
           <div className={classes.overviewGroups}>
             {group.items.map((item) => (
               <div className={classes.overviewGroup} key={item.link}>
-                <div className="flex break-all">
-                  <h3 style={{ marginBottom: 8 }}>
-                    <Link href={normalizeHref(item.link)}>
-                      {renderInlineMarkdown(item.text)}
-                    </Link>
-                  </h3>
-                </div>
+                <h3 style={{ marginBottom: 8 }}>
+                  <Link href={normalizeHref(item.link)}>
+                    {renderInlineMarkdown(item.text)}
+                  </Link>
+                </h3>
                 <div className={classes.overviewDescription}>
                   {item.description}
                 </div>

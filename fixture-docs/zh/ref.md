@@ -1,12 +1,6 @@
 ---
-sourceSHA: 4290add414c4012a7d7413ba9bdc0a6a48373253e71af90adb81ab421382420b
+sourceSHA: daa31adb48b8a970fc828dc420ad033e1eaf79dc622f371221bcda23d10abdb1
 ---
-
-# xxx
-
-## 标题
-
-这是另一段文字。
 
 ## 绝对路径
 
@@ -20,10 +14,10 @@ sourceSHA: 4290add414c4012a7d7413ba9bdc0a6a48373253e71af90adb81ab421382420b
 
 ## 相对路径
 
-![](./assets/Alauda.svg)
+![](./assets/alauda.svg)
 
-文本 ![](./assets/Alauda.svg)
+文本 ![](./assets/alauda.svg)
 
-<img src="./assets/Alauda.svg" alt="Alauda" />
+<img src="./assets/alauda.svg" alt="alauda" />
 
-文本 <img src="./assets/Alauda.svg" alt="Alauda" />
+文本 <img src="./assets/alauda.svg" alt="alauda" />

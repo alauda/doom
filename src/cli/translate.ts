@@ -57,7 +57,14 @@ const DEFAULT_SYSTEM_PROMPT = `
   * 灵雀云 -> Alauda
   * 容器组 -> Pods
   * global 集群 -> global cluster
-- 移除 {/* reference-start */}, {/* reference-end */}, <!-- reference-start --> 和 <!-- reference-end --> 相关的注释
+- 如果存在下列注释，请保留不用翻译，更不要修改注释内容
+  - {/* release-notes-for-bugs */}
+  - <!-- release-notes-for-bugs -->
+- 如果存在下列注释，请整体移除不要保留
+  - {/* reference-start */}
+  - {/* reference-end */}
+  - <!-- reference-start -->
+  - <!-- reference-end -->
 - 翻译过程中务必保留原文中的 \\< 和 \\{ 转义字符不要做任何转义变更
 - 翻译过程中不要破坏原有的 Markdown 格式，如 frontmatter, 代码块、列表、表格等，其中 frontmatter 的内容不用做任何翻译，只需要原样返回即可
 
@@ -178,7 +185,7 @@ export const translateCommand = new Command('translate')
       !Object.hasOwn(LANGUAGE_CODES, target) ||
       source === target
     ) {
-      console.error(
+      logger.error(
         `Translate from language \`${cyan(source)}\` to \`${cyan(target)}\` is not supported.`,
       )
       process.exitCode = 1
@@ -193,7 +200,7 @@ export const translateCommand = new Command('translate')
     const targetDir = path.resolve(docsDir, target)
 
     if (!(await pathExists(sourceDir, 'directory'))) {
-      console.error(`The directory "${cyan(sourceDir)}" does not exist.`)
+      logger.error(`The directory "${cyan(sourceDir)}" does not exist.`)
       process.exitCode = 1
       return
     }
@@ -203,6 +210,14 @@ export const translateCommand = new Command('translate')
       cwd: sourceDir,
       onlyFiles: false,
     })
+
+    if (matched.length === 0) {
+      logger.error(
+        `No files matched by the glob patterns: ${globs.map((g) => `\`${cyan(g)}\``).join(', ')}`,
+      )
+      process.exitCode = 1
+      return
+    }
 
     const sourceFilePaths = await Promise.all(
       matched.map(async (it) => {

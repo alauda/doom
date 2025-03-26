@@ -9,11 +9,11 @@ api:
 reference:
   - sources:
       - name: other
-        path: zh/other.mdx#heading-1
+        path: en/other.mdx#heading-1
       - name: images
-        path: zh/images.mdx#images
+        path: en/images.mdx#images
       - name: images-md
-        path: zh/images-md.md#images-md
+        path: en/images-md.md#images-md
   - repo: alauda-public/product-doc-guide
     sources:
       - name: anchor

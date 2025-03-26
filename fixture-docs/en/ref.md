@@ -2,11 +2,7 @@
 sourceSHA: fa166699c91171e85faa58ca63b0077e23f9fff8ef5eebcbeae97283492cc943
 ---
 
-# xxx
-
-## Heading
-
-This is another paragraph.
+<!-- reference-start#images-md -->
 
 ## Absolute
 
@@ -20,10 +16,12 @@ text <img src="/logo.svg" alt="logo" />
 
 ## Relative
 
-![](./assets/Alauda.svg)
+![](./assets/alauda.svg)
 
-text ![](./assets/Alauda.svg)
+text ![](./assets/alauda.svg)
 
-<img src="./assets/Alauda.svg" alt="Alauda" />
+<img src="./assets/alauda.svg" alt="alauda" />
 
-text <img src="./assets/Alauda.svg" alt="Alauda" />
+text <img src="./assets/alauda.svg" alt="alauda" />
+
+<!-- reference-end -->
