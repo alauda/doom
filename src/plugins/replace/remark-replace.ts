@@ -233,7 +233,7 @@ export const remarkReplace: Plugin<
 
     const newAstChildren: Array<Content | Content[]> = []
 
-    const currLang = lang === null ? 'zh' : relativePath.split('/')[0]
+    const currLang = lang === null ? 'zh' : relativePath.split(/[\\/]/)[0]
 
     for (const node of ast.children) {
       if (node.type !== (isMdx ? 'mdxFlowExpression' : 'html')) {

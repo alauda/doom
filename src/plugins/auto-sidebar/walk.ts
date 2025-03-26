@@ -73,7 +73,7 @@ const processSideMeta = (
       let filePart: string | undefined
 
       if (
-        (filePart = curr._fileKey.split('/').at(-1)) &&
+        (filePart = curr._fileKey.split(/[\\/]/).at(-1)) &&
         extensions.some((ext) => filePart === `index${ext}`)
       ) {
         if (acc.index?._fileKey) {
@@ -82,7 +82,7 @@ const processSideMeta = (
             path.dirname(acc.index._fileKey),
             path.dirname(curr._fileKey),
           )
-          if (relative === '..' || relative.endsWith('/..')) {
+          if (relative === '..' || /[\\/]\.\.$/.test(relative)) {
             acc.others.unshift(acc.index)
             acc.index = curr
           } else {
