@@ -152,8 +152,8 @@ Arguments:
   root                     Root directory of the documentation
 
 Options:
-  -s, --source <language>  Document source language (default: "zh")
-  -t, --target <language>  Document target language (default: "en")
+  -s, --source <language>  Document source language (default: "en")
+  -t, --target <language>  Document target language (default: "zh")
   -g, --glob <path...>     Glob patterns for source dirs/files
   -C, --copy [boolean]     Wether to copy relative assets to the target directory instead of following links (default: false)
   -h, --help               display help for command
@@ -173,6 +173,10 @@ Options:
     2. `<root>/<source>/abc.mdx` 文档中的 `./assets/<source>/xyz.jpg` 翻译时，如果 `<root>/<target>/assets/<target>/xyz.jpg` 已存在，将修改文档中的引用路径为 `./assets/<target>/xyz.jpg`，否则将修改为 `../<source>/assets/<target>/xyz.jpg`
 
 :::warning
+特殊地，如果使用 `-g '*'` 进行全量翻译，将会对比 `source` 和 `target` 目录文件列表，除 `internalRoutes` 之外的不匹配的 `target` 文件将被自动删除
+:::
+
+:::tip
 目前需要在本地配置 `AZURE_OPENAI_API_KEY` 环境变量，请联系 IDP 文档团队获取
 :::
 

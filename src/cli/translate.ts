@@ -2,6 +2,7 @@ import crypto from 'node:crypto'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { setTimeout } from 'node:timers/promises'
+import { isDeepStrictEqual } from 'node:util'
 
 import { removeLeadingSlash } from '@rspress/shared'
 import { logger } from '@rspress/shared/logger'
@@ -12,7 +13,7 @@ import matter from 'gray-matter'
 import { AzureOpenAI, RateLimitError } from 'openai'
 import { pRateLimit } from 'p-ratelimit'
 import { glob } from 'tinyglobby'
-import { cyan } from 'yoctocolors'
+import { cyan, red } from 'yoctocolors'
 
 import {
   mdProcessor,
@@ -20,11 +21,10 @@ import {
   normalizeImgSrc,
   type NormalizeImgSrcOptions,
 } from '../plugins/index.js'
-import { isDoc } from '../shared/index.js'
 import type { GlobalCliOptions, TranslateOptions } from '../types.js'
 import { pathExists } from '../utils/index.js'
 
-import { parseBoolean } from './helpers.js'
+import { getMatchedDocFilePaths, parseBoolean } from './helpers.js'
 import { loadConfig } from './load-config.js'
 
 export interface I18nFrontmatter {
@@ -161,8 +161,8 @@ export interface TranslateCommandOptions {
 export const translateCommand = new Command('translate')
   .description('Translate the documentation')
   .argument('[root]', 'Root directory of the documentation')
-  .option('-s, --source <language>', 'Document source language', 'zh')
-  .option('-t, --target <language>', 'Document target language', 'en')
+  .option('-s, --source <language>', 'Document source language', 'en')
+  .option('-t, --target <language>', 'Document target language', 'zh')
   .requiredOption('-g, --glob <path...>', 'Glob patterns for source dirs/files')
   .option(
     '-C, --copy [boolean]',
@@ -205,13 +205,26 @@ export const translateCommand = new Command('translate')
       return
     }
 
-    const matched = await glob(globs.map(removeLeadingSlash), {
+    const sourceMatched = await glob(globs.map(removeLeadingSlash), {
       absolute: true,
       cwd: sourceDir,
       onlyFiles: false,
     })
 
-    if (matched.length === 0) {
+    const sourceFilePaths = await getMatchedDocFilePaths(sourceMatched)
+
+    const allSourceFilePaths = new Set(sourceFilePaths.flat())
+
+    const internalFilePaths = await glob(config.internalRoutes || [], {
+      absolute: true,
+      cwd: docsDir,
+    })
+
+    for (const internalFilePath of internalFilePaths) {
+      allSourceFilePaths.delete(internalFilePath)
+    }
+
+    if (allSourceFilePaths.size === 0) {
       logger.error(
         `No files matched by the glob patterns: ${globs.map((g) => `\`${cyan(g)}\``).join(', ')}`,
       )
@@ -219,24 +232,44 @@ export const translateCommand = new Command('translate')
       return
     }
 
-    const sourceFilePaths = await Promise.all(
-      matched.map(async (it) => {
-        const stat = await fs.stat(it)
+    if (isDeepStrictEqual(globs, ['*'])) {
+      logger.warn(
+        `You're running in a special mode, all files except \`${cyan('internalRoutes')}\` will be translated, and all ${red('unmatched')} target files will be ${red('removed')}.`,
+      )
 
-        if (stat.isDirectory()) {
-          return glob('**/*.md{,x}', {
-            absolute: true,
-            cwd: it,
-          })
-        }
-        if (stat.isFile() && isDoc(it)) {
-          return it
-        }
-        return []
-      }),
-    )
+      const targetMatched = await glob(globs.map(removeLeadingSlash), {
+        absolute: true,
+        cwd: targetDir,
+        onlyFiles: false,
+      })
 
-    const allSourceFilePaths = new Set(sourceFilePaths.flat())
+      const targetFilePaths = await getMatchedDocFilePaths(targetMatched)
+
+      const allTargetFilePaths = new Set(targetFilePaths.flat())
+
+      for (const internalFilePath of internalFilePaths) {
+        allTargetFilePaths.delete(internalFilePath)
+      }
+
+      const toRemoveTargetFilePaths: string[] = []
+
+      for (const targetFilePath of allTargetFilePaths) {
+        const targetRelativePath = path.relative(targetDir, targetFilePath)
+        const sourceFilePath = path.resolve(sourceDir, targetRelativePath)
+        if (!allSourceFilePaths.has(sourceFilePath)) {
+          toRemoveTargetFilePaths.push(targetFilePath)
+        }
+      }
+
+      if (toRemoveTargetFilePaths.length > 0) {
+        logger.warn(
+          'Found unmatched target files will be removed:\n',
+          ...toRemoveTargetFilePaths.map((file) => `- ${red(file)}`),
+        )
+
+        await Promise.all(toRemoveTargetFilePaths.map((file) => fs.rm(file)))
+      }
+    }
 
     const executor = async () =>
       await Promise.all(
