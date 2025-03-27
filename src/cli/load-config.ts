@@ -123,6 +123,8 @@ const getCommonConfig = ({
     },
     themeConfig: {
       enableScrollToTop: true,
+      // https://github.com/web-infra-dev/rspress/issues/2011
+      outline: true,
       ...(fallbackToZh
         ? zhLocaleConfig
         : {
