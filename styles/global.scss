@@ -1,4 +1,4 @@
-@use "sass:color";
+@use 'sass:color';
 
 @import url(./shiki.css);
 
@@ -53,6 +53,7 @@ td {
   display: inline-flex;
   justify-content: center;
   align-items: center;
+  margin-left: 4px;
 }
 
 .has-callouts .rspress-code-content {
@@ -77,9 +78,12 @@ td {
     > li {
       margin-left: -1.25rem;
 
-      &:before {
-        @include callout;
-        margin-right: 0.75rem;
+      &:not(:has(> p)),
+      > p {
+        &:before {
+          @include callout;
+          margin-right: 0.75rem;
+        }
       }
 
       > {

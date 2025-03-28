@@ -21,10 +21,10 @@ weight: 3
 ````mdx
 ```sh
 Memory overhead per virtual machine ≈ (1.002 × requested memory) \
-              + 218 MiB \  # [\!code callout]
-              + 8 MiB × (number of vCPUs) \  # [\!code callout]
-              + 16 MiB × (number of graphics devices) \  # [\!code callout]
-              + (additional memory overhead)  # [\!code callout]
+              + 218 MiB \  # [!code callout]
+              + 8 MiB × (number of vCPUs) \  # [!code callout]
+              + 16 MiB × (number of graphics devices) \  # [!code callout]
+              + (additional memory overhead) # [!code callout]
 ```
 
 :::callouts
@@ -45,7 +45,7 @@ Memory overhead per virtual machine ≈ (1.002 × requested memory) \
               + 218 MiB \  # [!code callout]
               + 8 MiB × (number of vCPUs) \  # [!code callout]
               + 16 MiB × (number of graphics devices) \  # [!code callout]
-              + (additional memory overhead)  # [!code callout]
+              + (additional memory overhead) # [!code callout]
 ```
 
 :::callouts
