@@ -56,7 +56,7 @@ export const exportCommand = new Command('export')
           const link = removeLeadingSlash(item.link)
           pages.push({
             key: link,
-            path: config.base! + link + '.html?print=true',
+            path: config.base! + link + '.html?print',
             title: item.text,
           })
         }

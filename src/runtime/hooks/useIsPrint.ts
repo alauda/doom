@@ -1,14 +1,16 @@
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import { useLocation } from 'react-router'
 
+import { FALSY_VALUES } from '../../shared/index.js'
+
 export function useIsPrintQuery() {
   const { search } = useLocation()
 
   const searchParams = useMemo(() => new URLSearchParams(search), [search])
 
-  const isPrint = searchParams.get('print') === 'true'
+  const print = searchParams.get('print')
 
-  return isPrint
+  return print != null && !FALSY_VALUES.has(print)
 }
 
 const getPrintMediaQuery = () => {

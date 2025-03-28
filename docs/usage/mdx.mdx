@@ -35,58 +35,6 @@ import { SourceCode } from '@rspress/core/theme'
 
 文档概览组件，用于展示文档目录
 
-### `QuickNav`
-
-快速导航组件，用于展示快速导航信息，样式和功能将根据后续实际使用需求进行调整
-
-```mdx title="quick-nav.mdx"
-<QuickNav
-  items={[
-    {
-      icon: '/logo.svg',
-      title: 'Doom',
-      links: [
-        {
-          title: '首页',
-          href: '/',
-        },
-        {
-          title: '开始',
-          href: '/start',
-        },
-        {
-          title: '使用',
-          href: '/usage/',
-        },
-      ],
-    },
-  ]}
-/>
-```
-
-<QuickNav
-  items={[
-    {
-      icon: '/logo.svg',
-      title: 'Doom',
-      links: [
-        {
-          title: '首页',
-          href: '/',
-        },
-        {
-          title: '开始',
-          href: '/start',
-        },
-        {
-          title: '使用',
-          href: '/usage/',
-        },
-      ],
-    },
-  ]}
-/>
-
 ### `Directive`
 
 有时，由于嵌套缩进，[自定义容器](https://rspress.dev/zh/guide/basic/use-mdx#%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AE%B9%E5%99%A8)语法可能失效，可以使用 `Directive` 组件代替
