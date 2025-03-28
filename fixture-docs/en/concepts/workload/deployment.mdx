@@ -1,0 +1,26 @@
+---
+weight: 110
+sourceSHA: 08f84a5f0e60630dedd108f2e05ee20034ff58608c033e678a57d9605ab6f4c0
+---
+
+# In-Depth Understanding of Deployment
+
+Deployment is a workload controller in Kubernetes that allows you to run a program by creating a Deployment. You can also create multiple Deployments within an application as workloads to provide specific services for stateless applications.
+
+A Deployment provides declarative updates for ReplicaSets (replica controllers) and Pods (groups of containers). By simply describing the desired state of Replicas (number of Pods) and Containers in the Deployment, the Deployment controller will change the actual state of Pods and ReplicaSets to match the desired state.
+
+The functional characteristics of Deployment are as follows:
+
+- A ReplicaSet can be started by creating a Deployment. The ReplicaSet will create Pods based on the specified number of replicas and monitor the startup status of the Pods.
+
+- The new state of Pods can be declared by updating the PodTemplateSpec field of the Deployment. After declaring the new state of the Pods, a new ReplicaSet will be created, and the Deployment will migrate Pods from the old ReplicaSet to the new ReplicaSet at a controlled rate. At the same time, the ReplicaSet will update the version of the Deployment.
+
+- If the current status of the Deployment is unstable, it will roll back to a previous version of the Deployment. Each rollback will update the version of the Deployment.
+
+- The Deployment can be scaled up to meet higher loads.
+
+- The Deployment can be paused to apply multiple fixes to the PodTemplateSpec before bringing it back online.
+
+- The state of the Deployment can be used as an indicator to determine whether the rollout is stalled.
+
+- The Deployment can clean up old ReplicaSets that are no longer needed.

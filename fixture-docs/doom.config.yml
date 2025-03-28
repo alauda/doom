@@ -44,3 +44,4 @@ releaseNotes:
     unfixed: ''
 internalRoutes:
   - '*/internal/*.mdx'
+  - '*/concepts/**'

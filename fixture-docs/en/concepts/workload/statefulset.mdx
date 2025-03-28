@@ -1,0 +1,18 @@
+---
+weight: 130
+sourceSHA: 1a4e0733acb2f16fc3995e04b7184756a9e7daab032edd5f05155d0d6cc53e9f
+---
+
+# In-depth Understanding of StatefulSet
+
+A StatefulSet is a type of controller in Kubernetes that allows you to create a StatefulSet to run an application on the platform. You can also create multiple StatefulSets within an application as computational components that provide specific services for that application.
+
+StatefulSets are typically used for applications with master-slave or primary-backup relationships between Pod instances, such as MySQL or MongoDB. Some instances under these applications will store data locally on disk. If these Pods are deleted and then recreated, it may result in data loss or a loss of the correspondence between data and Pods, leading to application failure.
+
+In contrast to Deployments, where all Pods are identical and there is no order among them, resulting in random scheduling to suitable hosts, with StatefulSets, the Pods managed have fixed network identities (hostnames) and unique numerical ordinal identifiers within the range \[0, N). There exists a defined order for starting, stopping, deleting, and rolling updates of Pods. Even when Pods are recreated, they will follow the original order for these operations. This ensures that network identities remain consistent and that the newly created Pods can restore their original state, enabling proper access to them.
+
+The functionality features of StatefulSets are as follows:
+
+- Pods managed by StatefulSets have fixed network identities (hostnames) and unique numerical identities within the range \[0, N). Pods have a specific order for starting, stopping, deleting, and rolling updates, ensuring that even recreated Pods follow the original sequence. Additionally, their network identities will remain unchanged, allowing new Pods to restore their original state and ensuring they can be accessed normally.
+
+- Pods managed by StatefulSets have persistent storage. Even if a Pod is deleted, the Persistent Volume Claims (PVCs) and Persistent Volumes (PVs) allocated by the StatefulSet will be retained. When a Pod is newly created, Kubernetes will find the previously mounted PVC for it and mount the Volume corresponding to that PVC, thereby allowing access to the data that was stored in the Volume before the Pod was deleted.

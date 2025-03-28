@@ -1,0 +1,21 @@
+---
+weight: 120
+sourceSHA: 08adbf7a57581d34f76e02f625e36d24994d9844431093fff67cd08f73d72b0e
+---
+
+# In-depth Understanding of DaemonSet
+
+A DaemonSet is a type of controller in Kubernetes that manages compute components. You can create a DaemonSet to run a program on the platform, and you can also create multiple DaemonSets within an application as compute components to provide specific services for the application.
+
+The features of DaemonSet are as follows:
+
+- It ensures that a Pod replica runs on all or some of the nodes that meet the conditions.
+- When a node is added to the cluster, the DaemonSet automatically adds Pod replicas from the DaemonSet to the newly added node.
+- When a node is removed from the cluster, the Pods on that node are reclaimed.
+- When the DaemonSet is deleted, all Pods created by that DaemonSet will also be deleted.
+
+Common use cases for DaemonSet include:
+
+- Running a cluster storage daemon, such as: glusterd or ceph, on every node in the cluster.
+- Running a log collection daemon, such as: fluentd or logstash, on every node in the cluster.
+- Running a node monitoring daemon, such as: Prometheus Node Exporter, Sysdig Agent, collectd, Dynatrace OneAgent, AppDynamics Agent, Datadog agent, New Relic agent, Ganglia gmond, or Instana Agent on every node in the cluster.

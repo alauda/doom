@@ -92,7 +92,17 @@ const processSideMeta = (
           acc.index = curr
         }
         if (ignored) {
-          curr.link = ''
+          if (acc.index === curr) {
+            curr.link = ''
+            if (acc.others.length === 0) {
+              acc.index = undefined
+            }
+          } else {
+            const index = acc.others.indexOf(curr)
+            if (index > -1) {
+              acc.others.splice(index, 1)
+            }
+          }
         }
       } else if (!ignored) {
         acc.others.push(curr)
