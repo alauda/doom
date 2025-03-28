@@ -163,6 +163,7 @@ const getCommonConfig = ({
           'mermaid',
           'java',
           'python',
+          'toml',
           ...(config.shiki?.langs ?? []),
         ],
         transformers: [
