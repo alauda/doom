@@ -68,11 +68,4 @@ export default config(
     files: ['**/*.js'],
     ...configs.disableTypeChecked,
   },
-  {
-    files: ['**/html-export-pdf/**/*.ts'],
-    rules: {
-      '@typescript-eslint/no-unnecessary-condition': 'off',
-      curly: 'error',
-    },
-  },
 )

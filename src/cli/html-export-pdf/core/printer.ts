@@ -114,7 +114,7 @@ export class Printer extends EventEmitter {
       browserOptions.args.push('--allow-file-access-from-files')
     }
 
-    if (this.browserArgs) {
+    if (this.browserArgs.length) {
       browserOptions.args.push(...this.browserArgs)
     }
 

@@ -24,7 +24,11 @@ import {
 import type { GlobalCliOptions, TranslateOptions } from '../types.js'
 import { pathExists } from '../utils/index.js'
 
-import { getMatchedDocFilePaths, parseBoolean } from './helpers.js'
+import {
+  escapeMarkdownHeadingIds,
+  getMatchedDocFilePaths,
+  parseBoolean,
+} from './helpers.js'
 import { loadConfig } from './load-config.js'
 
 export interface I18nFrontmatter {
@@ -66,7 +70,7 @@ const DEFAULT_SYSTEM_PROMPT = `
   - <!-- reference-start -->
   - <!-- reference-end -->
 - 翻译过程中务必保留原文中的 \\< 和 \\{ 转义字符不要做任何转义变更
-- 翻译过程中不要破坏原有的 Markdown 格式，如 frontmatter, 代码块、列表、表格等，其中 frontmatter 的内容不用做任何翻译，只需要原样返回即可
+- 翻译过程中不要破坏原有的 Markdown 格式，如 frontmatter, 代码块、列表、表格等，其中 frontmatter.ii8n 的内容不用做任何翻译，只需要原样返回即可
 
 ## 策略
 分四步进行翻译工作：
@@ -318,7 +322,7 @@ export const translateCommand = new Command('translate')
 
             const processor = isMdx ? mdxProcessor : mdProcessor
 
-            const ast = processor.parse(sourceContent)
+            const ast = processor.parse(escapeMarkdownHeadingIds(sourceContent))
 
             const normalizeImgSrcOptions: NormalizeImgSrcOptions = {
               localPublicBase: path.resolve(docsDir, 'public'),

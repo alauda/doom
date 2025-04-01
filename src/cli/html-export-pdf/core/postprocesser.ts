@@ -58,7 +58,5 @@ export function setMetadata(pdfDoc: PDFDocument, meta: Meta) {
 
   meta.modDate = new Date()
 
-  if (meta.modDate) {
-    pdfDoc.setModificationDate(meta.modDate)
-  }
+  pdfDoc.setModificationDate(meta.modDate)
 }

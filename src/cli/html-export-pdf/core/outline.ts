@@ -194,8 +194,8 @@ function buildPdfObjectsForOutline(
   context: PDFContext,
 ) {
   for (const [i, item] of outlinesWithRef.entries()) {
-    const prev = outlinesWithRef[i - 1]
-    const next = outlinesWithRef[i + 1]
+    const prev = outlinesWithRef.at(i - 1)
+    const next = outlinesWithRef.at(i + 1)
 
     const pdfObject: DictMap = new Map()
     pdfObject.set(
@@ -259,6 +259,7 @@ function generateWarningsAboutMissingDestinations(
     PDFDict,
   )
   // Dests can be undefined if the PDF wasn't successfully generated (for instance if Paged.js threw an exception)
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!dests) {
     return
   }
