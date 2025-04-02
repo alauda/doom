@@ -20,10 +20,10 @@ __metadata:
     "@swc/core": "npm:1.11.16"
     "@types/cli-progress": "npm:^3.11.6"
     "@types/ejs": "npm:^3.1.5"
-    "@types/node": "npm:^18.19.85"
-    "@types/picomatch": "npm:^3.0.2"
+    "@types/node": "npm:^18.19.86"
+    "@types/picomatch": "npm:^4.0.0"
     "@types/react": "npm:^18.3.20"
-    "@types/react-dom": "npm:^18.3.5"
+    "@types/react-dom": "npm:^18.3.6"
     "@types/swagger2openapi": "npm:^7.0.4"
     "@unts/patch-package": "npm:^8.1.1"
     chokidar: "npm:^4.0.3"
@@ -2122,12 +2122,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^18.19.85":
-  version: 18.19.85
-  resolution: "@types/node@npm:18.19.85"
+"@types/node@npm:^18.19.86":
+  version: 18.19.86
+  resolution: "@types/node@npm:18.19.86"
   dependencies:
     undici-types: "npm:~5.26.4"
-  checksum: 10c0/07b426b58e53f83fbc5b4676d1b900955a4f08ba717fa0ec0d1893241f172b5766d36adf31449ffe71a293bb116ea06706ddf141407121089499e2d4bfcc349d
+  checksum: 10c0/1017c4ba61661ab30e4b4a78040cb66980919549f56d85755326dcccbe7a0405be7d6be1b2a91bace8eaef0d2a24b63d4f104b381be7f957c2483e465d829690
   languageName: node
   linkType: hard
 
@@ -2138,10 +2138,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/picomatch@npm:^3.0.2":
-  version: 3.0.2
-  resolution: "@types/picomatch@npm:3.0.2"
-  checksum: 10c0/f35d16fe10a6e13ead6499dd7d7d317e4fd78e48260398104e837e5ca83d393024bdc6f432cb644c0a69b0726a071fcc6eb09befbbcfafb3c3c5f71dbbfde487
+"@types/picomatch@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "@types/picomatch@npm:4.0.0"
+  checksum: 10c0/6455234501d3829301cc7291d5322b1737fd96fae7f0617c3b3ec97a58c41a3a3f40df65117714e502c245f603184a4511883c74727b7a9f9957b3fec0777e97
   languageName: node
   linkType: hard
 
@@ -2152,12 +2152,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:^18.3.5":
-  version: 18.3.5
-  resolution: "@types/react-dom@npm:18.3.5"
+"@types/react-dom@npm:^18.3.6":
+  version: 18.3.6
+  resolution: "@types/react-dom@npm:18.3.6"
   peerDependencies:
     "@types/react": ^18.0.0
-  checksum: 10c0/b163d35a6b32a79f5782574a7aeb12a31a647e248792bf437e6d596e2676961c394c5e3c6e91d1ce44ae90441dbaf93158efb4f051c0d61e2612f1cb04ce4faa
+  checksum: 10c0/e77ac076096bd4b2e0a99130c47959762a927e536b83412e470ac5198d4b8d111cfd787ff2ab7c22bc39c114c0c5fef80046ea0cccb02a655e021a435859314a
   languageName: node
   linkType: hard
 

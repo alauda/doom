@@ -84,6 +84,8 @@ const DEFAULT_SYSTEM_PROMPT = `
 
 最终只需要输出最后一步的结果，不需要输出之前步骤的结果。
 
+<%= userPrompt %>
+
 <%= additionalPrompts %>
 `.trim()
 
@@ -103,6 +105,7 @@ export const translate = async ({
   target,
   targetContent = '',
   systemPrompt,
+  userPrompt = '',
   additionalPrompts = '',
 }: InternalTranslateOptions) => {
   if (!openai) {
@@ -124,7 +127,7 @@ export const translate = async ({
         role: 'system',
         content: await render(
           systemPrompt?.trim() || DEFAULT_SYSTEM_PROMPT,
-          { sourceLang, targetLang, additionalPrompts },
+          { sourceLang, targetLang, userPrompt, additionalPrompts },
           { async: true },
         ),
       },

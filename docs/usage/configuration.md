@@ -157,9 +157,10 @@ shiki:
 
 ```yaml
 translate:
-  # 系统提示语，ejs 模板，传入的参数有 `sourceLang`, `targetLang`, `additionalPrompts`
+  # 系统提示语，ejs 模板，传入的参数有 `sourceLang`, `targetLang`, `userPrompt` 和 `additionalPrompts`
   # 其中 `sourceLang` 和 `targetLang` 是 `中文` 和 `英文` 两个字符串，
-  #     `additionalPrompts` 为 `i18n` 中的 `additionalPrompts` 配置，可能为空
+  #     `userPrompt` 为下述用户全局配置，可能为空
+  #     `additionalPrompts` 为文档 `frontmatter.i18n` 中的 `additionalPrompts` 配置，可能为空
   # 默认的系统提示语如下，可以根据实际情况进行修改
   systemPrompt: |
 ## 角色
@@ -199,5 +200,8 @@ translate:
 
 最终只需要输出最后一步的结果，不需要输出之前步骤的结果。
 
+<%= userPrompt %>
+
 <%= additionalPrompts %>
+  userPrompt: # 可选，用于填充到 `systemPrompt` 中的 `ejs` 模板全局参数
 ```

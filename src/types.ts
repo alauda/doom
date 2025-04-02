@@ -28,6 +28,7 @@ export interface GlobalCliOptions {
 
 export interface TranslateOptions {
   systemPrompt?: string
+  userPrompt?: string
 }
 
 declare module '@rspress/shared' {
