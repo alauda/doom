@@ -8,6 +8,7 @@ import { render } from 'ejs'
 import { glob } from 'tinyglobby'
 import { cyan, magenta } from 'yoctocolors'
 
+import { JS_STR_FALSY_VALUES } from '../shared/index.js'
 import type { ContentProcessor } from '../types.js'
 import { resolveRepo, resolveStaticConfig } from '../utils/index.js'
 
@@ -208,7 +209,9 @@ export const newCommand = new Command('new')
     const parameters: Record<string, unknown> = {}
 
     for (const param of scaffolding.parameters || []) {
-      parameters[param.name] = await prompts[param.type](param.options)
+      parameters[param.name] =
+        await // @ts-expect-error -- no idea how to fix this
+        prompts[param.type](param.options)
     }
 
     logger.start('Generating scaffolding...')
@@ -218,7 +221,7 @@ export const newCommand = new Command('new')
       const target = path.resolve(render(layout.target, { parameters }))
       const when = layout.when && render(layout.when, { parameters })
 
-      if (['', '0', 'false', 'null', 'undefined'].includes(when!)) {
+      if (JS_STR_FALSY_VALUES.has(when!)) {
         continue
       }
 

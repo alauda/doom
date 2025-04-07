@@ -17,7 +17,9 @@ import {
 import { loadConfig } from './load-config.js'
 
 export const exportCommand = new Command('export')
-  .description('Export the documentation as PDF')
+  .description(
+    'Export the documentation as PDF, `apis/**` and `*/apis/**` routes will be ignored automatically',
+  )
   .argument('[root]', 'Root directory of the documentation')
   .option('-H, --host [host]', 'Serve host name')
   .option('-P, --port [port]', 'Serve port number', '4173')
@@ -38,12 +40,14 @@ export const exportCommand = new Command('export')
     }
 
     config = await autoSidebar(config, {
-      excludeRoutes: (globalOptions.ignore && config.internalRoutes) || [],
+      ignore: globalOptions.ignore,
+      export: true,
     })
 
     config.builderConfig!.server!.open = false
 
-    const themeConfig = config.themeConfig!
+    // make sure it won't be overridden by `serve`
+    const themeConfig = { ...config.themeConfig! }
 
     logger.start('Serving...')
 
@@ -106,6 +110,7 @@ export const exportCommand = new Command('export')
       sidebarItems: DoomSidebar[],
       lang = config.lang!,
     ) => {
+      // console.log(sidebarItems, collectPages(sidebarItems))
       await generatePdf({
         pages: collectPages(sidebarItems),
         outFile: getPdfName(lang, config.userBase, config.title),

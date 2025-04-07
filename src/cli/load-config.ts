@@ -85,7 +85,6 @@ const getCommonConfig = ({
   const fallbackToZh = 'lang' in config && !config.lang
   root = resolveDocRoot(CWD, root, config.root)
   const localBasePath = configFilePath ? path.dirname(configFilePath) : root
-  const excludeRoutes = (ignore && config.internalRoutes) || []
 
   const userBase = (base = addLeadingSlash(
     addTrailingSlash(base || config.base || '/'),
@@ -109,7 +108,6 @@ const getCommonConfig = ({
         'doom.config.*',
         '**/assets/**/*',
         '**/*.d.ts',
-        ...excludeRoutes,
       ],
     },
     markdown: {
@@ -138,9 +136,7 @@ const getCommonConfig = ({
       apiPlugin({
         localBasePath,
       }),
-      autoSidebarPlugin({
-        excludeRoutes,
-      }),
+      autoSidebarPlugin({ ignore }),
       directivesPlugin(),
       globalPlugin({ version, download }),
       mermaidPlugin(),

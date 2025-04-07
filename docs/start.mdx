@@ -199,6 +199,23 @@ title: DevOps 连接器
 请在执行导出操作前先执行 `yarn build` 构建操作
 :::
 
+```sh
+doom export -h
+
+# output
+Usage: doom export [options] [root]
+
+Export the documentation as PDF, `apis/**` and `*/apis/**` routes will be ignored automatically
+
+Arguments:
+  root               Root directory of the documentation
+
+Options:
+  -H, --host [host]  Serve host name
+  -P, --port [port]  Serve port number (default: "4173")
+  -h, --help         display help for command
+```
+
 执行 `yarn export` 导出文档为 PDF 文件，注意如果使用了 `-b`, `-p` 参数构建，导出时也需要使用 `-b`, `-p` 参数
 
 导出功能依赖 [`playwright`](https://playwright.dev)，流水线请使用 `build-harbor.alauda.cn/frontend/playwright-runner:doom` 作为依赖安装和文档构建的基础镜像，

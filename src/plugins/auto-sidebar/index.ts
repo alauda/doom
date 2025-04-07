@@ -207,24 +207,35 @@ function processLocales(
 const defaultExtensions = ['.mdx', '.md', '.tsx', '.jsx', '.ts', '.js']
 
 export interface AutoSidebarPluginOptions {
-  excludeRoutes?: string[]
+  ignore?: boolean
+  export?: boolean
   collapsed?: boolean
 }
 
+const APIS_ROUTES = ['apis/**', '*/apis/**']
+
 export const autoSidebar = async (
   config: UserConfig,
-  { excludeRoutes }: AutoSidebarPluginOptions,
+  { ignore, export: export_ }: AutoSidebarPluginOptions,
 ) => {
-  config.themeConfig = config.themeConfig || {}
-  config.themeConfig.locales =
-    config.themeConfig.locales || config.locales || []
+  const excludeRoutes = (ignore && config.internalRoutes) || []
+  const route = (config.route ??= {})
+  if (export_ || excludeRoutes.length) {
+    if (export_) {
+      excludeRoutes.push(...APIS_ROUTES)
+    }
+    const exclude = (route.exclude ??= [])
+    exclude.push(...excludeRoutes)
+  }
+  config.themeConfig ??= {}
+  config.themeConfig.locales ??= config.locales || []
   const root = config.root!
   const langs = config.themeConfig.locales.map((locale) => locale.lang)
   const hasLocales = langs.length > 0
   const versions = config.multiVersion?.versions || []
   const defaultLang = config.lang || ''
   const { default: defaultVersion = '' } = config.multiVersion || {}
-  const { extensions = defaultExtensions } = config.route || {}
+  const { extensions = defaultExtensions } = route
   const collapsed = config.sidebar?.collapsed
   if (hasLocales) {
     const metaInfo = await processLocales(
