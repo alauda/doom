@@ -30,7 +30,10 @@ export const exportCommand = new Command('export')
       ServeOptions & GlobalCliOptions
     >()
 
-    let { config } = await loadConfig(root, globalOptions)
+    let { config } = await loadConfig(root, {
+      ...globalOptions,
+      export: true,
+    })
 
     const outDir = config.outDir!
 
@@ -47,7 +50,7 @@ export const exportCommand = new Command('export')
     config.builderConfig!.server!.open = false
 
     // make sure it won't be overridden by `serve`
-    const themeConfig = { ...config.themeConfig! }
+    const themeConfig = { ...config.themeConfig }
 
     logger.start('Serving...')
 

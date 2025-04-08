@@ -9,3 +9,5 @@ export const JS_STR_FALSY_VALUES = new Set([
   'null',
   'undefined',
 ])
+
+export const APIS_ROUTES = new Set(['apis/**', '*/apis/**'])

@@ -6,6 +6,8 @@ import {
   type UserConfig,
 } from '@rspress/core'
 
+import { APIS_ROUTES } from '../../shared/index.js'
+
 import { combineWalkResult } from './utils.js'
 import { walk } from './walk.js'
 
@@ -212,8 +214,6 @@ export interface AutoSidebarPluginOptions {
   collapsed?: boolean
 }
 
-const APIS_ROUTES = ['apis/**', '*/apis/**']
-
 export const autoSidebar = async (
   config: UserConfig,
   { ignore, export: export_ }: AutoSidebarPluginOptions,
@@ -221,11 +221,12 @@ export const autoSidebar = async (
   const excludeRoutes = (ignore && config.internalRoutes) || []
   const route = (config.route ??= {})
   if (export_ || excludeRoutes.length) {
+    const exclude = (route.exclude ??= [])
+    exclude.push(...excludeRoutes)
+    // only exclude apis routes for sidebar but not site data to avoid dead links
     if (export_) {
       excludeRoutes.push(...APIS_ROUTES)
     }
-    const exclude = (route.exclude ??= [])
-    exclude.push(...excludeRoutes)
   }
   config.themeConfig ??= {}
   config.themeConfig.locales ??= config.locales || []

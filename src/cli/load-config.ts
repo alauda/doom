@@ -66,6 +66,7 @@ const getCommonConfig = ({
   base,
   version,
   download,
+  export: export_,
   ignore,
   force,
   open,
@@ -77,6 +78,7 @@ const getCommonConfig = ({
   base?: string
   version?: string
   download?: boolean
+  export?: boolean
   ignore?: boolean
   force?: boolean
   open?: boolean
@@ -136,7 +138,7 @@ const getCommonConfig = ({
       apiPlugin({
         localBasePath,
       }),
-      autoSidebarPlugin({ ignore }),
+      autoSidebarPlugin({ export: export_, ignore }),
       directivesPlugin(),
       globalPlugin({ version, download }),
       mermaidPlugin(),
@@ -213,6 +215,7 @@ export async function loadConfig(
     prefix,
     v: version,
     download,
+    export: export_,
     ignore,
     force,
     open,
@@ -285,6 +288,7 @@ export async function loadConfig(
     base,
     version,
     download,
+    export: export_,
     ignore,
     force,
     open,

@@ -69,6 +69,12 @@ program
     false,
   )
   .option(
+    '-e, --export [boolean]',
+    'Run or build in exporting PDF mode, `apis/**` and `*/apis/**` routes will be ignored automatically',
+    parseBoolean,
+    false,
+  )
+  .option(
     '--no-open [boolean]',
     'Do not open the browser after starting the server',
   )

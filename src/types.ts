@@ -20,6 +20,7 @@ export interface GlobalCliOptions {
   prefix?: string
   v?: string
   download?: boolean
+  export?: boolean
   ignore?: boolean
   force?: boolean
   open?: boolean
