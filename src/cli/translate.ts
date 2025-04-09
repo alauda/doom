@@ -13,6 +13,8 @@ import matter from 'gray-matter'
 import { AzureOpenAI, RateLimitError } from 'openai'
 import { pRateLimit } from 'p-ratelimit'
 import { glob } from 'tinyglobby'
+import { fetchApi } from 'x-fetch'
+import { parse } from 'yaml'
 import { cyan, red } from 'yoctocolors'
 
 import {
@@ -21,6 +23,7 @@ import {
   normalizeImgSrc,
   type NormalizeImgSrcOptions,
 } from '../plugins/index.js'
+import type { NormalizedTermItem } from '../terms.js'
 import type { GlobalCliOptions, TranslateOptions } from '../types.js'
 import { pathExists } from '../utils/index.js'
 
@@ -57,10 +60,7 @@ const DEFAULT_SYSTEM_PROMPT = `
 - MDX 组件中包含的内容需要翻译，MDX 组件参数的值不需要翻译，但以下这些特殊的 MDX 组件参数值需要翻译
   * 组件示例： <Tab label="参数值">组件包含的内容</Tab>，label 是 key 不用翻译，"参数值" 需要翻译
 - 以下是常见的相关术语词汇对应表（中文 -> English）
-  * ACP -> ACP
-  * 灵雀云 -> Alauda
-  * 容器组 -> Pods
-  * global 集群 -> global cluster
+<%= terms %>
 - 如果存在下列注释，请保留不用翻译，更不要修改注释内容
   - {/* release-notes-for-bugs */}
   - <!-- release-notes-for-bugs -->
@@ -99,6 +99,15 @@ export interface InternalTranslateOptions extends TranslateOptions {
   additionalPrompts?: string
 }
 
+const resolveTerms = async () => {
+  const terms = await fetchApi(
+    'https://gitlab-ce.alauda.cn/alauda-public/product-doc-guide/-/raw/main/terms.yaml',
+    { type: 'text' },
+  )
+  const parsedTerms = parse(terms) as NormalizedTermItem[]
+  return parsedTerms.map(({ en, zh = en }) => `  * ${zh} -> ${en}`).join('\n')
+}
+
 export const translate = async ({
   source,
   sourceContent,
@@ -114,12 +123,16 @@ export const translate = async ({
         process.env.AZURE_OPENAI_ENDPOINT ||
         'https://apt-docs-openai.openai.azure.com',
       apiKey: process.env.AZURE_OPENAI_API_KEY || 'doom',
-      apiVersion: process.env.OPENAI_API_VERSION || '2025-01-01-preview',
+      apiVersion: process.env.OPENAI_API_VERSION || '2025-03-01-preview',
     })
   }
 
   const sourceLang = LANGUAGE_CODES[source]
   const targetLang = LANGUAGE_CODES[target]
+
+  const terms = await resolveTerms()
+
+  logger.debug('Resolved terms:\n' + terms)
 
   const { choices } = await openai.beta.chat.completions.parse({
     messages: [
@@ -127,7 +140,7 @@ export const translate = async ({
         role: 'system',
         content: await render(
           systemPrompt?.trim() || DEFAULT_SYSTEM_PROMPT,
-          { sourceLang, targetLang, userPrompt, additionalPrompts },
+          { sourceLang, targetLang, userPrompt, additionalPrompts, terms },
           { async: true },
         ),
       },

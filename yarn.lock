@@ -61,6 +61,7 @@ __metadata:
     type-fest: "npm:^4.39.1"
     typescript: "npm:^5.8.3"
     typescript-eslint: "npm:^8.29.1"
+    x-fetch: "npm:^0.2.4"
     yaml: "npm:^2.7.1"
     yarn-berry-deduplicate: "npm:^6.1.1"
     yoctocolors: "npm:^2.1.1"
@@ -9588,6 +9589,15 @@ __metadata:
   version: 1.0.2
   resolution: "wrappy@npm:1.0.2"
   checksum: 10c0/56fece1a4018c6a6c8e28fbc88c87e0fbf4ea8fd64fc6c63b18f4acc4bd13e0ad2515189786dd2c30d3eec9663d70f4ecf699330002f8ccb547e4a18231fc9f0
+  languageName: node
+  linkType: hard
+
+"x-fetch@npm:^0.2.4":
+  version: 0.2.4
+  resolution: "x-fetch@npm:0.2.4"
+  dependencies:
+    tslib: "npm:^2.8.1"
+  checksum: 10c0/9d705ec849462fdfee2f7152f9ac07f6be33b9f070fa1bfbd37f01e2b6b6b3e0231d09f121e01a9259fc4faba7f3cc5d161f09e4a64ae5fc80eb975de648ae4c
   languageName: node
   linkType: hard
 

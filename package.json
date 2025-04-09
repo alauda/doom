@@ -1,6 +1,6 @@
 {
   "name": "@alauda/doom",
-  "version": "0.18.10",
+  "version": "0.18.11",
   "type": "module",
   "description": "Doctor Doom making docs.",
   "repository": "https://gitlab-ce.alauda.cn/idp/Doom.git",
@@ -97,6 +97,7 @@
     "simple-git-hooks": "^2.12.1",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.29.1",
+    "x-fetch": "^0.2.4",
     "yarn-berry-deduplicate": "^6.1.1"
   },
   "publishConfig": {

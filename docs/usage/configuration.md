@@ -173,10 +173,7 @@ translate:
 - MDX 组件中包含的内容需要翻译，MDX 组件参数的值不需要翻译，但以下这些特殊的 MDX 组件参数值需要翻译
   * 组件示例： <Tab label="参数值">组件包含的内容</Tab>，label 是 key 不用翻译，"参数值" 需要翻译
 - 以下是常见的相关术语词汇对应表（中文 -> English）
-  * ACP -> ACP
-  * 灵雀云 -> Alauda
-  * 容器组 -> Pods
-  * global 集群 -> global cluster
+<%= terms %>
 - 如果存在下列注释，请保留不用翻译，更不要修改注释内容
   - {/* release-notes-for-bugs */}
   - <!-- release-notes-for-bugs -->
