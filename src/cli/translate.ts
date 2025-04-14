@@ -104,8 +104,8 @@ const resolveTerms_ = async () => {
   )
   const parsedTerms = parse(terms) as NormalizedTermItem[]
   return (
-    '- 以下是常见的相关术语词汇对应表（English -> 中文）\n' +
-    parsedTerms.map(({ en, zh = en }) => `  * ${en} -> ${zh}`).join('\n')
+    '- 以下是常见的相关术语词汇对应表（English <-> 中文）\n' +
+    parsedTerms.map(({ en, zh = en }) => `  * ${en} <-> ${zh}`).join('\n')
   )
 }
 
@@ -198,6 +198,8 @@ export interface TranslateCommandOptions {
 }
 
 const supportedLanguages = SUPPORTED_LANGUAGES.join(', ')
+
+const shaHash = crypto.createHash('sha256')
 
 export const translateCommand = new Command('translate')
   .description('Translate the documentation')
@@ -325,18 +327,17 @@ export const translateCommand = new Command('translate')
         [...allSourceFilePaths].map(async (sourceFilePath) => {
           const sourceContent = await fs.readFile(sourceFilePath, 'utf-8')
 
-          const sourceFrontmatter = matter(sourceContent)
-            .data as I18nFrontmatter
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const { sourceSHA: _sourceSHA, ...sourceFrontmatter } = matter(
+            sourceContent,
+          ).data as I18nFrontmatter
 
           if (sourceFrontmatter.i18n?.disableAutoTranslation) {
             allSourceFilePaths.delete(sourceFilePath)
             return
           }
 
-          const sourceSHA = crypto
-            .createHash('sha256')
-            .update(sourceContent)
-            .digest('hex')
+          const sourceSHA = shaHash.update(sourceContent).digest('hex')
 
           const targetFilePath = sourceFilePath.replace(sourceDir, targetDir)
 
