@@ -361,9 +361,12 @@ export const translateCommand = new Command('translate')
           }
 
           await limit(async () => {
-            const relativePath = path.relative(docsDir, sourceFilePath)
+            const sourceRelativePath = path.relative(docsDir, sourceFilePath)
+            const targetRelativePath = path.relative(docsDir, targetFilePath)
 
-            logger.info(`Translating ${cyan(relativePath)}`)
+            logger.info(
+              `Translating ${cyan(sourceRelativePath)} to ${cyan(targetRelativePath)}`,
+            )
 
             const isMdx = sourceFilePath.endsWith('.mdx')
 
@@ -371,10 +374,12 @@ export const translateCommand = new Command('translate')
 
             const ast = processor.parse(escapeMarkdownHeadingIds(sourceContent))
 
+            const targetBase = path.dirname(targetFilePath)
+
             const normalizeImgSrcOptions: NormalizeImgSrcOptions = {
               localPublicBase: path.resolve(docsDir, 'public'),
               sourceBase: path.dirname(sourceFilePath),
-              targetBase: path.dirname(targetFilePath),
+              targetBase,
               translating: { source, target, copy },
             }
 
@@ -416,11 +421,13 @@ export const translateCommand = new Command('translate')
               newFrontmatter,
             )
 
-            await fs.mkdir(path.dirname(targetFilePath), { recursive: true })
+            await fs.mkdir(targetBase, { recursive: true })
 
             await fs.writeFile(targetFilePath, targetContent)
 
-            logger.info(`${cyan(relativePath)} translated`)
+            logger.info(
+              `${cyan(sourceRelativePath)} translated to ${cyan(targetRelativePath)}`,
+            )
 
             allSourceFilePaths.delete(sourceFilePath)
           })
