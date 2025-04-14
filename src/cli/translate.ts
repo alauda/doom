@@ -312,8 +312,8 @@ export const translateCommand = new Command('translate')
 
       if (toRemoveTargetFilePaths.length > 0) {
         logger.warn(
-          'Found unmatched target files will be removed:\n',
-          ...toRemoveTargetFilePaths.map((file) => `- ${red(file)}`),
+          'Found unmatched target files will be removed:\n' +
+            toRemoveTargetFilePaths.map((file) => `- ${red(file)}`).join('\n'),
         )
 
         await Promise.all(toRemoveTargetFilePaths.map((file) => fs.rm(file)))
