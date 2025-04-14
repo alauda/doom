@@ -44,9 +44,9 @@ spec:
                 memory: 4Gi
             script: |
               # set -x
-              export COREPACK_NPM_REGISTRY=https://registry.npmmirror.com
+              export COREPACK_NPM_REGISTRY=https://edge-nexus.alauda.cn/repository/cnpm
               export YARN_GLOBAL_FOLDER=/workspace/yarn_cache/global
-              yarn config set npmRegistryServer https://build-nexus.alauda.cn/repository/cnpm
+              yarn config set npmRegistryServer https://edge-nexus.alauda.cn/repository/cnpm
               yarn --immutable
               git reset --hard
     - name: build-docs
@@ -70,6 +70,7 @@ spec:
                 memory: 4Gi
             script: |
               # set -x
+              export COREPACK_NPM_REGISTRY=https://edge-nexus.alauda.cn/repository/cnpm
               yarn doom build
     - name: build-image
       runAfter:

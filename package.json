@@ -4,7 +4,7 @@
   "type": "module",
   "description": "Doctor Doom making docs.",
   "repository": "https://gitlab-ce.alauda.cn/idp/Doom.git",
-  "packageManager": "yarn@4.9.1",
+  "packageManager": "yarn@4.9.0",
   "engines": {
     "node": ">=18.17.0 <20 || >=20.1.0"
   },
