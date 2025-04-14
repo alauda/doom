@@ -199,8 +199,6 @@ export interface TranslateCommandOptions {
 
 const supportedLanguages = SUPPORTED_LANGUAGES.join(', ')
 
-const shaHash = crypto.createHash('sha256')
-
 export const translateCommand = new Command('translate')
   .description('Translate the documentation')
   .argument('[root]', 'Root directory of the documentation')
@@ -337,7 +335,10 @@ export const translateCommand = new Command('translate')
             return
           }
 
-          const sourceSHA = shaHash.update(sourceContent).digest('hex')
+          const sourceSHA = crypto
+            .createHash('sha256')
+            .update(sourceContent)
+            .digest('hex')
 
           const targetFilePath = sourceFilePath.replace(sourceDir, targetDir)
 
