@@ -1,5 +1,4 @@
 ---
-sourceSHA: fcd06d4114915516b42f1e2f414051a36251a1e2d1b9c6027fab342e9cffdf7a
 ---
 
 # Images MD

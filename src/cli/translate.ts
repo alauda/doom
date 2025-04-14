@@ -23,6 +23,7 @@ import {
   normalizeImgSrc,
   type NormalizeImgSrcOptions,
 } from '../plugins/index.js'
+import { Language, SUPPORTED_LANGUAGES } from '../shared/index.js'
 import type { NormalizedTermItem } from '../terms.js'
 import type { GlobalCliOptions, TranslateOptions } from '../types.js'
 import { pathExists } from '../utils/index.js'
@@ -44,10 +45,7 @@ export interface I18nFrontmatter {
   title?: string
 }
 
-const LANGUAGE_CODES: Record<string, string> = {
-  zh: '中文',
-  en: '英文',
-}
+export const TERMS_SUPPORTED_LANGUAGES: Language[] = ['en', 'zh']
 
 const DEFAULT_SYSTEM_PROMPT = `
 ## 角色
@@ -57,9 +55,9 @@ const DEFAULT_SYSTEM_PROMPT = `
 - 第一条消息为需要翻译的最新<%= sourceLang %>文档，第二条消息为之前翻译过的但内容可能过期的<%= targetLang %>文档，如果没有翻译过则为空
 - 输入格式为 MDX 格式，输出格式也必须保留原始 MDX 格式，不要翻译其中的 jsx 组件名称，如 <Overview />，且不要额外包装在不必要的代码块中
 - 文档中的资源链接不要翻译和替换
-- MDX 组件中包含的内容需要翻译，MDX 组件参数的值不需要翻译，但以下这些特殊的 MDX 组件参数值需要翻译
-  * 组件示例： <Tab label="参数值">组件包含的内容</Tab>，label 是 key 不用翻译，"参数值" 需要翻译
-- 以下是常见的相关术语词汇对应表（中文 -> English）
+- MDX 组件中包含的内容需要翻译，MDX 组件名和参数值不需要翻译，但特殊的 MDX 组件参数值需要翻译，示例：
+  - <Overview /> 中的 Overview 是组件名，不用翻译
+  - <Tab label="value">组件包含的内容</Tab>，label 是 key 不用翻译，"value" 是参数值需要翻译
 <%= terms %>
 - 如果存在下列注释，请保留不用翻译，更不要修改注释内容
   - {/* release-notes-for-bugs */}
@@ -92,20 +90,35 @@ const DEFAULT_SYSTEM_PROMPT = `
 let openai: AzureOpenAI | undefined
 
 export interface InternalTranslateOptions extends TranslateOptions {
-  source: string
+  source: Language
   sourceContent: string
-  target: string
+  target: Language
   targetContent?: string
   additionalPrompts?: string
 }
 
-const resolveTerms = async () => {
+const resolveTerms_ = async () => {
   const terms = await fetchApi(
     'https://gitlab-ce.alauda.cn/alauda-public/product-doc-guide/-/raw/main/terms.yaml',
     { type: 'text' },
   )
   const parsedTerms = parse(terms) as NormalizedTermItem[]
-  return parsedTerms.map(({ en, zh = en }) => `  * ${zh} -> ${en}`).join('\n')
+  return (
+    '- 以下是常见的相关术语词汇对应表（English -> 中文）\n' +
+    parsedTerms.map(({ en, zh = en }) => `  * ${en} -> ${zh}`).join('\n')
+  )
+}
+
+let termsCache: Promise<string> | undefined
+
+const resolveTerms = async () => {
+  if (termsCache) {
+    return termsCache
+  }
+  return (termsCache = resolveTerms_().then((terms) => {
+    logger.debug('Resolved terms:', terms)
+    return terms
+  }))
 }
 
 export const translate = async ({
@@ -127,22 +140,28 @@ export const translate = async ({
     })
   }
 
-  const sourceLang = LANGUAGE_CODES[source]
-  const targetLang = LANGUAGE_CODES[target]
+  const sourceLang = Language[source]
+  const targetLang = Language[target]
 
-  const terms = await resolveTerms()
+  let terms = ''
 
-  logger.debug('Resolved terms:\n' + terms)
+  if (
+    [source, target].every((lang) => TERMS_SUPPORTED_LANGUAGES.includes(lang))
+  ) {
+    terms = await resolveTerms()
+  }
+
+  const finalSystemPrompt = await render(
+    systemPrompt?.trim() || DEFAULT_SYSTEM_PROMPT,
+    { sourceLang, targetLang, userPrompt, additionalPrompts, terms },
+    { async: true },
+  )
 
   const { choices } = await openai.beta.chat.completions.parse({
     messages: [
       {
         role: 'system',
-        content: await render(
-          systemPrompt?.trim() || DEFAULT_SYSTEM_PROMPT,
-          { sourceLang, targetLang, userPrompt, additionalPrompts, terms },
-          { async: true },
-        ),
+        content: finalSystemPrompt,
       },
       {
         role: 'user',
@@ -172,17 +191,27 @@ const limit = pRateLimit({
 })
 
 export interface TranslateCommandOptions {
-  source: string
-  target: string
+  source: Language
+  target: Language
   glob: string[]
   copy?: boolean
 }
 
+const supportedLanguages = SUPPORTED_LANGUAGES.join(', ')
+
 export const translateCommand = new Command('translate')
   .description('Translate the documentation')
   .argument('[root]', 'Root directory of the documentation')
-  .option('-s, --source <language>', 'Document source language', 'en')
-  .option('-t, --target <language>', 'Document target language', 'zh')
+  .option(
+    '-s, --source <language>',
+    `Document source language, one of ${supportedLanguages}`,
+    'en',
+  )
+  .option(
+    '-t, --target <language>',
+    `Document target language, one of ${supportedLanguages}`,
+    'zh',
+  )
   .requiredOption('-g, --glob <path...>', 'Glob patterns for source dirs/files')
   .option(
     '-C, --copy [boolean]',
@@ -201,8 +230,8 @@ export const translateCommand = new Command('translate')
     } = this.optsWithGlobals<TranslateCommandOptions & GlobalCliOptions>()
 
     if (
-      !Object.hasOwn(LANGUAGE_CODES, source) ||
-      !Object.hasOwn(LANGUAGE_CODES, target) ||
+      !Object.hasOwn(Language, source) ||
+      !Object.hasOwn(Language, target) ||
       source === target
     ) {
       logger.error(

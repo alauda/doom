@@ -59,6 +59,16 @@ const zhLocaleConfig: Omit<LocaleConfig, 'lang' | 'label'> = {
   nextPageText: '下一页',
 }
 
+const ruLocaleConfig: Omit<LocaleConfig, 'lang' | 'label'> = {
+  searchPlaceholderText: 'Поиск документов',
+  searchNoResultsText: 'Не найдено соответствующих результатов',
+  searchSuggestedQueryText:
+    'Попробуйте изменить ключевые слова и повторить поиск',
+  outlineTitle: 'Обзор страницы',
+  prevPageText: 'Предыдущая страница',
+  nextPageText: 'Следующая страница',
+}
+
 const getCommonConfig = ({
   config,
   root,
@@ -129,8 +139,9 @@ const getCommonConfig = ({
         ? zhLocaleConfig
         : {
             locales: [
-              { lang: 'zh', label: '简体中文', ...zhLocaleConfig },
               { lang: 'en', label: 'English' },
+              { lang: 'zh', label: '简体中文', ...zhLocaleConfig },
+              { lang: 'ru', label: 'Русский', ...ruLocaleConfig },
             ],
           }),
     },

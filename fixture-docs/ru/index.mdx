@@ -1,0 +1,40 @@
+---
+sourceSHA: e752331d6b37e30a460ac29cb4eb13f753c324f2f938af8cf631cb446b280819
+---
+
+import { useI18n } from '@rspress/core/runtime'
+
+# {useI18n()('prod_intro')}
+
+<Term name="company" />
+
+<Term name="product" />
+
+<Term name="productShort" />
+
+Следующие спецификации должны быть соблюдены в процессе перевода для интернационализации:
+
+- Структура директорий многоязычных документов (`doc/en`) должна быть идентична документам в директории `doc/zh`, что обеспечит точное совпадение ссылок на многоязычные документы за исключением идентификатора языка.
+
+  ::: danger
+  Если для перевода используется инструмент автоматического перевода, нет необходимости беспокоиться об этом вопросе, так как инструмент автоматического перевода автоматически сгенерирует структуру директорий для документов целевого языка на основе `doc/zh`.
+  :::
+
+<Tabs>
+  <Tab label="label1">
+    ```mdx title="AcpApisOverview"
+    <AcpApisOverview />
+    ```
+
+    <AcpApisOverview />
+
+  </Tab>
+
+  <Tab label="label2">
+    <AcpApisOverview />
+  </Tab>
+</Tabs>
+
+<AcpApisOverview />
+
+<Term name="product" textCase="capitalize" />

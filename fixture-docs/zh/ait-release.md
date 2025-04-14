@@ -1,6 +1,6 @@
 ---
 weight: 1
-sourceSHA: cb9b8e5159bbb1026a94e51f59cbda5fca87d71da99cebfe438ce70a4700d4e7
+sourceSHA: 1988533fe03d16c211477b5832eef936e46fec6a1207fb63319215c74b945c2f
 ---
 
 # AIT 发布

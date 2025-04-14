@@ -1,12 +1,13 @@
-import { useLang } from '@rspress/core/runtime'
+import { useLang as useLang_ } from '@rspress/core/runtime'
 import { useCallback } from 'react'
 
-import { type Locale, TRANSLATIONS } from '../translation.js'
+import type { Language } from '../../shared/index.js'
+import { TRANSLATIONS } from '../translation.js'
 
-export const useLocale = () => useLang() as Locale
+export const useLang = () => useLang_() as Language
 
 export const useTranslation = () => {
-  const lang = useLocale()
+  const lang = useLang()
   const translations = TRANSLATIONS[lang]
   return useCallback(
     (key: keyof typeof translations) => translations[key],

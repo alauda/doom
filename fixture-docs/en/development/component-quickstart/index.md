@@ -1,6 +1,5 @@
 ---
 created: '2025-01-07'
-sourceSHA: 91589088443ae79719c9ed05a2c99d7eac844a746b3af215551e4c5d15ac6db1
 ---
 
 # Component Quick Start

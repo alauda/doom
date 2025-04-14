@@ -1,7 +1,3 @@
----
-sourceSHA: fa166699c91171e85faa58ca63b0077e23f9fff8ef5eebcbeae97283492cc943
----
-
 <!-- reference-start#images-md -->
 
 ## Absolute

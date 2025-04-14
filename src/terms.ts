@@ -3,10 +3,12 @@ import type { SetOptional } from 'type-fest'
 export interface TermItem {
   en: string
   zh?: string
+  ru?: string
   description?: string
   badCases?: {
-    zh?: string[]
     en?: string[]
+    zh?: string[]
+    ru?: string[]
   }
 }
 

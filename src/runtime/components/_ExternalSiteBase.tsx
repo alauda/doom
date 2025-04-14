@@ -41,6 +41,16 @@ const SiteNotes: Notes = {
       </>
     )
   },
+  ru({ name, displayName }) {
+    return (
+      <>
+        Поскольку выпуски {displayName} осуществляются в ином режиме, чем у
+        Alauda Container Platform, документация {displayName} теперь доступна в
+        виде отдельного набора по адресу{' '}
+        <ExternalSiteLink name={name}>{displayName}</ExternalSiteLink>。
+      </>
+    )
+  },
 }
 
 const ApisOverviewNotes: Notes = {
@@ -66,6 +76,18 @@ const ApisOverviewNotes: Notes = {
           {displayName} APIs 指南
         </ExternalSiteLink>
         。
+      </>
+    )
+  },
+  ru({ name, displayName }) {
+    return (
+      <>
+        Для ознакомления с методами использования API {displayName}, обратитесь
+        к документации{' '}
+        <ExternalSiteLink name={name} href="apis/overview/">
+          {displayName} APIs Guide
+        </ExternalSiteLink>
+        .
       </>
     )
   },

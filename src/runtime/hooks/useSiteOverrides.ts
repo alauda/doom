@@ -4,11 +4,11 @@ import { merge } from 'es-toolkit/compat'
 import { useEffect, useMemo, useState } from 'react'
 import { parse } from 'yaml'
 
+import type { Language } from '../../shared/index.js'
 import type { DoomSite } from '../../shared/types.js'
 import { namedTerms, type NamedTerms, type TermName } from '../../terms.js'
-import type { Locale } from '../translation.js'
 
-import { useLocale } from './useTranslation.js'
+import { useLang } from './useTranslation.js'
 
 export type SiteOverridesTerms = Record<TermName, string>
 
@@ -20,16 +20,16 @@ export interface SiteOverridesItem {
 
 export type SiteOverrides = {
   [K in Exclude<keyof SiteOverridesItem, 'terms'>]?: Partial<
-    Record<Locale, SiteOverridesItem[K]>
+    Record<Language, SiteOverridesItem[K]>
   >
 } & {
   terms?: NamedTerms
 }
 
-export type NormalizedSiteOverrides = Record<Locale, SiteOverridesItem>
+export type NormalizedSiteOverrides = Record<Language, SiteOverridesItem>
 
 const normalizeOverrides = <K extends string, T>(
-  origin: Partial<Record<K, Partial<Record<Locale, T>>>>,
+  origin: Partial<Record<K, Partial<Record<Language, T>>>>,
 ) =>
   Object.keys(origin).reduce(
     (acc, key_) => {
@@ -38,11 +38,12 @@ const normalizeOverrides = <K extends string, T>(
       if (!term) {
         return acc
       }
-      acc.en[key] = term.en!
-      acc.zh[key] = term.zh || acc.en[key]
+      const en = (acc.en[key] = term.en!)
+      acc.zh[key] = term.zh || en
+      acc.ru[key] = term.ru || en
       return acc
     },
-    { en: {}, zh: {} } as Record<Locale, Record<K, T>>,
+    { en: {}, zh: {}, ru: {} } as Record<Language, Record<K, T>>,
   )
 
 let normalizedSiteOverrides: NormalizedSiteOverrides | undefined
@@ -100,6 +101,7 @@ const fetchSiteOverrides = async (
       return {
         en: { ...normalizedSiteOverrides.en, terms: normalizedTerms.en },
         zh: { ...normalizedSiteOverrides.zh, terms: normalizedTerms.zh },
+        ru: { ...normalizedSiteOverrides.ru, terms: normalizedTerms.ru },
       }
     }))
 }
@@ -109,7 +111,7 @@ export const useSiteOverrides = (): SiteOverridesItem => {
 
   const [siteOverrides, setSiteOverrides] = useState(normalizedSiteOverrides)
 
-  const lang = useLocale()
+  const lang = useLang()
 
   const acpSite = useMemo(
     () => virtual.sites?.find((s) => s.name === 'acp'),
