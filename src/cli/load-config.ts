@@ -37,7 +37,7 @@ import {
 } from '../plugins/index.js'
 import { type DoomSite } from '../shared/index.js'
 import type { GlobalCliOptions } from '../types.js'
-import { pkgResolve, resolveStaticConfig } from '../utils/index.js'
+import { pathExists, pkgResolve, resolveStaticConfig } from '../utils/index.js'
 
 import {
   CWD,
@@ -69,7 +69,7 @@ const ruLocaleConfig: Omit<LocaleConfig, 'lang' | 'label'> = {
   nextPageText: 'Следующая страница',
 }
 
-const getCommonConfig = ({
+const getCommonConfig = async ({
   config,
   root,
   configFilePath,
@@ -93,7 +93,7 @@ const getCommonConfig = ({
   force?: boolean
   open?: boolean
   lazy?: boolean
-}): UserConfig => {
+}): Promise<UserConfig> => {
   const fallbackToZh = 'lang' in config && !config.lang
   root = resolveDocRoot(CWD, root, config.root)
   const localBasePath = configFilePath ? path.dirname(configFilePath) : root
@@ -141,8 +141,12 @@ const getCommonConfig = ({
             locales: [
               { lang: 'en', label: 'English' },
               { lang: 'zh', label: '简体中文', ...zhLocaleConfig },
-              { lang: 'ru', label: 'Русский', ...ruLocaleConfig },
-            ],
+              (await pathExists(path.resolve(root, 'ru'), 'directory')) && {
+                lang: 'ru',
+                label: 'Русский',
+                ...ruLocaleConfig,
+              },
+            ].filter(Boolean),
           }),
     },
     plugins: [
@@ -292,7 +296,7 @@ export async function loadConfig(
 
   version ||= ''
 
-  const commonConfig = getCommonConfig({
+  const commonConfig = await getCommonConfig({
     config,
     configFilePath,
     root,

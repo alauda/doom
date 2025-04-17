@@ -18,6 +18,7 @@ __metadata:
     "@shikijs/transformers": "npm:^3.2.2"
     "@swc-node/register": "npm:^1.10.10"
     "@swc/core": "npm:1.11.21"
+    "@total-typescript/ts-reset": "npm:^0.6.1"
     "@types/cli-progress": "npm:^3.11.6"
     "@types/ejs": "npm:^3.1.5"
     "@types/node": "npm:^18.19.86"
@@ -1691,6 +1692,13 @@ __metadata:
   dependencies:
     defer-to-connect: "npm:^2.0.0"
   checksum: 10c0/73946918c025339db68b09abd91fa3001e87fc749c619d2e9c2003a663039d4c3cb89836c98a96598b3d47dec2481284ba85355392644911f5ecd2336536697f
+  languageName: node
+  linkType: hard
+
+"@total-typescript/ts-reset@npm:^0.6.1":
+  version: 0.6.1
+  resolution: "@total-typescript/ts-reset@npm:0.6.1"
+  checksum: 10c0/c42c592054d33e86ac870065820888f89f05e47b2cfbc6bed95f3084b1f6d13b0231b5b8577eabf461aeb3f37c63ae3216f343b573f7136766eb750aac0dd1ab
   languageName: node
   linkType: hard
 
