@@ -7,7 +7,7 @@ import {
   type NavItemWithLink,
   type NavItemWithLinkAndChildren,
 } from '@rspress/shared'
-import { useState, type ReactNode } from 'react'
+import { useCallback, useState, type ReactNode } from 'react'
 
 import { SvgDown } from './Down.js'
 import {
@@ -73,6 +73,15 @@ function NormalGroupItem({ item }: { item: NavItemWithLink }) {
 export function NavMenuGroup(item: NavMenuGroupItem) {
   const { activeValue, items: groupItems, base = '', pathname = '' } = item
   const [isOpen, setIsOpen] = useState(false)
+
+  const onOpen = useCallback(() => {
+    setIsOpen(true)
+  }, [])
+
+  const onClose = useCallback(() => {
+    setIsOpen(false)
+  }, [])
+
   const renderLinkItem = (item: NavItemWithLink) => {
     const isLinkActive = new RegExp(item.activeMatch || item.link).test(
       withoutBase(pathname, base),
@@ -82,6 +91,7 @@ export function NavMenuGroup(item: NavMenuGroupItem) {
     }
     return <NormalGroupItem key={item.link} item={item} />
   }
+
   const renderGroup = (
     item: NavItemWithChildren | NavItemWithLinkAndChildren,
   ) => {
@@ -98,39 +108,39 @@ export function NavMenuGroup(item: NavMenuGroupItem) {
       </div>
     )
   }
-  return (
-    <div
-      className="relative flex-center h-14"
-      onMouseLeave={() => {
-        setIsOpen(false)
-      }}
+
+  const hasMultiItems = groupItems.length > 1
+
+  const Content = hasMultiItems || item.link ? 'button' : 'span'
+
+  const content = (
+    <Content
+      onMouseEnter={hasMultiItems ? onOpen : undefined}
+      className={`${Content === 'button' ? 'rspress-nav-menu-group-button ' : ''}flex-center items-center font-medium text-sm text-text-1${hasMultiItems ? ' hover:text-text-2 transition-colors duration-200' : ''}`}
     >
-      <button
-        onMouseEnter={() => {
-          setIsOpen(true)
-        }}
-        className="rspress-nav-menu-group-button flex-center items-center font-medium text-sm text-text-1 hover:text-text-2 transition-colors duration-200"
-      >
-        {item.link ? (
-          <NavMenuSingleItem
-            {...(item as NavMenuSingleItemProps)}
-            rightIcon={<SvgWrapper icon={SvgDown} />}
-          />
-        ) : (
-          <>
-            <span
-              className="text-sm font-medium flex"
-              style={{
-                marginRight: '2px',
-              }}
-            >
-              <Tag tag={item.tag} />
-              {item.text}
-            </span>
-            <SvgWrapper icon={SvgDown} />
-          </>
-        )}
-      </button>
+      {item.link ? (
+        <NavMenuSingleItem
+          {...(item as NavMenuSingleItemProps)}
+          rightIcon={<SvgWrapper icon={SvgDown} />}
+        />
+      ) : (
+        <>
+          <span
+            className="text-sm font-medium flex"
+            style={hasMultiItems ? { marginRight: '2px' } : undefined}
+          >
+            <Tag tag={item.tag} />
+            {item.text}
+          </span>
+          {hasMultiItems && <SvgWrapper icon={SvgDown} />}
+        </>
+      )}
+    </Content>
+  )
+
+  return hasMultiItems ? (
+    <div className="relative flex-center h-14" onMouseLeave={onClose}>
+      {content}
       <div
         className="rspress-nav-menu-group-content absolute mx-0.8 transition-opacity duration-300"
         style={{
@@ -159,5 +169,7 @@ export function NavMenuGroup(item: NavMenuGroupItem) {
         </div>
       </div>
     </div>
+  ) : (
+    content
   )
 }

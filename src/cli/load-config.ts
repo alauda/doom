@@ -4,12 +4,12 @@ import path from 'node:path'
 import { nodeTypes } from '@mdx-js/mdx'
 import { pluginYaml } from '@rsbuild/plugin-yaml'
 import {
-  type LocaleConfig,
-  type UserConfig,
   addLeadingSlash,
   addTrailingSlash,
   normalizeSlash,
   removeLeadingSlash,
+  type LocaleConfig,
+  type UserConfig,
 } from '@rspress/core'
 import { logger } from '@rspress/shared/logger'
 import {
@@ -35,7 +35,11 @@ import {
   replacePlugin,
   shikiPlugin,
 } from '../plugins/index.js'
-import { type DoomSite } from '../shared/index.js'
+import {
+  isExplicitlyUnversioned,
+  UNVERSIONED,
+  type DoomSite,
+} from '../shared/index.js'
 import type { GlobalCliOptions } from '../types.js'
 import { pathExists, pkgResolve, resolveStaticConfig } from '../utils/index.js'
 
@@ -102,7 +106,7 @@ const getCommonConfig = async ({
     addTrailingSlash(base || config.base || '/'),
   ))
 
-  if (version && version !== 'unversioned') {
+  if (version && !isExplicitlyUnversioned(version)) {
     base = userBase + `${version}/`
   }
 
@@ -358,7 +362,7 @@ export async function loadConfig(
   if (mergedConfig.outDir) {
     mergedConfig.outDir = addTrailingSlash(mergedConfig.outDir) + version
   } else {
-    mergedConfig.outDir = `dist${version === 'unversioned' ? `${base}unversioned` : base}`
+    mergedConfig.outDir = `dist${isExplicitlyUnversioned(version) ? `${base}${UNVERSIONED}` : base}`
   }
 
   if (mergedConfig.builderConfig?.server?.open === true) {

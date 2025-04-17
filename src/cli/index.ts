@@ -42,7 +42,10 @@ program
     showGlobalOptions: true,
   })
   .option('-c, --config <config>', 'Specify the path to the config file')
-  .option('-v <version>', 'Specify the version of the documentation')
+  .option(
+    '-v <version>',
+    `Specify the version of the documentation, can also be 'unversioned' or 'unversioned-x.y'`,
+  )
   .option('-b, --base <base>', 'Override the base of the documentation')
   .option(
     '-p, --prefix <prefix>',
@@ -75,7 +78,7 @@ program
     false,
   )
   .option(
-    '--no-open [boolean]',
+    '-n, --no-open [boolean]',
     'Do not open the browser after starting the server',
   )
   .command('dev', { isDefault: true })

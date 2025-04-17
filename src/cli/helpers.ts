@@ -2,10 +2,14 @@ import fs from 'node:fs/promises'
 
 import { glob } from 'tinyglobby'
 
-import { FALSY_VALUES, isDoc } from '../shared/index.js'
+import { FALSY_VALUES } from '../shared/index.js'
 
 export const parseBoolean = (value: string) =>
   !!value && !FALSY_VALUES.has(value)
+
+const DOC_PATTERN = /\.mdx?$/
+
+const isDoc = (filename: string) => DOC_PATTERN.test(filename)
 
 export const getMatchedDocFilePaths = (matched: string[]) =>
   Promise.all(

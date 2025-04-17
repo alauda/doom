@@ -2,7 +2,6 @@ import {
   isProduction,
   NoSSR,
   removeTrailingSlash,
-  useLang,
   usePageData,
 } from '@rspress/core/runtime'
 import type { NavItem } from '@rspress/shared'
@@ -12,12 +11,17 @@ import { useEffect, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { parse } from 'yaml'
 
-import { ACP_BASE, getPdfName } from '../../shared/index.js'
+import {
+  ACP_BASE,
+  getPdfName,
+  getUnversionedVersion,
+  isExplicitlyUnversioned,
+} from '../../shared/index.js'
 
 import { NavMenuGroup } from './NavMenuGroup.js'
 import { NavMenuSingleItem } from './NavMenuSingleItem.js'
 
-import { useTranslation } from '@alauda/doom/runtime'
+import { useLang, useTranslation } from '@alauda/doom/runtime'
 
 const getNavMenu = () => {
   if (typeof document === 'undefined') {
@@ -55,37 +59,47 @@ const VersionsNav_ = () => {
   }, [lang, siteData.base, siteData.title])
 
   const [versionsBase, version] = useMemo(() => {
-    if (!virtual.version) {
+    const unversionedVersion = getUnversionedVersion(virtual.version)
+
+    if (!unversionedVersion) {
       return []
     }
 
     return [
-      removeTrailingSlash(siteData.base).slice(0, -virtual.version.length - 1),
-      virtual.version,
+      isExplicitlyUnversioned(virtual.version)
+        ? undefined
+        : removeTrailingSlash(siteData.base).slice(
+            0,
+            -unversionedVersion.length - 1,
+          ),
+      unversionedVersion,
     ]
   }, [siteData.base])
 
   const [navMenu, setNavMenu] = useState(getNavMenu)
 
-  const [versions, setVersions] = useState<string[]>()
+  const [versions, setVersions] = useState<string[]>(version ? [version] : [])
 
   useEffect(() => {
     const fetchVersions = async () => {
       if (versionsBase == null) {
-        return
+        if (!version) {
+          return
+        }
+      } else {
+        const res = await fetch(
+          `${isProduction() ? versionsBase : ''}/versions.yaml`,
+        )
+        if (!res.ok) {
+          return
+        }
+        const text = await res.text()
+        const versions = parse(text) as string[]
+        if (version && !versions.includes(version)) {
+          versions.unshift(version)
+        }
+        setVersions(versions)
       }
-      const res = await fetch(
-        `${isProduction() ? versionsBase : ''}/versions.yaml`,
-      )
-      if (!res.ok) {
-        return
-      }
-      const text = await res.text()
-      const versions = parse(text) as string[]
-      if (version && !versions.includes(version)) {
-        versions.unshift(version)
-      }
-      setVersions(versions)
       setNavMenu(getNavMenu)
     }
 
@@ -94,7 +108,7 @@ const VersionsNav_ = () => {
 
   // hack way to detect nav menu recreation on theme change
   useEffect(() => {
-    if (!navMenu) {
+    if (!navMenu?.parentNode) {
       return
     }
     const observer = new MutationObserver((mutations) => {
@@ -102,19 +116,22 @@ const VersionsNav_ = () => {
         setNavMenu(getNavMenu)
       }
     })
-    observer.observe(navMenu, { childList: true })
+    observer.observe(navMenu.parentNode, { childList: true })
     return () => {
       observer.disconnect()
     }
   }, [navMenu])
 
+  console.log('versionsBase', versionsBase)
+
   const navItems = useMemo(() => {
-    const versionItems: NavItem[] = (versions || []).map((v) => ({
-      text: v,
-      link: `${versionsBase}/${v}/`,
-      activeMatch: v,
-    }))
+    const versionItems: NavItem[] = versions.map((v) =>
+      versionsBase == null
+        ? { text: v, items: [] }
+        : { text: v, link: `${versionsBase}/${v}/`, activeMatch: v },
+    )
     if (
+      versionsBase != null &&
       ALLOW_LEGACY_DOMAINS.includes(location.hostname) &&
       virtual.userBase === ACP_BASE
     ) {

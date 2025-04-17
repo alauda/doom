@@ -12,6 +12,7 @@ import virtual from 'doom-@global-virtual'
 import { type AnchorHTMLAttributes, type ReactNode, useMemo } from 'react'
 
 import classes from '../../../styles/link.module.scss'
+import { isUnversioned } from '../../shared/helpers.js'
 import { useIsPrint } from '../hooks/index.js'
 
 import { Directive } from './Directive.js'
@@ -63,9 +64,9 @@ const ExternalSiteLink_ = ({
       href={
         (isPrint ? 'https://docs.alauda.io' : '') +
         (virtual.prefix || '') +
-        (virtual.version
-          ? addTrailingSlash(site.base + site.version)
-          : site.base) +
+        (isUnversioned(virtual.version)
+          ? site.base
+          : addTrailingSlash(site.base + site.version)) +
         (lang ? addTrailingSlash(lang) : '') +
         (hash ? `${url}#${hash}` : url)
       }

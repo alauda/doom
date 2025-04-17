@@ -4,7 +4,7 @@ import { merge } from 'es-toolkit/compat'
 import { useEffect, useMemo, useState } from 'react'
 import { parse } from 'yaml'
 
-import type { Language } from '../../shared/index.js'
+import { isUnversioned, type Language } from '../../shared/index.js'
 import type { DoomSite } from '../../shared/types.js'
 import { namedTerms, type NamedTerms, type TermName } from '../../terms.js'
 
@@ -60,7 +60,7 @@ const fetchSiteOverrides = async (
 
   const acpSiteOverridesUrl =
     acpSite && isProduction()
-      ? `${(virtual.prefix || '') + acpSite.base}${version ? acpSite.version + '/' : ''}overrides.yaml`
+      ? `${(virtual.prefix || '') + acpSite.base}${isUnversioned(version) ? '' : acpSite.version + '/'}overrides.yaml`
       : null
   const siteOverridesUrl = `${isProduction() ? base : '/'}overrides.yaml`
 

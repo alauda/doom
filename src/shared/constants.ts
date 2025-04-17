@@ -21,3 +21,7 @@ export const Language = {
 export type Language = keyof typeof Language
 
 export const SUPPORTED_LANGUAGES = Object.keys(Language) as Language[]
+
+export const UNVERSIONED = 'unversioned'
+
+export const UNVERSIONED_PREFIX = `${UNVERSIONED}-`

@@ -56,7 +56,7 @@ export const globalPlugin = ({
           {
             userBase: config.userBase,
             prefix: config.prefix,
-            version: version === 'unversioned' ? undefined : version,
+            version,
             download,
             sites: config.sites?.map((site) => ({
               ...site,

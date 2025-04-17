@@ -1,3 +1,5 @@
+import type { UNVERSIONED } from './constants.js'
+
 export interface DoomSite {
   name: string
   base: string
@@ -23,3 +25,7 @@ export interface K8sTypeMeta {
 export interface K8sTypeList<T extends K8sTypeMeta> extends K8sTypeMeta {
   items: T[]
 }
+
+export type UnversionedVersion =
+  | typeof UNVERSIONED
+  | `${typeof UNVERSIONED}-${string}`
