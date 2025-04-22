@@ -1,4 +1,4 @@
-import fs from 'node:fs'
+import fs from 'node:fs/promises'
 import path from 'node:path'
 
 import { nodeTypes } from '@mdx-js/mdx'
@@ -54,23 +54,31 @@ import {
 
 const DEFAULT_LOGO = '/logo.svg'
 
-const zhLocaleConfig: Omit<LocaleConfig, 'lang' | 'label'> = {
-  searchPlaceholderText: '搜索文档',
-  searchNoResultsText: '未搜索到相关结果',
-  searchSuggestedQueryText: '可更换不同的关键字后重试',
-  outlineTitle: '本页概览',
-  prevPageText: '上一页',
-  nextPageText: '下一页',
-}
-
-const ruLocaleConfig: Omit<LocaleConfig, 'lang' | 'label'> = {
-  searchPlaceholderText: 'Поиск документов',
-  searchNoResultsText: 'Не найдено соответствующих результатов',
-  searchSuggestedQueryText:
-    'Попробуйте изменить ключевые слова и повторить поиск',
-  outlineTitle: 'Обзор страницы',
-  prevPageText: 'Предыдущая страница',
-  nextPageText: 'Следующая страница',
+const KNOWN_LOCALE_CONFIGS: Partial<
+  Record<string, Omit<LocaleConfig, 'lang'>>
+> = {
+  en: {
+    label: 'English',
+  },
+  zh: {
+    label: '简体中文',
+    searchPlaceholderText: '搜索文档',
+    searchNoResultsText: '未搜索到相关结果',
+    searchSuggestedQueryText: '可更换不同的关键字后重试',
+    outlineTitle: '本页概览',
+    prevPageText: '上一页',
+    nextPageText: '下一页',
+  },
+  ru: {
+    label: 'Русский',
+    searchPlaceholderText: 'Поиск документов',
+    searchNoResultsText: 'Не найдено соответствующих результатов',
+    searchSuggestedQueryText:
+      'Попробуйте изменить ключевые слова и повторить поиск',
+    outlineTitle: 'Обзор страницы',
+    prevPageText: 'Предыдущая страница',
+    nextPageText: 'Следующая страница',
+  },
 }
 
 const getCommonConfig = async ({
@@ -85,6 +93,8 @@ const getCommonConfig = async ({
   force,
   open,
   lazy,
+  includeLanguages,
+  excludeLanguages,
 }: {
   config: UserConfig
   configFilePath?: string
@@ -97,6 +107,8 @@ const getCommonConfig = async ({
   force?: boolean
   open?: boolean
   lazy?: boolean
+  includeLanguages?: string[]
+  excludeLanguages?: string[]
 }): Promise<UserConfig> => {
   const fallbackToZh = 'lang' in config && !config.lang
   root = resolveDocRoot(CWD, root, config.root)
@@ -108,6 +120,32 @@ const getCommonConfig = async ({
 
   if (version && !isExplicitlyUnversioned(version)) {
     base = userBase + `${version}/`
+  }
+
+  let locales: LocaleConfig[] | undefined
+
+  if (!fallbackToZh) {
+    const dirents = await fs.readdir(root, { withFileTypes: true })
+    for (const dirent of dirents) {
+      const { name } = dirent
+      if (!dirent.isDirectory() || ['public', 'shared'].includes(name)) {
+        continue
+      }
+      if (includeLanguages?.length) {
+        if (!includeLanguages.includes(name)) {
+          continue
+        }
+      } else if (excludeLanguages?.length) {
+        if (excludeLanguages.includes(name)) {
+          continue
+        }
+      }
+      ;(locales ??= []).push({
+        lang: name,
+        label: name,
+        ...KNOWN_LOCALE_CONFIGS[name],
+      })
+    }
   }
 
   return {
@@ -139,19 +177,7 @@ const getCommonConfig = async ({
       enableScrollToTop: true,
       // https://github.com/web-infra-dev/rspress/issues/2011
       outline: true,
-      ...(fallbackToZh
-        ? zhLocaleConfig
-        : {
-            locales: [
-              { lang: 'en', label: 'English' },
-              { lang: 'zh', label: '简体中文', ...zhLocaleConfig },
-              (await pathExists(path.resolve(root, 'ru'), 'directory')) && {
-                lang: 'ru',
-                label: 'Русский',
-                ...ruLocaleConfig,
-              },
-            ].filter(Boolean),
-          }),
+      ...(fallbackToZh ? KNOWN_LOCALE_CONFIGS.zh : { locales }),
     },
     plugins: [
       apiPlugin({
@@ -222,8 +248,12 @@ const getCommonConfig = async ({
   }
 }
 
-const findConfig = (basePath: string): string | undefined => {
-  return DEFAULT_EXTENSIONS.map((ext) => basePath + ext).find(fs.existsSync)
+const findConfig = async (basePath: string) => {
+  for (const configFile of DEFAULT_EXTENSIONS.map((ext) => basePath + ext)) {
+    if (await pathExists(configFile, 'file')) {
+      return configFile
+    }
+  }
 }
 
 export async function loadConfig(
@@ -239,6 +269,8 @@ export async function loadConfig(
     force,
     open,
     lazy,
+    includeLanguage: includeLanguages,
+    excludeLanguage: excludeLanguages,
   }: GlobalCliOptions = {},
 ): Promise<{
   config: UserConfig
@@ -250,14 +282,16 @@ export async function loadConfig(
     configFilePath = path.resolve(configFile)
   } else {
     if (root) {
-      configFilePath = findConfig(path.resolve(root, DEFAULT_CONFIG_NAME))
+      configFilePath = await findConfig(path.resolve(root, DEFAULT_CONFIG_NAME))
     }
     if (!configFilePath) {
-      configFilePath = findConfig(path.resolve(DEFAULT_CONFIG_NAME))
+      configFilePath = await findConfig(path.resolve(DEFAULT_CONFIG_NAME))
     }
     // when root is not specified, try to find config in docs folder
     if (!root && !configFilePath) {
-      configFilePath = findConfig(path.resolve('docs', DEFAULT_CONFIG_NAME))
+      configFilePath = await findConfig(
+        path.resolve('docs', DEFAULT_CONFIG_NAME),
+      )
     }
   }
 
@@ -293,7 +327,7 @@ export async function loadConfig(
     logger.error('Use separate `sites.yaml` config in repository root instead')
   } else {
     const sitesConfigFilePath = path.resolve(SITES_FILE)
-    if (fs.existsSync(sitesConfigFilePath)) {
+    if (await pathExists(sitesConfigFilePath, 'file')) {
       config.sites = await resolveStaticConfig<DoomSite[]>(sitesConfigFilePath)
     }
   }
@@ -312,6 +346,8 @@ export async function loadConfig(
     force,
     open,
     lazy,
+    includeLanguages,
+    excludeLanguages,
   })
 
   base = commonConfig.base
@@ -340,11 +376,11 @@ export async function loadConfig(
 
   if (ensureDefaultLogo) {
     const publicPath = path.resolve(mergedConfig.root!, `public`)
-    fs.mkdirSync(publicPath, { recursive: true })
+    await fs.mkdir(publicPath, { recursive: true })
     const logoPath = path.resolve(publicPath, removeLeadingSlash(DEFAULT_LOGO))
 
-    if (!fs.existsSync(logoPath)) {
-      fs.copyFileSync(pkgResolve(`assets${DEFAULT_LOGO}`), logoPath)
+    if (!(await pathExists(logoPath))) {
+      await fs.copyFile(pkgResolve(`assets${DEFAULT_LOGO}`), logoPath)
     }
   }
 
