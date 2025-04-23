@@ -25,7 +25,7 @@ export default defineConfig({})
 - `logoText`：文档标题，会显示在左上角的 logo 处
 - `icon`：文档 favicon，默认同 `logo`
 - `base`：文档基础路径，用于部署到非根路径，如 `product-docs`，默认为 `/`
-- `outDir`：构建产物目录，默认为 `dist/{base}/${version}`，如果指定此项，则变更为 `dist/{outDir}/{version}`，其中 `version` 可选，参考[多版本构建](./deploy#多版本构建)
+- `outDir`：构建产物目录，默认为 `dist/{base}/{version}`，如果指定此项，则变更为 `dist/{outDir}/{version}`，其中 `version` 可选，参考[多版本构建](./deploy#多版本构建)
 
 ## API 文档配置 \{#api}
 

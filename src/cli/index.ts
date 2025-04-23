@@ -86,6 +86,10 @@ program
     'Include all languages except the specific language(s), `ru` for example',
   )
   .option(
+    '-o, --out-dir <path>',
+    'Override the `outDir` defined in the config file or the default `dist/{base}/{version}`, the resulting path will be `dist/{outDir}/{version}`',
+  )
+  .option(
     '-n, --no-open [boolean]',
     'Do not open the browser after starting the server',
   )

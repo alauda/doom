@@ -271,6 +271,7 @@ export async function loadConfig(
     lazy,
     includeLanguage: includeLanguages,
     excludeLanguage: excludeLanguages,
+    outDir,
   }: GlobalCliOptions = {},
 ): Promise<{
   config: UserConfig
@@ -395,8 +396,12 @@ export async function loadConfig(
     mergedConfig.i18nSourcePath = path.resolve(mergedConfig.root!, I18N_FILE)
   }
 
+  if (outDir) {
+    mergedConfig.outDir = outDir
+  }
+
   if (mergedConfig.outDir) {
-    mergedConfig.outDir = addTrailingSlash(mergedConfig.outDir) + version
+    mergedConfig.outDir = `dist${addLeadingSlash(addTrailingSlash(mergedConfig.outDir)) + version}`
   } else {
     mergedConfig.outDir = `dist${isExplicitlyUnversioned(version) ? `${base}${UNVERSIONED}` : base}`
   }

@@ -27,6 +27,7 @@ export interface GlobalCliOptions {
   lazy?: boolean
   includeLanguage?: string[]
   excludeLanguage?: string[]
+  outDir?: string
 }
 
 export interface TranslateOptions {
