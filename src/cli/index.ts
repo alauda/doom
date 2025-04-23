@@ -78,11 +78,11 @@ program
     false,
   )
   .option(
-    '-I, --include-language <language...>',
+    '-I, --include <language...>',
     'Include **only** the specific language(s), `en ru` for example',
   )
   .option(
-    '-E, --exclude-language <language...>',
+    '-E, --exclude <language...>',
     'Include all languages except the specific language(s), `ru` for example',
   )
   .option(

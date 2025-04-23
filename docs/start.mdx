@@ -81,30 +81,30 @@ Usage: doom [options] [command]
 Doctor Doom making docs.
 
 Options:
-  -V, --version                         output the version number
-  -c, --config <config>                 Specify the path to the config file
-  -v <version>                          Specify the version of the documentation, can also be 'unversioned' or 'unversioned-x.y'
-  -b, --base <base>                     Override the base of the documentation
-  -p, --prefix <prefix>                 Specify the prefix of the documentation base
-  -f, --force [boolean]                 Force to
-                                        1. fetch latest reference remotes or scaffolding templates, otherwise use local cache
-                                        2. translate ignore hash equality check and original text (default: false)
-  -i, --ignore [boolean]                Ignore internal routes (default: false)
-  -d, --download [boolean]              Display download pdf link on nav bar (default: false)
-  -e, --export [boolean]                Run or build in exporting PDF mode, `apis/**` and `*/apis/**` routes will be ignored automatically (default: false)
-  -I, --include-language <language...>  Include **only** the specific language(s), `en ru` for example
-  -E, --exclude-language <language...>  Include all languages except the specific language(s), `ru` for example
-  -n, --no-open [boolean]               Do not open the browser after starting the server
-  -h, --help                            display help for command
+  -V, --version                   output the version number
+  -c, --config <config>           Specify the path to the config file
+  -v <version>                    Specify the version of the documentation, can also be 'unversioned' or 'unversioned-x.y'
+  -b, --base <base>               Override the base of the documentation
+  -p, --prefix <prefix>           Specify the prefix of the documentation base
+  -f, --force [boolean]           Force to
+                                  1. fetch latest reference remotes or scaffolding templates, otherwise use local cache
+                                  2. translate ignore hash equality check and original text (default: false)
+  -i, --ignore [boolean]          Ignore internal routes (default: false)
+  -d, --download [boolean]        Display download pdf link on nav bar (default: false)
+  -e, --export [boolean]          Run or build in exporting PDF mode, `apis/**` and `*/apis/**` routes will be ignored automatically (default: false)
+  -I, --include <language...>     Include **only** the specific language(s), `en ru` for example
+  -E, --exclude <language...>     Include all languages except the specific language(s), `ru` for example
+  -n, --no-open [boolean]         Do not open the browser after starting the server
+  -h, --help                      display help for command
 
 Commands:
-  dev [options] [root]                  Start the development server
-  build [root]                          Build the documentation
-  preview|serve [options] [root]        Preview the built documentation
-  new [template]                        Generate scaffolding from templates
-  translate [options] [root]            Translate the documentation
-  export [options] [root]               Export the documentation as PDF, `apis/**` and `*/apis/**` routes will be ignored automatically
-  help [command]                        display help for command
+  dev [options] [root]            Start the development server
+  build [root]                    Build the documentation
+  preview|serve [options] [root]  Preview the built documentation
+  new [template]                  Generate scaffolding from templates
+  translate [options] [root]      Translate the documentation
+  export [options] [root]         Export the documentation as PDF, `apis/**` and `*/apis/**` routes will be ignored automatically
+  help [command]                  display help for command
 ```
 
 ### 启动开发服务 \{#dev}
