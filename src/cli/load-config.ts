@@ -351,7 +351,7 @@ export async function loadConfig(
     excludeLanguages,
   })
 
-  base = commonConfig.base
+  base = commonConfig.base!
 
   const mergedConfig = mergeRsbuildConfig(commonConfig, config, {
     base,
@@ -396,15 +396,12 @@ export async function loadConfig(
     mergedConfig.i18nSourcePath = path.resolve(mergedConfig.root!, I18N_FILE)
   }
 
-  if (outDir) {
-    mergedConfig.outDir = outDir
-  }
+  outDir ||= mergedConfig.outDir
 
-  if (mergedConfig.outDir) {
-    mergedConfig.outDir = `dist${addLeadingSlash(addTrailingSlash(mergedConfig.outDir)) + version}`
-  } else {
-    mergedConfig.outDir = `dist${isExplicitlyUnversioned(version) ? `${base}${UNVERSIONED}` : base}`
-  }
+  mergedConfig.outDir = `dist${
+    (outDir ? addLeadingSlash(addTrailingSlash(outDir)) : base) +
+    (isExplicitlyUnversioned(version) ? UNVERSIONED : '')
+  }`
 
   if (mergedConfig.builderConfig?.server?.open === true) {
     mergedConfig.builderConfig.server.open = mergedConfig.base
