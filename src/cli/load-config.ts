@@ -22,6 +22,7 @@ import {
   transformerNotationWordHighlight,
   transformerRemoveNotationEscape,
 } from '@shikijs/transformers'
+import { difference } from 'es-toolkit'
 import rehypeRaw from 'rehype-raw'
 
 import {
@@ -93,8 +94,8 @@ const getCommonConfig = async ({
   force,
   open,
   lazy,
-  includeLanguages,
-  excludeLanguages,
+  include,
+  exclude,
 }: {
   config: UserConfig
   configFilePath?: string
@@ -107,8 +108,8 @@ const getCommonConfig = async ({
   force?: boolean
   open?: boolean
   lazy?: boolean
-  includeLanguages?: string[]
-  excludeLanguages?: string[]
+  include?: string[]
+  exclude?: string[]
 }): Promise<UserConfig> => {
   const fallbackToZh = 'lang' in config && !config.lang
   root = resolveDocRoot(CWD, root, config.root)
@@ -122,7 +123,9 @@ const getCommonConfig = async ({
     base = userBase + `${version}/`
   }
 
-  let locales: LocaleConfig[] | undefined
+  const allLanguages: string[] = []
+
+  const locales: LocaleConfig[] = []
 
   if (!fallbackToZh) {
     const dirents = await fs.readdir(root, { withFileTypes: true })
@@ -131,22 +134,28 @@ const getCommonConfig = async ({
       if (!dirent.isDirectory() || ['public', 'shared'].includes(name)) {
         continue
       }
-      if (includeLanguages?.length) {
-        if (!includeLanguages.includes(name)) {
+      allLanguages.push(name)
+      if (include?.length) {
+        if (!include.includes(name)) {
           continue
         }
-      } else if (excludeLanguages?.length) {
-        if (excludeLanguages.includes(name)) {
+      } else if (exclude?.length) {
+        if (exclude.includes(name)) {
           continue
         }
       }
-      ;(locales ??= []).push({
+      locales.push({
         lang: name,
         label: name,
         ...KNOWN_LOCALE_CONFIGS[name],
       })
     }
   }
+
+  const unusedLanguages = difference(
+    allLanguages,
+    locales.map(({ lang }) => lang),
+  )
 
   return {
     userBase,
@@ -162,6 +171,7 @@ const getCommonConfig = async ({
         'doom.config.*',
         '**/assets/**/*',
         '**/*.d.ts',
+        ...unusedLanguages.map((lang) => `${lang}/**/*`),
       ],
     },
     markdown: {
@@ -269,8 +279,8 @@ export async function loadConfig(
     force,
     open,
     lazy,
-    includeLanguage: includeLanguages,
-    excludeLanguage: excludeLanguages,
+    include,
+    exclude,
     outDir,
   }: GlobalCliOptions = {},
 ): Promise<{
@@ -347,8 +357,8 @@ export async function loadConfig(
     force,
     open,
     lazy,
-    includeLanguages,
-    excludeLanguages,
+    include,
+    exclude,
   })
 
   base = commonConfig.base!

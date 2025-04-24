@@ -25,8 +25,8 @@ export interface GlobalCliOptions {
   force?: boolean
   open?: boolean
   lazy?: boolean
-  includeLanguage?: string[]
-  excludeLanguage?: string[]
+  include?: string[]
+  exclude?: string[]
   outDir?: string
 }
 

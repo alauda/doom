@@ -1,5 +1,5 @@
 {
   "semi": false,
   "singleQuote": true,
-  "plugins": ["prettier-plugin-pkg"]
+  "plugins": ["prettier-plugin-pkg", "prettier-plugin-properties"]
 }
