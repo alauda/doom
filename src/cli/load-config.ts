@@ -400,7 +400,7 @@ export async function loadConfig(
 
   mergedConfig.outDir = `dist${
     (outDir ? addLeadingSlash(addTrailingSlash(outDir)) : base) +
-    (isExplicitlyUnversioned(version) ? UNVERSIONED : '')
+    (isExplicitlyUnversioned(version) ? UNVERSIONED : version)
   }`
 
   if (mergedConfig.builderConfig?.server?.open === true) {
