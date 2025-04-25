@@ -107,6 +107,12 @@ td {
   }
 }
 
+.doom-auto-toc {
+  @media (min-width: 1280px) {
+    display: none;
+  }
+}
+
 .dark .doom-tabs .language-mdx {
   // https://github.com/web-infra-dev/rspress/blob/bbe6476c8394f9c95a98fd791f0614481f89d878/packages/theme-default/src/styles/code.css#L17
   --rp-code-block-bg: #{color.adjust($color: #242424, $lightness: 5%)};

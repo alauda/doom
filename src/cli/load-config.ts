@@ -25,6 +25,7 @@ import {
 import { difference } from 'es-toolkit'
 import rehypeRaw from 'rehype-raw'
 
+import { autoTocPlugin } from '../plugins/auto-toc/index.js'
 import {
   apiPlugin,
   autoSidebarPlugin,
@@ -194,6 +195,7 @@ const getCommonConfig = async ({
         localBasePath,
       }),
       autoSidebarPlugin({ export: export_, ignore }),
+      autoTocPlugin(),
       directivesPlugin(),
       globalPlugin({ version, download }),
       mermaidPlugin(),

@@ -15,6 +15,7 @@ const en = {
   chinese_bad_cases: 'Chinese Bad Cases',
   english_bad_cases: 'English Bad Cases',
   download_pdf: 'Download PDF',
+  toc: 'TOC',
 }
 
 export type Translation = typeof en
@@ -36,6 +37,7 @@ const zh: Translation = {
   chinese_bad_cases: '中文反例',
   english_bad_cases: '英文反例',
   download_pdf: '下载 PDF',
+  toc: '目录',
 }
 
 const ru: Translation = {
@@ -55,6 +57,7 @@ const ru: Translation = {
   chinese_bad_cases: 'Примеры ошибок на китайском',
   english_bad_cases: 'Примеры ошибок на английском',
   download_pdf: 'Скачать PDF',
+  toc: 'Содержание',
 }
 
 export const TRANSLATIONS = { en, zh, ru }

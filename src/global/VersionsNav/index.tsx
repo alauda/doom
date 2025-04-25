@@ -122,8 +122,6 @@ const VersionsNav_ = () => {
     }
   }, [navMenu])
 
-  console.log('versionsBase', versionsBase)
-
   const navItems = useMemo(() => {
     const versionItems: NavItem[] = versions.map((v) =>
       versionsBase == null

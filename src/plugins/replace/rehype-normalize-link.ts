@@ -1,12 +1,12 @@
 import { isExternalUrl } from '@rspress/core'
 import type { Root } from 'hast'
-import type { MdxjsEsm } from 'mdast-util-mdxjs-esm'
+import type { MdxJsxAttribute, MdxjsEsm } from 'mdast-util-mdx'
 import type { Plugin } from 'unified'
 import { visit } from 'unist-util-visit'
 
-import { getASTNodeImport } from './utils.js'
+import { getASTNodeImport } from '../shared.js'
 
-const getMdxSrcAttribute = (tempVar: string) => {
+const getMdxSrcAttribute = (tempVar: string): MdxJsxAttribute => {
   return {
     type: 'mdxJsxAttribute',
     name: 'src',

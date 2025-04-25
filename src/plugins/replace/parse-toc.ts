@@ -32,8 +32,10 @@ interface Heading {
 
 export const parseToc = (tree: Root, allDepths?: boolean) => {
   let title = ''
+
   const toc: TocItem[] = []
   const slugger = new Slugger()
+
   visitChildren((node: Heading, index: number) => {
     if (node.type !== 'heading' || !node.depth || !node.children) {
       return
@@ -74,8 +76,6 @@ export const parseToc = (tree: Root, allDepths?: boolean) => {
       }
     }
   })(tree)
-  return {
-    title,
-    toc,
-  }
+
+  return { title, toc }
 }
