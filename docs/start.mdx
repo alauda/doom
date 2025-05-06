@@ -181,20 +181,18 @@ Options:
 :::
 
 :::tip
-目前需要在本地配置 `AZURE_OPENAI_API_KEY` 环境变量，请联系 IDP 文档团队获取
+翻译功能须在本地配置 `AZURE_OPENAI_API_KEY` 环境变量，请联系各自团队 Leader 获取
 :::
 
 文档中可以使用元数据控制翻译行为
 
 ```yaml
----
 i18n:
   title:
     en: DevOps Connectors
   additionalPrompts: '此文中的 Connectors 是专有名词，不要翻译'
   disableAutoTranslation: false
 title: DevOps 连接器
----
 ```
 
 ### 导出 PDF \{#export}
