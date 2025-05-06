@@ -134,8 +134,8 @@ export const translate = async ({
     openai = new AzureOpenAI({
       endpoint:
         process.env.AZURE_OPENAI_ENDPOINT ||
-        'https://apt-docs-openai.openai.azure.com',
-      apiKey: process.env.AZURE_OPENAI_API_KEY || 'doom',
+        'https://azure-ai-api-gateway.alauda.cn',
+      apiKey: process.env.AZURE_OPENAI_API_KEY,
       apiVersion: process.env.OPENAI_API_VERSION || '2025-03-01-preview',
     })
   }
