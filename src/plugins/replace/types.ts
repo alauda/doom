@@ -38,3 +38,5 @@ export interface JiraIssue {
   key: string
   fields: Partial<Record<string, string>>
 }
+
+export type JiraLanguage = 'zh' | 'en'

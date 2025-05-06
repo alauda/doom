@@ -1,9 +1,10 @@
 import { logger } from '@rspress/shared/logger'
 import { render } from 'ejs'
-import type { Content, List, ListItem, PhrasingContent } from 'mdast'
+import type { Content, List, ListItem, Paragraph, PhrasingContent } from 'mdast'
+import { ResponseError, xfetch } from 'x-fetch'
 import { cyan, red } from 'yoctocolors'
 
-import type { JiraIssue } from './types.js'
+import type { JiraIssue, JiraLanguage } from './types.js'
 import { isCI } from './utils.js'
 
 const releaseCache = new Map<
@@ -11,18 +12,19 @@ const releaseCache = new Map<
   Promise<Record<string, Content | Content[]> | undefined>
 >()
 
-const FIELD_MAPPER: Record<string, string> = {
+const FIELD_MAPPER: Record<JiraLanguage, string> = {
   zh: 'customfield_13800',
   en: 'customfield_13801',
 }
 
-const { JIRA_USERNAME, JIRA_PASSWORD } = process.env
-
-const issuesToMdast = (issues: JiraIssue[], lang: string) => {
-  return issues
+const issuesToListItems = (
+  issues: JiraIssue[],
+  lang: JiraLanguage,
+): ListItem[] =>
+  issues
     .map((issue): ListItem | undefined => {
       const description = (
-        (lang !== 'en' && issue.fields[FIELD_MAPPER[lang]]) ||
+        (FIELD_MAPPER[lang] && issue.fields[FIELD_MAPPER[lang]]) ||
         issue.fields[FIELD_MAPPER.en]
       )?.trim()
       if (!description) {
@@ -35,12 +37,7 @@ const issuesToMdast = (issues: JiraIssue[], lang: string) => {
             type: 'paragraph',
             children: description
               .split('\n')
-              .map<PhrasingContent>((line) => {
-                return {
-                  type: 'text',
-                  value: line,
-                }
-              })
+              .map<PhrasingContent>((line) => ({ type: 'text', value: line }))
               .reduce<PhrasingContent[]>((acc, curr, index) => {
                 if (index === 0) {
                   return [curr]
@@ -51,10 +48,16 @@ const issuesToMdast = (issues: JiraIssue[], lang: string) => {
         ],
       }
     })
-    .filter((_) => !!_)
-}
+    .filter(Boolean)
+
+const { JIRA_USERNAME, JIRA_PASSWORD } = process.env
 
 let warned = false
+
+const NO_ISSUE_MAPPER: Record<JiraLanguage, string> = {
+  zh: '此次发版无相关问题。',
+  en: 'No issues in this release.',
+}
 
 const resolveRelease_ = async (
   releaseTemplates: Record<string, string>,
@@ -84,10 +87,9 @@ const resolveRelease_ = async (
   } else {
     if (warned) {
       return
-    } else {
-      warned = true
     }
-    const message = `${cyan('`JIRA_USERNAME`')} and ${cyan('`JIRA_PASSWORD`')} environments must be set for fetching Jira issues`
+    warned = true
+    const message = `\`${cyan('JIRA_USERNAME')}\` and \`${cyan('JIRA_PASSWORD')}\` environments must be set for fetching Jira issues`
     if (isCI) {
       throw new Error(message)
     }
@@ -108,24 +110,39 @@ const resolveRelease_ = async (
 
   logger.info(`Fetching release notes for query \`${cyan(releaseQuery)}\``)
 
-  const res = await fetch(
-    `https://jira.alauda.cn/rest/api/2/search?${new URLSearchParams({ jql })}`,
-    { headers: { Authorization } },
-  )
+  let issues: JiraIssue[]
 
-  if (!res.ok) {
-    logger.error(
-      `Failed to fetch release notes for query \`${red(releaseQuery)}\` with status \`${res.status}\``,
-    )
+  try {
+    ;({ issues } = await xfetch<{ issues: JiraIssue[] }>(
+      `https://jira.alauda.cn/rest/api/2/search?${new URLSearchParams({ jql })}`,
+      { headers: { Authorization } },
+    ))
+  } catch (err) {
+    if (err instanceof ResponseError) {
+      logger.error(
+        `Failed to fetch release notes for query \`${red(releaseQuery)}\` with status \`${err.response.status}\` and ${err.data ? `data ${JSON.stringify(data, null, 2)}` : `message \`${err.message}\``}`,
+      )
+    }
     return
   }
 
-  const { issues } = (await res.json()) as { issues: JiraIssue[] }
-
-  return ['en', 'zh'].reduce(
-    (acc, curr) =>
+  return (['en', 'zh'] as const).reduce(
+    (acc, lang) =>
       Object.assign(acc, {
-        [curr]: { type: 'list', children: issuesToMdast(issues, curr) },
+        [lang]: issues.length
+          ? ({
+              type: 'list',
+              children: issuesToListItems(issues, lang),
+            } satisfies List)
+          : ({
+              type: 'paragraph',
+              children: [
+                {
+                  type: 'text',
+                  value: NO_ISSUE_MAPPER[lang] || NO_ISSUE_MAPPER.en,
+                },
+              ],
+            } satisfies Paragraph),
       }),
     {},
   )

@@ -13,7 +13,7 @@ import matter from 'gray-matter'
 import { AzureOpenAI, RateLimitError } from 'openai'
 import { pRateLimit } from 'p-ratelimit'
 import { glob } from 'tinyglobby'
-import { fetchApi } from 'x-fetch'
+import { xfetch } from 'x-fetch'
 import { parse } from 'yaml'
 import { cyan, red } from 'yoctocolors'
 
@@ -98,7 +98,7 @@ export interface InternalTranslateOptions extends TranslateOptions {
 }
 
 const resolveTerms_ = async () => {
-  const terms = await fetchApi(
+  const terms = await xfetch(
     'https://gitlab-ce.alauda.cn/alauda-public/product-doc-guide/-/raw/main/terms.yaml',
     { type: 'text' },
   )
