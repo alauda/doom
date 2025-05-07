@@ -97,6 +97,7 @@ const getCommonConfig = async ({
   lazy,
   include,
   exclude,
+  redirect,
 }: {
   config: UserConfig
   configFilePath?: string
@@ -111,6 +112,7 @@ const getCommonConfig = async ({
   lazy?: boolean
   include?: string[]
   exclude?: string[]
+  redirect?: 'auto' | 'never'
 }): Promise<UserConfig> => {
   const fallbackToZh = 'lang' in config && !config.lang
   root = resolveDocRoot(CWD, root, config.root)
@@ -188,6 +190,7 @@ const getCommonConfig = async ({
       enableScrollToTop: true,
       // https://github.com/web-infra-dev/rspress/issues/2011
       outline: true,
+      localeRedirect: redirect,
       ...(fallbackToZh ? KNOWN_LOCALE_CONFIGS.zh : { locales }),
     },
     plugins: [
@@ -284,6 +287,7 @@ export async function loadConfig(
     include,
     exclude,
     outDir,
+    redirect,
   }: GlobalCliOptions = {},
 ): Promise<{
   config: UserConfig
@@ -361,6 +365,7 @@ export async function loadConfig(
     lazy,
     include,
     exclude,
+    redirect,
   })
 
   base = commonConfig.base!

@@ -44,7 +44,7 @@ program
   .option('-c, --config <config>', 'Specify the path to the config file')
   .option(
     '-v <version>',
-    `Specify the version of the documentation, can also be 'unversioned' or 'unversioned-x.y'`,
+    'Specify the version of the documentation, can also be `unversioned` or `unversioned-x.y`',
   )
   .option('-b, --base <base>', 'Override the base of the documentation')
   .option(
@@ -88,6 +88,11 @@ program
   .option(
     '-o, --out-dir <path>',
     'Override the `outDir` defined in the config file or the default `dist/{base}/{version}`, the resulting path will be `dist/{outDir}/{version}`',
+  )
+  .option(
+    '-r, --redirect <enum>',
+    'Whether to redirect to the locale closest to `navigator.language` when the user visits the site, could be `auto` or `never`',
+    'auto',
   )
   .option(
     '-n, --no-open [boolean]',

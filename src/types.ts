@@ -28,6 +28,7 @@ export interface GlobalCliOptions {
   include?: string[]
   exclude?: string[]
   outDir?: string
+  redirect?: 'auto' | 'never'
 }
 
 export interface TranslateOptions {
