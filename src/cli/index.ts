@@ -91,8 +91,8 @@ program
   )
   .option(
     '-r, --redirect <enum>',
-    'Whether to redirect to the locale closest to `navigator.language` when the user visits the site, could be `auto` or `never`',
-    'auto',
+    'Whether to redirect to the locale closest to `navigator.language` when the user visits the site, could be `auto`, `never` or `only-default-lang`',
+    'only-default-lang',
   )
   .option(
     '-n, --no-open [boolean]',
