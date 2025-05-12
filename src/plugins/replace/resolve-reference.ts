@@ -36,7 +36,7 @@ const resolveReference_ = async (
 
   const source = items[refName]
 
-  let publicBase
+  let publicBase: string
   let sourcePath = source.path
   if (source.repo) {
     const repoFolder = await resolveRepo(source.repo, force, source.branch)

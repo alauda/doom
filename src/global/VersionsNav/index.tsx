@@ -108,7 +108,7 @@ const VersionsNav_ = () => {
 
   // hack way to detect nav menu recreation on theme change
   useEffect(() => {
-    if (!navMenu?.parentNode) {
+    if (!navMenu) {
       return
     }
     const observer = new MutationObserver((mutations) => {
@@ -116,7 +116,12 @@ const VersionsNav_ = () => {
         setNavMenu(getNavMenu)
       }
     })
-    observer.observe(navMenu.parentNode, { childList: true })
+    const newNavMenu = getNavMenu()
+    if (newNavMenu !== navMenu) {
+      setNavMenu(newNavMenu)
+    } else if (navMenu.parentNode) {
+      observer.observe(navMenu.parentNode, { childList: true })
+    }
     return () => {
       observer.disconnect()
     }

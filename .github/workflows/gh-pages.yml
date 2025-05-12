@@ -28,12 +28,25 @@ jobs:
       - name: Install Dependencies
         run: yarn --immutable
 
-      - name: Build the project
-        run: yarn doom build -p doom
+      - name: Build and Export
+        run: |
+          # export the docs as pdf first
+          yarn docs:build -e -p doom
+          yarn docs:export -p doom
+          tempdir=$(mktemp -d)
+          # copy the pdf to the tempdir
+          cp -r ./dist/*.pdf $tempdir
+          # then build the docs with pdf download link
+          yarn docs:build -d -p doom
+          # copy the pdf back to the dist folder
+          cp -r $tempdir/*.pdf ./dist
+          # remove the tempdir
+          rm -rf $tempdir
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
+          cname: doom.js.org
           full_commit_message: ${{ github.event.head_commit.message }}
