@@ -5,6 +5,7 @@
   "description": "Doctor Doom making docs.",
   "repository": "git+https://github.com/alauda/Doom.git",
   "homepage": "https://github.com/alauda/Doom#readme",
+  "funding": "https://opencollective.com/alauda",
   "packageManager": "yarn@4.9.1",
   "engines": {
     "node": ">=18.17.0 <20 || >=20.1.0"
