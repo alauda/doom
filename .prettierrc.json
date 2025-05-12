@@ -1,5 +1,14 @@
 {
   "semi": false,
   "singleQuote": true,
-  "plugins": ["prettier-plugin-pkg", "prettier-plugin-properties"]
+  "plugins": ["prettier-plugin-pkg", "prettier-plugin-properties"],
+  "overrides": [
+    {
+      "files": ["**/.changeset/*.md"],
+      "excludeFiles": ["README.md"],
+      "options": {
+        "singleQuote": false
+      }
+    }
+  ]
 }
