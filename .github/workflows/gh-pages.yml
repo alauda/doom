@@ -31,13 +31,13 @@ jobs:
       - name: Build and Export
         run: |
           # export the docs as pdf first
-          yarn docs:build -e -p doom
-          yarn docs:export -p doom
+          yarn docs:build -e
+          yarn docs:export
           tempdir=$(mktemp -d)
           # copy the pdf to the tempdir
           cp -r ./dist/*.pdf $tempdir
           # then build the docs with pdf download link
-          yarn docs:build -d -p doom
+          yarn docs:build -d
           # copy the pdf back to the dist folder
           cp -r $tempdir/*.pdf ./dist
           # remove the tempdir
