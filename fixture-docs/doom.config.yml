@@ -45,3 +45,4 @@ releaseNotes:
 internalRoutes:
   - '*/internal/*.mdx'
   - '*/concepts/**'
+editRepoBaseUrl: alauda/doom/tree/main/fixture-docs

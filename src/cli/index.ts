@@ -13,6 +13,7 @@ import { type FSWatcher, watch } from 'chokidar'
 import { type Command, program } from 'commander'
 import { green } from 'yoctocolors'
 
+import { FALSY_VALUES, TRUTHY_VALUES } from '../shared/index.js'
 import type { GlobalCliOptions, ServeOptions } from '../types.js'
 import { setNodeEnv } from '../utils/index.js'
 
@@ -93,6 +94,13 @@ program
     '-r, --redirect <enum>',
     'Whether to redirect to the locale closest to `navigator.language` when the user visits the site, could be `auto`, `never` or `only-default-lang`',
     'only-default-lang',
+  )
+  .option(
+    '-R, --edit-repo [boolean|url]',
+    'Whether to enable or override the `editRepoBaseUrl` config feature, `https://github.com/` prefix could be omitted',
+    (value: string) =>
+      FALSY_VALUES.has(value) ? false : TRUTHY_VALUES.has(value) || value,
+    false,
   )
   .option(
     '-n, --no-open [boolean]',

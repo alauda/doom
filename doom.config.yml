@@ -19,3 +19,4 @@ reference:
         path: docs/usage/configuration.md#引用文档配置
 sidebar:
   collapsed: false
+editRepoBaseUrl: alauda/doom/tree/main/docs
