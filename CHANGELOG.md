@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 0.22.4
+
+### Patch Changes
+
+- [#5](https://github.com/alauda/doom/pull/5) [`3885f28`](https://github.com/alauda/doom/commit/3885f28347eb07b9bd5d5501bca2fef5b9f7249b) Thanks [@JounQin](https://github.com/JounQin)! - fix: pdf download link not displayed correctly
+
 ## 0.22.3
 
 ### Patch Changes
