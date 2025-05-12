@@ -1,5 +1,13 @@
 # @alauda/doom
 
+## 0.22.5
+
+### Patch Changes
+
+- [#7](https://github.com/alauda/doom/pull/7) [`1ec6573`](https://github.com/alauda/doom/commit/1ec65734131f5e5460dfb85f5a5e43b4fb1e16d9) Thanks [@JounQin](https://github.com/JounQin)! - feat: change default `redirect` to `only-default-lang` instead
+
+- [#9](https://github.com/alauda/doom/pull/9) [`0de1845`](https://github.com/alauda/doom/commit/0de184568541130a1c7c034687efdd951c1a28c5) Thanks [@JounQin](https://github.com/JounQin)! - feat: add `editRepoBaseUrl` config and `-R, --edit-repo` cli flag support
+
 ## 0.22.4
 
 ### Patch Changes
