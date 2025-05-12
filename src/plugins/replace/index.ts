@@ -98,7 +98,7 @@ export const replacePlugin = ({
 
       for (const result of results) {
         if (result.status === 'rejected') {
-          logger.error(result.reason)
+          logger.error(result.reason) // type-coverage:ignore-line -- out of control
         }
       }
     },

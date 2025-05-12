@@ -33,7 +33,7 @@ export async function mergePDFs(entries: string[]) {
   pyodide.FS.mkdirTree(MOUNT_DIR)
   pyodide.FS.mount(
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    pyodide.FS.filesystems.NODEFS,
+    pyodide.FS.filesystems.NODEFS, // type-coverage:ignore-line -- out of control
     { root: pyodideDir },
     MOUNT_DIR,
   )

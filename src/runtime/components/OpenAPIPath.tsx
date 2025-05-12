@@ -146,9 +146,9 @@ const getRefsForPath = (
         schema = resolveRef(openapi, schema.$ref)
       }
     }
-    for (const value of Object.values(schema)) {
-      if (typeof value === 'object') {
-        collectRefs(value as object)
+    for (const value of Object.values(schema) as unknown[]) {
+      if (value && typeof value === 'object') {
+        collectRefs(value)
       }
     }
   }
