@@ -28,7 +28,8 @@ export interface GlobalCliOptions {
   include?: string[]
   exclude?: string[]
   outDir?: string
-  redirect?: 'auto' | 'never'
+  redirect?: 'auto' | 'never' | 'only-default-lang'
+  editRepo?: boolean | string
 }
 
 export interface TranslateOptions {
@@ -49,6 +50,7 @@ declare module '@rspress/shared' {
     internalRoutes?: string[]
     translate?: TranslateOptions
     shiki?: PluginShikiOptions
+    editRepoBaseUrl?: string
   }
 }
 

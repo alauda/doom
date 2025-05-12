@@ -43,3 +43,8 @@ export function escapeMarkdownHeadingIds(content: string): string {
       .replace('\\\\{#', '\\{#'),
   )
 }
+
+export const defaultGitHubUrl = (url: string) =>
+  /^https?:\/\//.test(url)
+    ? url
+    : `https://github.com/${url.replace(/^(\/*github.com)?\/+/i, '')}`

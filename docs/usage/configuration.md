@@ -202,3 +202,9 @@ translate:
 <%= additionalPrompts %>
   userPrompt: # 可选，用于填充到 `systemPrompt` 中的 `ejs` 模板全局参数
 ```
+
+## 在代码仓库编辑文档 \{#edit-repo}
+
+```yaml
+editRepoBaseUrl: alauda/doom/tree/main/docs # https://github.com/ 前缀可以省略，仅当启用 `-R, --edit-repo` 命令行标志符时生效
+```

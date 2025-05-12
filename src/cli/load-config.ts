@@ -24,6 +24,7 @@ import {
 } from '@shikijs/transformers'
 import { difference } from 'es-toolkit'
 import rehypeRaw from 'rehype-raw'
+import { cyan } from 'yoctocolors'
 
 import { autoTocPlugin } from '../plugins/auto-toc/index.js'
 import {
@@ -53,14 +54,21 @@ import {
   SITES_FILE,
   YAML_EXTENSIONS,
 } from './constants.js'
+import { defaultGitHubUrl } from './helpers.js'
 
 const DEFAULT_LOGO = '/logo.svg'
 
 const KNOWN_LOCALE_CONFIGS: Partial<
-  Record<string, Omit<LocaleConfig, 'lang'>>
+  Record<
+    string,
+    Omit<LocaleConfig, 'lang' | 'editLink'> & { editLink: { text: string } }
+  >
 > = {
   en: {
     label: 'English',
+    editLink: {
+      text: '📝 Edit this page on GitHub',
+    },
   },
   zh: {
     label: '简体中文',
@@ -70,6 +78,9 @@ const KNOWN_LOCALE_CONFIGS: Partial<
     outlineTitle: '本页概览',
     prevPageText: '上一页',
     nextPageText: '下一页',
+    editLink: {
+      text: '📝 在 GitHub 上编辑此页',
+    },
   },
   ru: {
     label: 'Русский',
@@ -80,6 +91,9 @@ const KNOWN_LOCALE_CONFIGS: Partial<
     outlineTitle: 'Обзор страницы',
     prevPageText: 'Предыдущая страница',
     nextPageText: 'Следующая страница',
+    editLink: {
+      text: '📝 Редактировать эту страницу на GitHub',
+    },
   },
 }
 
@@ -98,6 +112,7 @@ const getCommonConfig = async ({
   include,
   exclude,
   redirect,
+  editRepo,
 }: {
   config: UserConfig
   configFilePath?: string
@@ -112,7 +127,8 @@ const getCommonConfig = async ({
   lazy?: boolean
   include?: string[]
   exclude?: string[]
-  redirect?: 'auto' | 'never'
+  redirect?: 'auto' | 'never' | 'only-default-lang'
+  editRepo?: boolean | string
 }): Promise<UserConfig> => {
   const fallbackToZh = 'lang' in config && !config.lang
   root = resolveDocRoot(CWD, root, config.root)
@@ -124,6 +140,24 @@ const getCommonConfig = async ({
 
   if (version && !isExplicitlyUnversioned(version)) {
     base = userBase + `${version}/`
+  }
+
+  let { editRepoBaseUrl } = config
+
+  const editRepoEnabled = !!editRepo
+
+  if (typeof editRepo === 'string') {
+    editRepoBaseUrl = editRepo
+  }
+
+  if (editRepoEnabled) {
+    if (editRepoBaseUrl) {
+      editRepoBaseUrl = defaultGitHubUrl(editRepoBaseUrl)
+    } else {
+      logger.error(
+        `The \`${cyan('-R, --edit-repo')}\` flag is enabled specifically, but no \`${cyan('editRepoBaseUrl')}\` found, it will take no effect`,
+      )
+    }
   }
 
   const allLanguages: string[] = []
@@ -151,6 +185,14 @@ const getCommonConfig = async ({
         lang: name,
         label: name,
         ...KNOWN_LOCALE_CONFIGS[name],
+        editLink:
+          editRepoEnabled && editRepoBaseUrl
+            ? {
+                docRepoBaseUrl: editRepoBaseUrl,
+                ...KNOWN_LOCALE_CONFIGS.en!.editLink,
+                ...KNOWN_LOCALE_CONFIGS[name]?.editLink,
+              }
+            : undefined,
       })
     }
   }
@@ -159,6 +201,8 @@ const getCommonConfig = async ({
     allLanguages,
     locales.map(({ lang }) => lang),
   )
+
+  const { editLink, ...zhLocale } = KNOWN_LOCALE_CONFIGS.zh!
 
   return {
     userBase,
@@ -191,7 +235,14 @@ const getCommonConfig = async ({
       // https://github.com/web-infra-dev/rspress/issues/2011
       outline: true,
       localeRedirect: redirect,
-      ...(fallbackToZh ? KNOWN_LOCALE_CONFIGS.zh : { locales }),
+      ...(fallbackToZh
+        ? editRepoEnabled && editRepoBaseUrl
+          ? {
+              ...zhLocale,
+              editLink: { ...editLink, docRepoBaseUrl: editRepoBaseUrl },
+            }
+          : zhLocale
+        : { locales }),
     },
     plugins: [
       apiPlugin({
@@ -288,6 +339,7 @@ export async function loadConfig(
     exclude,
     outDir,
     redirect,
+    editRepo,
   }: GlobalCliOptions = {},
 ): Promise<{
   config: UserConfig
@@ -366,6 +418,7 @@ export async function loadConfig(
     include,
     exclude,
     redirect,
+    editRepo,
   })
 
   base = commonConfig.base!
