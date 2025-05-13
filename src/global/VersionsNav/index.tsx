@@ -50,13 +50,15 @@ const VersionsNav_ = () => {
 
   const t = useTranslation()
 
+  const siteTitle = siteData.originalTitle ?? siteData.title
+
   const downloadLink = useMemo(() => {
     if (!virtual.download) {
       return
     }
 
-    return siteData.base + getPdfName(lang, virtual.userBase, siteData.title)
-  }, [lang, siteData.base, siteData.title])
+    return siteData.base + getPdfName(lang, virtual.userBase, siteTitle)
+  }, [lang, siteData.base, siteTitle])
 
   const [versionsBase, version] = useMemo(() => {
     const unversionedVersion = getUnversionedVersion(virtual.version)
