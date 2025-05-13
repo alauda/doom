@@ -49,24 +49,24 @@ doom build -v unversioned-4.0 # Build document without version prefix but displa
 ### Merged Directory Structure
 
 ```sh
-├── console-platform
+│── console-platform
 │   ├── 4.0
 │   ├── 4.1
 │   ├── index.html
 │   ├── overrides.yaml
-|   └── versions.yaml
+│   └── versions.yaml
 │── console-devops-docs
 │   ├── 4.0
 │   ├── 4.1
 │   ├── index.html
 │   ├── overrides.yaml
-|   └── versions.yaml
+│   └── versions.yaml
 │── console-tekton-docs
 │   ├── 1.0
 │   ├── 1.1
 │   ├── index.html
 │   ├── overrides.yaml
-|   └── versions.yaml
+│   └── versions.yaml
 ```
 
 ```html title="index.html"

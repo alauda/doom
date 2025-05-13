@@ -8,7 +8,7 @@ sourceSHA: 0b49514f79d09a01026a8298196675d07468e9e90efd7acc6c77353dd24b72f3
 Based on actual business needs, we generally categorize APIs into two types: Advanced APIs and CRDs (Custom Resource Definitions). Therefore, the directory structure is typically organized as follows:
 
 ```sh
-├── apis
+│── apis
 │   ├── advanced-apis # Advanced APIs
 │   ├── crds # CRDs
 │   └── references # Common References
