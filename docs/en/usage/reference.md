@@ -21,7 +21,7 @@ In MDX files:
 {/* reference-end */}
 ```
 
-The `name` above refers to the name of the referenced document. For more information, please refer to [Document Reference Configuration](./configuration#引用文档配置). If the referenced document content uses static resources from a remote repository, the related static resources will be automatically stored locally in the `<root>/public/_remotes/<name>` directory.
+The `name` above refers to the name of the referenced document. For more information, please refer to [Document Reference Configuration](./configuration#reference). If the referenced document content uses static resources from a remote repository, the related static resources will be automatically stored locally in the `<root>/public/_remotes/<name>` directory.
 
 Here is an example using `<!-- reference-start#ref -->`:
 
@@ -34,7 +34,7 @@ reference:
     publicBase: # [string] Optional, the directory where static resources for remote repository located, corresponding to absolute paths like /images/xx.png. Default is docs/public.
     sources:
       - name: anchor # Name of the referenced document, used to reference within the document and must be globally unique.
-        path: docs/index.mdx#介绍 # Path to the referenced document, supports anchor targeting; for remote repositories, relative to the repository root directory, and for local, relative to the directory of doom.config.*.
+        path: docs/index.mdx#introduction # Path to the referenced document, supports anchor targeting; for remote repositories, relative to the repository root directory, and for local, relative to the directory of doom.config.*.
         ignoreHeading: # [boolean] Optional, whether to ignore headings. If true, the anchor's title will not be displayed in the referenced document.
         processors: # Optional, processors for handling the content of the referenced document.
           - type: ejsTemplate
@@ -49,4 +49,4 @@ reference:
 - `replace`: Replaces the frontmatter of the current document with that of the referenced document.
 - `remove`: Removes the frontmatter of the current document.
 
-For writing documentation, refer to [Document Reference](./reference).
+For writing documentation, refer to [Document Reference](./reference#reference).
