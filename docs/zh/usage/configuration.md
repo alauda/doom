@@ -86,7 +86,7 @@ reference:
 - `replace`：使用引用文档的 frontmatter 替换当前文档的 frontmatter
 - `remove`：移除当前文档的 frontmatter
 
-文档编写参考[引用文档](./reference)
+文档编写参考[引用文档](./reference#reference)
 
 ## 发行说明配置 \{#release-notes}
 

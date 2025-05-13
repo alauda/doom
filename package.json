@@ -51,7 +51,7 @@
     "release": "yarn build && clean-pkg-json && changeset publish",
     "serve": "yarn doom serve",
     "swc-node": "node --enable-source-maps --import @swc-node/register/esm-register",
-    "translate": "yarn doom translate fixture-docs",
+    "translate": "yarn doom translate",
     "typecov": "type-coverage",
     "version": "changeset version && yarn --no-immutable"
   },

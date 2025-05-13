@@ -46,24 +46,24 @@ doom build -v unversioned-4.0 # 构建无版本号前缀但导航栏展示版本
 ### 合并目录结构
 
 ```sh
-├── console-platform
+│── console-platform
 │   ├── 4.0
 │   ├── 4.1
 │   ├── index.html
 │   ├── overrides.yaml
-|   └── versions.yaml
+│   └── versions.yaml
 │── console-devops-docs
 │   ├── 4.0
 │   ├── 4.1
 │   ├── index.html
 │   ├── overrides.yaml
-|   └── versions.yaml
+│   └── versions.yaml
 │── console-tekton-docs
 │   ├── 1.0
 │   ├── 1.1
 │   ├── index.html
 │   ├── overrides.yaml
-|   └── versions.yaml
+│   └── versions.yaml
 ```
 
 ```html title="index.html"

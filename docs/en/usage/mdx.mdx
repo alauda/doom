@@ -1,0 +1,182 @@
+---
+description: Dynamic content display and content reuse can be achieved using MDX
+weight: 3
+sourceSHA: afd842f895c2dc8f6d60d41be4a45d5a7c85f0098fa6a9c50ee62a34c90f6b43
+---
+
+# MDX
+
+[MDX](https://mdxjs.com/) is an extended syntax of Markdown that allows the use of JSX syntax within Markdown. For usage, you can refer to [rspress MDX](https://rspress.dev/zh/guide/basic/use-mdx).
+
+## rspress Components
+
+The `rspress` theme provides a majority of the [built-in components](https://rspress.dev/zh/guide/default-theme/components) as global components, which can be used directly in `.mdx` files without import, including:
+
+- `Badge`
+- `Card`
+- `LinkCard`
+- `PackageManagerTabs`
+- `Steps`
+- `Tab/Tabs`
+- `Toc`
+
+Other less frequently used components can be imported from `@rspress/core/theme`, for example:
+
+```mdx title="preview.mdx"
+import { SourceCode } from '@rspress/core/theme'
+
+<SourceCode href="/" />
+```
+
+## doom Components
+
+`doom` provides some global components to assist in document writing, which can be used directly without import. Currently, these include:
+
+### `Overview`
+
+Component for document overview, used to display the document directory.
+
+### `Directive`
+
+Sometimes, due to nested indentation, the [custom container](https://rspress.dev/zh/guide/basic/use-mdx#%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AE%B9%E5%99%A8) syntax may become invalid. The `Directive` component can be used as a substitute.
+
+```mdx
+- The directory structure of multi-language documents (`doc/en`) needs to be fully consistent with the documents under the `doc/zh` directory to ensure that the links of multi-language documents are identical except for the language identifier.
+
+  <Directive type="danger" title="Attention">
+    If automated translation tools are used for translation, there is no need to
+    worry about this issue, as the automated translation tools will
+    automatically generate the directory structure of the target language
+    documents based on `doc/zh`.
+  </Directive>
+```
+
+- The directory structure of multi-language documents (`doc/en`) needs to be fully consistent with the documents under the `doc/zh` directory to ensure that the links of multi-language documents are identical except for the language identifier.
+
+  <Directive type="danger" title="Attention">
+    If automated translation tools are used for translation, there is no need to
+    worry about this issue, as the automated translation tools will
+    automatically generate the directory structure of the target language
+    documents based on `doc/zh`.
+  </Directive>
+
+### `ExternalSite`
+
+Component to reference external sites.
+
+```mdx
+<ExternalSite name="connectors" />
+```
+
+<ExternalSite name="connectors" />
+
+### `ExternalSiteLink`
+
+Component to reference external site links.
+
+```mdx
+<ExternalSiteLink name="connectors" href="link.mdx#hash" children="Content" />
+```
+
+<ExternalSiteLink name="connectors" href="link.mdx#hash" children="Content" />
+
+:::tip
+
+In mdx, `<ExternalSiteLink name="connectors" href="link" children="Content" />` has a different meaning from the content below
+
+```mdx
+<ExternalSiteLink name="connectors" href="link">
+  Content {/* this will be rendered inside a `p` element */}
+</ExternalSiteLink>
+```
+
+If you do not want the text to be rendered inside a `p` element, you can use the `children` attribute as shown in the example above.
+
+:::
+
+### `AcpApisOverview` and `ExternalApisOverview`
+
+Components to reference external site API overviews.
+
+```mdx
+<AcpApisOverview />
+{/* the same as the following */}
+<ExternalApisOverview name="acp" />
+
+<ExternalApisOverview name="connectors" />
+```
+
+<AcpApisOverview />
+
+<ExternalApisOverview name="connectors" />
+
+### Term
+
+Term component for plain text, dynamically mounted for injection.
+
+```mdx
+<Term name="company" textCase="capitalize" />
+<Term name="product" textCase="lower" />
+<Term name="productShort" textCase="upper" />
+```
+
+<Term name="company" textCase="capitalize" />
+
+<Term name="product" textCase="lower" />
+
+<Term name="productShort" textCase="upper" />
+
+#### `props`
+
+- `name`: Built-in term name, refer to [dynamic mounting configuration file](./deploy.md#overrides).
+- `textCase`: Text case transformation, optional values are `lower`, `upper`, `capitalize`.
+
+### `TermsTable`
+
+Component for displaying a list of built-in terms.
+
+```mdx
+<TermsTable />
+```
+
+<TermsTable />
+
+#### `props`
+
+- `terms`: `NormalizedTermItem[]`, optional, a custom term list for reusing when rendering custom terms in internal documentation.
+
+### `JsonViewer`
+
+```mdx
+<JsonViewer value={{ key: 'value' }} />
+```
+
+<JsonViewer value={{ key: 'value' }} />
+
+## Custom Component Reuse
+
+According to [conventions](./convention), we can extract reusable content to the `shared` directory, then import it where needed, for example:
+
+```mdx
+import CommonContent from './shared/CommonContent.mdx'
+
+<CommonContent />
+```
+
+If you need to use more [runtime](https://rspress.dev/zh/api/client-api/api-runtime) related APIs, you can implement components using `.jsx/.tsx` and then import them into `.mdx` files.
+
+```tsx
+// shared/CommonContent.tsx
+export const CommonContent = () => {
+  const { page } = usePageData()
+  return <div>{page.title}</div>
+}
+
+// showcase/content.mdx
+import { CommonContent } from './shared/CommonContent'
+;<CommonContent />
+```
+
+:::warning
+Note: Currently, components exported from `.mdx` do not support passing `props`. For scenarios where `props` need to be passed, please use `.jsx/.tsx` components for development, refer to [this issue](https://github.com/web-infra-dev/rspress/issues/1555).
+:::
