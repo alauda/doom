@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 0.22.6
+
+### Patch Changes
+
+- [#13](https://github.com/alauda/doom/pull/13) [`dd5ff3b`](https://github.com/alauda/doom/commit/dd5ff3bf8903e0adb5652574026a5fd71cc18bf1) Thanks [@JounQin](https://github.com/JounQin)! - fix: should prefer `originalTitle` over `title` for settled pdf name
+
 ## 0.22.5
 
 ### Patch Changes
