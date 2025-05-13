@@ -52,6 +52,10 @@ declare module '@rspress/shared' {
     shiki?: PluginShikiOptions
     editRepoBaseUrl?: string
   }
+
+  interface SiteData {
+    originalTitle?: string
+  }
 }
 
 export type ContentProcessor = {

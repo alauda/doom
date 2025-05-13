@@ -49,6 +49,7 @@ export const SiteOverrides = () => {
       return
     }
 
+    siteData.originalTitle ??= siteData.title
     siteData.title = title
 
     let newTitle = (frontmatter.title as string) || articleTitle
