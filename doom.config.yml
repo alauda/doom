@@ -20,3 +20,11 @@ reference:
 sidebar:
   collapsed: false
 editRepoBaseUrl: alauda/doom/tree/main/docs
+lint:
+  cspellOptions:
+    cspell:
+      words:
+        - artifactcleanupruns
+        - katanomi
+        - testplans
+        - testmodules

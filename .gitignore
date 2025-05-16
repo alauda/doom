@@ -1,3 +1,4 @@
+.type-coverage
 .yarn/*
 !.yarn/patches
 !.yarn/plugins

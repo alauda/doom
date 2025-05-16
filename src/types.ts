@@ -1,3 +1,4 @@
+import type { Options } from '@cspell/eslint-plugin'
 import type { serve } from '@rspress/core'
 
 import type {
@@ -37,6 +38,10 @@ export interface TranslateOptions {
   userPrompt?: string
 }
 
+export interface LintOptions {
+  cspellOptions?: Partial<Options>
+}
+
 declare module '@rspress/shared' {
   interface UserConfig {
     prefix?: string
@@ -51,6 +56,7 @@ declare module '@rspress/shared' {
     translate?: TranslateOptions
     shiki?: PluginShikiOptions
     editRepoBaseUrl?: string
+    lint?: LintOptions
   }
 
   interface SiteData {

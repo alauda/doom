@@ -12,16 +12,13 @@ export default config(
   eslint.configs.recommended,
   importX.flatConfigs.recommended,
   importX.flatConfigs.typescript,
-  configs.eslintRecommended,
-  ...configs.strictTypeChecked,
   {
+    files: ['**/*.{ts,tsx}'],
+    extends: [configs.eslintRecommended, configs.strictTypeChecked],
     languageOptions: {
       parserOptions: {
         projectService: true,
       },
-    },
-    settings: {
-      'import-x/resolver-next': [createTypeScriptImportResolver()],
     },
     rules: {
       '@typescript-eslint/no-misused-promises': 'off',
@@ -30,6 +27,13 @@ export default config(
         'error',
         { allowNumber: true },
       ],
+    },
+  },
+  {
+    settings: {
+      'import-x/resolver-next': createTypeScriptImportResolver(),
+    },
+    rules: {
       'import-x/default': 'off',
       'import-x/first': 'error',
       'import-x/newline-after-import': 'error',
@@ -63,9 +67,5 @@ export default config(
       ],
       'prefer-const': ['error', { destructuring: 'all' }],
     },
-  },
-  {
-    files: ['**/*.js'],
-    ...configs.disableTypeChecked,
   },
 )

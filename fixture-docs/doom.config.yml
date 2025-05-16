@@ -46,3 +46,18 @@ internalRoutes:
   - '*/internal/*.mdx'
   - '*/concepts/**'
 editRepoBaseUrl: alauda/doom/tree/main/fixture-docs
+lint:
+  cspellOptions:
+    cspell:
+      words:
+        - gatewayview
+        - netrelationship
+        - openshiftpipelinesascodes
+        - tekton
+        - tektonchains
+        - tektonconfigs
+        - tektonhubs
+        - tektoninstallersets
+        - tektonpipelines
+        - tektonresults
+        - tektontriggers
