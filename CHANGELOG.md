@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 0.23.0
+
+### Minor Changes
+
+- [#15](https://github.com/alauda/doom/pull/15) [`1d4244f`](https://github.com/alauda/doom/commit/1d4244f702cb37ec6b117bf147d2e0bc7296505a) Thanks [@JounQin](https://github.com/JounQin)! - feat: add new `lint` command
+
 ## 0.22.6
 
 ### Patch Changes
