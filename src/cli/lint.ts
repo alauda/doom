@@ -28,8 +28,9 @@ export const lintCommand = new Command('lint')
 
     const eslint = new ESLint({
       cwd: docsDir,
+      overrideConfigFile: true,
       // @ts-expect-error -- stronger types
-      baseConfig: tseslint.config([
+      overrideConfig: tseslint.config([
         {
           extends: [
             js.configs.recommended,
@@ -58,29 +59,28 @@ export const lintCommand = new Command('lint')
             ],
           },
         },
-        // https://github.com/eslint/eslint/issues/19722
-        // {
-        //   files: ['**/*.{ts,tsx}'],
-        //   extends: [
-        //     tseslint.configs.recommendedTypeChecked,
-        //     react.configs['recommended-typescript'],
-        //   ],
-        //   rules: {
-        //     '@typescript-eslint/no-misused-promises': 'off',
-        //     '@typescript-eslint/no-non-null-assertion': 'off',
-        //     '@typescript-eslint/restrict-template-expressions': [
-        //       'error',
-        //       { allowNumber: true },
-        //     ],
-        //     'prefer-const': ['error', { destructuring: 'all' }],
-        //   },
-        //   languageOptions: {
-        //     parser: tseslint.parser,
-        //     parserOptions: {
-        //       projectService: true,
-        //     },
-        //   },
-        // },
+        {
+          files: ['**/*.{ts,tsx}'],
+          extends: [
+            tseslint.configs.recommendedTypeChecked,
+            react.configs['recommended-typescript'],
+          ],
+          rules: {
+            '@typescript-eslint/no-misused-promises': 'off',
+            '@typescript-eslint/no-non-null-assertion': 'off',
+            '@typescript-eslint/restrict-template-expressions': [
+              'error',
+              { allowNumber: true },
+            ],
+            'prefer-const': ['error', { destructuring: 'all' }],
+          },
+          languageOptions: {
+            parser: tseslint.parser,
+            parserOptions: {
+              projectService: true,
+            },
+          },
+        },
       ]),
     })
 
