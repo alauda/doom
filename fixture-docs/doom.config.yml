@@ -50,8 +50,6 @@ lint:
   cspellOptions:
     cspell:
       words:
-        - gatewayview
-        - netrelationship
         - openshiftpipelinesascodes
         - tekton
         - tektonchains

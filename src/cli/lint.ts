@@ -48,6 +48,7 @@ export const lintCommand = new Command('lint')
                 {
                   autoFix: true,
                   cspell: {
+                    allowCompoundWords: true,
                     words: parsedTerms.map((it) => it.en),
                     flagWords: parsedTerms.flatMap(
                       ({ badCases }) => badCases?.en ?? [],

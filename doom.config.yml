@@ -24,7 +24,4 @@ lint:
   cspellOptions:
     cspell:
       words:
-        - artifactcleanupruns
         - katanomi
-        - testplans
-        - testmodules
