@@ -208,3 +208,10 @@ translate:
 ```yaml
 editRepoBaseUrl: alauda/doom/tree/main/docs # https://github.com/ 前缀可以省略，仅当启用 `-R, --edit-repo` 命令行标志符时生效
 ```
+
+## 文档检查配置 \{#lint}
+
+```yaml
+lint:
+  cspellOptions: # 可选，cspell 配置项，参考 https://github.com/streetsidesoftware/cspell/tree/main/packages/cspell-eslint-plugin#options
+```

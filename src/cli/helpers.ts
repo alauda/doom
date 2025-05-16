@@ -1,8 +1,11 @@
 import fs from 'node:fs/promises'
 
 import { glob } from 'tinyglobby'
+import { xfetch } from 'x-fetch'
+import { parse } from 'yaml'
 
 import { FALSY_VALUES } from '../shared/index.js'
+import type { NormalizedTermItem } from '../terms.js'
 
 export const parseBoolean = (value: string) =>
   !!value && !FALSY_VALUES.has(value)
@@ -48,3 +51,16 @@ export const defaultGitHubUrl = (url: string) =>
   /^https?:\/\//.test(url)
     ? url
     : `https://github.com/${url.replace(/^(\/*github.com)?\/+/i, '')}`
+
+const parseTerms_ = async () => {
+  const terms = await xfetch(
+    process.env.RAW_TERMS_URL ||
+      'https://gitlab-ce.alauda.cn/alauda-public/product-doc-guide/-/raw/main/terms.yaml',
+    { type: 'text' },
+  )
+  return parse(terms) as NormalizedTermItem[]
+}
+
+let parsedTermsCache: Promise<NormalizedTermItem[]> | undefined
+
+export const parseTerms = () => (parsedTermsCache ??= parseTerms_())

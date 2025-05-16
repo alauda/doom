@@ -20,6 +20,7 @@ import { setNodeEnv } from '../utils/index.js'
 import { CWD, DEFAULT_CONFIGS, I18N_FILE, SITES_FILE } from './constants.js'
 import { exportCommand } from './export.js'
 import { parseBoolean } from './helpers.js'
+import { lintCommand } from './lint.js'
 import { loadConfig } from './load-config.js'
 import { newCommand } from './new.js'
 import { translateCommand } from './translate.js'
@@ -253,6 +254,7 @@ program
 program.addCommand(newCommand)
 program.addCommand(translateCommand)
 program.addCommand(exportCommand)
+program.addCommand(lintCommand)
 
 program.parseAsync().catch((err: unknown) => {
   if (err instanceof Error && err.name === 'ExitPromptError') {

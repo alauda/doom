@@ -13,8 +13,6 @@ import matter from 'gray-matter'
 import { AzureOpenAI, RateLimitError } from 'openai'
 import { pRateLimit } from 'p-ratelimit'
 import { glob } from 'tinyglobby'
-import { xfetch } from 'x-fetch'
-import { parse } from 'yaml'
 import { cyan, red } from 'yoctocolors'
 
 import {
@@ -24,7 +22,6 @@ import {
   type NormalizeImgSrcOptions,
 } from '../plugins/index.js'
 import { Language, SUPPORTED_LANGUAGES } from '../shared/index.js'
-import type { NormalizedTermItem } from '../terms.js'
 import type { GlobalCliOptions, TranslateOptions } from '../types.js'
 import { pathExists } from '../utils/index.js'
 
@@ -32,6 +29,7 @@ import {
   escapeMarkdownHeadingIds,
   getMatchedDocFilePaths,
   parseBoolean,
+  parseTerms,
 } from './helpers.js'
 import { loadConfig } from './load-config.js'
 
@@ -98,11 +96,7 @@ export interface InternalTranslateOptions extends TranslateOptions {
 }
 
 const resolveTerms_ = async () => {
-  const terms = await xfetch(
-    'https://gitlab-ce.alauda.cn/alauda-public/product-doc-guide/-/raw/main/terms.yaml',
-    { type: 'text' },
-  )
-  const parsedTerms = parse(terms) as NormalizedTermItem[]
+  const parsedTerms = await parseTerms()
   return (
     '- 以下是常见的相关术语词汇对应表（English <-> 中文）\n' +
     parsedTerms.map(({ en, zh = en }) => `  * ${en} <-> ${zh}`).join('\n')
