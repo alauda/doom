@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 0.23.1
+
+### Patch Changes
+
+- [#17](https://github.com/alauda/doom/pull/17) [`e54587f`](https://github.com/alauda/doom/commit/e54587f029ff017b24ef8ca300c506cc523b8fd4) Thanks [@JounQin](https://github.com/JounQin)! - fix: use `overrideConfigFile: true` + `overrideConfig` instead
+
 ## 0.23.0
 
 ### Minor Changes
