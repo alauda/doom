@@ -44,6 +44,7 @@ __metadata:
     eslint-plugin-mdx: "npm:^3.4.2"
     html-tag-names: "npm:^2.1.0"
     mdast-util-mdx: "npm:^2.0.1"
+    mdast-util-mdx-jsx: "npm:^2.1.4"
     mermaid: "npm:^11.6.0"
     nano-staged: "npm:^0.8.0"
     npm-run-all2: "npm:^7.0.2"
@@ -62,6 +63,7 @@ __metadata:
     remark-directive: "npm:^2.0.1"
     remark-frontmatter: "npm:^4.0.1"
     remark-gfm: "npm:^3.0.1"
+    remark-mdx: "npm:^2.3.0"
     remark-stringify: "npm:^10.0.3"
     shiki: "npm:^3.4.2"
     simple-git: "npm:^3.27.0"
@@ -7993,7 +7995,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mdast-util-mdx-jsx@npm:^2.0.0":
+"mdast-util-mdx-jsx@npm:^2.0.0, mdast-util-mdx-jsx@npm:^2.1.4":
   version: 2.1.4
   resolution: "mdast-util-mdx-jsx@npm:2.1.4"
   dependencies:
@@ -10672,7 +10674,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"remark-mdx@npm:^2.0.0":
+"remark-mdx@npm:^2.0.0, remark-mdx@npm:^2.3.0":
   version: 2.3.0
   resolution: "remark-mdx@npm:2.3.0"
   dependencies:

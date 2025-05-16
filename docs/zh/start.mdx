@@ -110,6 +110,8 @@ Commands:
   help [command]                  display help for command
 ```
 
+更多配置请参考[配置](./usage/configuration)
+
 ### 启动开发服务 \{#dev}
 
 执行 `yarn dev` 启动开发服务，浏览器会自动打开文档首页
@@ -197,6 +199,8 @@ i18n:
 title: DevOps 连接器
 ```
 
+更多配置请参考[翻译配置](./usage/configuration#translate)
+
 ### 导出 PDF \{#export}
 
 :::warning
@@ -228,3 +232,22 @@ Options:
 ```dotenv title=".env.yarn"
 PLAYWRIGHT_DOWNLOAD_HOST="https://cdn.npmmirror.com/binaries/playwright"
 ```
+
+### 文档检查 \{#lint}
+
+```sh
+doom lint -h
+
+# output
+Usage: doom lint [options] [root]
+
+Lint the documentation
+
+Arguments:
+  root        Root directory of the documentation
+
+Options:
+  -h, --help  display help for command
+```
+
+更多配置请参考[文档检查配置](./usage/configuration#lint)

@@ -39,3 +39,4 @@ jobs:
         run: yarn run-p build docs lint typecov
         env:
           PARSER_NO_WATCH: true
+          RAW_TERMS_URL: ${{ secrets.RAW_TERMS_URL }}

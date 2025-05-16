@@ -2,6 +2,7 @@ import type { Options } from '@cspell/eslint-plugin'
 import cspellRecommended from '@cspell/eslint-plugin/recommended'
 import js from '@eslint/js'
 import react from '@eslint-react/eslint-plugin'
+import { logger } from '@rspress/shared/logger'
 import { Command } from 'commander'
 import { merge } from 'es-toolkit/compat'
 import { ESLint } from 'eslint'
@@ -37,7 +38,7 @@ export const lintCommand = new Command('lint')
           ],
         },
         {
-          files: ['**/docs/en/**/*.{js,jsx,md,mdx,ts,tsx}'],
+          files: ['**/en/**/*.{js,jsx,md,mdx,ts,tsx}'],
           extends: [cspellRecommended],
           rules: {
             '@cspell/spellchecker': [
@@ -83,15 +84,31 @@ export const lintCommand = new Command('lint')
       ]),
     })
 
+    logger.start('Linting...')
+
     const results = await eslint.lintFiles('**/*.{js,jsx,ts,tsx,md,mdx}')
 
-    if (!results.length) {
-      return
-    }
+    const { error, warning } = results.reduce(
+      (count, result) => ({
+        error: count.error + result.errorCount,
+        warning: count.warning + result.warningCount,
+      }),
+      { error: 0, warning: 0 },
+    )
 
-    process.exitCode = 1
+    logger.info(
+      `Linting completed with ${error} errors and ${warning} warnings`,
+    )
 
     const formatter = await eslint.loadFormatter('stylish')
 
-    process.stderr.write(await formatter.format(results))
+    const formatted = await formatter.format(results)
+
+    if (formatted) {
+      console.log(formatted)
+    }
+
+    if (error) {
+      process.exitCode = 1
+    }
   })

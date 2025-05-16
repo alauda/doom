@@ -1,7 +1,7 @@
 ---
 description: Configure `doom` documentation tool
 weight: 1
-sourceSHA: 8c04921d3d667333d5dd810c99aa189cd38774116eb48bf9425944810e400344
+sourceSHA: e06d0647311a571bc2a3584ed125b83d6f6ab016738b27879f59aa32984fdd92
 ---
 
 # Configuration {#configuration}
@@ -208,4 +208,11 @@ The final output should only include the results from the last step, and previou
 
 ```yaml
 editRepoBaseUrl: alauda/doom/tree/main/docs # The prefix https://github.com/ can be omitted; it only takes effect when the `-R, --edit-repo` command line flag is enabled.
+```
+
+## Document Linting Configuration {#lint}
+
+```yaml
+lint:
+  cspellOptions: # optional, cspell configuration options, refer to https://github.com/streetsidesoftware/cspell/tree/main/packages/cspell-eslint-plugin#options
 ```

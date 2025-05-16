@@ -54,7 +54,8 @@ export const defaultGitHubUrl = (url: string) =>
 
 const parseTerms_ = async () => {
   const terms = await xfetch(
-    'https://gitlab-ce.alauda.cn/alauda-public/product-doc-guide/-/raw/main/terms.yaml',
+    process.env.RAW_TERMS_URL ||
+      'https://gitlab-ce.alauda.cn/alauda-public/product-doc-guide/-/raw/main/terms.yaml',
     { type: 'text' },
   )
   return parse(terms) as NormalizedTermItem[]
