@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 0.23.2
+
+### Patch Changes
+
+- [#19](https://github.com/alauda/doom/pull/19) [`968695e`](https://github.com/alauda/doom/commit/968695e3795b5387f2ff0236e35fb4a230f9acaa) Thanks [@JounQin](https://github.com/JounQin)! - feat: enable cspell `allowCompoundWords` option
+
 ## 0.23.1
 
 ### Patch Changes
