@@ -168,6 +168,7 @@ function processLocales(
   defaultLang: string,
   defaultVersion: string,
   extensions: string[],
+  onlyIncludeRoutes?: string[],
   excludeRoutes?: string[],
   collapsed?: boolean,
 ) {
@@ -186,6 +187,7 @@ function processLocales(
                 routePrefix,
                 root,
                 extensions,
+                onlyIncludeRoutes,
                 excludeRoutes,
                 collapsed,
               )
@@ -197,6 +199,7 @@ function processLocales(
               addTrailingSlash(lang === defaultLang ? '' : `/${lang}`),
               root,
               extensions,
+              onlyIncludeRoutes,
               excludeRoutes,
               collapsed,
             ),
@@ -218,6 +221,7 @@ export const autoSidebar = async (
   config: UserConfig,
   { ignore, export: export_ }: AutoSidebarPluginOptions,
 ) => {
+  const onlyIncludeRoutes = (ignore && config.onlyIncludeRoutes) || []
   const excludeRoutes = (ignore && config.internalRoutes) || []
   const route = (config.route ??= {})
   if (export_ || excludeRoutes.length) {
@@ -246,6 +250,7 @@ export const autoSidebar = async (
       defaultLang,
       defaultVersion,
       extensions,
+      onlyIncludeRoutes,
       excludeRoutes,
       collapsed,
     )
@@ -267,12 +272,23 @@ export const autoSidebar = async (
               routePrefix,
               config.root!,
               extensions,
+              onlyIncludeRoutes,
               excludeRoutes,
               collapsed,
             )
           }),
         )
-      : [await walk(root, '/', root, extensions, excludeRoutes, collapsed)]
+      : [
+          await walk(
+            root,
+            '/',
+            root,
+            extensions,
+            onlyIncludeRoutes,
+            excludeRoutes,
+            collapsed,
+          ),
+        ]
 
     const combined = combineWalkResult(walks, versions)
 

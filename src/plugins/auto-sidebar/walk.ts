@@ -50,6 +50,7 @@ const sidebarSorter = (a: DoomSidebar, b: DoomSidebar) => {
 const processSideMeta = (
   sideMeta: Array<DoomSidebar | undefined>,
   extensions: string[],
+  onlyIncludeRoutes: string[],
   excludeRoutes: string[],
 ) => {
   const result = sideMeta.reduce<{
@@ -66,9 +67,15 @@ const processSideMeta = (
         return acc
       }
 
-      const ignored = excludeRoutes.some((glob) =>
-        picomatch.isMatch(curr._fileKey!, glob),
-      )
+      const included =
+        !onlyIncludeRoutes.length ||
+        onlyIncludeRoutes.some((glob) =>
+          picomatch.isMatch(curr._fileKey!, glob),
+        )
+
+      const excluded =
+        !included ||
+        excludeRoutes.some((glob) => picomatch.isMatch(curr._fileKey!, glob))
 
       let filePart: string | undefined
 
@@ -91,7 +98,7 @@ const processSideMeta = (
         } else {
           acc.index = curr
         }
-        if (ignored) {
+        if (excluded) {
           if (acc.index === curr) {
             curr.link = ''
             if (acc.others.length === 0) {
@@ -104,7 +111,7 @@ const processSideMeta = (
             }
           }
         }
-      } else if (!ignored) {
+      } else if (!excluded) {
         acc.others.push(curr)
       }
 
@@ -125,6 +132,7 @@ export async function scanSideMeta(
   routePrefix: string,
   extensions: string[],
   ignoredDirs: string[],
+  onlyIncludeRoutes: string[],
   excludeRoutes: string[],
 ) {
   if (!(await pathExists(workDir))) {
@@ -267,6 +275,7 @@ export async function scanSideMeta(
           routePrefix,
           extensions,
           ['assets'],
+          onlyIncludeRoutes,
           excludeRoutes,
         )
         const realPath = await detectFilePath(subDir, extensions)
@@ -313,7 +322,12 @@ export async function scanSideMeta(
     }),
   )
 
-  return processSideMeta(sidebarFromMeta, extensions, excludeRoutes)
+  return processSideMeta(
+    sidebarFromMeta,
+    extensions,
+    onlyIncludeRoutes,
+    excludeRoutes,
+  )
 }
 
 // Start walking from the doc directory, scan the `_meta.json` file in each subdirectory
@@ -323,6 +337,7 @@ export async function walk(
   routePrefix = '/',
   docsDir: string,
   extensions: string[],
+  onlyIncludeRoutes: string[] = [],
   excludeRoutes: string[] = [],
   collapsed?: boolean,
 ) {
@@ -333,6 +348,7 @@ export async function walk(
     routePrefix,
     extensions,
     ['assets', 'public', 'shared'],
+    onlyIncludeRoutes,
     excludeRoutes,
   )
 

@@ -1,7 +1,7 @@
 ---
 description: Configure `doom` documentation tool
 weight: 1
-sourceSHA: e06d0647311a571bc2a3584ed125b83d6f6ab016738b27879f59aa32984fdd92
+sourceSHA: 11ecf257d004e931c672a3eeda41c811f327c91c61fba6625cbb858736213033
 ---
 
 # Configuration {#configuration}
@@ -20,7 +20,7 @@ export default defineConfig({})
 
 ## Basic Configuration {#basic}
 
-- `lang`: The default document language. For the convenience of the majority of projects, we support both Chinese and English documents by default, with the default language set to `en`. If the current document project does not require multilingual support, this can be set to `null` or `undefined`.
+- `lang`: The default document language. To accommodate most projects, we support both Chinese and English documents by default, with the default language set to `en`. If the current document project does not require multilingual support, this can be set to `null` or `undefined`.
 - `title`: The document title, which will appear in the browser tab.
 - `logo`: The logo in the top left corner of the document. It supports image links and file paths; absolute paths reference files in the `public` directory, while relative paths refer to files relative to the current tool directory. By default, it uses the built-in Alauda logo from the `doom` package.
 - `logoText`: The document title that will display at the logo location in the top left corner.
@@ -94,7 +94,7 @@ For writing documentation, refer to [reference documentation](./reference).
 ```yaml
 releaseNotes:
   queryTemplates:
-    fixed: # may include jql statements with ejs templates.
+    fixed: # May include jql statements with ejs templates.
     unfixed:
 ```
 
@@ -115,20 +115,29 @@ sidebar:
   collapsed: false # Optional, whether to default the left navigation to be collapsed. Defaults to collapsed. If there is not much document content, it can be set to false.
 ```
 
-## Internal Document Routes {#internal-routes}
+## Internal Document Routes Configuration {#internal-routes}
 
 ```yaml
 internalRoutes: # Optional, supports glob matching, relative to the docs directory. Matched files will be ignored if the cli is enabled with the `-i, --ignore` option.
   - '*/internal/**/*'
 ```
 
+## Only Include Document Routes Configuration {#only-include-routes}
+
+```yaml
+onlyIncludeRoutes: # Optional, supports glob matching, relative to the docs directory. Only routes/files under this configuration will be activated when the cli is enabled with the `-i, --ignore` option. Can be used in conjunction with `internalRoutes` to further exclude some routes within.
+  - '*/internal/**/*'
+internalRoutes:
+  - '*/internal/overview.mdx'
+```
+
 ## Language Highlight Plugin Configuration {#highlight}
 
 ```yaml
 shiki:
-  theme: # optional, https://shiki.style/themes
-  langs: # optional, https://shiki.style/languages
-  transformers: # optional, only available in js/ts config, https://shiki.style/guide/transformers
+  theme: # Optional, https://shiki.style/themes
+  langs: # Optional, https://shiki.style/languages
+  transformers: # Optional, only available in js/ts config, https://shiki.style/guide/transformers
 ```
 
 :::warning
