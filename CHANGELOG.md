@@ -1,5 +1,13 @@
 # @alauda/doom
 
+## 0.23.3
+
+### Patch Changes
+
+- [#21](https://github.com/alauda/doom/pull/21) [`5f2a576`](https://github.com/alauda/doom/commit/5f2a57685190117127efc61aa27b7e07b332a756) Thanks [@JounQin](https://github.com/JounQin)! - chore: enable `temperature: 0` for openai output stability
+
+- [#21](https://github.com/alauda/doom/pull/21) [`5f2a576`](https://github.com/alauda/doom/commit/5f2a57685190117127efc61aa27b7e07b332a756) Thanks [@JounQin](https://github.com/JounQin)! - feat: add `onlyIncludeRoutes` config support
+
 ## 0.23.2
 
 ### Patch Changes
