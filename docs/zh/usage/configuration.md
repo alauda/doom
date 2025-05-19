@@ -114,11 +114,20 @@ sidebar:
   collapsed: false # 可选，是否默认折叠左导航，默认折叠，文档内容不多时可以考虑设置为 false
 ```
 
-## 内部文档路由 \{#internal-routes}
+## 内部文档路由配置 \{#internal-routes}
 
 ```yaml
-internalRoutes: # 可选，支持 glob 匹配，相对于 docs 目录，匹配到的文件在 cli 启用 `-i, --ignore` 选项时会被忽略
-  - '*/internal/**/*'
+internalRoutes: # 可选，支持 glob 匹配，相对于 docs 目录，在 cli 启用 `-i, --ignore` 选项时匹配到的路由/文件会被忽略
+  - '*/internal/**'
+```
+
+## 仅包含文档路由配置 \{#only-include-routes}
+
+```yaml
+onlyIncludeRoutes: # 可选，支持 glob 匹配，相对于 docs 目录，在 cli 启用 `-i, --ignore` 选项时只有此配置下的路由/文件会被启用，可同时配合 `internalRoutes` 进一步排除其中的部分路由
+  - '*/internal/**'
+internalRoutes:
+  - '*/internal/overview.mdx'
 ```
 
 ## 语言高亮插件配置 \{#highlight}

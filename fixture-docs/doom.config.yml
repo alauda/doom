@@ -42,7 +42,10 @@ releaseNotes:
       AND ReleaseNotesStatus = Publish
       AND project = <%= project %>
     unfixed: ''
+onlyIncludeRoutes:
+  - '*/install/**'
 internalRoutes:
+  - '*/install/prerequisites.mdx'
   - '*/internal/*.mdx'
   - '*/concepts/**'
 editRepoBaseUrl: alauda/doom/tree/main/fixture-docs

@@ -211,6 +211,7 @@ const getCommonConfig = async ({
     lang: fallbackToZh ? 'zh' : config.lang || 'en',
     title: '',
     route: {
+      include: ignore ? config.onlyIncludeRoutes : undefined,
       exclude: [
         'dist/**/*',
         'public/**/*',
@@ -218,6 +219,7 @@ const getCommonConfig = async ({
         'doom.config.*',
         '**/assets/**/*',
         '**/*.d.ts',
+        ...((ignore && config.internalRoutes) || []),
         ...unusedLanguages.map((lang) => `${lang}/**/*`),
       ],
     },

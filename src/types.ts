@@ -52,6 +52,7 @@ declare module '@rspress/shared' {
     reference?: ReferenceItem[]
     sidebar?: Omit<AutoSidebarPluginOptions, 'download' | 'excludeRoutes'>
     releaseNotes?: ReleaseNotesOptions
+    onlyIncludeRoutes?: string[]
     internalRoutes?: string[]
     translate?: TranslateOptions
     shiki?: PluginShikiOptions
