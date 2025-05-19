@@ -43,9 +43,23 @@ const sidebarSorter = (a: DoomSidebar, b: DoomSidebar) => {
   return aWeight - bWeight
 }
 
+const isExcluded = (
+  onlyIncludeRoutes: string[],
+  excludeRoutes: string[],
+  fileKey: string,
+) => {
+  const included =
+    !onlyIncludeRoutes.length ||
+    onlyIncludeRoutes.some((glob) => picomatch.isMatch(fileKey, glob))
+  return (
+    !included || excludeRoutes.some((glob) => picomatch.isMatch(fileKey, glob))
+  )
+}
+
 /**
  * 1. Split sideMeta into two parts: `index` and `others` and sort `others` by weight
- * 2. filter out `excludeRoutes`
+ * 2. filter only include routes if `onlyIncludeRoutes` is not empty
+ * 3. filter out `excludeRoutes`
  */
 const processSideMeta = (
   sideMeta: Array<DoomSidebar | undefined>,
@@ -67,15 +81,11 @@ const processSideMeta = (
         return acc
       }
 
-      const included =
-        !onlyIncludeRoutes.length ||
-        onlyIncludeRoutes.some((glob) =>
-          picomatch.isMatch(curr._fileKey!, glob),
-        )
-
-      const excluded =
-        !included ||
-        excludeRoutes.some((glob) => picomatch.isMatch(curr._fileKey!, glob))
+      const excluded = isExcluded(
+        onlyIncludeRoutes,
+        excludeRoutes,
+        curr._fileKey,
+      )
 
       let filePart: string | undefined
 
@@ -352,7 +362,11 @@ export async function walk(
     excludeRoutes,
   )
 
-  const sidebars = index ? [index, ...others] : others
+  const isIndexExcluded =
+    !!index?._fileKey &&
+    isExcluded(onlyIncludeRoutes, excludeRoutes, index._fileKey)
+
+  const sidebars = index && !isIndexExcluded ? [index, ...others] : others
 
   if (collapsed != null) {
     for (const sidebarItem of sidebars) {
