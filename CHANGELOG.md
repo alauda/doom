@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 0.23.4
+
+### Patch Changes
+
+- [#23](https://github.com/alauda/doom/pull/23) [`41a5074`](https://github.com/alauda/doom/commit/41a50743efc2c7a31a1fdf3da682cacc71aacc18) Thanks [@JounQin](https://github.com/JounQin)! - fix: exclude index pages correctly
+
 ## 0.23.3
 
 ### Patch Changes
