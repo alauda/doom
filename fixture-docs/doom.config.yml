@@ -43,7 +43,7 @@ releaseNotes:
       AND project = <%= project %>
     unfixed: ''
 onlyIncludeRoutes:
-  - '*/install/**'
+  - '*/development/component-quickstart/*'
 internalRoutes:
   - '*/install/prerequisites.mdx'
   - '*/internal/*.mdx'
