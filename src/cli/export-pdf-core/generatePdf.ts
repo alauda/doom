@@ -143,7 +143,7 @@ export async function generatePdf({
     allOutlines,
   )
 
-  const message = `\nExported to ${yellow(exportedPath)}\n`
+  const message = `Exported to ${yellow(exportedPath)}\n`
   process.stdout.write(message)
 
   await fs.rm(tempDir, { force: true, recursive: true })

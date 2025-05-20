@@ -185,7 +185,7 @@ export async function mergePDF(
   const saveFilePath = join(saveDirPath, outFile)
 
   if (pages.length === 0) {
-    process.stdout.write(
+    process.stderr.write(
       red(
         'The website has no pages, please check whether the export path is set correctly',
       ),

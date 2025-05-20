@@ -113,9 +113,12 @@ export const exportCommand = new Command('export')
       sidebarItems: DoomSidebar[],
       lang = config.lang!,
     ) => {
-      // console.log(sidebarItems, collectPages(sidebarItems))
+      const pages = collectPages(sidebarItems)
+      logger.start(
+        `Exporting ${lang} language documents with ${pages.length} pages...`,
+      )
       await generatePdf({
-        pages: collectPages(sidebarItems),
+        pages,
         outFile: getPdfName(lang, config.userBase, config.title),
         ...commonOptions,
       })
