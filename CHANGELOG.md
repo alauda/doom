@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 0.23.5
+
+### Patch Changes
+
+- [#25](https://github.com/alauda/doom/pull/25) [`9508fd5`](https://github.com/alauda/doom/commit/9508fd5d22c8224dacdfe187aa7cb468d4099260) Thanks [@JounQin](https://github.com/JounQin)! - feat: add exporting log info
+
 ## 0.23.4
 
 ### Patch Changes
