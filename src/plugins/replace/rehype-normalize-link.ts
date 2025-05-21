@@ -48,7 +48,7 @@ export const rehypeNormalizeLink: Plugin<[], Root> = () => {
         return
       }
 
-      const { alt, src } = node.properties || {}
+      const { alt, src } = node.properties
 
       if (typeof src !== 'string') {
         return

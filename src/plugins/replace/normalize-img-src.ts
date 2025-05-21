@@ -3,7 +3,7 @@ import path from 'node:path'
 
 import { isExternalUrl, removeLeadingSlash } from '@rspress/core'
 import { cloneDeep } from 'es-toolkit'
-import type { Content } from 'mdast'
+import type { RootContent } from 'mdast'
 import type { MdxJsxFlowElement, MdxJsxTextElement } from 'mdast-util-mdx-jsx'
 import { visit } from 'unist-util-visit'
 
@@ -25,7 +25,7 @@ export interface NormalizeImgSrcOptions {
 }
 
 export const normalizeImgSrc = (
-  content: Content,
+  content: RootContent,
   {
     refSource,
     localPublicBase,

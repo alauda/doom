@@ -32,7 +32,7 @@ export const remarkAutoToc: Plugin<[], Root> = function () {
           {
             type: 'mdxJsxAttribute',
             name: 'className',
-            value: 'doom-auto-toc',
+            value: 'doom-auto-toc rspress-toc-exclude',
           },
         ],
         children: [

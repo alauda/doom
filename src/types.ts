@@ -5,7 +5,6 @@ import type {
   ApiPluginOptions,
   AutoSidebarPluginOptions,
   PermissionPluginOptions,
-  PluginShikiOptions,
   ReferenceItem,
   ReleaseNotesOptions,
 } from './plugins/index.js'
@@ -55,7 +54,6 @@ declare module '@rspress/shared' {
     onlyIncludeRoutes?: string[]
     internalRoutes?: string[]
     translate?: TranslateOptions
-    shiki?: PluginShikiOptions
     editRepoBaseUrl?: string
     lint?: LintOptions
   }

@@ -1,5 +1,5 @@
 import { logger } from '@rspress/shared/logger'
-import type { Root, YAML } from 'mdast'
+import type { Root, Yaml } from 'mdast'
 import remarkFrontmatter from 'remark-frontmatter'
 import remarkGfm from 'remark-gfm'
 import remarkMdx from 'remark-mdx'
@@ -60,7 +60,7 @@ export const mdProcessor = unified()
 
 export const mdxProcessor = mdProcessor().use(remarkMdx).freeze()
 
-export const getFrontmatterNode = (ast: Root): YAML | undefined => {
+export const getFrontmatterNode = (ast: Root): Yaml | undefined => {
   const firstNode = ast.children[0]
   return firstNode.type === 'yaml' ? firstNode : undefined
 }

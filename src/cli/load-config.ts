@@ -2,6 +2,7 @@ import fs from 'node:fs/promises'
 import path from 'node:path'
 
 import { nodeTypes } from '@mdx-js/mdx'
+import { pluginSass } from '@rsbuild/plugin-sass'
 import { pluginYaml } from '@rsbuild/plugin-yaml'
 import {
   addLeadingSlash,
@@ -36,7 +37,6 @@ import {
   mermaidPlugin,
   permissionPlugin,
   replacePlugin,
-  shikiPlugin,
 } from '../plugins/index.js'
 import {
   isExplicitlyUnversioned,
@@ -225,12 +225,23 @@ const getCommonConfig = async ({
     },
     markdown: {
       checkDeadLinks: true,
-      highlightLanguages: [['jsonc', 'json']],
-      mdxRs: false,
       rehypePlugins: [[rehypeRaw, { passThrough: nodeTypes }]],
-    },
-    ssg: {
-      strict: true,
+      shiki: {
+        transformers: [
+          // builtin transformers
+          transformerMetaHighlight(),
+          transformerMetaWordHighlight(),
+          transformerNotationDiff(),
+          transformerNotationErrorLevel(),
+          transformerNotationFocus(),
+          transformerNotationHighlight(),
+          transformerNotationWordHighlight(),
+          transformerRemoveNotationEscape(),
+
+          // custom transformers
+          createTransformerCallouts(),
+        ],
+      },
     },
     themeConfig: {
       enableScrollToTop: true,
@@ -263,43 +274,12 @@ const getCommonConfig = async ({
         localBasePath,
         force,
       }),
-      shikiPlugin({
-        theme: config.shiki?.theme,
-        langs: [
-          'dockerfile',
-          'dotenv',
-          'html',
-          'go',
-          'jsonc',
-          'mermaid',
-          'java',
-          'python',
-          'toml',
-          ...(config.shiki?.langs ?? []),
-        ],
-        transformers: [
-          // builtin transformers
-          transformerMetaHighlight(),
-          transformerMetaWordHighlight(),
-          transformerNotationDiff(),
-          transformerNotationErrorLevel(),
-          transformerNotationFocus(),
-          transformerNotationHighlight(),
-          transformerNotationWordHighlight(),
-          transformerRemoveNotationEscape(),
-
-          // custom transformers
-          createTransformerCallouts(),
-
-          ...(config.shiki?.transformers ?? []),
-        ],
-      }),
     ],
     builderConfig: {
       dev: {
         lazyCompilation: lazy,
       },
-      plugins: [pluginYaml()],
+      plugins: [pluginSass(), pluginYaml()],
       server: {
         open,
       },

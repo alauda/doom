@@ -1,6 +1,12 @@
 import { logger } from '@rspress/shared/logger'
 import { render } from 'ejs'
-import type { Content, List, ListItem, Paragraph, PhrasingContent } from 'mdast'
+import type {
+  List,
+  ListItem,
+  Paragraph,
+  PhrasingContent,
+  RootContent,
+} from 'mdast'
 import { ResponseError, xfetch } from 'x-fetch'
 import { cyan, red } from 'yoctocolors'
 
@@ -9,7 +15,7 @@ import { isCI } from './utils.js'
 
 const releaseCache = new Map<
   string,
-  Promise<Record<string, Content | Content[]> | undefined>
+  Promise<Record<string, RootContent | RootContent[]> | undefined>
 >()
 
 const FIELD_MAPPER: Record<JiraLanguage, string> = {
