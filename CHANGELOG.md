@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.0.0-next.0
+
+### Major Changes
+
+- [#28](https://github.com/alauda/doom/pull/28) [`0a8ec2a`](https://github.com/alauda/doom/commit/0a8ec2a0dfb207eeee767ca677a529c97080a0bc) Thanks [@JounQin](https://github.com/JounQin)! - feat!: migrate to rspress v2
+
 ## 0.23.5
 
 ### Patch Changes
