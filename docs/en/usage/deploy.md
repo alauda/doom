@@ -3,7 +3,7 @@ description: >-
   After completing the project development, we can deploy the project to the ACP
   platform.
 weight: 8
-sourceSHA: 3bb40af83c43ea6f891a330af703b5cb17133d17970dea35cde1a796e5b7b246
+sourceSHA: 0491a77146a707d759a6f09a35952b2167d6510824b7f22ecb522aef87c4d2d6
 ---
 
 # Deployment
@@ -17,21 +17,7 @@ doom build # Build static artifacts
 doom serve # Preview the build artifacts in production mode
 ```
 
-## Image Build
-
-Refer to the [ci.yaml](https://gitlab-ce.alauda.cn/idp/Doom/-/blob/master/.build/ci.yaml) to create the pipeline configuration file, and use the [Dockerfile](https://gitlab-ce.alauda.cn/idp/Doom/-/blob/master/Dockerfile) to build a pure static resource image.
-
-```dockerfile
-FROM build-harbor.alauda.cn/ops/alpine:latest
-
-WORKDIR /docs
-
-COPY . dist
-```
-
-## Deploy to ACP
-
-### Multi-Version Build
+## Multi-Version Builds
 
 By default, `doom build` will output the build artifacts to the `dist` directory. If multiple versions of the documentation need to be built, you can specify the version number using the `-v` parameter, for example:
 
@@ -46,7 +32,7 @@ doom build -v unversioned # Build document without version prefix, output artifa
 doom build -v unversioned-4.0 # Build document without version prefix but display version number 4.0 in the navigation bar, output artifacts to dist/unversioned, documentation access path is {base}
 ```
 
-### Merged Directory Structure
+## Merged Directory Structure
 
 ```sh
 │── console-platform
@@ -82,21 +68,9 @@ doom build -v unversioned-4.0 # Build document without version prefix but displa
 </html>
 ```
 
-#### Dynamic Mounting Configuration File {#overrides}
+## Dynamic Mounting Configuration File {#overrides}
 
 ```yaml title="overrides.yaml"
-# Terminology information only needs to be mounted to the console-platform entry once, the following is the default configuration without dynamic mounting
-# https://gitlab-ce.alauda.cn/idp/Doom/-/blob/master/src/terms.ts#L11
-terms:
-  company:
-    en: Alauda
-    zh: 灵雀云
-  product:
-    en: Alauda Container Platform
-    zh: 灵雀云容器平台
-  productShort:
-    en: ACP
-
 # Document information, each document can mount to override default configuration
 title:
   en: Doom - Alauda
@@ -110,15 +84,3 @@ logoText:
 - '4.1'
 - '4.0'
 ```
-
-### Documentation Released with the Product
-
-Currently, product documentation is deployed together with [chart-frontend](https://gitlab-ce.alauda.cn/frontend/chart-frontend/-/blob/master/chart/values.yaml#L78-107). Therefore, there is no need to change the release process, and it can continue to follow the original [alauda-docs](https://gitlab-ce.alauda.cn/alauda/alauda-docs) release process. If all product documentation is split later, it will require the front end to adjust the relevant [release pipeline](https://edge.alauda.cn/console-devops/workspace/frontend/cd?delivery=packager-frontend-chart) image check configuration in the `check-alauda-docs` phase simultaneously.
-
-### Other Self-Hosted Documentation
-
-For documentation that does not need to be released with the product, such as the current `doom` documentation, you can use the IDP-provided [webapp](https://edge.alauda.cn/console-acp/app-market/idp~alauda-idp~idp/chart/webapp.idp-repo/latest) application template for quick deployment. Currently, it relies on manually updating the application’s image version after building the image.
-
-:::info
-PR preview, gitops, and other related features will be provided in the future.
-:::

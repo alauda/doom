@@ -25,3 +25,8 @@ lint:
     cspell:
       words:
         - katanomi
+themeConfig:
+  socialLinks:
+    - icon: github
+      mode: link
+      content: https://github.com/alauda/doom
