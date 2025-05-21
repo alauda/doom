@@ -4,7 +4,7 @@ import path from 'node:path'
 import { isProduction } from '@rspress/core'
 import { logger } from '@rspress/shared/logger'
 import { render } from 'ejs'
-import type { Content } from 'mdast'
+import type { RootContent } from 'mdast'
 import { red } from 'yoctocolors'
 
 import { resolveRepo } from '../../utils/index.js'
@@ -16,7 +16,7 @@ import { getFrontmatterNode, mdProcessor, mdxProcessor } from './utils.js'
 export interface ResolveReferenceResult {
   publicBase: string
   sourceBase: string
-  contents: Content[]
+  contents: RootContent[]
 }
 
 const refCache = new Map<string, Promise<ResolveReferenceResult | undefined>>()
@@ -118,7 +118,7 @@ const resolveReference_ = async (
     return
   }
 
-  const nodes: Content[] = frontmatterNode ? [frontmatterNode] : []
+  const nodes: RootContent[] = frontmatterNode ? [frontmatterNode] : []
 
   for (let i = active.index, n = root.children.length; i < n; i++) {
     if (i === active.index && (source.ignoreHeading ?? active.depth === 1)) {

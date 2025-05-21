@@ -17,6 +17,18 @@ export * from './normalize-img-src.js'
 export type * from './types.js'
 export * from './utils.js'
 
+declare module 'unified' {
+  interface Data {
+    pageMeta: Record<string, unknown>
+  }
+}
+
+declare module 'mdast' {
+  interface Data {
+    _mdxExplicitJsx?: boolean
+  }
+}
+
 export const replacePlugin = ({
   lang,
   localBasePath,

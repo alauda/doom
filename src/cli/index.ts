@@ -220,7 +220,6 @@ program
     const runBuild = () =>
       build({
         config,
-        appDirectory: CWD,
         docDirectory,
       })
 

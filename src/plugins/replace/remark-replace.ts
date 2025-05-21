@@ -3,7 +3,7 @@ import path from 'node:path'
 
 import { isProduction } from '@rspress/core'
 import { logger } from '@rspress/shared/logger'
-import type { Content, Root } from 'mdast'
+import type { Root, RootContent } from 'mdast'
 import type { Plugin } from 'unified'
 import { parse, stringify } from 'yaml'
 import { cyan, red } from 'yoctocolors'
@@ -77,7 +77,7 @@ export const remarkReplace: Plugin<
       frontmatterNode &&
       (parse(frontmatterNode.value) as Record<string, unknown> | null)
 
-    const newContentChildren: Array<Content | Content[]> = []
+    const newContentChildren: Array<RootContent | RootContent[]> = []
 
     let start = false
     let refName = ''
@@ -231,7 +231,7 @@ export const remarkReplace: Plugin<
       }
     }
 
-    const newAstChildren: Array<Content | Content[]> = []
+    const newAstChildren: Array<RootContent | RootContent[]> = []
 
     const currLang = lang === null ? 'zh' : relativePath.split(/[\\/]/)[0]
 
