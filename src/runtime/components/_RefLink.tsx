@@ -1,15 +1,12 @@
-import { getCustomMDXComponent } from '@rspress/core/theme'
-import { useState } from 'react'
-
 import { COMMON_REFS, modelName } from '../utils.js'
+
+import { X } from './_X.js'
 
 export interface RefLinkProps {
   $ref?: string
 }
 
 export const RefLink = ({ $ref }: RefLinkProps) => {
-  const [X] = useState(getCustomMDXComponent)
-
   if (!$ref) {
     return null
   }

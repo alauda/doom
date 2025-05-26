@@ -1,9 +1,8 @@
 import { useLang } from '@rspress/core/runtime'
-import { getCustomMDXComponent } from '@rspress/core/theme'
 import functionResourcesMap from 'doom-@permission-functionResourcesMap'
 import roleTemplatesMap from 'doom-@permission-roleTemplatesMap'
 import { intersection, sortBy } from 'es-toolkit'
-import { Fragment, useMemo, useState } from 'react'
+import { Fragment, useMemo } from 'react'
 
 import type {
   FunctionResource,
@@ -11,6 +10,8 @@ import type {
   RoleTemplateRuleVerb,
 } from '../../plugins/index.js'
 import { useTranslation } from '../hooks/index.js'
+
+import { X } from './_X.js'
 
 export interface K8sPermissionTableProps {
   functions: string[]
@@ -47,7 +48,6 @@ const RolesPermission = ({
   roleTemplates: RoleTemplate[]
   verb: Verb
 }) => {
-  const [X] = useState(getCustomMDXComponent)
   const functionResourceName = functionResource.metadata.name
   const actions = functionResource.metadata.annotations['auth.cpaas.io/actions']
   return roleTemplates.map(({ metadata: { name }, spec: { rules } }) => {
@@ -85,8 +85,6 @@ const RolesPermission = ({
 }
 
 export const K8sPermissionTable = ({ functions }: K8sPermissionTableProps) => {
-  const [X] = useState(getCustomMDXComponent)
-
   const allFunctionResources = useMemo(
     () =>
       Object.values(functionResourcesMap).reduce<

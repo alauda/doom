@@ -1,10 +1,10 @@
 import { usePageData } from '@rspress/core/runtime'
-import { Badge, getCustomMDXComponent } from '@rspress/core/theme'
+import { Badge } from '@rspress/core/theme'
 import openapisMap from 'doom-@api-openapisMap'
 import virtual from 'doom-@api-virtual'
 import BananaSlug from 'github-slugger'
 import { OpenAPIV3, type OpenAPIV3_1 } from 'openapi-types'
-import { Fragment, useMemo, useState, type ReactNode } from 'react'
+import { Fragment, useMemo, type ReactNode } from 'react'
 
 import { omitRoutePathRefs, resolveRef } from '../utils.js'
 
@@ -12,6 +12,7 @@ import { OpenAPIProperties, OpenAPIProperty, OpenAPIRef } from './OpenAPIRef.js'
 import { HeadingTitle } from './_HeadingTitle.js'
 import { Markdown } from './_Markdown.js'
 import { RefLink } from './_RefLink.js'
+import { X } from './_X.js'
 
 export interface OpenAPIPathProps {
   /**
@@ -35,7 +36,6 @@ export const OpenAPIParameters = ({
   parameters: Array<OpenAPIV3_1.ReferenceObject | OpenAPIV3_1.ParameterObject>
   openapi: OpenAPIV3_1.Document
 }) => {
-  const [X] = useState(getCustomMDXComponent)
   return (
     <X.ul>
       {parameters.map((param, index) => {
@@ -71,7 +71,6 @@ export const OpenAPIResponses = ({
   responses: OpenAPIV3_1.ResponsesObject
   openapi: OpenAPIV3_1.Document
 }) => {
-  const [X] = useState(getCustomMDXComponent)
   return (
     <X.ul>
       {Object.entries(responses).map(([code, response]) => {
@@ -172,7 +171,6 @@ export const OpenAPIPath = ({
   openapiPath: openapiPath_,
   pathPrefix: pathPrefix_,
 }: OpenAPIPathProps) => {
-  const [X] = useState(getCustomMDXComponent)
   const { page } = usePageData()
 
   const pathPrefix = pathPrefix_ ?? (virtual.pathPrefix || '')

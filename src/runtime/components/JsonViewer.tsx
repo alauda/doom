@@ -1,5 +1,4 @@
-import { getCustomMDXComponent, Tab, Tabs } from '@rspress/core/theme'
-import { useState } from 'react'
+import { CodeBlockRuntime, Tab, Tabs } from '@rspress/core/theme'
 import type { JsonValue } from 'type-fest'
 import { stringify } from 'yaml'
 
@@ -8,20 +7,15 @@ export interface JsonViewerProps {
 }
 
 export const JsonViewer = ({ value }: JsonViewerProps) => {
-  const [X] = useState(getCustomMDXComponent)
   return (
     <Tabs>
       <Tab label="yaml">
-        <X.pre>
-          <X.code className="language-yaml">{stringify(value)}</X.code>
-        </X.pre>
+        {/* @ts-expect-error -- https://github.com/web-infra-dev/rspress/pull/2205 */}
+        <CodeBlockRuntime lang="yaml" code={stringify(value)} />
       </Tab>
       <Tab label="json">
-        <X.pre>
-          <X.code className="language-json">
-            {JSON.stringify(value, null, 2)}
-          </X.code>
-        </X.pre>
+        {/* @ts-expect-error -- https://github.com/web-infra-dev/rspress/pull/2205 */}
+        <CodeBlockRuntime lang="json" code={JSON.stringify(value, null, 2)} />
       </Tab>
     </Tabs>
   )
