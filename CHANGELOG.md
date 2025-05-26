@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.0.0-next.1
+
+### Patch Changes
+
+- [#30](https://github.com/alauda/doom/pull/30) [`cf044cb`](https://github.com/alauda/doom/commit/cf044cb249425f55ba1e7afe04adb16e6a3b00ae) Thanks [@JounQin](https://github.com/JounQin)! - chore: bump `@rspress/core` to v2.0.0-beta.7
+
 ## 1.0.0-next.0
 
 ### Major Changes
