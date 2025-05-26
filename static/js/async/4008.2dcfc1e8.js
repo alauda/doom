@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk_alauda_doom=self.webpackChunk_alauda_doom||[]).push([["4008"],{18599:function(e,a,c){c.d(a,{createArchitectureServices:()=>u.i});var u=c(19613);c(84583)}}]);
