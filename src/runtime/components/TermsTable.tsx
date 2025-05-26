@@ -1,15 +1,13 @@
-import { getCustomMDXComponent } from '@rspress/core/theme'
-import { useState } from 'react'
-
 import { namedTermItems, type NormalizedTermItem } from '../../terms.js'
 import { useTranslation } from '../hooks/index.js'
+
+import { X } from './_X.js'
 
 export interface TermsTableProps {
   terms?: NormalizedTermItem[]
 }
 
 export const TermsTable = ({ terms }: TermsTableProps) => {
-  const [X] = useState(getCustomMDXComponent)
   const t = useTranslation()
 
   const normalized: NormalizedTermItem[] = terms ?? namedTermItems

@@ -2,7 +2,7 @@
  * modified based on @see https://github.com/crdsdev/doc/blob/main/template/doc.html
  */
 
-import { Badge, Button, getCustomMDXComponent } from '@rspress/core/theme'
+import { Badge, Button } from '@rspress/core/theme'
 import crdsMap from 'doom-@api-crdsMap'
 import type { OpenAPIV3_1 } from 'openapi-types'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -11,6 +11,7 @@ import { useIsPrint, useTranslation } from '../hooks/index.js'
 
 import { Directive } from './Directive.js'
 import { Markdown } from './_Markdown.js'
+import { X } from './_X.js'
 
 export interface K8sCrdProps {
   /**
@@ -162,8 +163,6 @@ export const K8sCrdSchema = ({
 }
 
 export const K8sCrd = ({ name, crdPath }: K8sCrdProps) => {
-  const [X] = useState(getCustomMDXComponent)
-
   const [, crd] = useMemo(
     () =>
       Object.entries(crdsMap).find(([pathname, crd]) => {

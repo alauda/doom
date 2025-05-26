@@ -2,7 +2,7 @@
 
 import eslint from '@eslint/js'
 import { createTypeScriptImportResolver } from 'eslint-import-resolver-typescript'
-import importX from 'eslint-plugin-import-x'
+import { importX } from 'eslint-plugin-import-x'
 import { config, configs } from 'typescript-eslint'
 
 export default config(
