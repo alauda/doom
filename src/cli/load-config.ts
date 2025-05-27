@@ -36,6 +36,7 @@ import {
   globalPlugin,
   mermaidPlugin,
   permissionPlugin,
+  rehypeFix,
   replacePlugin,
 } from '../plugins/index.js'
 import {
@@ -225,7 +226,7 @@ const getCommonConfig = async ({
     },
     markdown: {
       checkDeadLinks: true,
-      rehypePlugins: [[rehypeRaw, { passThrough: nodeTypes }]],
+      rehypePlugins: [[rehypeRaw, { passThrough: nodeTypes }], rehypeFix],
       shiki: {
         transformers: [
           // builtin transformers
