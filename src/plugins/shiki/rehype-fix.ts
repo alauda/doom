@@ -3,7 +3,8 @@ import type { Plugin } from 'unified'
 import { visit } from 'unist-util-visit'
 
 /**
- * Fix a compatibility issue with `rehype-raw` that the title of code block is not displayed, basically it's a reversed action with
+ * Restores metadata (e.g., titles) for code blocks that `rehype-raw` removes unexpectedly.
+ * This function addresses a compatibility issue where `rehype-raw` strips metadata from code blocks.
  * @see https://github.com/syntax-tree/hast-util-raw/issues/29
  * @see https://github.com/web-infra-dev/rspress/blob/ab7567460e63712300b64d7ab46065a2f1c1e069/packages/core/src/node/mdx/rehypePlugins/codeMeta.ts#L5-L22
  */
