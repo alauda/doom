@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.0.0-next.2
+
+### Patch Changes
+
+- [#32](https://github.com/alauda/doom/pull/32) [`97c8342`](https://github.com/alauda/doom/commit/97c83425485f065ff7953ffce167d5b2c61379ba) Thanks [@JounQin](https://github.com/JounQin)! - fix: `rehype-raw` removes `node.data` unexpectedly
+
 ## 1.0.0-next.1
 
 ### Patch Changes

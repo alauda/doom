@@ -4,5 +4,9 @@
   "initialVersions": {
     "@alauda/doom": "0.23.5"
   },
-  "changesets": ["eight-cougars-agree", "rotten-cows-cough"]
+  "changesets": [
+    "eight-cougars-agree",
+    "rotten-cows-cough",
+    "yummy-numbers-enjoy"
+  ]
 }
