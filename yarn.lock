@@ -19,7 +19,7 @@ __metadata:
     "@playwright/browser-chromium": "npm:^1.52.0"
     "@rsbuild/plugin-sass": "npm:^1.3.1"
     "@rsbuild/plugin-yaml": "npm:^1.0.2"
-    "@rspress/core": "npm:2.0.0-beta.7"
+    "@rspress/core": "npm:2.0.0-beta.8"
     "@shikijs/transformers": "npm:^3.4.2"
     "@swc-node/register": "npm:^1.10.10"
     "@swc/core": "npm:1.11.29"
@@ -28,7 +28,7 @@ __metadata:
     "@types/ejs": "npm:^3.1.5"
     "@types/node": "npm:^22.15.21"
     "@types/picomatch": "npm:^4.0.0"
-    "@types/react": "npm:^19.1.5"
+    "@types/react": "npm:^19.1.6"
     "@types/react-dom": "npm:^19.1.5"
     "@types/swagger2openapi": "npm:^7.0.4"
     "@unts/patch-package": "npm:^8.1.1"
@@ -2219,9 +2219,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rspress/core@npm:2.0.0-beta.7":
-  version: 2.0.0-beta.7
-  resolution: "@rspress/core@npm:2.0.0-beta.7"
+"@rspress/core@npm:2.0.0-beta.8":
+  version: 2.0.0-beta.8
+  resolution: "@rspress/core@npm:2.0.0-beta.8"
   dependencies:
     "@mdx-js/loader": "npm:^3.1.0"
     "@mdx-js/mdx": "npm:^3.1.0"
@@ -2229,14 +2229,14 @@ __metadata:
     "@rsbuild/core": "npm:~1.3.21"
     "@rsbuild/plugin-react": "npm:~1.3.1"
     "@rspress/mdx-rs": "npm:0.6.6"
-    "@rspress/plugin-auto-nav-sidebar": "npm:2.0.0-beta.7"
-    "@rspress/plugin-container-syntax": "npm:2.0.0-beta.7"
-    "@rspress/plugin-last-updated": "npm:2.0.0-beta.7"
-    "@rspress/plugin-medium-zoom": "npm:2.0.0-beta.7"
-    "@rspress/plugin-shiki": "npm:2.0.0-beta.7"
-    "@rspress/runtime": "npm:2.0.0-beta.7"
-    "@rspress/shared": "npm:2.0.0-beta.7"
-    "@rspress/theme-default": "npm:2.0.0-beta.7"
+    "@rspress/plugin-auto-nav-sidebar": "npm:2.0.0-beta.8"
+    "@rspress/plugin-container-syntax": "npm:2.0.0-beta.8"
+    "@rspress/plugin-last-updated": "npm:2.0.0-beta.8"
+    "@rspress/plugin-medium-zoom": "npm:2.0.0-beta.8"
+    "@rspress/plugin-shiki": "npm:2.0.0-beta.8"
+    "@rspress/runtime": "npm:2.0.0-beta.8"
+    "@rspress/shared": "npm:2.0.0-beta.8"
+    "@rspress/theme-default": "npm:2.0.0-beta.8"
     "@types/unist": "npm:^3.0.3"
     "@unhead/react": "npm:^2.0.10"
     enhanced-resolve: "npm:5.18.1"
@@ -2259,7 +2259,7 @@ __metadata:
     unified: "npm:^11.0.5"
     unist-util-visit: "npm:^5.0.0"
     unist-util-visit-children: "npm:^3.0.0"
-  checksum: 10c0/4c4ebf24898cc3943d05e9de67465612f757580bd3df34536c4855b764f8cd1ac786ad03cb0ca110b62ebd1fd8bef8abc4135c70d1669a25a4d8af3de9ed39fd
+  checksum: 10c0/848caa1845ab469388dc6a5239d7de6ab34ca21e4481620a2a509121d4b357ff53149281e3e6ee452a1f0876a8ce8cc8c9673baa07f233fdb5c54058a3a5460f
   languageName: node
   linkType: hard
 
@@ -2352,101 +2352,102 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rspress/plugin-auto-nav-sidebar@npm:2.0.0-beta.7":
-  version: 2.0.0-beta.7
-  resolution: "@rspress/plugin-auto-nav-sidebar@npm:2.0.0-beta.7"
+"@rspress/plugin-auto-nav-sidebar@npm:2.0.0-beta.8":
+  version: 2.0.0-beta.8
+  resolution: "@rspress/plugin-auto-nav-sidebar@npm:2.0.0-beta.8"
   dependencies:
-    "@rspress/shared": "npm:2.0.0-beta.7"
-  checksum: 10c0/ffbd6b1566451b924e6a6554f8c4629a5acf2b2d70944fc3c0476e37bb3b4db2756119f3259612c318782089326769b6d77a59bdbd84933fc1d7b60524fac1f6
+    "@rspress/shared": "npm:2.0.0-beta.8"
+  checksum: 10c0/0b174e6221601f41e3877882d193639280e9575033b62550141b96ed39525cd6b0cae0862351bb6d1b6ff2ea01dfef6ab5f3c511812ab17c4d0c23a99eb71236
   languageName: node
   linkType: hard
 
-"@rspress/plugin-container-syntax@npm:2.0.0-beta.7":
-  version: 2.0.0-beta.7
-  resolution: "@rspress/plugin-container-syntax@npm:2.0.0-beta.7"
+"@rspress/plugin-container-syntax@npm:2.0.0-beta.8":
+  version: 2.0.0-beta.8
+  resolution: "@rspress/plugin-container-syntax@npm:2.0.0-beta.8"
   dependencies:
-    "@rspress/shared": "npm:2.0.0-beta.7"
-  checksum: 10c0/63288ee0fba3acb371740ead1e9306d2563437b934a2cc7a8408b1094380a737ab4ceeb8a029d7074fe16a2c7d8bdf0c1b83578156a932289c278687a36a7d46
+    "@rspress/shared": "npm:2.0.0-beta.8"
+  checksum: 10c0/dd811938cb4142693ec7f834033fed78e285971614af29e71d0e9f9f7bfda13a11942a7620bb8b06d68d75b2f767709704ba2836279c03adb2fc976b873d7c88
   languageName: node
   linkType: hard
 
-"@rspress/plugin-last-updated@npm:2.0.0-beta.7":
-  version: 2.0.0-beta.7
-  resolution: "@rspress/plugin-last-updated@npm:2.0.0-beta.7"
+"@rspress/plugin-last-updated@npm:2.0.0-beta.8":
+  version: 2.0.0-beta.8
+  resolution: "@rspress/plugin-last-updated@npm:2.0.0-beta.8"
   dependencies:
-    "@rspress/shared": "npm:2.0.0-beta.7"
-  checksum: 10c0/9eaac1b8870525e3a8473cccc3cba59ae3e30d0e541395b36dbdbf5a103d97c2f8c1dd5fe4b90614f8543c8f90408337d22c0780e60bcb3a0b4d8b6a026f491a
+    "@rspress/shared": "npm:2.0.0-beta.8"
+  checksum: 10c0/c0e4a0088afd5b5d2714637a9577b1ea225c7af1fe751b723c071993a927a5c2b816cc430139271a8f847e0c63b98f8850b2811d01213e9fdd200c67f61cbc89
   languageName: node
   linkType: hard
 
-"@rspress/plugin-medium-zoom@npm:2.0.0-beta.7":
-  version: 2.0.0-beta.7
-  resolution: "@rspress/plugin-medium-zoom@npm:2.0.0-beta.7"
+"@rspress/plugin-medium-zoom@npm:2.0.0-beta.8":
+  version: 2.0.0-beta.8
+  resolution: "@rspress/plugin-medium-zoom@npm:2.0.0-beta.8"
   dependencies:
     medium-zoom: "npm:1.1.0"
   peerDependencies:
-    "@rspress/runtime": ^2.0.0-beta.7
-  checksum: 10c0/30b7b09e62d0cf81872fd467c9f621f039235020a3f86f3145d72f98bb91febebc209dc0dff8f03fb3c1b25ca6c4f2214dcf7b23ce2c19b20405686928117630
+    "@rspress/runtime": ^2.0.0-beta.8
+  checksum: 10c0/d15a1fe27383e17ac718a2f2597ccd58cdf8e4b484a3cfd9f291745857df9d7a4c972c719fea5b638ea8eabad1cdfe120452a6040ef4f02ab2fa402a92115d6d
   languageName: node
   linkType: hard
 
-"@rspress/plugin-shiki@npm:2.0.0-beta.7":
-  version: 2.0.0-beta.7
-  resolution: "@rspress/plugin-shiki@npm:2.0.0-beta.7"
+"@rspress/plugin-shiki@npm:2.0.0-beta.8":
+  version: 2.0.0-beta.8
+  resolution: "@rspress/plugin-shiki@npm:2.0.0-beta.8"
   dependencies:
-    "@rspress/shared": "npm:2.0.0-beta.7"
+    "@rspress/shared": "npm:2.0.0-beta.8"
     "@shikijs/rehype": "npm:^3.4.2"
     hast-util-from-html: "npm:^2.0.3"
     shiki: "npm:^3.4.2"
-  checksum: 10c0/ab07983cb475504c5ab69d5afeeaadca15935ab916c5c80b539a7418df1adc93babb827a2d9a3e4b3cc788a96a6ee141dd3cdb395291513a6321eefe3982858c
+  checksum: 10c0/ce3ff73ebd0d549a7bb067e8dc25b0ad368e174eabd0badd4e35ab6b094e4e77cee56fadf42661608b9b0de8336266bc1bb8435058f8a23daac5ed2c8eb34afa
   languageName: node
   linkType: hard
 
-"@rspress/runtime@npm:2.0.0-beta.7":
-  version: 2.0.0-beta.7
-  resolution: "@rspress/runtime@npm:2.0.0-beta.7"
+"@rspress/runtime@npm:2.0.0-beta.8":
+  version: 2.0.0-beta.8
+  resolution: "@rspress/runtime@npm:2.0.0-beta.8"
   dependencies:
-    "@rspress/shared": "npm:2.0.0-beta.7"
+    "@rspress/shared": "npm:2.0.0-beta.8"
     "@unhead/react": "npm:^2.0.10"
     react: "npm:^19.1.0"
     react-dom: "npm:^19.1.0"
     react-router-dom: "npm:^6.29.0"
-  checksum: 10c0/b1efe337f7eba4b04da46ea141b3126b5c62f2baf24750fd130f023b66a4194bd5c143cee51cfe3bc8b61388dae569e2f58490ff20343444a33a60499cd2ccfa
+  checksum: 10c0/d7d116077a673ac62465790384dcabef86039c6792d495c1828b41c95ebf6032ca6ca01af260c02686d45227cd3ad839ba1afaca336e8cac6b414f55163b9fef
   languageName: node
   linkType: hard
 
-"@rspress/shared@npm:2.0.0-beta.7":
-  version: 2.0.0-beta.7
-  resolution: "@rspress/shared@npm:2.0.0-beta.7"
+"@rspress/shared@npm:2.0.0-beta.8":
+  version: 2.0.0-beta.8
+  resolution: "@rspress/shared@npm:2.0.0-beta.8"
   dependencies:
     "@rsbuild/core": "npm:~1.3.21"
     "@shikijs/rehype": "npm:^3.4.2"
     gray-matter: "npm:4.0.3"
     lodash-es: "npm:^4.17.21"
     unified: "npm:^11.0.5"
-  checksum: 10c0/1cfc4b505377879dfdbb0543ac017f1b56e29fc3d019520d00a9109225913dc3b53b8580411ca181f4dbe0a86473292c8d2f4c2ac050e7892f214d8063589b96
+  checksum: 10c0/f098c0a08d7a88d71c10e4941685605902a998e596d258de493493a958fb1eb6db19549ed036b4b5659b9538bb545957c83eec0333377f7639d3c70e8f10183f
   languageName: node
   linkType: hard
 
-"@rspress/theme-default@npm:2.0.0-beta.7":
-  version: 2.0.0-beta.7
-  resolution: "@rspress/theme-default@npm:2.0.0-beta.7"
+"@rspress/theme-default@npm:2.0.0-beta.8":
+  version: 2.0.0-beta.8
+  resolution: "@rspress/theme-default@npm:2.0.0-beta.8"
   dependencies:
     "@mdx-js/react": "npm:2.3.0"
-    "@rspress/runtime": "npm:2.0.0-beta.7"
-    "@rspress/shared": "npm:2.0.0-beta.7"
+    "@rspress/runtime": "npm:2.0.0-beta.8"
+    "@rspress/shared": "npm:2.0.0-beta.8"
     "@unhead/react": "npm:^2.0.10"
     body-scroll-lock: "npm:4.0.0-beta.0"
     copy-to-clipboard: "npm:^3.3.3"
     flexsearch: "npm:0.7.43"
     github-slugger: "npm:^2.0.0"
+    hast-util-to-jsx-runtime: "npm:^2.3.6"
     htmr: "npm:^1.0.2"
     lodash-es: "npm:^4.17.21"
     nprogress: "npm:^0.2.0"
     react: "npm:^19.1.0"
     react-dom: "npm:^19.1.0"
     shiki: "npm:^3.4.2"
-  checksum: 10c0/c96b55db21d76b31335f2387450c6b684bb33046de8a726401d6033e989a44169ba62817154a23576fdb719f4d917bc0db1cb006fb4aaf8d8a7f9a4ea0fd28c3
+  checksum: 10c0/26b3738309ea89bf0360d629c1bd33b48331d292b0141a3f0390f25327142e727e6822669dd1b688c665c3e522b7c18d865910af9630c8075a47ed155f0de07b
   languageName: node
   linkType: hard
 
@@ -3221,12 +3222,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:>=16, @types/react@npm:^19.1.5":
-  version: 19.1.5
-  resolution: "@types/react@npm:19.1.5"
+"@types/react@npm:>=16, @types/react@npm:^19.1.6":
+  version: 19.1.6
+  resolution: "@types/react@npm:19.1.6"
   dependencies:
     csstype: "npm:^3.0.2"
-  checksum: 10c0/e0811aadc65cf4030e2418c7975b524f126db806bacb85cffdbe5e50c3606e9a5ffe89ffe6bf9c945e03f5e8d5ed992686bc6bb478db1f3127cc50933f648e1e
+  checksum: 10c0/8b10b198e28997b3c57559750f8bcf5ae7b33c554b16b6f4fe2ece1d4de6a2fc8cb53e7effe08ec9cb939d2f479eb97c5e08aac2cf83b10a90164fe451cc8ea2
   languageName: node
   linkType: hard
 
@@ -6398,7 +6399,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"hast-util-to-jsx-runtime@npm:^2.0.0":
+"hast-util-to-jsx-runtime@npm:^2.0.0, hast-util-to-jsx-runtime@npm:^2.3.6":
   version: 2.3.6
   resolution: "hast-util-to-jsx-runtime@npm:2.3.6"
   dependencies:
