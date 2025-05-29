@@ -31,6 +31,7 @@ export interface GlobalCliOptions {
   redirect?: 'auto' | 'never' | 'only-default-lang'
   editRepo?: boolean | string
   algolia?: boolean
+  siteUrl?: boolean
 }
 
 export interface TranslateOptions {
@@ -64,6 +65,7 @@ declare module '@rspress/shared' {
     editRepoBaseUrl?: string
     lint?: LintOptions
     algolia?: AlgoliaOptions
+    siteUrl?: string
   }
 
   interface SiteData {

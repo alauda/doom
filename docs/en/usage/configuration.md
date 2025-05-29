@@ -1,7 +1,7 @@
 ---
 description: Configure `doom` documentation tool
 weight: 1
-sourceSHA: 99d5505366bd7c2a066dd673ddb80b0c0b17420a9ad29f8a71b6cb7f66b495f3
+sourceSHA: c2b69e517f964f8b758654e4b634cfa2dd2089227f8b83c13cb3673e0dcbc400
 ---
 
 # Configuration {#configuration}
@@ -210,7 +210,7 @@ The final output should only include the results from the last step, and previou
 <%= userPrompt %>
 
 <%= additionalPrompts %>
-  userPrompt: # optional, used to fill in the global parameters of the `ejs` template in `systemPrompt`.
+  userPrompt: # optional, used to fill in the global parameters of the `ejs` template in `systemPrompt`
 ```
 
 ## Edit Documentation in Code Repository {#edit-repo}
@@ -233,4 +233,12 @@ algolia:
   appId: # Algolia application ID
   apiKey: # Algolia API Key
   indexName: # Algolia index name
+```
+
+Please use `public/robots.txt` for Algolia Crawler Verification.
+
+## Sitemap Configuration {#sitemap}
+
+```yaml
+siteUrl: https://docs.alauda.cn # Optional, site URL used for generating sitemap, only effective when the `-S, --site-url` command line flag is enabled.
 ```

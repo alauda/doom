@@ -12,6 +12,8 @@ import {
   type LocaleConfig,
   type UserConfig,
 } from '@rspress/core'
+import { pluginAlgolia } from '@rspress/plugin-algolia'
+import { pluginLlms } from '@rspress/plugin-llms'
 import { logger } from '@rspress/shared/logger'
 import {
   transformerMetaHighlight,
@@ -27,10 +29,10 @@ import { difference } from 'es-toolkit'
 import rehypeRaw from 'rehype-raw'
 import { cyan } from 'yoctocolors'
 
-import { autoTocPlugin } from '../plugins/auto-toc/index.js'
 import {
   apiPlugin,
   autoSidebarPlugin,
+  autoTocPlugin,
   createTransformerCallouts,
   directivesPlugin,
   globalPlugin,
@@ -38,6 +40,7 @@ import {
   permissionPlugin,
   rehypeFix,
   replacePlugin,
+  sitemapPlugin,
 } from '../plugins/index.js'
 import {
   isExplicitlyUnversioned,
@@ -115,6 +118,7 @@ const getCommonConfig = async ({
   redirect,
   editRepo,
   algolia,
+  siteUrl,
 }: {
   config: UserConfig
   configFilePath?: string
@@ -132,6 +136,7 @@ const getCommonConfig = async ({
   redirect?: 'auto' | 'never' | 'only-default-lang'
   editRepo?: boolean | string
   algolia?: boolean
+  siteUrl?: boolean
 }): Promise<UserConfig> => {
   const fallbackToZh = 'lang' in config && !config.lang
   root = resolveDocRoot(CWD, root, config.root)
@@ -207,6 +212,8 @@ const getCommonConfig = async ({
 
   const { editLink, ...zhLocale } = KNOWN_LOCALE_CONFIGS.zh!
 
+  const algoliaOptions = algolia ? config.algolia : undefined
+
   return {
     userBase,
     root,
@@ -261,6 +268,9 @@ const getCommonConfig = async ({
         : { locales }),
     },
     plugins: [
+      algoliaOptions && pluginAlgolia(),
+      pluginLlms(),
+
       apiPlugin({
         localBasePath,
       }),
@@ -277,7 +287,13 @@ const getCommonConfig = async ({
         localBasePath,
         force,
       }),
-    ],
+      siteUrl &&
+        config.siteUrl &&
+        sitemapPlugin({
+          domain: config.siteUrl,
+        }),
+    ].filter(Boolean),
+    search: algoliaOptions ? false : undefined,
     builderConfig: {
       dev: {
         lazyCompilation: lazy,
@@ -288,7 +304,6 @@ const getCommonConfig = async ({
       },
       tools: {
         rspack(rspackConfig, { mergeConfig, rspack }) {
-          const algoliaOptions = algolia ? config.algolia : undefined
           return mergeConfig(rspackConfig, {
             resolve: {
               extensionAlias: {
@@ -342,6 +357,7 @@ export async function loadConfig(
     redirect,
     editRepo,
     algolia,
+    siteUrl,
   }: GlobalCliOptions = {},
 ): Promise<{
   config: UserConfig
@@ -422,6 +438,7 @@ export async function loadConfig(
     redirect,
     editRepo,
     algolia,
+    siteUrl,
   })
 
   base = commonConfig.base!
