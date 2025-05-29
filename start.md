@@ -1,0 +1,254 @@
+# 开始 \{#start}
+
+## 创建项目 \{#create}
+
+首先，你可以通过以下命令创建一个新目录：
+
+```bash
+mkdir my-docs && cd my-docs
+```
+
+执行 `npm init -y` 来初始化一个项目。你可以使用 npm、yarn 或 pnpm 安装 doom:
+
+然后通过如下命令创建文件:
+
+```bash
+# 创建 docs 目录，默认支持中英文双语
+mkdir docs/en && echo '# Hello World' > docs/en/index.md
+mkdir docs/zh && echo '# 你好世界' > docs/zh/index.md
+```
+
+在 `package.json` 中加上如下的脚本:
+
+```json
+{
+  "scripts": {
+    "dev": "doom dev",
+    "build": "doom build",
+    "new": "doom new",
+    "serve": "doom serve",
+    "translate": "doom translate",
+    "export": "doom export"
+  }
+}
+```
+
+然后初始化一个配置文件 `doom.config.yml`:
+
+```yaml
+title: My Docs
+```
+
+同时新建 `tsconfig.json`，内容如下：
+
+```jsonc
+{
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "ESNext",
+  },
+  "mdx": {
+    "checkMdx": true,
+  },
+}
+```
+
+最后创建 `global.d.ts` 文件，内容如下：
+
+```ts
+/// <reference types="@alauda/doom/runtime" />
+```
+
+这样你便可以在 `.mdx` 文件中类型安全地使用 doom 提供的全局组件了。
+
+## 命令行工具 \{#cli}
+
+```bash
+doom -h
+
+# output
+Usage: doom [options] [command]
+
+Doctor Doom making docs.
+
+Options:
+  -V, --version                   output the version number
+  -c, --config <config>           Specify the path to the config file
+  -v <version>                    Specify the version of the documentation, can also be `unversioned` or `unversioned-x.y`
+  -b, --base <base>               Override the base of the documentation
+  -p, --prefix <prefix>           Specify the prefix of the documentation base
+  -f, --force [boolean]           Force to
+                                  1. fetch latest reference remotes or scaffolding templates, otherwise use local cache
+                                  2. translate ignore hash equality check and original text (default: false)
+  -i, --ignore [boolean]          Ignore internal routes (default: false)
+  -d, --download [boolean]        Display download pdf link on nav bar (default: false)
+  -e, --export [boolean]          Run or build in exporting PDF mode, `apis/**` and `*/apis/**` routes will be ignored automatically (default: false)
+  -I, --include <language...>     Include **only** the specific language(s), `en ru` for example
+  -E, --exclude <language...>     Include all languages except the specific language(s), `ru` for example
+  -o, --out-dir <path>            Override the `outDir` defined in the config file or the default `dist/{base}/{version}`, the resulting path will be `dist/{outDir}/{version}`
+  -r, --redirect <enum>           Whether to redirect to the locale closest to `navigator.language` when the user visits the site, could be `auto`, `never` or `only-default-lang` (default: "only-default-lang")
+  -R, --edit-repo [boolean|url]   Whether to enable or override the `editRepoBaseUrl` config feature, `https://github.com/` prefix could be omitted (default: false)
+  -a, --algolia                   Whether to enable Algolia search (default: false)
+  -S, --site-url                  Whether to enable the siteUrl for sitemap generation (default: false)
+  -n, --no-open [boolean]         Do not open the browser after starting the server
+  -h, --help                      display help for command
+
+Commands:
+  dev [options] [root]            Start the development server
+  build [root]                    Build the documentation
+  preview|serve [options] [root]  Preview the built documentation
+  new [template]                  Generate scaffolding from templates
+  translate [options] [root]      Translate the documentation
+  export [options] [root]         Export the documentation as PDF, `apis/**` and `*/apis/**` routes will be ignored automatically
+  lint [root]                     Lint the documentation
+  help [command]                  display help for command
+```
+
+更多配置请参考[配置](/zh/usage/configuration.md)
+
+### 启动开发服务 \{#dev}
+
+执行 `yarn dev` 启动开发服务，浏览器会自动打开文档首页
+
+```sh
+doom dev -h
+
+# output
+Usage: doom dev [options] [root]
+
+Start the development server
+
+Arguments:
+  root                      Root directory of the documentation
+
+Options:
+  -H, --host [host]         Dev server host name
+  -P, --port [port]         Dev server port number
+  -l, --lazy [boolean]      Whether to enable `lazyCompilation` which could improve the compilation performance (default: false)
+  -h, --help                display help for command
+```
+
+### 生产环境构建 \{#build}
+
+执行 `yarn build` 构建生产环境代码，构建完成后会在 `dist` 目录生成静态文件
+
+### 本地预览 \{#serve}
+
+执行 `yarn serve` 预览构建后的静态文件，注意如果使用了 `-b`, `-p` 参数构建，预览时也需要使用 `-b`, `-p` 参数
+
+### 使用脚手架模板 \{#new}
+
+执行 `yarn new` 使用脚手架模板生成项目、模块或文档
+
+### 翻译文档 \{#translate}
+
+```bash
+doom translate -h
+
+# output
+Usage: doom translate [options] [root]
+
+Translate the documentation
+
+Arguments:
+  root                     Root directory of the documentation
+
+Options:
+  -s, --source <language>  Document source language, one of en, zh, ru (default: "en")
+  -t, --target <language>  Document target language, one of en, zh, ru (default: "zh")
+  -g, --glob <path...>     Glob patterns for source dirs/files
+  -C, --copy [boolean]     Wether to copy relative assets to the target directory instead of following links (default: false)
+  -h, --help               display help for command
+```
+
+* `-g, --glob` 参数必填，可以指定需要翻译的文件目录或路径，支持 `glob` 语法，注意参数值必须带引号否则会被命令行解析造成非预期行为。示例：
+  1. `yarn translate -g abc xyz`，将把 `<root>/<source>/abc`, `<root>/<source>/xyz`
+     目录下的所有文档翻译到 `<root>/<target>/abc`, `<root>/<target>/xyz` 目录下
+  2. `yarn translate -g '*'` 将翻译 `<root>/<source>` 下的所有文档文件
+* `-C, --copy` 参数可选，是否在目标文件不存在时复制本地路径的资源文件到目标目录，默认为 `false`，即改变资源文件的引用路径为引用源路径。示例：
+  * 当启动此参数
+    1. `/<source>/abc.jpg` 翻译时将复制 `<root>/public/<source>/abc.jpg` 到 `<root>/public/<target>/abc.jpg`，并修改文档中的引用路径为 `/<target>/abc.jpg`
+    2. `<root>/<source>/abc.mdx` 文档中的 `./assets/xyz.jpg` 翻译时将复制 `<root>/<source>/assets/xyz.jpg` 到 `<root>/<target>/assets/xyz.jpg`，图片引用路径保持不变
+    3. `<root>/<source>/abc.mdx` 文档中的 `./assets/<source>/xyz.jpg` 翻译时将复制 `<root>/<source>/assets/<source>/xyz.jpg` 到 `<root>/<target>/assets/<target>/xyz.jpg`，并修改文档中的引用路径为 `./assets/<target>/xyz.jpg`
+  * 当没有启用此参数：
+    1. `/<source>/abc.jpg` 翻译时如果 `<root>/public/<target>/abc.jpg` 已存在，将修改文档中的引用路径为 `/<target>/abc.jpg`，否则保持图片引用路径保持不变
+    2. `<root>/<source>/abc.mdx` 文档中的 `./assets/<source>/xyz.jpg` 翻译时，如果 `<root>/<target>/assets/<target>/xyz.jpg` 已存在，将修改文档中的引用路径为 `./assets/<target>/xyz.jpg`，否则将修改为 `../<source>/assets/<target>/xyz.jpg`
+
+:::warning
+特殊地，如果使用 `-g '*'` 进行全量翻译，将会对比 `source` 和 `target` 目录文件列表，除 `internalRoutes` 之外的不匹配的 `target` 文件将被自动删除
+:::
+
+:::tip
+翻译功能须在本地配置 `AZURE_OPENAI_API_KEY` 环境变量，请联系各自团队 Leader 获取
+:::
+
+文档中可以使用元数据控制翻译行为
+
+```yaml
+i18n:
+  title:
+    en: DevOps Connectors
+  additionalPrompts: '此文中的 Connectors 是专有名词，不要翻译'
+  disableAutoTranslation: false
+title: DevOps 连接器
+```
+
+更多配置请参考[翻译配置](/zh/usage/configuration.md#translate)
+
+### 导出 PDF \{#export}
+
+:::warning
+请在执行导出操作前先执行 `yarn build` 构建操作
+:::
+
+```sh
+doom export -h
+
+# output
+Usage: doom export [options] [root]
+
+Export the documentation as PDF, `apis/**` and `*/apis/**` routes will be ignored automatically
+
+Arguments:
+  root               Root directory of the documentation
+
+Options:
+  -H, --host [host]  Serve host name
+  -P, --port [port]  Serve port number (default: "4173")
+  -h, --help         display help for command
+```
+
+执行 `yarn export` 导出文档为 PDF 文件，注意如果使用了 `-b`, `-p` 参数构建，导出时也需要使用 `-b`, `-p` 参数
+
+导出功能依赖 [`playwright`](https://playwright.dev)，流水线请使用 `build-harbor.alauda.cn/frontend/playwright-runner:doom` 作为依赖安装和文档构建的基础镜像，
+本地可以设置如下环境变量加速下载：
+
+```dotenv title=".env.yarn"
+PLAYWRIGHT_DOWNLOAD_HOST="https://cdn.npmmirror.com/binaries/playwright"
+```
+
+### 文档检查 \{#lint}
+
+```sh
+doom lint -h
+
+# output
+Usage: doom lint [options] [root]
+
+Lint the documentation
+
+Arguments:
+  root        Root directory of the documentation
+
+Options:
+  -h, --help  display help for command
+```
+
+更多配置请参考[文档检查配置](/zh/usage/configuration.md#lint)

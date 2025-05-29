@@ -1,0 +1,29 @@
+# Doom
+
+## Other
+
+- [CodeQualityTaskSummary](/apis/advanced-apis/codeQualityTaskSummary.md)
+- [Event APIs](/apis/advanced-apis/event/index.md)
+- [Search](/apis/advanced-apis/event/search.md)
+- [高级 API](/apis/advanced-apis/index.md)
+- [Aggregation](/apis/advanced-apis/log/aggregation.md)
+- [Log APIs](/apis/advanced-apis/log/index.md)
+- [Search](/apis/advanced-apis/log/search.md)
+- [Projects](/apis/advanced-apis/projects.md)
+- [ArtifactCleanupRun](/apis/crds/ArtifactCleanupRun.md)
+- [CRDs](/apis/crds/index.md)
+- [APIs](/apis/index.md)
+- [CodeQuality](/apis/references/CodeQuality.md)
+- [CodeQualityBranch](/apis/references/CodeQualityBranch.md)
+- [公共引用](/apis/references/index.md)
+- [开始](/start.md)
+- [API 文档](/usage/api.md)
+- [配置](/usage/configuration.md): 配置 `doom` 文档工具
+- [约定](/usage/convention.md): 基于“约定大于配置”的理念，我们约定文档的组织方式以自动生成左侧边栏等相关内容
+- [部署](/usage/deploy.md): 文档项目开发完成后我们可以将项目部署到 ACP 平台
+- [国际化](/usage/i18n.md): 在可复用组件中使用国际化文本
+- [使用](/usage/index.md)
+- [Markdown](/usage/markdown.md)
+- [MDX](/usage/mdx.md): 使用 MDX 可以实现动态内容的展示和内容复用
+- [权限说明文档](/usage/permission.md)
+- [引用文档](/usage/reference.md)
