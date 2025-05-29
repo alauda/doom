@@ -111,6 +111,12 @@ program
     false,
   )
   .option(
+    '-S, --site-url',
+    'Whether to enable the siteUrl for sitemap generation',
+    parseBoolean,
+    false,
+  )
+  .option(
     '-n, --no-open [boolean]',
     'Do not open the browser after starting the server',
   )

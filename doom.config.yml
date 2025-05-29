@@ -35,3 +35,4 @@ algolia:
   appId: USO7A9NBAD
   apiKey: 44896d7bbb41e9c1e807699d1dbb7cee
   indexName: doom_js_org_uso7a9nbad_pages
+siteUrl: https://doom.js.org
