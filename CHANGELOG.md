@@ -1,5 +1,13 @@
 # @alauda/doom
 
+## 0.23.6
+
+### Patch Changes
+
+- [#38](https://github.com/alauda/doom/pull/38) [`020e0db`](https://github.com/alauda/doom/commit/020e0db3cf0a530d05df8b5587cd5e65459d6d99) Thanks [@JounQin](https://github.com/JounQin)! - chore: bump all (dev)Dependencies
+
+- [#36](https://github.com/alauda/doom/pull/36) [`e51390c`](https://github.com/alauda/doom/commit/e51390c2d5b6f2abe2b71f273406944c7b8ca15b) Thanks [@JounQin](https://github.com/JounQin)! - fix: boolean value parsing
+
 ## 0.23.5
 
 ### Patch Changes
