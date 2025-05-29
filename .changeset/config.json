@@ -1,11 +1,16 @@
 {
   "$schema": "https://unpkg.com/@changesets/config/schema.json",
-  "changelog": ["@changesets/changelog-github", { "repo": "alauda/Doom" }],
+  "changelog": [
+    "@changesets/changelog-github",
+    {
+      "repo": "alauda/Doom"
+    }
+  ],
   "commit": false,
   "fixed": [],
   "linked": [],
   "access": "restricted",
-  "baseBranch": "main",
+  "baseBranch": "0.x",
   "updateInternalDependencies": "patch",
   "ignore": []
 }
