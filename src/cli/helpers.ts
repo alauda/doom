@@ -7,8 +7,8 @@ import { parse } from 'yaml'
 import { FALSY_VALUES } from '../shared/index.js'
 import type { NormalizedTermItem } from '../terms.js'
 
-export const parseBoolean = (value: string) =>
-  !!value && !FALSY_VALUES.has(value)
+export const parseBoolean = (value?: string) =>
+  value === undefined || !FALSY_VALUES.has(value)
 
 const DOC_PATTERN = /\.mdx?$/
 
