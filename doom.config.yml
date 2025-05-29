@@ -1,6 +1,12 @@
 lang: zh
 title: Doom
 logoText: Doom
+themeConfig:
+  socialLinks:
+    - icon: github
+      mode: link
+      content: https://github.com/alauda/doom
+
 api:
   crds:
     - docs/shared/crds/*.yaml
@@ -25,8 +31,7 @@ lint:
     cspell:
       words:
         - katanomi
-themeConfig:
-  socialLinks:
-    - icon: github
-      mode: link
-      content: https://github.com/alauda/doom
+algolia:
+  appId:
+  apiKey:
+  indexName:

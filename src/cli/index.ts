@@ -104,6 +104,12 @@ program
     false,
   )
   .option(
+    '-a, --algolia',
+    'Whether to enable Algolia search',
+    parseBoolean,
+    false,
+  )
+  .option(
     '-n, --no-open [boolean]',
     'Do not open the browser after starting the server',
   )

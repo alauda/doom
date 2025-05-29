@@ -12,7 +12,8 @@
     "target": "ESNext",
     "paths": {
       "@alauda/doom/config": ["./src/config.ts"],
-      "@alauda/doom/runtime": ["./src/runtime/index.ts"]
+      "@alauda/doom/runtime": ["./src/runtime/index.ts"],
+      "@alauda/doom/theme": ["./src/theme.tsx"]
     },
     "stripInternal": true,
     "verbatimModuleSyntax": true

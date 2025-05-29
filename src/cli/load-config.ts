@@ -114,6 +114,7 @@ const getCommonConfig = async ({
   exclude,
   redirect,
   editRepo,
+  algolia,
 }: {
   config: UserConfig
   configFilePath?: string
@@ -130,6 +131,7 @@ const getCommonConfig = async ({
   exclude?: string[]
   redirect?: 'auto' | 'never' | 'only-default-lang'
   editRepo?: boolean | string
+  algolia?: boolean
 }): Promise<UserConfig> => {
   const fallbackToZh = 'lang' in config && !config.lang
   root = resolveDocRoot(CWD, root, config.root)
@@ -285,12 +287,30 @@ const getCommonConfig = async ({
         open,
       },
       tools: {
-        rspack: {
-          resolve: {
-            extensionAlias: {
-              '.js': ['.ts', '.tsx', '.js'],
+        rspack(rspackConfig, { mergeConfig, rspack }) {
+          return mergeConfig(rspackConfig, {
+            resolve: {
+              extensionAlias: {
+                '.js': ['.ts', '.tsx', '.js'],
+              },
             },
-          },
+            plugins:
+              algolia && config.algolia
+                ? [
+                    new rspack.DefinePlugin({
+                      'process.env.ALGOLIA_APP_ID': JSON.stringify(
+                        config.algolia.appId,
+                      ),
+                      'process.env.ALGOLIA_API_KEY': JSON.stringify(
+                        config.algolia.apiKey,
+                      ),
+                      'process.env.ALGOLIA_INDEX_NAME': JSON.stringify(
+                        config.algolia.indexName,
+                      ),
+                    }),
+                  ]
+                : undefined,
+          })
         },
       },
     },
@@ -323,6 +343,7 @@ export async function loadConfig(
     outDir,
     redirect,
     editRepo,
+    algolia,
   }: GlobalCliOptions = {},
 ): Promise<{
   config: UserConfig
@@ -402,6 +423,7 @@ export async function loadConfig(
     exclude,
     redirect,
     editRepo,
+    algolia,
   })
 
   base = commonConfig.base!
