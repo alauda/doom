@@ -2,6 +2,7 @@ export const ACP_BASE = '/container_platform/'
 
 export const FALSY_VALUES = new Set([
   null,
+  undefined,
   '',
   '0',
   'false',
