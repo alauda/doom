@@ -3,7 +3,7 @@ description: >-
   After completing the project development, we can deploy the project to the ACP
   platform.
 weight: 8
-sourceSHA: 0491a77146a707d759a6f09a35952b2167d6510824b7f22ecb522aef87c4d2d6
+sourceSHA: c87a4a8346bc7c7c09d4aa01777c7196f17d414fb6f8673371b6c91e8537c5fe
 ---
 
 # Deployment

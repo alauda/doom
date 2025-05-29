@@ -288,28 +288,26 @@ const getCommonConfig = async ({
       },
       tools: {
         rspack(rspackConfig, { mergeConfig, rspack }) {
+          const algoliaOptions = algolia ? config.algolia : undefined
           return mergeConfig(rspackConfig, {
             resolve: {
               extensionAlias: {
                 '.js': ['.ts', '.tsx', '.js'],
               },
             },
-            plugins:
-              algolia && config.algolia
-                ? [
-                    new rspack.DefinePlugin({
-                      'process.env.ALGOLIA_APP_ID': JSON.stringify(
-                        config.algolia.appId,
-                      ),
-                      'process.env.ALGOLIA_API_KEY': JSON.stringify(
-                        config.algolia.apiKey,
-                      ),
-                      'process.env.ALGOLIA_INDEX_NAME': JSON.stringify(
-                        config.algolia.indexName,
-                      ),
-                    }),
-                  ]
-                : undefined,
+            plugins: [
+              new rspack.DefinePlugin({
+                'process.env.ALGOLIA_APP_ID': JSON.stringify(
+                  algoliaOptions?.appId,
+                ),
+                'process.env.ALGOLIA_API_KEY': JSON.stringify(
+                  algoliaOptions?.apiKey,
+                ),
+                'process.env.ALGOLIA_INDEX_NAME': JSON.stringify(
+                  algoliaOptions?.indexName,
+                ),
+              }),
+            ],
           })
         },
       },

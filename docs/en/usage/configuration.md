@@ -1,7 +1,7 @@
 ---
 description: Configure `doom` documentation tool
 weight: 1
-sourceSHA: 11ecf257d004e931c672a3eeda41c811f327c91c61fba6625cbb858736213033
+sourceSHA: 99d5505366bd7c2a066dd673ddb80b0c0b17420a9ad29f8a71b6cb7f66b495f3
 ---
 
 # Configuration {#configuration}
@@ -224,4 +224,13 @@ editRepoBaseUrl: alauda/doom/tree/main/docs # The prefix https://github.com/ can
 ```yaml
 lint:
   cspellOptions: # optional, cspell configuration options, refer to https://github.com/streetsidesoftware/cspell/tree/main/packages/cspell-eslint-plugin#options
+```
+
+## Algolia Search Configuration {#algolia}
+
+```yaml
+algolia:
+  appId: # Algolia application ID
+  apiKey: # Algolia API Key
+  indexName: # Algolia index name
 ```

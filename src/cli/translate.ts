@@ -167,7 +167,7 @@ export const translate = async ({
       },
     ],
     model: 'gpt-4o-mini',
-    temperature: 0,
+    temperature: 0.1,
   })
 
   const { content, refusal } = choices[0].message

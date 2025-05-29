@@ -99,8 +99,9 @@ program
   .option(
     '-R, --edit-repo [boolean|url]',
     'Whether to enable or override the `editRepoBaseUrl` config feature, `https://github.com/` prefix could be omitted',
-    (value: string) =>
-      FALSY_VALUES.has(value) ? false : TRUTHY_VALUES.has(value) || value,
+    (value?: string) =>
+      value === undefined ||
+      (FALSY_VALUES.has(value) ? false : TRUTHY_VALUES.has(value) || value),
     false,
   )
   .option(

@@ -37,7 +37,7 @@ jobs:
           # copy the pdf to the tempdir
           cp -r ./dist/*.pdf $tempdir
           # then build the docs with pdf download link
-          yarn docs:build -d -R
+          yarn docs:build -a -d -R
           # copy the pdf back to the dist folder
           cp -r $tempdir/*.pdf ./dist
           # remove the tempdir

@@ -224,3 +224,12 @@ editRepoBaseUrl: alauda/doom/tree/main/docs # https://github.com/ 前缀可以�
 lint:
   cspellOptions: # 可选，cspell 配置项，参考 https://github.com/streetsidesoftware/cspell/tree/main/packages/cspell-eslint-plugin#options
 ```
+
+## Algolia 搜索配置 \{#algolia}
+
+```yaml
+algolia:
+  appId: # Algolia 应用 ID
+  apiKey: # Algolia API Key
+  indexName: # Algolia 索引名称
+```
