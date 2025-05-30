@@ -4,16 +4,13 @@ import remarkGfm from 'remark-gfm'
 
 import { X } from './_X.js'
 
-export const Markdown = ({ children }: { children?: string }) => {
-  return (
-    children && (
-      <ReactMarkdown
-        remarkPlugins={[[remarkGfm]]}
-        components={X as Record<string, ElementType>}
-        skipHtml={true}
-      >
-        {children}
-      </ReactMarkdown>
-    )
+export const Markdown = ({ children }: { children?: string }) =>
+  children && (
+    <ReactMarkdown
+      remarkPlugins={[[remarkGfm]]}
+      components={X as Record<string, ElementType>}
+      skipHtml={true}
+    >
+      {children}
+    </ReactMarkdown>
   )
-}
