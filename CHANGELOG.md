@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.0.0-next.4
+
+### Patch Changes
+
+- [#46](https://github.com/alauda/doom/pull/46) [`5d474de`](https://github.com/alauda/doom/commit/5d474deccbe75d6d8f52ddd09645b132f9901bb2) Thanks [@JounQin](https://github.com/JounQin)! - fix: potential duplicate ids warning
+
 ## 1.0.0-next.3
 
 ### Minor Changes
