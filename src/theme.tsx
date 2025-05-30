@@ -18,7 +18,7 @@ const Search =
             apiKey: process.env.ALGOLIA_API_KEY!,
             indexName: process.env.ALGOLIA_INDEX_NAME!,
             searchParameters: {
-              facetFilters: [`language:${lang}`],
+              facetFilters: [`lang:${lang}`],
             },
           }),
           [lang],
