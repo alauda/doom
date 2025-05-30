@@ -1,7 +1,7 @@
 import { usePageData } from '@rspress/core/runtime'
 import openapisMap from 'doom-@api-openapisMap'
 import type { OpenAPIV3_1 } from 'openapi-types'
-import { type ReactNode, useMemo } from 'react'
+import { type ReactNode, useId, useMemo } from 'react'
 
 import { modelName, omitRoutePathRefs, resolveRef } from '../utils.js'
 
@@ -19,6 +19,7 @@ export interface OpenAPIRefProps {
    * The specific path to the OpenAPI schema, otherwise the first matched will be used.
    */
   openapiPath?: string
+  uid?: string
   collectRefs?: boolean
 }
 
@@ -149,9 +150,16 @@ const getRefsForSchema = (
 export const OpenAPIRef = ({
   schema,
   openapiPath: openapiPath_,
+  uid,
   collectRefs = true,
 }: OpenAPIRefProps) => {
   const { page } = usePageData()
+
+  const innerUid = useId()
+
+  if (uid == null) {
+    uid = innerUid
+  }
 
   const [schemaItem, openapi, openapiPath] = useMemo(() => {
     for (const [pathname, openapi] of Object.entries(openapisMap)) {
@@ -183,7 +191,7 @@ export const OpenAPIRef = ({
 
   return (
     <>
-      <HeadingTitle slug={schema} level={2}>
+      <HeadingTitle uid={uid} slug={schema} level={2}>
         {modelName(schema)}
       </HeadingTitle>
       <Markdown>{schemaItem.description}</Markdown>
@@ -198,6 +206,7 @@ export const OpenAPIRef = ({
           key={schema}
           schema={schema}
           openapiPath={openapiPath}
+          uid={uid}
           collectRefs={false}
         />
       ))}

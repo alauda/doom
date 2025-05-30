@@ -6,13 +6,16 @@ import { X } from './_X.js'
 export interface HeadingTitleProps {
   slug?: string
   slugger?: BananaSlug
+  uid?: string
   level: 1 | 2 | 3 | 4 | 5 | 6
   children: ReactNode
 }
 
+// TODO: use context to simplify the usage of `slugger` and `uid`
 export const HeadingTitle = ({
   slug,
   slugger,
+  uid,
   level,
   children,
 }: HeadingTitleProps) => {
@@ -22,13 +25,18 @@ export const HeadingTitle = ({
   const HeadingComponent = HeadingComponents[level]
   const id = useMemo(
     () =>
-      slug ||
-      slugger?.slug(
-        Children.toArray(children)
-          .filter((it) => typeof it === 'string')
-          .join(''),
-      ),
-    [slug, children],
+      [
+        uid,
+        slug ||
+          slugger?.slug(
+            Children.toArray(children)
+              .filter((it) => typeof it === 'string')
+              .join(''),
+          ),
+      ]
+        .filter(Boolean)
+        .join('-') || undefined,
+    [slug, uid, children],
   )
   return (
     <HeadingComponent id={id}>
