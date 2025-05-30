@@ -1,7 +1,6 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 
-import { nodeTypes } from '@mdx-js/mdx'
 import { pluginSass } from '@rsbuild/plugin-sass'
 import { pluginYaml } from '@rsbuild/plugin-yaml'
 import {
@@ -26,7 +25,6 @@ import {
   transformerRemoveNotationEscape,
 } from '@shikijs/transformers'
 import { difference } from 'es-toolkit'
-import rehypeRaw from 'rehype-raw'
 import { cyan } from 'yoctocolors'
 
 import {
@@ -38,7 +36,6 @@ import {
   globalPlugin,
   mermaidPlugin,
   permissionPlugin,
-  rehypeFix,
   replacePlugin,
   sitemapPlugin,
 } from '../plugins/index.js'
@@ -235,7 +232,6 @@ const getCommonConfig = async ({
     },
     markdown: {
       checkDeadLinks: true,
-      rehypePlugins: [[rehypeRaw, { passThrough: nodeTypes }], rehypeFix],
       shiki: {
         transformers: [
           // builtin transformers

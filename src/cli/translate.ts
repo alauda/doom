@@ -151,7 +151,7 @@ export const translate = async ({
     { async: true },
   )
 
-  const { choices } = await openai.beta.chat.completions.parse({
+  const { choices } = await openai.chat.completions.parse({
     messages: [
       {
         role: 'system',
