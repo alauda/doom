@@ -1,7 +1,7 @@
 ---
 description: Configure `doom` documentation tool
 weight: 1
-sourceSHA: c2b69e517f964f8b758654e4b634cfa2dd2089227f8b83c13cb3673e0dcbc400
+sourceSHA: cdfb35537b7a4a9d39fa1ede177c331c6f73d3aa531f3169df3671b705433138
 ---
 
 # Configuration {#configuration}
@@ -203,9 +203,9 @@ The translation work is divided into four steps:
  - Sentences that are not fluent, indicating the positions without needing to provide suggestions for modification; repair during paraphrasing.
  - Ambiguous or difficult-to-understand phrases can be attempted to be explained.
 3. Based on the direct translation result and the issues pointed out in the second step, rephrase while ensuring that the original meaning remains intact, making it easier to understand and more compliant with <%= targetLang %> technical documentation expression habits, while keeping the original format unchanged.
-4. When there exist previously translated <%= targetLang %> documents, compare the results from step three with the previous <%= targetLang %> document in detail, ensuring no new segments (including text, resource links, etc.) are omitted. If the translation results within the segment are roughly similar in meaning, differing only in expression without introducing new content, that segment should retain the previously translated content without re-translation.
+4. When there exist previously translated <%= targetLang %> documents, compare the results from step three with the previous <%= targetLang %> document in detail, ensuring no new segments (including text, code blocks, images, hyperlinks, etc.) are omitted. If the translation results within the segment are roughly similar in meaning, differing only in expression without introducing new content, that segment should retain the previously translated content without re-translation.
 
-The final output should only include the results from the last step, and previous step results should not be output.
+The final output should only include the complete result from the last step, no need to output any references to cue words or previous steps, and don't just return the additions.
 
 <%= userPrompt %>
 
@@ -236,6 +236,16 @@ algolia:
 ```
 
 Please use `public/robots.txt` for Algolia Crawler Verification.
+
+::: info
+
+Due to the current architectural limitations of `rspress`, the Algolia search function needs to be implemented through a [custom theme](https://rspress.dev/guide/advanced/custom-theme). Therefore, to unify the use of related theme features, we provide the theme entry via `@alauda/doom/theme`. Please add the following theme configuration file to enable it:
+
+```ts title "theme/index.ts"
+export * from '@alauda/doom/theme'
+```
+
+:::
 
 ## Sitemap Configuration {#sitemap}
 
