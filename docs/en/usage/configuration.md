@@ -1,7 +1,7 @@
 ---
 description: Configure `doom` documentation tool
 weight: 1
-sourceSHA: 11ecf257d004e931c672a3eeda41c811f327c91c61fba6625cbb858736213033
+sourceSHA: e703548149749f03ea52f3655222b93dac2749305ae228bce9abfee6624a51bf
 ---
 
 # Configuration {#configuration}
@@ -203,9 +203,9 @@ The translation work is divided into four steps:
  - Sentences that are not fluent, indicating the positions without needing to provide suggestions for modification; repair during paraphrasing.
  - Ambiguous or difficult-to-understand phrases can be attempted to be explained.
 3. Based on the direct translation result and the issues pointed out in the second step, rephrase while ensuring that the original meaning remains intact, making it easier to understand and more compliant with <%= targetLang %> technical documentation expression habits, while keeping the original format unchanged.
-4. When there exist previously translated <%= targetLang %> documents, compare the results from step three with the previous <%= targetLang %> document in detail, ensuring no new segments (including text, resource links, etc.) are omitted. If the translation results within the segment are roughly similar in meaning, differing only in expression without introducing new content, that segment should retain the previously translated content without re-translation.
+4. When there exist previously translated <%= targetLang %> documents, compare the results from step three with the previous <%= targetLang %> document in detail, ensuring no new segments (including text, code blocks, images, hyperlinks, etc.) are omitted. If the translation results within the segment are roughly similar in meaning, differing only in expression without introducing new content, that segment should retain the previously translated content without re-translation.
 
-The final output should only include the results from the last step, and previous step results should not be output.
+The final output should only include the complete result from the last step, no need to output any references to cue words or previous steps, and don't just return the additions.
 
 <%= userPrompt %>
 
