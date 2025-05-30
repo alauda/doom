@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 0.23.7
+
+### Patch Changes
+
+- [#43](https://github.com/alauda/doom/pull/43) [`e2cd004`](https://github.com/alauda/doom/commit/e2cd004d80147a5837992cce03bfa885148c080f) Thanks [@JounQin](https://github.com/JounQin)! - chore: tiny improvement of translate prompt
+
 ## 0.23.6
 
 ### Patch Changes
