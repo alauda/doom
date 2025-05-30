@@ -5,8 +5,13 @@
     "@alauda/doom": "0.23.5"
   },
   "changesets": [
+    "afraid-buttons-decide",
     "eight-cougars-agree",
+    "healthy-shirts-wink",
+    "icy-sloths-sit",
     "rotten-cows-cough",
+    "smart-rivers-smash",
+    "witty-carrots-repair",
     "yummy-numbers-enjoy"
   ]
 }

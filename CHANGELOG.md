@@ -1,5 +1,21 @@
 # @alauda/doom
 
+## 1.0.0-next.3
+
+### Minor Changes
+
+- [#40](https://github.com/alauda/doom/pull/40) [`0442929`](https://github.com/alauda/doom/commit/04429292a53c9ce857e11370d5f04a3ae0921069) Thanks [@JounQin](https://github.com/JounQin)! - feat: add llms and sitemap support
+
+- [#34](https://github.com/alauda/doom/pull/34) [`8b3cd58`](https://github.com/alauda/doom/commit/8b3cd589de5242e63ab0d11520f7740bd9b32944) Thanks [@JounQin](https://github.com/JounQin)! - feat: add algolia search support
+
+### Patch Changes
+
+- [#41](https://github.com/alauda/doom/pull/41) [`17585ce`](https://github.com/alauda/doom/commit/17585ce903ed4d7ffc4b32c2ff62b096684dc698) Thanks [@JounQin](https://github.com/JounQin)! - chore: tiny improvement of translate prompt
+
+- [#39](https://github.com/alauda/doom/pull/39) [`cdc390e`](https://github.com/alauda/doom/commit/cdc390e66f20710057f7253b3ade7f282b664e84) Thanks [@JounQin](https://github.com/JounQin)! - fix: add zh locale support for algolia search
+
+- [#42](https://github.com/alauda/doom/pull/42) [`2a2edb1`](https://github.com/alauda/doom/commit/2a2edb1b7c1afd96529c3f7864f4f54cc952a204) Thanks [@JounQin](https://github.com/JounQin)! - fix: `facet` should be `lang:` instead of `language:`
+
 ## 1.0.0-next.2
 
 ### Patch Changes
