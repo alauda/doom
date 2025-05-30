@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 0.23.8
+
+### Patch Changes
+
+- [#48](https://github.com/alauda/doom/pull/48) [`a357bfa`](https://github.com/alauda/doom/commit/a357bfa47f07b3b924fff8651c38239c5533f9b3) Thanks [@JounQin](https://github.com/JounQin)! - fix: potential duplicate ids warning
+
 ## 0.23.7
 
 ### Patch Changes
