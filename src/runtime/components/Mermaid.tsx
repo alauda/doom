@@ -32,7 +32,7 @@ export const Mermaid = ({ className, children }: MermaidProps) => {
     }
 
     void render()
-  }, [children, isDark])
+  }, [children, id, isDark])
 
   return (
     <div

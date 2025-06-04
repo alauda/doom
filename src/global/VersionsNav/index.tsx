@@ -106,7 +106,7 @@ const VersionsNav_ = () => {
     }
 
     void fetchVersions().catch(noop)
-  }, [])
+  }, [version, versionsBase])
 
   // hack way to detect nav menu recreation on theme change
   useEffect(() => {

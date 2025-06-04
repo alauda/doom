@@ -172,15 +172,10 @@ export const OpenAPIRef = ({
       }
     }
     return []
-  }, [])
-
-  if (!schemaItem || !openapi) {
-    console.error(`No OpenAPI schema definition found for ${schema}\n`)
-    return null
-  }
+  }, [openapiPath_, schema])
 
   const refs = useMemo(() => {
-    if (collectRefs) {
+    if (collectRefs && openapi) {
       return getRefsForSchema(
         openapi,
         schema,
@@ -188,6 +183,11 @@ export const OpenAPIRef = ({
       )
     }
   }, [collectRefs, openapi, page.routePath, schema])
+
+  if (!schemaItem || !openapi) {
+    console.error(`No OpenAPI schema definition found for ${schema}\n`)
+    return null
+  }
 
   return (
     <>

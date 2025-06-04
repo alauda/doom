@@ -71,7 +71,14 @@ export const SiteOverrides = () => {
     requestAnimationFrame(() => {
       document.title = newTitle
     })
-  }, [title])
+  }, [
+    articleTitle,
+    frontmatter.title,
+    frontmatter.titleSuffix,
+    pageType,
+    siteData,
+    title,
+  ])
 
   useEffect(() => {
     if (!logoText) {
