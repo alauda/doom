@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.0.0-next.6
+
+### Patch Changes
+
+- [#52](https://github.com/alauda/doom/pull/52) [`6f931bc`](https://github.com/alauda/doom/commit/6f931bca403915ce64d025005790494d0d9a432e) Thanks [@JounQin](https://github.com/JounQin)! - fix: incorrect `error.data` displayed
+
 ## 1.0.0-next.5
 
 ### Minor Changes
