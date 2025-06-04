@@ -25,6 +25,7 @@ export const HeadingTitle = ({
   const HeadingComponent = HeadingComponents[level]
   const slugFromChildren = useMemo(
     () =>
+      // eslint-disable-next-line @eslint-react/no-children-to-array
       Children.toArray(children)
         .filter((it) => typeof it === 'string')
         .join(''),

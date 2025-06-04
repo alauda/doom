@@ -120,6 +120,7 @@ const VersionsNav_ = () => {
     })
     const newNavMenu = getNavMenu()
     if (newNavMenu !== navMenu) {
+      // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
       setNavMenu(newNavMenu)
     } else if (navMenu.parentNode) {
       observer.observe(navMenu.parentNode, { childList: true })
