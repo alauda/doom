@@ -18,6 +18,7 @@ export const TermsTable = ({ terms }: TermsTableProps) => {
     list?.length ? (
       <X.ul>
         {list.map((item, index) => (
+          // eslint-disable-next-line @eslint-react/no-array-index-key
           <X.li key={index}>{item}</X.li>
         ))}
       </X.ul>

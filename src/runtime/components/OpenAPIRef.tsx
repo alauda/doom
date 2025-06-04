@@ -105,8 +105,8 @@ export const OpenAPIProperties = ({
 }) => {
   return (
     <X.ul>
-      {Object.entries(properties).map(([name, property], index) => (
-        <X.li key={index}>
+      {Object.entries(properties).map(([name, property]) => (
+        <X.li key={name}>
           <OpenAPIProperty name={name} property={property} openapi={openapi} />
         </X.li>
       ))}
