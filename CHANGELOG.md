@@ -1,5 +1,13 @@
 # @alauda/doom
 
+## 0.23.10
+
+### Patch Changes
+
+- [#58](https://github.com/alauda/doom/pull/58) [`5fc26c4`](https://github.com/alauda/doom/commit/5fc26c47e5eb556f11c2ce6bb7d636273f407055) Thanks [@JounQin](https://github.com/JounQin)! - fix: unstable slug due to children changes
+
+- [#62](https://github.com/alauda/doom/pull/62) [`2d0357a`](https://github.com/alauda/doom/commit/2d0357af601ce6f1eca3ed19735c59546c5d70d7) Thanks [@JounQin](https://github.com/JounQin)! - chore: enable `@eslint-react/eslint-plugin`, fix related reports
+
 ## 0.23.9
 
 ### Patch Changes
