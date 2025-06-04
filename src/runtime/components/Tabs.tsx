@@ -15,7 +15,9 @@ export const Tabs: ForwardRefExoticComponent<
   return (
     <div className="doom-tabs" ref={ref}>
       {isPrint ? (
+        // eslint-disable-next-line @eslint-react/no-children-map
         Children.map(children, (child, index) => (
+          // eslint-disable-next-line @eslint-react/no-array-index-key
           <Tabs_ key={index} {...props}>
             {child}
           </Tabs_>

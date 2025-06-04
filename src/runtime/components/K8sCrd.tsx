@@ -41,6 +41,7 @@ export const K8sCrdSchemaPart = ({
   }, [])
 
   useEffect(() => {
+    // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
     setOpen(expandAll)
   }, [expandAll])
 
