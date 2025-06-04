@@ -5,6 +5,7 @@
 [![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/alauda/doom)](https://coderabbit.ai)
 [![npm](https://img.shields.io/npm/v/@alauda/doom.svg)](https://www.npmjs.com/package/@alauda/doom)
 [![GitHub Release](https://img.shields.io/github/release/alauda/doom)](https://github.com/alauda/doom/releases)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/alauda/doom)
 
 [![Conventional Commits](https://img.shields.io/badge/conventional%20commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
 [![Renovate enabled](https://img.shields.io/badge/renovate-enabled-brightgreen.svg)](https://renovatebot.com)
