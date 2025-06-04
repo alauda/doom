@@ -35,7 +35,7 @@ export const HeadingTitle = ({
       [uid, slug || slugger?.slug(slugFromChildren)]
         .filter(Boolean)
         .join('-') || undefined,
-    [slug, uid, slugFromChildren],
+    [uid, slug, slugger, slugFromChildren],
   )
   return (
     <HeadingComponent id={id}>

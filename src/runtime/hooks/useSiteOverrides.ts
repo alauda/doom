@@ -125,7 +125,7 @@ export const useSiteOverrides = (): SiteOverridesItem => {
     void fetchSiteOverrides(siteData.base, virtual.version, acpSite).then(
       setSiteOverrides,
     )
-  }, [])
+  }, [acpSite, siteData.base])
 
   return siteOverrides?.[lang] || {}
 }

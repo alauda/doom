@@ -31,7 +31,10 @@ const ExternalSiteLink_ = ({
 }: ExternalSiteLinkProps) => {
   const isPrint = useIsPrint()
 
-  const site = useMemo(() => virtual.sites?.find((s) => s.name === name), [])
+  const site = useMemo(
+    () => virtual.sites?.find((s) => s.name === name),
+    [name],
+  )
   const lang = useLang()
 
   if (!site) {
