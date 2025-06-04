@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.0.0-next.7
+
+### Patch Changes
+
+- [#56](https://github.com/alauda/doom/pull/56) [`67816f3`](https://github.com/alauda/doom/commit/67816f34e95181f276024bba68eb882535ead48b) Thanks [@JounQin](https://github.com/JounQin)! - fix: unstable slug due to children changes
+
 ## 1.0.0-next.6
 
 ### Patch Changes
