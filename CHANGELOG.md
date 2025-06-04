@@ -1,5 +1,13 @@
 # @alauda/doom
 
+## 1.0.0-next.5
+
+### Minor Changes
+
+- [#51](https://github.com/alauda/doom/pull/51) [`4a3c706`](https://github.com/alauda/doom/commit/4a3c7068f9d21c8cf9154a925b4debb4c842dc5a) Thanks [@JounQin](https://github.com/JounQin)! - feat: support algolia alauda preset
+
+- [#45](https://github.com/alauda/doom/pull/45) [`2661d68`](https://github.com/alauda/doom/commit/2661d68d4e42adf19b23f3ad6270fea4eda42733) Thanks [@JounQin](https://github.com/JounQin)! - chore: bump rspress and openai, remove unnecessary rehype-raw
+
 ## 1.0.0-next.4
 
 ### Patch Changes
