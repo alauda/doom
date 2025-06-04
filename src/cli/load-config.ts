@@ -132,7 +132,7 @@ const getCommonConfig = async ({
   exclude?: string[]
   redirect?: 'auto' | 'never' | 'only-default-lang'
   editRepo?: boolean | string
-  algolia?: boolean
+  algolia?: boolean | 'alauda'
   siteUrl?: boolean
 }): Promise<UserConfig> => {
   const fallbackToZh = 'lang' in config && !config.lang
@@ -209,7 +209,14 @@ const getCommonConfig = async ({
 
   const { editLink, ...zhLocale } = KNOWN_LOCALE_CONFIGS.zh!
 
-  const algoliaOptions = algolia ? config.algolia : undefined
+  const algoliaOptions =
+    ((algolia && config.algolia) ??
+      (algolia === 'alauda' && {
+        appId: 'XN35Q5JLSV',
+        apiKey: '487fb969bdcda09dd4950468d7d8b61e',
+        indexName: 'docs_alauda_io_xn35q5jlsv_pages',
+      })) ||
+    null
 
   return {
     userBase,

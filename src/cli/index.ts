@@ -13,13 +13,12 @@ import { type FSWatcher, watch } from 'chokidar'
 import { type Command, program } from 'commander'
 import { green } from 'yoctocolors'
 
-import { FALSY_VALUES, TRUTHY_VALUES } from '../shared/index.js'
 import type { GlobalCliOptions, ServeOptions } from '../types.js'
 import { setNodeEnv } from '../utils/index.js'
 
 import { CWD, DEFAULT_CONFIGS, I18N_FILE, SITES_FILE } from './constants.js'
 import { exportCommand } from './export.js'
-import { parseBoolean } from './helpers.js'
+import { parseBoolean, parseBooleanOrString } from './helpers.js'
 import { lintCommand } from './lint.js'
 import { loadConfig } from './load-config.js'
 import { newCommand } from './new.js'
@@ -99,15 +98,13 @@ program
   .option(
     '-R, --edit-repo [boolean|url]',
     'Whether to enable or override the `editRepoBaseUrl` config feature, `https://github.com/` prefix could be omitted',
-    (value?: string) =>
-      value === undefined ||
-      (FALSY_VALUES.has(value) ? false : TRUTHY_VALUES.has(value) || value),
+    parseBooleanOrString,
     false,
   )
   .option(
-    '-a, --algolia',
-    'Whether to enable Algolia search',
-    parseBoolean,
+    '-a, --algolia [boolean|alauda]',
+    'Whether to enable or use the alauda (docs.alauda.io) preset for Algolia search',
+    parseBooleanOrString,
     false,
   )
   .option(
