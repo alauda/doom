@@ -32,7 +32,7 @@ export function useIsPrintMedia() {
   useEffect(() => {
     printMediaQuery?.addEventListener('change', onChange)
     return () => printMediaQuery?.removeEventListener('change', onChange)
-  }, [printMediaQuery])
+  }, [onChange, printMediaQuery])
 
   return isPrint
 }

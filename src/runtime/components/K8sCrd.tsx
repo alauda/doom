@@ -42,6 +42,7 @@ export const K8sCrdSchemaPart = ({
   }, [])
 
   useEffect(() => {
+    // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
     setOpen(expandAll)
   }, [expandAll])
 
@@ -73,8 +74,18 @@ export const K8sCrdSchemaPart = ({
         title={
           <>
             {name}
-            {type && <code>{type}</code>}
-            {required && <Badge>required</Badge>}
+            {type && (
+              <>
+                {' '}
+                <code>{type}</code>
+              </>
+            )}
+            {required && (
+              <>
+                {' '}
+                <Badge>required</Badge>
+              </>
+            )}
           </>
         }
         open={open}
@@ -122,8 +133,7 @@ export const K8sCrdSchema = ({
       <Markdown>{description}</Markdown>
       <div className="flex items-center">
         <span>
-          <code>{version}</code>
-          <Badge>version</Badge>
+          <code>{version}</code> <Badge>version</Badge>
         </span>
         {!isPrint && properties != null && (
           <Button
@@ -171,7 +181,7 @@ export const K8sCrd = ({ name, crdPath }: K8sCrdProps) => {
         }
         return crd.metadata.name === name
       }) || [],
-    [],
+    [crdPath, name],
   )
 
   if (!crd) {
@@ -182,8 +192,7 @@ export const K8sCrd = ({ name, crdPath }: K8sCrdProps) => {
   return (
     <>
       <X.p>
-        <code>{crd.spec.group}</code>
-        <Badge>group</Badge>
+        <code>{crd.spec.group}</code> <Badge>group</Badge>
       </X.p>
       {crd.spec.versions.map((version) => (
         <K8sCrdSchema

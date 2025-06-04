@@ -1,8 +1,10 @@
 // @ts-check
 
 import eslint from '@eslint/js'
+import react from '@eslint-react/eslint-plugin'
 import { createTypeScriptImportResolver } from 'eslint-import-resolver-typescript'
 import { importX } from 'eslint-plugin-import-x'
+import * as reactHooks from 'eslint-plugin-react-hooks'
 import { config, configs } from 'typescript-eslint'
 
 export default config(
@@ -12,9 +14,15 @@ export default config(
   eslint.configs.recommended,
   importX.flatConfigs.recommended,
   importX.flatConfigs.typescript,
+  react.configs.recommended,
+  reactHooks.configs['recommended-latest'],
   {
     files: ['**/*.{ts,tsx}'],
-    extends: [configs.eslintRecommended, configs.strictTypeChecked],
+    extends: [
+      configs.eslintRecommended,
+      configs.strictTypeChecked,
+      react.configs['recommended-type-checked'],
+    ],
     languageOptions: {
       parserOptions: {
         projectService: true,

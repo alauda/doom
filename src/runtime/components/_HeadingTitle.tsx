@@ -21,10 +21,11 @@ export const HeadingTitle = ({
 }: HeadingTitleProps) => {
   const HeadingComponents = useMemo(() => {
     return [null, X.h1, X.h2, X.h3, X.h4, X.h5, X.h6] as const
-  }, [X])
+  }, [])
   const HeadingComponent = HeadingComponents[level]
   const slugFromChildren = useMemo(
     () =>
+      // eslint-disable-next-line @eslint-react/no-children-to-array
       Children.toArray(children)
         .filter((it) => typeof it === 'string')
         .join(''),
@@ -35,7 +36,7 @@ export const HeadingTitle = ({
       [uid, slug || slugger?.slug(slugFromChildren)]
         .filter(Boolean)
         .join('-') || undefined,
-    [slug, uid, slugFromChildren],
+    [uid, slug, slugger, slugFromChildren],
   )
   return (
     <HeadingComponent id={id}>

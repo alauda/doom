@@ -94,13 +94,16 @@ const ApisOverviewNotes: Notes = {
 }
 
 export const ExternalSiteBase = ({ name, template }: ExternalSiteBaseProps) => {
-  const site = useMemo(() => virtual.sites?.find((s) => s.name === name), [])
+  const site = useMemo(
+    () => virtual.sites?.find((s) => s.name === name),
+    [name],
+  )
   const lang = useLang()
 
   const displayName = useMemo(
     () =>
       site?.displayName?.[lang] || site?.displayName?.en || name.toUpperCase(),
-    [],
+    [lang, name, site?.displayName],
   )
 
   if (!site) {

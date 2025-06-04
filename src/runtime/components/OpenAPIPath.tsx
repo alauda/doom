@@ -53,10 +53,19 @@ export const OpenAPIParameters = ({
           typeNode = <RefLink $ref={type.$ref} />
         }
         return (
+          // eslint-disable-next-line @eslint-react/no-array-index-key
           <X.li key={index}>
-            <code>{paramObj.name}</code>(<em>in {paramObj.in}</em>): {typeNode}
-            {paramObj.required && <Badge>required</Badge>}
-            <Markdown>{paramObj.description}</Markdown>
+            <code>{paramObj.name}</code> (<em>in {paramObj.in}</em>): {typeNode}
+            {paramObj.required && (
+              <>
+                {' '}
+                <Badge>required</Badge>
+              </>
+            )}
+            <>
+              {' '}
+              <Markdown>{paramObj.description}</Markdown>
+            </>
           </X.li>
         )
       })}
@@ -195,7 +204,7 @@ export const OpenAPIPath = ({
       }
     }
     return []
-  }, [])
+  }, [openapiPath_, page.routePath, path])
 
   if (!pathItem || !openapi) {
     console.error(`No OpenAPI path definition found for ${path}`)
