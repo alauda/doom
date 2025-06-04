@@ -30,7 +30,7 @@ export interface GlobalCliOptions {
   outDir?: string
   redirect?: 'auto' | 'never' | 'only-default-lang'
   editRepo?: boolean | string
-  algolia?: boolean
+  algolia?: boolean | 'alauda'
   siteUrl?: boolean
 }
 
