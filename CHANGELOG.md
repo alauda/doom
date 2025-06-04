@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.0.0-next.8
+
+### Patch Changes
+
+- [#60](https://github.com/alauda/doom/pull/60) [`ab03ec5`](https://github.com/alauda/doom/commit/ab03ec532e8f85ab5d27244d1945e3e00998073d) Thanks [@JounQin](https://github.com/JounQin)! - chore: enable `eslint-plugin-react-hooks` and `@eslint-react/eslint-plugin`, fix related reports
+
 ## 1.0.0-next.7
 
 ### Patch Changes
