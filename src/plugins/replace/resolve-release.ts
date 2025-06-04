@@ -121,7 +121,7 @@ const resolveRelease_ = async (
     if (err instanceof ResponseError) {
       const error = err as ResponseError<unknown>
       logger.error(
-        `Failed to fetch release notes for query \`${red(releaseQuery)}\` with status \`${error.response.status}\` and ${error.data ? `data ${JSON.stringify(data, null, 2)}` : `message \`${error.message}\``}`,
+        `Failed to fetch release notes for query \`${red(releaseQuery)}\` with status \`${error.response.status}\` and ${error.data ? `data ${JSON.stringify(error.data, null, 2)}` : `message \`${error.message}\``}`,
       )
     }
     return
