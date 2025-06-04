@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 0.23.9
+
+### Patch Changes
+
+- [#54](https://github.com/alauda/doom/pull/54) [`cf8e9bf`](https://github.com/alauda/doom/commit/cf8e9bf1173ab94cd5b41a5a74e589570d02f5ce) Thanks [@JounQin](https://github.com/JounQin)! - fix: incorrect `error.data` displayed
+
 ## 0.23.8
 
 ### Patch Changes
