@@ -44,7 +44,7 @@ import {
   UNVERSIONED,
   type DoomSite,
 } from '../shared/index.js'
-import type { GlobalCliOptions } from '../types.js'
+import type { AlgoliaOptions, GlobalCliOptions } from '../types.js'
 import { pathExists, pkgResolve, resolveStaticConfig } from '../utils/index.js'
 
 import {
@@ -96,6 +96,12 @@ const KNOWN_LOCALE_CONFIGS: Partial<
       text: '📝 Редактировать эту страницу на GitHub',
     },
   },
+}
+
+const ALAUDA_ALGOLIA_OPTIONS: AlgoliaOptions = {
+  appId: 'XN35Q5JLSV',
+  apiKey: '487fb969bdcda09dd4950468d7d8b61e',
+  indexName: 'docs_alauda_io_xn35q5jlsv_pages',
 }
 
 const getCommonConfig = async ({
@@ -211,11 +217,7 @@ const getCommonConfig = async ({
 
   const algoliaOptions =
     ((algolia && config.algolia) ??
-      (algolia === 'alauda' && {
-        appId: 'XN35Q5JLSV',
-        apiKey: '487fb969bdcda09dd4950468d7d8b61e',
-        indexName: 'docs_alauda_io_xn35q5jlsv_pages',
-      })) ||
+      (algolia === 'alauda' && ALAUDA_ALGOLIA_OPTIONS)) ||
     null
 
   return {
