@@ -197,7 +197,7 @@ export const OpenAPIPath = ({
       }
     }
     return []
-  }, [])
+  }, [openapiPath_, page.routePath, path])
 
   if (!pathItem || !openapi) {
     console.error(`No OpenAPI path definition found for ${path}`)

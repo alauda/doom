@@ -11,7 +11,7 @@ import type {
   SidebarDivider,
   SidebarItem,
 } from '@rspress/shared'
-import { Fragment, useMemo } from 'react'
+import { Fragment, useCallback, useMemo } from 'react'
 
 import classes from '../../../styles/overview.module.scss'
 
@@ -29,6 +29,18 @@ interface Group {
   items: GroupItem[]
 }
 
+const getChildLink = (
+  traverseItem: SidebarDivider | SidebarItem | NormalizedSidebarGroup,
+): string => {
+  if ('link' in traverseItem && traverseItem.link) {
+    return traverseItem.link
+  }
+  if ('items' in traverseItem && traverseItem.items.length) {
+    return getChildLink(traverseItem.items[0])
+  }
+  return ''
+}
+
 // The sidebar data include two types: sidebar item and sidebar group.
 // In overpage page, we select all the related sidebar groups and show the groups in the page.
 // In the meantime, some sidebar items also should be shown in the page, we collect them in the group named 'Others' and show them in the page.
@@ -44,25 +56,23 @@ export function Overview(props: {
     page: { routePath, frontmatter, title },
   } = usePageData()
   const { content, groups: customGroups, defaultGroupTitle = 'Others' } = props
-  const subFilter = (link: string) =>
-    // sidebar items link without base path
-    // pages route path with base path
-    withBase(link).startsWith(routePath.replace(/overview$/, '')) &&
-    !isEqualPath(withBase(link), routePath)
-  const getChildLink = (
-    traverseItem: SidebarDivider | SidebarItem | NormalizedSidebarGroup,
-  ): string => {
-    if ('link' in traverseItem && traverseItem.link) {
-      return traverseItem.link
-    }
-    if ('items' in traverseItem && traverseItem.items.length) {
-      return getChildLink(traverseItem.items[0])
-    }
-    return ''
-  }
+
+  const subFilter = useCallback(
+    (link: string) =>
+      // sidebar items link without base path
+      // pages route path with base path
+      withBase(link).startsWith(routePath.replace(/overview$/, '')) &&
+      !isEqualPath(withBase(link), routePath),
+    [routePath],
+  )
 
   const { pages } = siteData
-  const overviewModules = pages.filter((page) => subFilter(page.routePath))
+
+  const overviewModules = useMemo(
+    () => pages.filter((page) => subFilter(page.routePath)),
+    [pages, subFilter],
+  )
+
   let overviewSidebarGroups = useSidebarData()
 
   if (
@@ -76,115 +86,121 @@ export function Overview(props: {
     )
   }
 
-  function normalizeSidebarItem(
-    item: SidebarItem | SidebarDivider | NormalizedSidebarGroup,
-    sidebarGroup?: NormalizedSidebarGroup,
-    frontmatter?: Record<string, unknown>,
-  ) {
-    if ('dividerType' in item) {
-      return item
-    }
-    // do not display overview title in sub pages overview
-    if (
-      withBase(item.link) === `${routePath}index` &&
-      frontmatter?.overview === true
-    ) {
-      return false
-    }
-    // props > frontmatter in single file > _meta.json config in a file > frontmatter in overview page > _meta.json config in sidebar
-    const overviewHeaders = props.overviewHeaders ??
-      item.overviewHeaders ??
-      (frontmatter?.overviewHeaders as number[] | undefined) ??
-      sidebarGroup?.overviewHeaders ?? [2]
-    // sidebar items link without base path
-    const pageModule = overviewModules.find((m) =>
-      isEqualPath(m.routePath, withBase(item.link || '')),
-    )
-    const link = getChildLink(item)
-    return {
-      ...item,
-      description: pageModule?.frontmatter.description,
-      link,
-      headers:
-        pageModule?.toc.filter((header) =>
-          overviewHeaders.some((depth) => header.depth === depth),
-        ) || [],
-    } as GroupItem
-  }
+  const normalizeSidebarItem = useCallback(
+    (
+      item: SidebarItem | SidebarDivider | NormalizedSidebarGroup,
+      sidebarGroup?: NormalizedSidebarGroup,
+      frontmatter?: Record<string, unknown>,
+    ) => {
+      if ('dividerType' in item) {
+        return item
+      }
+      // do not display overview title in sub pages overview
+      if (
+        withBase(item.link) === `${routePath}index` &&
+        frontmatter?.overview === true
+      ) {
+        return false
+      }
+      // props > frontmatter in single file > _meta.json config in a file > frontmatter in overview page > _meta.json config in sidebar
+      const overviewHeaders = props.overviewHeaders ??
+        item.overviewHeaders ??
+        (frontmatter?.overviewHeaders as number[] | undefined) ??
+        sidebarGroup?.overviewHeaders ?? [2]
+      // sidebar items link without base path
+      const pageModule = overviewModules.find((m) =>
+        isEqualPath(m.routePath, withBase(item.link || '')),
+      )
+      const link = getChildLink(item)
+      return {
+        ...item,
+        description: pageModule?.frontmatter.description,
+        link,
+        headers:
+          pageModule?.toc.filter((header) =>
+            overviewHeaders.some((depth) => header.depth === depth),
+          ) || [],
+      } as GroupItem
+    },
+    [overviewModules, props.overviewHeaders, routePath],
+  )
 
   const isSingleFile = (
     item: SidebarItem | SidebarDivider | NormalizedSidebarGroup,
   ): item is SidebarItem | (NormalizedSidebarGroup & { link: string }) =>
     !('items' in item) && 'link' in item
 
-  const getGroup = (
-    sidebarGroups: (NormalizedSidebarGroup | SidebarItem | SidebarDivider)[],
-  ) => {
-    const group = sidebarGroups
-      .filter((sidebarGroup) => {
-        if ('items' in sidebarGroup) {
-          return (
-            sidebarGroup.items.filter((item) => subFilter(getChildLink(item)))
-              .length > 0
-          )
-        }
-        if (
-          isSingleFile(sidebarGroup) &&
-          subFilter(getChildLink(sidebarGroup))
-        ) {
-          return true
-        }
-        return false
-      })
-      .map((sidebarGroup) => {
-        let items: (GroupItem | SidebarDivider)[] = []
-        if ('items' in sidebarGroup) {
-          items = sidebarGroup.items
-            .map((item) =>
-              normalizeSidebarItem(item, sidebarGroup, frontmatter),
+  const getGroup = useCallback(
+    (
+      sidebarGroups: (NormalizedSidebarGroup | SidebarItem | SidebarDivider)[],
+    ) => {
+      const group = sidebarGroups
+        .filter((sidebarGroup) => {
+          if ('items' in sidebarGroup) {
+            return (
+              sidebarGroup.items.filter((item) => subFilter(getChildLink(item)))
+                .length > 0
             )
-            .filter((_): _ is GroupItem | SidebarDivider => !!_)
-        } else if (isSingleFile(sidebarGroup)) {
-          items = [
-            normalizeSidebarItem(
-              {
-                link: sidebarGroup.link,
-                text: sidebarGroup.text || '',
-                tag: sidebarGroup.tag,
-                _fileKey: sidebarGroup._fileKey,
-                overviewHeaders: sidebarGroup.overviewHeaders,
-              },
-              undefined,
-              frontmatter,
-            ),
-          ].filter((_): _ is GroupItem | SidebarDivider => !!_)
-        }
-        return {
-          name: ('text' in sidebarGroup && sidebarGroup.text) || '',
-          items,
-        }
-      }) as Group[]
-    return group
-  }
+          }
+          if (
+            isSingleFile(sidebarGroup) &&
+            subFilter(getChildLink(sidebarGroup))
+          ) {
+            return true
+          }
+          return false
+        })
+        .map((sidebarGroup) => {
+          let items: (GroupItem | SidebarDivider)[] = []
+          if ('items' in sidebarGroup) {
+            items = sidebarGroup.items
+              .map((item) =>
+                normalizeSidebarItem(item, sidebarGroup, frontmatter),
+              )
+              .filter((_): _ is GroupItem | SidebarDivider => !!_)
+          } else if (isSingleFile(sidebarGroup)) {
+            items = [
+              normalizeSidebarItem(
+                {
+                  link: sidebarGroup.link,
+                  text: sidebarGroup.text || '',
+                  tag: sidebarGroup.tag,
+                  _fileKey: sidebarGroup._fileKey,
+                  overviewHeaders: sidebarGroup.overviewHeaders,
+                },
+                undefined,
+                frontmatter,
+              ),
+            ].filter((_): _ is GroupItem | SidebarDivider => !!_)
+          }
+          return {
+            name: ('text' in sidebarGroup && sidebarGroup.text) || '',
+            items,
+          }
+        }) as Group[]
+      return group
+    },
+    [frontmatter, normalizeSidebarItem, subFilter],
+  )
 
-  const groups =
-    customGroups ??
-    useMemo(() => {
-      const group = getGroup(overviewSidebarGroups)
+  const defaultGroups = useMemo(() => {
+    const group = getGroup(overviewSidebarGroups)
+    if (group.length) {
+      return group
+    }
+    for (const sidebarGroup of overviewSidebarGroups) {
+      if (!('items' in sidebarGroup)) {
+        continue
+      }
+      const group = getGroup(sidebarGroup.items)
       if (group.length) {
         return group
       }
-      for (const sidebarGroup of overviewSidebarGroups) {
-        if (!('items' in sidebarGroup)) {
-          continue
-        }
-        const group = getGroup(sidebarGroup.items)
-        if (group.length) {
-          return group
-        }
-      }
-      return []
-    }, [overviewSidebarGroups, routePath, frontmatter])
+    }
+    return []
+  }, [getGroup, overviewSidebarGroups])
+
+  const groups = customGroups ?? defaultGroups
 
   return (
     <div className="overview-index doom-overview-index mx-auto">

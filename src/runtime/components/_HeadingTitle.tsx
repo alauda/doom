@@ -23,20 +23,19 @@ export const HeadingTitle = ({
     return [null, X.h1, X.h2, X.h3, X.h4, X.h5, X.h6] as const
   }, [X])
   const HeadingComponent = HeadingComponents[level]
+  const slugFromChildren = useMemo(
+    () =>
+      Children.toArray(children)
+        .filter((it) => typeof it === 'string')
+        .join(''),
+    [children],
+  )
   const id = useMemo(
     () =>
-      [
-        uid,
-        slug ||
-          slugger?.slug(
-            Children.toArray(children)
-              .filter((it) => typeof it === 'string')
-              .join(''),
-          ),
-      ]
+      [uid, slug || slugger?.slug(slugFromChildren)]
         .filter(Boolean)
         .join('-') || undefined,
-    [slug, uid, children],
+    [uid, slug, slugger, slugFromChildren],
   )
   return (
     <HeadingComponent id={id}>

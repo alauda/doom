@@ -2,7 +2,8 @@
 
 import eslint from '@eslint/js'
 import { createTypeScriptImportResolver } from 'eslint-import-resolver-typescript'
-import importX from 'eslint-plugin-import-x'
+import { importX } from 'eslint-plugin-import-x'
+import * as reactHooks from 'eslint-plugin-react-hooks'
 import { config, configs } from 'typescript-eslint'
 
 export default config(
@@ -12,6 +13,7 @@ export default config(
   eslint.configs.recommended,
   importX.flatConfigs.recommended,
   importX.flatConfigs.typescript,
+  reactHooks.configs['recommended-latest'],
   {
     files: ['**/*.{ts,tsx}'],
     extends: [configs.eslintRecommended, configs.strictTypeChecked],

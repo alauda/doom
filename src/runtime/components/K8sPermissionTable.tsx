@@ -84,34 +84,33 @@ const RolesPermission = ({
   })
 }
 
+const allFunctionResources = Object.values(functionResourcesMap).reduce<
+  Partial<Record<string, FunctionResource>>
+>(
+  (acc, curr) =>
+    Object.assign(
+      acc,
+      ...curr.map((fr) => ({ [fr.metadata.name]: fr })),
+    ) as Partial<Record<string, FunctionResource>>,
+  {},
+)
+
 export const K8sPermissionTable = ({ functions }: K8sPermissionTableProps) => {
   const [X] = useState(getCustomMDXComponent)
 
-  const allFunctionResources = useMemo(
+  const functionResources = useMemo(
     () =>
-      Object.values(functionResourcesMap).reduce<
-        Partial<Record<string, FunctionResource>>
-      >(
-        (acc, curr) =>
-          Object.assign(
-            acc,
-            ...curr.map((fr) => ({ [fr.metadata.name]: fr })),
-          ) as Partial<Record<string, FunctionResource>>,
-        {},
-      ),
-    [],
+      functions.flatMap((name) => {
+        const matched = allFunctionResources[name]
+        if (!matched) {
+          console.error(`FunctionResource \`${name}\` not found!\n`)
+          return []
+        }
+        return matched
+      }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    functions,
   )
-
-  const functionResources = useMemo(() => {
-    return functions.flatMap((name) => {
-      const matched = allFunctionResources[name]
-      if (!matched) {
-        console.error(`FunctionResource \`${name}\` not found!\n`)
-        return []
-      }
-      return matched
-    })
-  }, [...functions])
 
   const roleTemplates = useMemo(
     () =>
