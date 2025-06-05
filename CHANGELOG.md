@@ -1,5 +1,43 @@
 # @alauda/doom
 
+## 1.0.0
+
+### Major Changes
+
+- [#28](https://github.com/alauda/doom/pull/28) [`0a8ec2a`](https://github.com/alauda/doom/commit/0a8ec2a0dfb207eeee767ca677a529c97080a0bc) Thanks [@JounQin](https://github.com/JounQin)! - feat!: migrate to rspress v2
+
+### Minor Changes
+
+- [#51](https://github.com/alauda/doom/pull/51) [`4a3c706`](https://github.com/alauda/doom/commit/4a3c7068f9d21c8cf9154a925b4debb4c842dc5a) Thanks [@JounQin](https://github.com/JounQin)! - feat: support algolia alauda preset
+
+- [#40](https://github.com/alauda/doom/pull/40) [`0442929`](https://github.com/alauda/doom/commit/04429292a53c9ce857e11370d5f04a3ae0921069) Thanks [@JounQin](https://github.com/JounQin)! - feat: add llms and sitemap support
+
+- [#45](https://github.com/alauda/doom/pull/45) [`2661d68`](https://github.com/alauda/doom/commit/2661d68d4e42adf19b23f3ad6270fea4eda42733) Thanks [@JounQin](https://github.com/JounQin)! - chore: bump rspress and openai, remove unnecessary rehype-raw
+
+- [#34](https://github.com/alauda/doom/pull/34) [`8b3cd58`](https://github.com/alauda/doom/commit/8b3cd589de5242e63ab0d11520f7740bd9b32944) Thanks [@JounQin](https://github.com/JounQin)! - feat: add algolia search support
+
+### Patch Changes
+
+- [#41](https://github.com/alauda/doom/pull/41) [`17585ce`](https://github.com/alauda/doom/commit/17585ce903ed4d7ffc4b32c2ff62b096684dc698) Thanks [@JounQin](https://github.com/JounQin)! - chore: tiny improvement of translate prompt
+
+- [#46](https://github.com/alauda/doom/pull/46) [`5d474de`](https://github.com/alauda/doom/commit/5d474deccbe75d6d8f52ddd09645b132f9901bb2) Thanks [@JounQin](https://github.com/JounQin)! - fix: potential duplicate ids warning
+
+- [#30](https://github.com/alauda/doom/pull/30) [`cf044cb`](https://github.com/alauda/doom/commit/cf044cb249425f55ba1e7afe04adb16e6a3b00ae) Thanks [@JounQin](https://github.com/JounQin)! - chore: bump `@rspress/core` to v2.0.0-beta.7
+
+- [#63](https://github.com/alauda/doom/pull/63) [`0fb5b97`](https://github.com/alauda/doom/commit/0fb5b977d90d913c6baa173ccec646607d899854) Thanks [@JounQin](https://github.com/JounQin)! - fix: unknown node type `raw` for mdx
+
+- [#39](https://github.com/alauda/doom/pull/39) [`cdc390e`](https://github.com/alauda/doom/commit/cdc390e66f20710057f7253b3ade7f282b664e84) Thanks [@JounQin](https://github.com/JounQin)! - fix: add zh locale support for algolia search
+
+- [#56](https://github.com/alauda/doom/pull/56) [`67816f3`](https://github.com/alauda/doom/commit/67816f34e95181f276024bba68eb882535ead48b) Thanks [@JounQin](https://github.com/JounQin)! - fix: unstable slug due to children changes
+
+- [#42](https://github.com/alauda/doom/pull/42) [`2a2edb1`](https://github.com/alauda/doom/commit/2a2edb1b7c1afd96529c3f7864f4f54cc952a204) Thanks [@JounQin](https://github.com/JounQin)! - fix: `facet` should be `lang:` instead of `language:`
+
+- [#60](https://github.com/alauda/doom/pull/60) [`ab03ec5`](https://github.com/alauda/doom/commit/ab03ec532e8f85ab5d27244d1945e3e00998073d) Thanks [@JounQin](https://github.com/JounQin)! - chore: enable `eslint-plugin-react-hooks` and `@eslint-react/eslint-plugin`, fix related reports
+
+- [#52](https://github.com/alauda/doom/pull/52) [`6f931bc`](https://github.com/alauda/doom/commit/6f931bca403915ce64d025005790494d0d9a432e) Thanks [@JounQin](https://github.com/JounQin)! - fix: incorrect `error.data` displayed
+
+- [#32](https://github.com/alauda/doom/pull/32) [`97c8342`](https://github.com/alauda/doom/commit/97c83425485f065ff7953ffce167d5b2c61379ba) Thanks [@JounQin](https://github.com/JounQin)! - fix: `rehype-raw` removes `node.data` unexpectedly
+
 ## 1.0.0-next.9
 
 ### Patch Changes
