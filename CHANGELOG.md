@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.0.1
+
+### Patch Changes
+
+- [#67](https://github.com/alauda/doom/pull/67) [`8959c29`](https://github.com/alauda/doom/commit/8959c299206f3db4219399f10bef7d637654e8a0) Thanks [@JounQin](https://github.com/JounQin)! - fix: support alauda-ru preset
+
 ## 1.0.0
 
 ### Major Changes
