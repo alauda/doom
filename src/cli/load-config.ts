@@ -104,6 +104,12 @@ const ALAUDA_ALGOLIA_OPTIONS: AlgoliaOptions = {
   indexName: 'docs_alauda_io_xn35q5jlsv_pages',
 }
 
+const ALAUDA_RU_ALGOLIA_OPTIONS: AlgoliaOptions = {
+  appId: 'GBNIJIGQ50',
+  apiKey: '786fa6da36fe76777d688387c0520c5b',
+  indexName: 'docs_alauda_io_gbnijigq50_pages',
+}
+
 const getCommonConfig = async ({
   config,
   root,
@@ -138,7 +144,7 @@ const getCommonConfig = async ({
   exclude?: string[]
   redirect?: 'auto' | 'never' | 'only-default-lang'
   editRepo?: boolean | string
-  algolia?: boolean | 'alauda'
+  algolia?: boolean | 'alauda' | 'alauda-ru'
   siteUrl?: boolean
 }): Promise<UserConfig> => {
   const fallbackToZh = 'lang' in config && !config.lang
@@ -217,7 +223,9 @@ const getCommonConfig = async ({
 
   const algoliaOptions =
     ((algolia && config.algolia) ??
-      (algolia === 'alauda' && ALAUDA_ALGOLIA_OPTIONS)) ||
+      (algolia === 'alauda'
+        ? ALAUDA_ALGOLIA_OPTIONS
+        : algolia === 'alauda-ru' && ALAUDA_RU_ALGOLIA_OPTIONS)) ||
     null
 
   return {
