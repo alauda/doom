@@ -47,15 +47,17 @@ const issuesToListItems = (
               .map<PhrasingContent>((line) => ({ type: 'text', value: line }))
               .reduce<PhrasingContent[]>((acc, curr, index) => {
                 if (index === 0) {
-                  return [curr]
+                  acc.push(curr)
+                } else {
+                  acc.push(
+                    // @ts-expect-error -- seems like a typing issue in mdast or TypeScript
+                    isMdx
+                      ? { type: 'mdxJsxFlowElement', name: 'br' }
+                      : { type: 'html', value: '<br>' },
+                    curr,
+                  )
                 }
-                // @ts-expect-error -- seems like a typing issue in mdast or TypeScript
-                return acc.concat(
-                  isMdx
-                    ? { type: 'mdxJsxFlowElement', name: 'br' }
-                    : { type: 'html', value: '<br>' },
-                  curr,
-                )
+                return acc
               }, []),
           },
         ],
