@@ -26,6 +26,7 @@ const FIELD_MAPPER: Record<JiraLanguage, string> = {
 const issuesToListItems = (
   issues: JiraIssue[],
   lang: JiraLanguage,
+  isMdx: boolean,
 ): ListItem[] =>
   issues
     .map((issue): ListItem | undefined => {
@@ -48,7 +49,13 @@ const issuesToListItems = (
                 if (index === 0) {
                   return [curr]
                 }
-                return acc.concat({ type: 'html', value: '<br>' }, curr)
+                // @ts-expect-error -- seems like a typing issue in mdast or TypeScript
+                return acc.concat(
+                  isMdx
+                    ? { type: 'mdxJsxFlowElement', name: 'br' }
+                    : { type: 'html', value: '<br>' },
+                  curr,
+                )
               }, []),
           },
         ],
@@ -68,6 +75,7 @@ const NO_ISSUE_MAPPER: Record<JiraLanguage, string> = {
 const resolveRelease_ = async (
   releaseTemplates: Record<string, string>,
   releaseQuery: string,
+  isMdx: boolean,
 ): Promise<Record<string, List> | undefined> => {
   const query = new URLSearchParams(releaseQuery)
   const templateName = query.get('template')
@@ -139,7 +147,7 @@ const resolveRelease_ = async (
         [lang]: issues.length
           ? ({
               type: 'list',
-              children: issuesToListItems(issues, lang),
+              children: issuesToListItems(issues, lang, isMdx),
             } satisfies List)
           : ({
               type: 'paragraph',
@@ -159,13 +167,14 @@ export const resolveRelease = async (
   releaseTemplates: Record<string, string>,
   releaseQuery: string,
   lang: string,
+  isMdx: boolean,
 ) => {
   if (releaseCache.has(releaseQuery)) {
     const cached = await releaseCache.get(releaseQuery)
     return cached?.[lang] ?? cached?.en
   }
 
-  const resolving = resolveRelease_(releaseTemplates, releaseQuery)
+  const resolving = resolveRelease_(releaseTemplates, releaseQuery, isMdx)
   releaseCache.set(releaseQuery, resolving)
   const resolved = await resolving
   return resolved?.[lang] ?? resolved?.en
