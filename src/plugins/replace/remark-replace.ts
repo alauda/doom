@@ -250,6 +250,7 @@ export const remarkReplace: Plugin<
           releaseNotes?.queryTemplates ?? {},
           matched[1].trim(),
           currLang,
+          isMdx,
         )
         newAstChildren.push(releaseContent ?? node)
         continue
