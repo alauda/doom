@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.0.0-next.9
+
+### Patch Changes
+
+- [#63](https://github.com/alauda/doom/pull/63) [`0fb5b97`](https://github.com/alauda/doom/commit/0fb5b977d90d913c6baa173ccec646607d899854) Thanks [@JounQin](https://github.com/JounQin)! - fix: unknown node type `raw` for mdx
+
 ## 1.0.0-next.8
 
 ### Patch Changes
