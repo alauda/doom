@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.0.3
+
+### Patch Changes
+
+- [#73](https://github.com/alauda/doom/pull/73) [`d6202b7`](https://github.com/alauda/doom/commit/d6202b757cd9dabec50023c91b3f2bb5be4a3263) Thanks [@JounQin](https://github.com/JounQin)! - fix: remove invalid `frontmatter.title`, bump rspress to v2.0.0-beta.11
+
 ## 1.0.2
 
 ### Patch Changes
