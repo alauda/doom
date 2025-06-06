@@ -11,7 +11,7 @@ __metadata:
   dependencies:
     "@changesets/changelog-github": "npm:^0.5.1"
     "@changesets/cli": "npm:^2.29.4"
-    "@cspell/eslint-plugin": "npm:^9.0.2"
+    "@cspell/eslint-plugin": "npm:^8.19.4 || ^9.0.2"
     "@eslint-react/eslint-plugin": "npm:^1.51.0"
     "@eslint/js": "npm:^9.28.0"
     "@inquirer/prompts": "npm:^7.5.3"
@@ -1154,7 +1154,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cspell/eslint-plugin@npm:^9.0.2":
+"@cspell/eslint-plugin@npm:^8.19.4 || ^9.0.2":
   version: 9.0.2
   resolution: "@cspell/eslint-plugin@npm:9.0.2"
   dependencies:
