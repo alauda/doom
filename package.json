@@ -1,6 +1,6 @@
 {
   "name": "@alauda/doom",
-  "version": "0.23.10",
+  "version": "0.23.11",
   "type": "module",
   "description": "Doctor Doom making docs.",
   "repository": "git+https://github.com/alauda/doom.git",
