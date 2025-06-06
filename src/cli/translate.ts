@@ -411,6 +411,10 @@ export const translateCommand = new Command('translate')
               newFrontmatter.title = sourceFrontmatter.i18n.title[target]
             }
 
+            if (typeof newFrontmatter.title !== 'string') {
+              delete newFrontmatter.title
+            }
+
             targetContent = matter.stringify(
               content.startsWith('\n') ? content : '\n' + content,
               newFrontmatter,
