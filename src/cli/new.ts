@@ -221,7 +221,7 @@ export const newCommand = new Command('new')
       const target = path.resolve(render(layout.target, { parameters }))
       const when = layout.when && render(layout.when, { parameters })
 
-      if (JS_STR_FALSY_VALUES.has(when)) {
+      if (when != null && JS_STR_FALSY_VALUES.has(when)) {
         continue
       }
 
