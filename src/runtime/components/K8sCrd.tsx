@@ -131,23 +131,22 @@ export const K8sCrdSchema = ({
   return (
     <>
       <Markdown>{description}</Markdown>
-      <div className="flex items-center">
+      <div className="rp-flex rp-items-center">
         <span>
           <code>{version}</code> <Badge>version</Badge>
         </span>
         {!isPrint && properties != null && (
           <Button
-            className="ml-auto doom-btn"
+            className="rp-ml-auto doom-btn"
             type="button"
-            text={
-              <span onClick={toggleExpandAll}>
-                {expandAll ? '-' : '+'}{' '}
-                {t(expandAll ? 'collapse_all' : 'expand_all')}
-              </span>
-            }
             size="medium"
             theme="alt"
-          ></Button>
+          >
+            <span onClick={toggleExpandAll}>
+              {expandAll ? '-' : '+'}{' '}
+              {t(expandAll ? 'collapse_all' : 'expand_all')}
+            </span>
+          </Button>
         )}
       </div>
       {properties == null ? (

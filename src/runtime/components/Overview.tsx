@@ -203,40 +203,42 @@ export function Overview(props: {
   const groups = customGroups ?? defaultGroups
 
   return (
-    <div className="overview-index doom-overview-index mx-auto">
+    <div className="overview-index doom-overview-index rp-mx-auto">
       {content}
       {groups.map((group) => (
         <Fragment key={group.name}>
           {/* If there is no sidebar group, we show the sidebar items directly and hide the group name */}
           {(!title || [title, defaultGroupTitle].includes(group.name)) &&
           groups.length === 1 ? (
-            <h2 style={{ paddingTop: 0 }}></h2>
+            <h2 style={{ paddingTop: 0 }} />
           ) : (
-            <h2>{renderInlineMarkdown(group.name)}</h2>
+            <h2 {...renderInlineMarkdown(group.name)} />
           )}
 
           <div className={classes.overviewGroups}>
             {group.items.map((item) => (
               <div className={classes.overviewGroup} key={item.link}>
                 <h3 style={{ marginBottom: 8 }}>
-                  <Link href={normalizeHref(item.link)}>
-                    {renderInlineMarkdown(item.text)}
-                  </Link>
+                  <Link
+                    href={normalizeHref(item.link)}
+                    {...renderInlineMarkdown(item.text)}
+                  />
                 </h3>
                 <div className={classes.overviewDescription}>
                   {item.description}
                 </div>
-                <ul className="list-none">
+                <ul className="rp-list-none">
                   {item.headers?.map((header) => (
                     <li
                       key={header.id}
                       className={`${classes.overviewGroupLi} ${
                         classes[`level${header.depth}`]
-                      } first:mt-2`}
+                      } first:rp-mt-2`}
                     >
-                      <Link href={`${normalizeHref(item.link)}#${header.id}`}>
-                        {renderInlineMarkdown(header.text)}
-                      </Link>
+                      <Link
+                        href={`${normalizeHref(item.link)}#${header.id}`}
+                        {...renderInlineMarkdown(header.text)}
+                      />
                     </li>
                   ))}
                 </ul>
