@@ -75,7 +75,7 @@ const ExternalSiteLink_ = ({
       }
       target="_blank"
       rel="noopener noreferrer"
-      className={clsx(classes.link, 'cursor-pointer', className)}
+      className={clsx(classes.link, 'rp-cursor-pointer', className)}
       {...props}
     />
   )
