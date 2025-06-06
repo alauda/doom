@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 0.23.11
+
+### Patch Changes
+
+- [#71](https://github.com/alauda/doom/pull/71) [`b345b55`](https://github.com/alauda/doom/commit/b345b5548f6b6a1a5b22f2d2d2f84b51d82a6866) Thanks [@JounQin](https://github.com/JounQin)! - fix: check `when` expression correctly
+
 ## 0.23.10
 
 ### Patch Changes
