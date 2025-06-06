@@ -1,5 +1,13 @@
 # @alauda/doom
 
+## 1.0.2
+
+### Patch Changes
+
+- [`ea66f96`](https://github.com/alauda/doom/commit/ea66f966c8319de21c72c7a79387b9cc84559d0f) Thanks [@JounQin](https://github.com/JounQin)! - chore: bump all (dev)Dependencies
+
+- [#69](https://github.com/alauda/doom/pull/69) [`13eeacf`](https://github.com/alauda/doom/commit/13eeacf676f226bfae93f4ca53cb3e2d8b33bf38) Thanks [@JounQin](https://github.com/JounQin)! - fix: check `when` expression correctly
+
 ## 1.0.1
 
 ### Patch Changes
