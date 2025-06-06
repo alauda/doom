@@ -27,14 +27,34 @@ export const JS_STR_FALSY_VALUES = new Set([
 export const APIS_ROUTES = new Set(['apis/**', '*/apis/**'])
 
 export const Language = {
-  en: '英文',
-  zh: '中文',
-  ru: '俄文',
+  en: 'English',
+  zh: 'Chinese',
+  ru: 'Russian',
 } as const
 
 export type Language = keyof typeof Language
 
 export const SUPPORTED_LANGUAGES = Object.keys(Language) as Language[]
+
+export const TITLE_TRANSLATION_MAP: Array<Partial<Record<Language, string>>> = [
+  {
+    en: 'Concepts',
+    zh: '核心概念',
+    ru: 'Основные понятия',
+  },
+  {
+    en: 'Guides',
+    zh: '操作指南',
+  },
+  {
+    en: 'How To',
+    zh: '实用指南',
+  },
+  {
+    en: 'Release Notes',
+    zh: '发版日志',
+  },
+]
 
 export const UNVERSIONED = 'unversioned'
 
