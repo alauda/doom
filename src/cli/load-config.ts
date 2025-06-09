@@ -1,7 +1,9 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 
+import { pluginReact } from '@rsbuild/plugin-react'
 import { pluginSass } from '@rsbuild/plugin-sass'
+import { pluginSvgr } from '@rsbuild/plugin-svgr'
 import { pluginYaml } from '@rsbuild/plugin-yaml'
 import {
   addLeadingSlash,
@@ -311,7 +313,7 @@ const getCommonConfig = async ({
       dev: {
         lazyCompilation: lazy,
       },
-      plugins: [pluginSass(), pluginYaml()],
+      plugins: [pluginReact(), pluginSass(), pluginSvgr(), pluginYaml()],
       server: {
         open,
       },
