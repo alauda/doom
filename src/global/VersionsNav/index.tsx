@@ -37,10 +37,10 @@ const LEGACY_NAV_ITEMS = LEGACY_VERSIONS.map((v) => ({
   link: `https://docs.alauda.io/document/release-notes?version=${v}`,
 }))
 
-const ALLOW_LEGACY_DOMAINS = ['docs.alauda.cn', 'docs.alauda.io']
+const ALLOWED_LEGACY_DOMAINS = new Set(['docs.alauda.cn', 'docs.alauda.io'])
 
 if (!isProduction()) {
-  ALLOW_LEGACY_DOMAINS.push('localhost')
+  ALLOWED_LEGACY_DOMAINS.add('localhost')
 }
 
 const VersionsNav_ = () => {
@@ -138,7 +138,7 @@ const VersionsNav_ = () => {
     )
     if (
       versionsBase != null &&
-      ALLOW_LEGACY_DOMAINS.includes(location.hostname) &&
+      ALLOWED_LEGACY_DOMAINS.has(location.hostname) &&
       virtual.userBase === ACP_BASE
     ) {
       versionItems.push(...LEGACY_NAV_ITEMS)
