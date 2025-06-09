@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.1.1
+
+### Patch Changes
+
+- [#78](https://github.com/alauda/doom/pull/78) [`698b3bb`](https://github.com/alauda/doom/commit/698b3bb09f764fd681fa7e7d8c9c89fd7eea1b19) Thanks [@JounQin](https://github.com/JounQin)! - fix(deps): `@total-typescript/ts-reset` should be listed as dependency
+
 ## 1.1.0
 
 ### Minor Changes
