@@ -16,7 +16,7 @@ import { green } from 'yoctocolors'
 import type { GlobalCliOptions, ServeOptions } from '../types.js'
 import { setNodeEnv } from '../utils/index.js'
 
-import { CWD, DEFAULT_CONFIGS, I18N_FILE, SITES_FILE } from './constants.js'
+import { CWD, DEFAULT_CONFIGS, SITES_FILE } from './constants.js'
 import { exportCommand } from './export.js'
 import { parseBoolean, parseBooleanOrString } from './helpers.js'
 import { lintCommand } from './lint.js'
@@ -26,7 +26,7 @@ import { translateCommand } from './translate.js'
 
 const META_FILE = '_meta.json'
 
-const CONFIG_FILES = [...DEFAULT_CONFIGS, I18N_FILE, SITES_FILE]
+const CONFIG_FILES = [...DEFAULT_CONFIGS, SITES_FILE]
 
 const cjsRequire = module.createRequire(import.meta.url)
 
@@ -176,8 +176,7 @@ program
           eventName === 'add' ||
           eventName === 'unlink' ||
           (eventName === 'change' &&
-            (filepath === config.i18nSourcePath ||
-              CONFIG_FILES.includes(path.basename(filepath)) ||
+            (CONFIG_FILES.includes(path.basename(filepath)) ||
               path.basename(filepath) === META_FILE))
         ) {
           if (isRestarting) {
