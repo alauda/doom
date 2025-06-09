@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.1.2
+
+### Patch Changes
+
+- [#80](https://github.com/alauda/doom/pull/80) [`853961e`](https://github.com/alauda/doom/commit/853961e2ce98b494ec502b3fe847dd0da49d81c0) Thanks [@JounQin](https://github.com/JounQin)! - fix: `i18n.json` is now virtual module
+
 ## 1.1.1
 
 ### Patch Changes
