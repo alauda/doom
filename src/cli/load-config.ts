@@ -314,6 +314,11 @@ const getCommonConfig = async ({
         lazyCompilation: lazy,
       },
       plugins: [pluginReact(), pluginSass(), pluginSvgr(), pluginYaml()],
+      resolve: {
+        alias: {
+          classnames$: 'clsx',
+        },
+      },
       server: {
         open,
       },
