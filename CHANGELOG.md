@@ -1,5 +1,13 @@
 # @alauda/doom
 
+## 1.1.0
+
+### Minor Changes
+
+- [#75](https://github.com/alauda/doom/pull/75) [`7a41f1c`](https://github.com/alauda/doom/commit/7a41f1c33fd4e49c2e20a5031b4a94c4157b6bc1) Thanks [@JounQin](https://github.com/JounQin)! - feat: integrate with rsbuild svgr
+
+- [#77](https://github.com/alauda/doom/pull/77) [`21fe248`](https://github.com/alauda/doom/commit/21fe248c8cbde6d218e13afd163693b179c762c3) Thanks [@JounQin](https://github.com/JounQin)! - feat: alias `classnames` to `clsx`
+
 ## 1.0.3
 
 ### Patch Changes
