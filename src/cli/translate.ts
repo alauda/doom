@@ -476,7 +476,7 @@ export const translateCommand = new Command('translate')
           if (await pathExists(targetFilePath, 'file')) {
             targetContent = await fs.readFile(targetFilePath, 'utf-8')
 
-            targetFrontmatter = matter(targetContent).data
+            targetFrontmatter = matter(targetContent).data as I18nFrontmatter
 
             if (
               sourceFrontmatter.i18n?.disableAutoTranslation ||
@@ -558,9 +558,10 @@ export const translateCommand = new Command('translate')
               newFrontmatter.sourceSHA = sourceSHA
 
               const { data, content } = matter(targetContent)
+              const typedData = data as I18nFrontmatter
 
-              if (data.title && typeof data.title === 'string') {
-                newFrontmatter.title = data.title
+              if (typedData.title && typeof typedData.title === 'string') {
+                newFrontmatter.title = typedData.title
               }
 
               if (sourceFrontmatter.title) {
