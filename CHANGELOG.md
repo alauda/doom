@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.2.0
+
+### Minor Changes
+
+- [#82](https://github.com/alauda/doom/pull/82) [`32a35c7`](https://github.com/alauda/doom/commit/32a35c7352c0ba883160634086bcc91fb8e8b90b) Thanks [@youyongsong](https://github.com/youyongsong)! - feat: overhaul translation system for improved accuracy and stability
+
 ## 1.1.2
 
 ### Patch Changes
