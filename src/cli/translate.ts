@@ -43,6 +43,7 @@ export interface I18nFrontmatter {
   }
   sourceSHA?: string
   title?: string
+  description?: string
 }
 
 export const TERMS_SUPPORTED_LANGUAGES: Language[] = ['en', 'zh', 'ru']
@@ -558,6 +559,12 @@ export const translateCommand = new Command('translate')
 
               if (typedData.title && typeof typedData.title === 'string') {
                 newFrontmatter.title = typedData.title
+              }
+              if (
+                typedData.description &&
+                typeof typedData.description === 'string'
+              ) {
+                newFrontmatter.description = typedData.description
               }
 
               if (sourceFrontmatter.title) {
