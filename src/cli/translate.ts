@@ -478,10 +478,7 @@ export const translateCommand = new Command('translate')
 
             targetFrontmatter = matter(targetContent).data as I18nFrontmatter
 
-            if (
-              sourceFrontmatter.i18n?.disableAutoTranslation ||
-              (!force && targetFrontmatter.sourceSHA === sourceSHA)
-            ) {
+            if (!force && targetFrontmatter.sourceSHA === sourceSHA) {
               allSourceFilePaths.delete(sourceFilePath)
               return
             }
@@ -577,13 +574,18 @@ export const translateCommand = new Command('translate')
                 }
               }
 
-              if (typeof newFrontmatter.title !== 'string') {
-                delete newFrontmatter.title
-              }
+              const finalFrontmatter =
+                typeof newFrontmatter.title === 'string'
+                  ? newFrontmatter
+                  : (() => {
+                      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                      const { title: _, ...rest } = newFrontmatter
+                      return rest
+                    })()
 
               targetContent = matter.stringify(
                 content.startsWith('\n') ? content : '\n' + content,
-                newFrontmatter,
+                finalFrontmatter,
               )
 
               await fs.mkdir(targetBase, { recursive: true })
