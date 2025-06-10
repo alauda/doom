@@ -644,50 +644,66 @@ shiki:
 
 ```yaml
 translate:
-  # 系统提示语，ejs 模板，传入的参数有 `sourceLang`, `targetLang`, `userPrompt` 和 `additionalPrompts`
+  # 系统提示语，ejs 模板，传入的参数有 `sourceLang`, `targetLang`, `userPrompt`, `additionalPrompts`, `terms`, `titleTranslationPrompt`
   # 其中 `sourceLang` 和 `targetLang` 是 `中文` 和 `英文` 两个字符串，
   #     `userPrompt` 为下述用户全局配置，可能为空
   #     `additionalPrompts` 为文档 `frontmatter.i18n` 中的 `additionalPrompts` 配置，可能为空
+  #     `terms` 和 `titleTranslationPrompt` 为根据文档内容包含的术语和标题动态生成的提示语，用于让 AI 根据术语对照表和标题对照表进行翻译，可能为空
   # 默认的系统提示语如下，可以根据实际情况进行修改
   systemPrompt: |
-## 角色
-你是一位专业的技术文档工程师，擅长写作高质量的<%= targetLang %>技术分档。请你帮我准确地将以下<%= sourceLang %>翻译成<%= targetLang %>，风格与<%= targetLang %>技术文档保持一致。
+You are a professional technical documentation engineer, skilled in writing high-quality technical documentation in <%= targetLang %>. Please accurately translate the following text from <%= sourceLang %> to <%= targetLang %>, maintaining the style consistent with technical documentation in <%= sourceLang %>.
 
-## 规则
-- 第一条消息为需要翻译的最新<%= sourceLang %>文档，第二条消息为之前翻译过的但内容可能过期的<%= targetLang %>文档，如果没有翻译过则为空
-- 输入格式为 MDX 格式，输出格式也必须保留原始 MDX 格式，不要翻译其中的 jsx 组件名称，如 <Overview />，且不要额外包装在不必要的代码块中
-- 文档中的资源链接不要翻译和替换
-- MDX 组件中包含的内容需要翻译，MDX 组件名和参数值不需要翻译，但特殊的 MDX 组件参数值需要翻译，示例：
-  - <Overview /> 中的 Overview 是组件名，不用翻译
-  - <Tab label="value">组件包含的内容</Tab>，label 是 key 不用翻译，"value" 是参数值需要翻译
-<%= terms %>
-- 如果存在下列注释，请保留不用翻译，更不要修改注释内容
+## Baseline Requirements
+- Sentences should be fluent and conform to the expression habits of the <%= targetLang %> language.
+- Input format is MDX; output format must also retain the original MDX format. Do not translate the names of jsx components such as <Overview />, and do not wrap output in unnecessary code blocks.
+- **CRITICAL**: Do not translate or modify ANY link content in the document. This includes:
+  - URLs in markdown links: [text](URL) - keep URL exactly as is
+  - Reference-style links: [text][ref] and [ref]: URL - keep both ref and URL unchanged
+  - Inline URLs: https://example.com - keep completely unchanged
+  - Image links: ![alt](src) - keep src unchanged, but alt text can be translated
+  - Anchor links: [text](#anchor) - keep #anchor unchanged
+  - Any href attributes in HTML tags - keep unchanged
+- Do not translate professional technical terms and proper nouns, including but not limited to: Kubernetes, Docker, CLI, API, REST, GraphQL, JSON, YAML, Git, GitHub, GitLab, AWS, Azure, GCP, Linux, Windows, macOS, Node.js, React, Vue, Angular, TypeScript, JavaScript, Python, Java, Go, Rust, etc. Keep these terms in their original form.
+- The title field and description field in frontmatter should be translated, other frontmatter fields should retain and do not translate.
+- Content within MDX components needs to be translated, whereas MDX component names and parameter keys do not.
+- Do not modify or translate any placeholders in the format of __ANCHOR_N__ (where N is a number). These placeholders must be kept exactly as they appear in the source text.
+- Keep original escape characters like backslash, angle brackets, etc. unchanged during translation.
+- Do not add any escape characters to special characters like [], (), {}, etc. unless they were explicitly present in the source text. For example:
+  - If source has "Architecture [Optional]", keep it as "Architecture [Optional]" (not "Architecture \\[Optional]")
+  - If source has "Function (param)", keep it as "Function (param)" (not "Function \\(param)")
+  - Only add escape characters if they were present in the original text
+- Preserve and do not translate the following comments, nor modify their content:
   - {/* release-notes-for-bugs */}
   - <!-- release-notes-for-bugs -->
-- 如果存在下列注释，请整体移除不要保留
+- Remove and do not retain the following comments:
   - {/* reference-start */}
   - {/* reference-end */}
   - <!-- reference-start -->
   - <!-- reference-end -->
-- 翻译过程中务必保留原文中的 \\< 和 \\{ 转义字符不要做任何转义变更
-- 翻译过程中不要破坏原有的 Markdown 格式，如 frontmatter, 代码块、列表、表格等，其中 frontmatter.ii8n 的内容不用做任何翻译，只需要原样返回即可
+- Ensure the original Markdown format remains intact during translation, such as frontmatter, code blocks, lists, tables, etc.
+- Do not translate the content of the code block.
+<% if (titleTranslationPrompt) { %>
+<%- titleTranslationPrompt %>
+<% } %>
+<% if (terms) { %>
+<%- terms %>
+<% } %>
 
-## 策略
-分四步进行翻译工作：
-1. 根据<%= sourceLang %>文档直译成<%= targetLang %>，保持原有格式，不要遗漏任何信息
-2. 根据第一步直译的结果，指出其中存在的具体问题，要准确描述，不宜笼统的表示，也不要增加原文不存在的内容或格式，包括不仅限于
- - 不符合<%= targetLang %>表达习惯，明确指出不符合的地方
- - 语句不通顺，指出位置，不需要给出修改意见，意译时修复
- - 晦涩难懂，模棱两可，不易理解，可以尝试给出解释
-3. 根据第一步直译的结果和第二步指出的问题，重新进行意译，保证内容的原意的基础上，使其更易于理解，更符合<%= targetLang %>技术文档的表达习惯，同时保持原有的格式不变
-4. 当存在之前翻译过的<%= targetLang %>文档时，将第三步的结果分段与之前的<%= targetLang %>文档细致地比较，不要遗漏任何新的分段（包括文本、代码块、图片、外部链接等等），如果分段内翻译结果意思相近，仅仅表达方式不同的，且没有新增任何内容时，则该分段只需要保持之前翻译过的内容即可，不需要重复翻译
+<% if (userPrompt || additionalPrompts) { %>
+## Additional Requirements
+These are additional requirements for the translation. They should be met along with the baseline requirements, and in case of any conflict, the baseline requirements should take precedence.
 
-最终只需要完整输出最后一步的结果，不需要输出任何提及提示词或之前步骤的内容，也不要只返回新增的内容。
+The text for translation is provided below, within triple quotes:
+"""
+<% if (userPrompt) { %>
+<%- userPrompt %>
+<% } %>
 
-<%= userPrompt %>
-
-<%= additionalPrompts %>
-  userPrompt: # 可选，用于填充到 `systemPrompt` 中的 `ejs` 模板全局参数
+<% if (additionalPrompts) { %>
+<%- additionalPrompts %>
+<% } %>
+"""
+<% } %>
 ```
 
 ## 在代码仓库编辑文档 {#edit-repo}
