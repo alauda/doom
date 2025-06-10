@@ -8,7 +8,6 @@ import { removeLeadingSlash } from '@rspress/shared'
 import { logger } from '@rspress/shared/logger'
 import { Command } from 'commander'
 import { render } from 'ejs'
-import { merge } from 'es-toolkit/compat'
 import matter from 'gray-matter'
 import { AzureOpenAI, RateLimitError } from 'openai'
 import { pRateLimit } from 'p-ratelimit'
@@ -21,7 +20,11 @@ import {
   normalizeImgSrc,
   type NormalizeImgSrcOptions,
 } from '../plugins/index.js'
-import { Language, SUPPORTED_LANGUAGES } from '../shared/index.js'
+import {
+  Language,
+  SUPPORTED_LANGUAGES,
+  TITLE_TRANSLATION_MAP,
+} from '../shared/index.js'
 import type { GlobalCliOptions, TranslateOptions } from '../types.js'
 import { pathExists } from '../utils/index.js'
 
@@ -35,54 +38,76 @@ import { loadConfig } from './load-config.js'
 
 export interface I18nFrontmatter {
   i18n?: {
-    title?: Record<string, string>
     additionalPrompts?: string
     disableAutoTranslation?: boolean
   }
   sourceSHA?: string
   title?: string
+  description?: string
 }
 
-export const TERMS_SUPPORTED_LANGUAGES: Language[] = ['en', 'zh']
+export const TERMS_SUPPORTED_LANGUAGES: Language[] = ['en', 'zh', 'ru']
+
+// Directories that should be copied instead of translated
+const COPY_ONLY_DIRECTORIES = [
+  'apis/advanced_apis/**',
+  'apis/kubernetes_apis/**',
+]
 
 const DEFAULT_SYSTEM_PROMPT = `
-## 角色
-你是一位专业的技术文档工程师，擅长写作高质量的<%= targetLang %>技术分档。请你帮我准确地将以下<%= sourceLang %>翻译成<%= targetLang %>，风格与<%= targetLang %>技术文档保持一致。
+You are a professional technical documentation engineer, skilled in writing high-quality technical documentation in <%= targetLang %>. Please accurately translate the following text from <%= sourceLang %> to <%= targetLang %>, maintaining the style consistent with technical documentation in <%= sourceLang %>.
 
-## 规则
-- 第一条消息为需要翻译的最新<%= sourceLang %>文档，第二条消息为之前翻译过的但内容可能过期的<%= targetLang %>文档，如果没有翻译过则为空
-- 输入格式为 MDX 格式，输出格式也必须保留原始 MDX 格式，不要翻译其中的 jsx 组件名称，如 <Overview />，且不要额外包装在不必要的代码块中
-- 文档中的资源链接不要翻译和替换
-- MDX 组件中包含的内容需要翻译，MDX 组件名和参数值不需要翻译，但特殊的 MDX 组件参数值需要翻译，示例：
-  - <Overview /> 中的 Overview 是组件名，不用翻译
-  - <Tab label="value">组件包含的内容</Tab>，label 是 key 不用翻译，"value" 是参数值需要翻译
-<%= terms %>
-- 如果存在下列注释，请保留不用翻译，更不要修改注释内容
+## Baseline Requirements
+- Sentences should be fluent and conform to the expression habits of the <%= targetLang %> language.
+- Input format is MDX; output format must also retain the original MDX format. Do not translate the names of jsx components such as <Overview />, and do not wrap output in unnecessary code blocks.
+- **CRITICAL**: Do not translate or modify ANY link content in the document. This includes:
+  - URLs in markdown links: [text](URL) - keep URL exactly as is
+  - Reference-style links: [text][ref] and [ref]: URL - keep both ref and URL unchanged
+  - Inline URLs: https://example.com - keep completely unchanged
+  - Image links: ![alt](src) - keep src unchanged, but alt text can be translated
+  - Anchor links: [text](#anchor) - keep #anchor unchanged
+  - Any href attributes in HTML tags - keep unchanged
+- Do not translate professional technical terms and proper nouns, including but not limited to: Kubernetes, Docker, CLI, API, REST, GraphQL, JSON, YAML, Git, GitHub, GitLab, AWS, Azure, GCP, Linux, Windows, macOS, Node.js, React, Vue, Angular, TypeScript, JavaScript, Python, Java, Go, Rust, etc. Keep these terms in their original form.
+- The title field and description field in frontmatter should be translated, other frontmatter fields should retain and do not translate.
+- Content within MDX components needs to be translated, whereas MDX component names and parameter keys do not.
+- Do not modify or translate any placeholders in the format of __ANCHOR_N__ (where N is a number). These placeholders must be kept exactly as they appear in the source text.
+- Keep original escape characters like backslash, angle brackets, etc. unchanged during translation.
+- Do not add any escape characters to special characters like [], (), {}, etc. unless they were explicitly present in the source text. For example:
+  - If source has "Architecture [Optional]", keep it as "Architecture [Optional]" (not "Architecture \\[Optional]")
+  - If source has "Function (param)", keep it as "Function (param)" (not "Function \\(param)")
+  - Only add escape characters if they were present in the original text
+- Preserve and do not translate the following comments, nor modify their content:
   - {/* release-notes-for-bugs */}
   - <!-- release-notes-for-bugs -->
-- 如果存在下列注释，请整体移除不要保留
+- Remove and do not retain the following comments:
   - {/* reference-start */}
   - {/* reference-end */}
   - <!-- reference-start -->
   - <!-- reference-end -->
-- 翻译过程中务必保留原文中的 \\< 和 \\{ 转义字符不要做任何转义变更
-- 翻译过程中不要破坏原有的 Markdown 格式，如 frontmatter, 代码块、列表、表格等，其中 frontmatter.ii8n 的内容不用做任何翻译，只需要原样返回即可
+- Ensure the original Markdown format remains intact during translation, such as frontmatter, code blocks, lists, tables, etc.
+- Do not translate the content of the code block.
+<% if (titleTranslationPrompt) { %>
+<%- titleTranslationPrompt %>
+<% } %>
+<% if (terms) { %>
+<%- terms %>
+<% } %>
 
-## 策略
-分四步进行翻译工作：
-1. 根据<%= sourceLang %>文档直译成<%= targetLang %>，保持原有格式，不要遗漏任何信息
-2. 根据第一步直译的结果，指出其中存在的具体问题，要准确描述，不宜笼统的表示，也不要增加原文不存在的内容或格式，包括不仅限于
- - 不符合<%= targetLang %>表达习惯，明确指出不符合的地方
- - 语句不通顺，指出位置，不需要给出修改意见，意译时修复
- - 晦涩难懂，模棱两可，不易理解，可以尝试给出解释
-3. 根据第一步直译的结果和第二步指出的问题，重新进行意译，保证内容的原意的基础上，使其更易于理解，更符合<%= targetLang %>技术文档的表达习惯，同时保持原有的格式不变
-4. 当存在之前翻译过的<%= targetLang %>文档时，将第三步的结果分段与之前的<%= targetLang %>文档细致地比较，不要遗漏任何新的分段（包括文本、代码块、图片、超链接等等），如果分段内翻译结果意思相近，仅仅表达方式不同的，且没有新增任何内容时，则该分段只需要保持之前翻译过的内容即可，不需要重复翻译
+<% if (userPrompt || additionalPrompts) { %>
+## Additional Requirements
+These are additional requirements for the translation. They should be met along with the baseline requirements, and in case of any conflict, the baseline requirements should take precedence.
 
-最终只需要完整输出最后一步的结果，不需要输出任何提及提示词或之前步骤的内容，也不要只返回新增的内容。
+The text for translation is provided below, within triple quotes:
+"""
+<% if (userPrompt) { %>
+<%- userPrompt %>
+<% } %>
 
-<%= userPrompt %>
-
-<%= additionalPrompts %>
+<% if (additionalPrompts) { %>
+<%- additionalPrompts %>
+<% } %>
+"""
+<% } %>
 `.trim()
 
 let openai: AzureOpenAI | undefined
@@ -91,35 +116,114 @@ export interface InternalTranslateOptions extends TranslateOptions {
   source: Language
   sourceContent: string
   target: Language
-  targetContent?: string
   additionalPrompts?: string
 }
 
-const resolveTerms_ = async () => {
+const resolveTerms = async (
+  sourceLang: Language,
+  targetLang: Language,
+  sourceContent: string,
+) => {
   const parsedTerms = await parseTerms()
-  return (
-    '- 以下是常见的相关术语词汇对应表（English <-> 中文）\n' +
-    parsedTerms.map(({ en, zh = en }) => `  * ${en} <-> ${zh}`).join('\n')
-  )
+
+  // Filter terms that exist in source content and have translations for both source and target languages
+  const relevantTerms = parsedTerms.filter((term) => {
+    // Check if term has both source and target language translations
+    const sourceTranslation = term[sourceLang]
+    const targetTranslation = term[targetLang]
+
+    if (!sourceTranslation || !targetTranslation) {
+      return false
+    }
+
+    // Check if the source translation appears in the source content (case-insensitive)
+    const sourceTermRegex = new RegExp(
+      `\\b${sourceTranslation.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`,
+      'i',
+    )
+    return sourceTermRegex.test(sourceContent)
+  })
+
+  if (relevantTerms.length === 0) {
+    logger.debug('No relevant terms found for translation')
+    return ''
+  }
+
+  const sourceLangName = Language[sourceLang]
+  const targetLangName = Language[targetLang]
+
+  const terms =
+    `- The following is a common related terminology vocabulary table (${sourceLangName} <=> ${targetLangName}), you should use it to translate the matched text.\n` +
+    relevantTerms
+      .map((term) => `  * ${term[sourceLang]} <=> ${term[targetLang]}`)
+      .join('\n')
+
+  logger.debug('Resolved terms:', terms)
+  return terms
 }
 
-let termsCache: Promise<string> | undefined
+const ANCHOR_REGEX = /(\\\\?)\{#([a-zA-Z0-9_-]+)\}/g
 
-const resolveTerms = async () => {
-  if (termsCache) {
-    return termsCache
+function replaceAnchorsWithPlaceholders(content: string): {
+  content: string
+  anchors: string[]
+} {
+  // Handle escaped underscores in anchor IDs (e.g., \{#independent\_doc\_site} -> \{#independent_doc_site})
+  // This is necessary because MDX processor automatically escapes underscores in heading IDs
+  // to ensure proper Markdown parsing, but we need the original unescaped form for anchor matching
+  const unescapedContent = content.replace(/\\_/g, '_')
+
+  const anchors: string[] = []
+  const contentWithPlaceholders = unescapedContent.replace(
+    ANCHOR_REGEX,
+    (match) => {
+      anchors.push(match)
+      return `__ANCHOR_${anchors.length - 1}__`
+    },
+  )
+
+  return { content: contentWithPlaceholders, anchors }
+}
+
+function restoreAnchors(content: string, anchors: string[]): string {
+  return content.replace(/__ANCHOR_(\d+)__/g, (_, index: string) => {
+    const numIndex: number = parseInt(index, 10)
+    if (isNaN(numIndex) || numIndex < 0 || numIndex >= anchors.length) {
+      throw new Error(`Invalid anchor index: ${index}`)
+    }
+    const anchor: string = anchors[numIndex]
+    return anchor
+  })
+}
+
+function extractFirstLevelHeading(content: string): string | null {
+  const lines = content.split('\n')
+  for (const line of lines) {
+    const trimmed = line.trim()
+    if (trimmed.startsWith('# ')) {
+      return trimmed.substring(2).trim()
+    }
   }
-  return (termsCache = resolveTerms_().then((terms) => {
-    logger.debug('Resolved terms:', terms)
-    return terms
-  }))
+  return null
+}
+
+function getTitleTranslation(
+  title: string,
+  sourceLang: Language,
+  targetLang: Language,
+): string | null {
+  for (const translations of TITLE_TRANSLATION_MAP) {
+    if (translations[sourceLang] === title && translations[targetLang]) {
+      return translations[targetLang]
+    }
+  }
+  return null
 }
 
 export const translate = async ({
   source,
   sourceContent,
   target,
-  targetContent = '',
   systemPrompt,
   userPrompt = '',
   additionalPrompts = '',
@@ -142,15 +246,40 @@ export const translate = async ({
   if (
     [source, target].every((lang) => TERMS_SUPPORTED_LANGUAGES.includes(lang))
   ) {
-    terms = await resolveTerms()
+    terms = await resolveTerms(source, target, sourceContent)
   }
+
+  const firstLevelHeading = extractFirstLevelHeading(sourceContent)
+  let titleTranslationPrompt = ''
+
+  if (firstLevelHeading) {
+    const titleTranslation = getTitleTranslation(
+      firstLevelHeading,
+      source,
+      target,
+    )
+    if (titleTranslation) {
+      titleTranslationPrompt = `- The heading "${firstLevelHeading}" should be translated as "${titleTranslation}".`
+    }
+  }
+
+  const { content: contentWithPlaceholders, anchors } =
+    replaceAnchorsWithPlaceholders(sourceContent)
 
   const finalSystemPrompt = await render(
     systemPrompt?.trim() || DEFAULT_SYSTEM_PROMPT,
-    { sourceLang, targetLang, userPrompt, additionalPrompts, terms },
+    {
+      sourceLang,
+      targetLang,
+      userPrompt,
+      additionalPrompts: additionalPrompts,
+      terms,
+      titleTranslationPrompt,
+    },
     { async: true },
   )
 
+  logger.debug('Final system prompt:\n', finalSystemPrompt)
   const { choices } = await openai.chat.completions.parse({
     messages: [
       {
@@ -159,14 +288,10 @@ export const translate = async ({
       },
       {
         role: 'user',
-        content: sourceContent,
-      },
-      {
-        role: 'user',
-        content: targetContent,
+        content: contentWithPlaceholders,
       },
     ],
-    model: 'gpt-4o-mini',
+    model: 'gpt-4.1-mini',
     temperature: 0.2,
   })
 
@@ -176,7 +301,7 @@ export const translate = async ({
     throw new Error(refusal)
   }
 
-  return content!
+  return restoreAnchors(content!, anchors)
 }
 
 const limit = pRateLimit({
@@ -268,6 +393,14 @@ export const translateCommand = new Command('translate')
       allSourceFilePaths.delete(internalFilePath)
     }
 
+    // Get copy-only files using glob patterns
+    const copyOnlyFilePaths = await glob(COPY_ONLY_DIRECTORIES, {
+      absolute: true,
+      cwd: sourceDir,
+    })
+
+    const copyOnlyFilePathsSet = new Set(copyOnlyFilePaths)
+
     if (allSourceFilePaths.size === 0) {
       logger.error(
         `No files matched by the glob patterns: ${globs.map((g) => `\`${cyan(g)}\``).join(', ')}`,
@@ -344,89 +477,124 @@ export const translateCommand = new Command('translate')
           if (await pathExists(targetFilePath, 'file')) {
             targetContent = await fs.readFile(targetFilePath, 'utf-8')
 
-            targetFrontmatter = matter(targetContent).data
+            targetFrontmatter = matter(targetContent).data as I18nFrontmatter
 
-            if (
-              targetFrontmatter.i18n?.disableAutoTranslation ||
-              (!force && targetFrontmatter.sourceSHA === sourceSHA)
-            ) {
+            if (!force && targetFrontmatter.sourceSHA === sourceSHA) {
               allSourceFilePaths.delete(sourceFilePath)
               return
             }
           }
 
+          const shouldCopyOnly = copyOnlyFilePathsSet.has(sourceFilePath)
+
           await limit(async () => {
             const sourceRelativePath = path.relative(docsDir, sourceFilePath)
             const targetRelativePath = path.relative(docsDir, targetFilePath)
 
-            logger.info(
-              `Translating ${cyan(sourceRelativePath)} to ${cyan(targetRelativePath)}`,
-            )
+            if (shouldCopyOnly) {
+              logger.info(
+                `Copying ${cyan(sourceRelativePath)} to ${cyan(targetRelativePath)}`,
+              )
 
-            const isMdx = sourceFilePath.endsWith('.mdx')
+              // For copy-only files, we still update the sourceSHA but don't translate
+              const newFrontmatter = { ...sourceFrontmatter, sourceSHA }
+              delete newFrontmatter.i18n
 
-            const processor = isMdx ? mdxProcessor : mdProcessor
+              const { content } = matter(sourceContent)
 
-            const ast = processor.parse(escapeMarkdownHeadingIds(sourceContent))
+              targetContent = matter.stringify(
+                content.startsWith('\n') ? content : '\n' + content,
+                newFrontmatter,
+              )
 
-            const targetBase = path.dirname(targetFilePath)
+              const targetBase = path.dirname(targetFilePath)
+              await fs.mkdir(targetBase, { recursive: true })
+              await fs.writeFile(targetFilePath, targetContent)
 
-            const normalizeImgSrcOptions: NormalizeImgSrcOptions = {
-              localPublicBase: path.resolve(docsDir, 'public'),
-              sourceBase: path.dirname(sourceFilePath),
-              targetBase,
-              translating: { source, target, copy },
+              logger.info(
+                `${cyan(sourceRelativePath)} copied to ${cyan(targetRelativePath)}`,
+              )
+            } else {
+              logger.info(
+                `Translating ${cyan(sourceRelativePath)} to ${cyan(targetRelativePath)}`,
+              )
+
+              const isMdx = sourceFilePath.endsWith('.mdx')
+
+              const processor = isMdx ? mdxProcessor : mdProcessor
+
+              const ast = processor.parse(
+                escapeMarkdownHeadingIds(sourceContent),
+              )
+
+              const targetBase = path.dirname(targetFilePath)
+
+              const normalizeImgSrcOptions: NormalizeImgSrcOptions = {
+                localPublicBase: path.resolve(docsDir, 'public'),
+                sourceBase: path.dirname(sourceFilePath),
+                targetBase,
+                translating: { source, target, copy },
+              }
+
+              const normalizedSourceContent = processor.stringify({
+                ...ast,
+                children: ast.children.map((it) =>
+                  normalizeImgSrc(it, normalizeImgSrcOptions),
+                ),
+              })
+
+              targetContent = await translate({
+                ...config.translate,
+                source,
+                sourceContent: normalizedSourceContent,
+                target,
+                additionalPrompts: sourceFrontmatter.i18n?.additionalPrompts,
+              })
+
+              const newFrontmatter = { ...sourceFrontmatter, sourceSHA }
+              delete newFrontmatter.i18n
+
+              const { data, content } = matter(targetContent)
+              const typedData = data as I18nFrontmatter
+
+              if (typedData.title && typeof typedData.title === 'string') {
+                newFrontmatter.title = typedData.title
+              }
+              if (
+                typedData.description &&
+                typeof typedData.description === 'string'
+              ) {
+                newFrontmatter.description = typedData.description
+              }
+
+              if (sourceFrontmatter.title) {
+                const titleTranslation = getTitleTranslation(
+                  sourceFrontmatter.title,
+                  source,
+                  target,
+                )
+                if (titleTranslation) {
+                  newFrontmatter.title = titleTranslation
+                }
+              }
+
+              if (typeof newFrontmatter.title !== 'string') {
+                delete newFrontmatter.title
+              }
+
+              targetContent = matter.stringify(
+                content.startsWith('\n') ? content : '\n' + content,
+                newFrontmatter,
+              )
+
+              await fs.mkdir(targetBase, { recursive: true })
+
+              await fs.writeFile(targetFilePath, targetContent)
+
+              logger.info(
+                `${cyan(sourceRelativePath)} translated to ${cyan(targetRelativePath)}`,
+              )
             }
-
-            const normalizedSourceContent = processor.stringify({
-              ...ast,
-              children: ast.children.map((it) =>
-                normalizeImgSrc(it, normalizeImgSrcOptions),
-              ),
-            })
-
-            targetContent = await translate({
-              ...config.translate,
-              source,
-              sourceContent: normalizedSourceContent,
-              target,
-              targetContent: force ? '' : targetContent,
-              additionalPrompts:
-                targetFrontmatter?.i18n?.additionalPrompts ??
-                sourceFrontmatter.i18n?.additionalPrompts,
-            })
-
-            const { data, content } = matter(targetContent)
-
-            const newFrontmatter = merge(
-              {},
-              sourceFrontmatter,
-              targetFrontmatter,
-              data,
-            )
-
-            newFrontmatter.sourceSHA = sourceSHA
-
-            if (sourceFrontmatter.i18n?.title?.[target]) {
-              newFrontmatter.title = sourceFrontmatter.i18n.title[target]
-            }
-
-            if (typeof newFrontmatter.title !== 'string') {
-              delete newFrontmatter.title
-            }
-
-            targetContent = matter.stringify(
-              content.startsWith('\n') ? content : '\n' + content,
-              newFrontmatter,
-            )
-
-            await fs.mkdir(targetBase, { recursive: true })
-
-            await fs.writeFile(targetFilePath, targetContent)
-
-            logger.info(
-              `${cyan(sourceRelativePath)} translated to ${cyan(targetRelativePath)}`,
-            )
 
             allSourceFilePaths.delete(sourceFilePath)
           })

@@ -1,30 +1,30 @@
 ---
-sourceSHA: e31a32d16aad2cdb01d351735f58941fd13ae5e5ec7ca53922a524c102850d8f
+sourceSHA: c3feb38cb30b2f92c125dfa6af05ca6f5e9a23fd299bbbd39f4726159b7d7079
 ---
 
-# Start \{#start}
+# Getting Started \{#start}
 
-## Create Project \{#create}
+## Creating a Project \{#create}
 
-First, you can create a new directory using the following command:
+First, you can create a new directory with the following command:
 
 ```bash
 mkdir my-docs && cd my-docs
 ```
 
-Run `npm init -y` to initialize a project. You can use npm, yarn, or pnpm to install doom:
+Run `npm init -y` to initialize a project. You can install doom using npm, yarn, or pnpm:
 
 <PackageManagerTabs command="install -D @alauda/doom typescript" />
 
-Then, create files using the following commands:
+Then create files with the following commands:
 
 ```bash
-# Create docs directory, supporting both Chinese and English by default
+# Create docs directories, default supports bilingual Chinese and English
 mkdir docs/en && echo '# Hello World' > docs/en/index.md
 mkdir docs/zh && echo '# 你好世界' > docs/zh/index.md
 ```
 
-Add the following scripts in `package.json`:
+Add the following scripts to your `package.json`:
 
 ```json
 {
@@ -45,7 +45,7 @@ Then initialize a configuration file `doom.config.yml`:
 title: My Docs
 ```
 
-Also, create a `tsconfig.json` file with the following content:
+Also create a `tsconfig.json` file with the following content:
 
 ```jsonc
 {
@@ -66,15 +66,15 @@ Also, create a `tsconfig.json` file with the following content:
 }
 ```
 
-Lastly, create a `global.d.ts` file with the following content:
+Finally, create a `global.d.ts` file with the following content:
 
 ```ts
 /// <reference types="@alauda/doom/runtime" />
 ```
 
-Now you can use the global components provided by doom in your `.mdx` files with type safety.
+This allows you to safely use the global components provided by doom in `.mdx` files with type safety.
 
-## Command Line Tool \{#cli}
+## CLI Tool \{#cli}
 
 ```bash
 doom -h
@@ -117,9 +117,11 @@ Commands:
   help [command]                  display help for command
 ```
 
-### Start Development Service \{#dev}
+For more configuration, please refer to [Configuration](./usage/configuration)
 
-Run `yarn dev` to start the development service, and the browser will automatically open the documentation homepage.
+### Starting the Development Server \{#dev}
+
+Run `yarn dev` to start the development server, the browser will automatically open the documentation homepage.
 
 ```sh
 doom dev -h
@@ -135,23 +137,23 @@ Arguments:
 Options:
   -H, --host [host]         Dev server host name
   -P, --port [port]         Dev server port number
-  -l, --lazy [boolean]      Whether to enable `lazyCompilation`, which could improve the compilation performance (default: false)
+  -l, --lazy [boolean]      Whether to enable `lazyCompilation` which could improve the compilation performance (default: false)
   -h, --help                display help for command
 ```
 
 ### Production Build \{#build}
 
-Run `yarn build` to build the production environment code. After the build is completed, static files will be generated in the `dist` directory.
+Run `yarn build` to build the production code. After building, static files will be generated in the `dist` directory.
 
 ### Local Preview \{#serve}
 
-Run `yarn serve` to preview the built static files. Note that if you used the `-b`, `-p` options to build, the same options are also required when previewing.
+Run `yarn serve` to preview the built static files. Note that if you used `-b` or `-p` parameters during build, you need to use the same `-b` and `-p` parameters during preview.
 
-### Use Scaffolding Templates \{#new}
+### Using Scaffolding Templates \{#new}
 
 Run `yarn new` to generate projects, modules, or documentation using scaffolding templates.
 
-### Translate Documentation \{#translate}
+### Translating Documentation \{#translate}
 
 ```bash
 doom translate -h
@@ -172,43 +174,43 @@ Options:
   -h, --help               display help for command
 ```
 
-- The `-g, --glob` parameter is required and can specify the directory or path of files to be translated, supporting `glob` syntax. Note that the parameter value must be quoted; otherwise, command line parsing may cause unexpected behavior. Examples:
-
-  1. `yarn translate -g abc xyz` will translate all documents in the `<root>/<source>/abc` and `<root>/<source>/xyz` directories to `<root>/<target>/abc` and `<root>/<target>/xyz`.
-  2. `yarn translate -g '*'` will translate all document files under `<root>/<source>`.
-
-- The `-C, --copy` parameter is optional, determining whether to copy local resource files to the target directory when a target file does not exist. The default is `false`, which means changing the reference path of the resource file to the source path. Examples:
+- The `-g, --glob` parameter is required. You can specify the directories or paths of files to translate, supporting `glob` syntax. Note that the parameter value must be quoted to avoid unexpected behavior from command line parsing. Examples:
+  1. `yarn translate -g abc xyz` will translate all documents under `<root>/<source>/abc` and `<root>/<source>/xyz` to `<root>/<target>/abc` and `<root>/<target>/xyz` respectively.
+  2. `yarn translate -g '*'` will translate all documents under `<root>/<source>`.
+- The `-C, --copy` parameter is optional. It controls whether to copy local asset files to the target directory when the target file does not exist. The default is `false`, which means changing the asset reference path to the source path. Examples:
   - When this parameter is enabled:
-    1. Translating `/<source>/abc.jpg` will copy `<root>/public/<source>/abc.jpg` to `<root>/public/<target>/abc.jpg` and change the document's reference path to `/<target>/abc.jpg`.
-    2. In `<root>/<source>/abc.mdx`, when translating the reference `./assets/xyz.jpg`, it will copy `<root>/<source>/assets/xyz.jpg` to `<root>/<target>/assets/xyz.jpg`, keeping the image reference path unchanged.
-    3. In `<root>/<source>/abc.mdx`, when translating the reference `./assets/<source>/xyz.jpg`, it will copy `<root>/<source>/assets/<source>/xyz.jpg` to `<root>/<target>/assets/<target>/xyz.jpg` and change the document's reference path to `./assets/<target>/xyz.jpg`.
-  - If this parameter is not enabled:
-    1. Translating `/<source>/abc.jpg`, if `<root>/public/<target>/abc.jpg` already exists, will change the document's reference path to `/<target>/abc.jpg`; otherwise, it will keep the image reference path unchanged.
-    2. In `<root>/<source>/abc.mdx`, when translating the reference `./assets/<source>/xyz.jpg`, if `<root>/<target>/assets/<target>/xyz.jpg` already exists, it will change the document's reference path to `./assets/<target>/xyz.jpg`; otherwise, it will change to `../<source>/assets/<target>/xyz.jpg`.
+    1. When translating `/<source>/abc.jpg`, `<root>/public/<source>/abc.jpg` will be copied to `<root>/public/<target>/abc.jpg`, and the reference path in the document will be changed to `/<target>/abc.jpg`.
+    2. In `<root>/<source>/abc.mdx`, the `./assets/xyz.jpg` reference will copy `<root>/<source>/assets/xyz.jpg` to `<root>/<target>/assets/xyz.jpg`, and the image reference path remains unchanged.
+    3. In `<root>/<source>/abc.mdx`, the `./assets/<source>/xyz.jpg` reference will copy `<root>/<source>/assets/<source>/xyz.jpg` to `<root>/<target>/assets/<target>/xyz.jpg`, and the reference path in the document will be changed to `./assets/<target>/xyz.jpg`.
+  - When this parameter is not enabled:
+    1. When translating `/<source>/abc.jpg`, if `<root>/public/<target>/abc.jpg` exists, the reference path in the document will be changed to `/<target>/abc.jpg`; otherwise, the image reference path remains unchanged.
+    2. In `<root>/<source>/abc.mdx`, if `<root>/<target>/assets/<target>/xyz.jpg` exists, the reference path `./assets/<source>/xyz.jpg` will be changed to `./assets/<target>/xyz.jpg`; otherwise, it will be changed to `../<source>/assets/<target>/xyz.jpg`.
 
 :::warning
-In particular, when using `-g '*'` for full translation, the file lists of the `source` and `target` directories will be compared. Any unmatched `target` files, excluding `internalRoutes`, will be automatically deleted.
+Specifically, if you use `-g '*'` for full translation, the file lists of the `source` and `target` directories will be compared, and unmatched `target` files except for `internalRoutes` will be automatically deleted.
 :::
 
 :::tip
-The translation function requires the local environment variable `AZURE_OPENAI_API_KEY` to be configured. Please contact your team leader for this information.
+The translation feature requires the local environment variable `AZURE_OPENAI_API_KEY` to be configured. Please contact your team leader to obtain it.
 :::
 
-Metadata can be used in the document to control translation behavior:
+You can control translation behavior in the document metadata:
 
 ```yaml
 i18n:
   title:
     en: DevOps Connectors
-  additionalPrompts: 'In this text, Connectors is a proper noun, do not translate it.'
+  additionalPrompts: 'The Connectors in this document are proper nouns and should not be translated'
   disableAutoTranslation: false
-title: DevOps 连接器
+title: DevOps Connectors
 ```
 
-### Export PDF \{#export}
+For more configuration, please refer to [Translation Configuration](./usage/configuration#translate)
+
+### Exporting PDF \{#export}
 
 :::warning
-Please run the `yarn build` operation before executing the export operation.
+Please run the `yarn build` command before exporting.
 :::
 
 ```sh
@@ -228,10 +230,29 @@ Options:
   -h, --help         display help for command
 ```
 
-Run `yarn export` to export the documentation as a PDF file. Note that if you used `-b`, `-p` options to build, the same options are also required during export.
+Run `yarn export` to export the documentation as PDF files. Note that if you used `-b` or `-p` parameters during build, you need to use the same `-b` and `-p` parameters during export.
 
-The export functionality relies on [`playwright`](https://playwright.dev). In the pipeline, please use `build-harbor.alauda.cn/frontend/playwright-runner:doom` as the base image for dependency installation and documentation building. You can set the following environment variable locally to speed up downloads:
+The export feature depends on [`playwright`](https://playwright.dev). For CI pipelines, please use `build-harbor.alauda.cn/frontend/playwright-runner:doom` as the base image for dependency installation and documentation building. Locally, you can set the following environment variable to speed up downloads:
 
 ```dotenv title=".env.yarn"
 PLAYWRIGHT_DOWNLOAD_HOST="https://cdn.npmmirror.com/binaries/playwright"
 ```
+
+### Documentation Linting \{#lint}
+
+```sh
+doom lint -h
+
+# output
+Usage: doom lint [options] [root]
+
+Lint the documentation
+
+Arguments:
+  root        Root directory of the documentation
+
+Options:
+  -h, --help  display help for command
+```
+
+For more configuration, please refer to [Lint Configuration](./usage/configuration#lint)
