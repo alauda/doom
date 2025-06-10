@@ -553,9 +553,11 @@ export const translateCommand = new Command('translate')
                 additionalPrompts: sourceFrontmatter.i18n?.additionalPrompts,
               })
 
-              const newFrontmatter = { ...sourceFrontmatter, sourceSHA }
-              delete newFrontmatter.i18n
-              newFrontmatter.sourceSHA = sourceSHA
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
+              const { i18n: _, ...newFrontmatter } = {
+                ...sourceFrontmatter,
+                sourceSHA,
+              }
 
               const { data, content } = matter(targetContent)
               const typedData = data as I18nFrontmatter
