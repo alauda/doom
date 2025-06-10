@@ -550,11 +550,8 @@ export const translateCommand = new Command('translate')
                 additionalPrompts: sourceFrontmatter.i18n?.additionalPrompts,
               })
 
-              // eslint-disable-next-line @typescript-eslint/no-unused-vars
-              const { i18n: _, ...newFrontmatter } = {
-                ...sourceFrontmatter,
-                sourceSHA,
-              }
+              const newFrontmatter = { ...sourceFrontmatter, sourceSHA }
+              delete newFrontmatter.i18n
 
               const { data, content } = matter(targetContent)
               const typedData = data as I18nFrontmatter
@@ -574,18 +571,13 @@ export const translateCommand = new Command('translate')
                 }
               }
 
-              const finalFrontmatter =
-                typeof newFrontmatter.title === 'string'
-                  ? newFrontmatter
-                  : (() => {
-                      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                      const { title: _, ...rest } = newFrontmatter
-                      return rest
-                    })()
+              if (typeof newFrontmatter.title !== 'string') {
+                delete newFrontmatter.title
+              }
 
               targetContent = matter.stringify(
                 content.startsWith('\n') ? content : '\n' + content,
-                finalFrontmatter,
+                newFrontmatter,
               )
 
               await fs.mkdir(targetBase, { recursive: true })
