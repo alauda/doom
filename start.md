@@ -97,7 +97,7 @@ Options:
   -R, --edit-repo [boolean|url]   Whether to enable or override the `editRepoBaseUrl` config feature, `https://github.com/` prefix could be omitted (default: false)
   -a, --algolia [boolean|alauda]  Whether to enable or use the alauda (docs.alauda.io) preset for Algolia search (default: false)
   -S, --site-url                  Whether to enable the siteUrl for sitemap generation (default: false)
-  -n, --no-open [boolean]         Do not open the browser after starting the server
+  -n, --no-open                   Do not open the browser after starting the server
   -h, --help                      display help for command
 
 Commands:
@@ -131,7 +131,8 @@ Arguments:
 Options:
   -H, --host [host]         Dev server host name
   -P, --port [port]         Dev server port number
-  -l, --lazy [boolean]      Whether to enable `lazyCompilation` which could improve the compilation performance (default: false)
+  -l, --lazy [boolean]      Whether to enable `lazyCompilation` which could improve the compilation performance (default: true)
+  --no-lazy                 Do not enable `lazyCompilation`
   -h, --help                display help for command
 ```
 
