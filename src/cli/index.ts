@@ -113,10 +113,7 @@ program
     parseBoolean,
     false,
   )
-  .option(
-    '-n, --no-open [boolean]',
-    'Do not open the browser after starting the server',
-  )
+  .option('-n, --no-open', 'Do not open the browser after starting the server')
   .command('dev', { isDefault: true })
   .description('Start the development server')
   .argument('[root]', 'Root directory of the documentation')
@@ -126,8 +123,9 @@ program
     '-l, --lazy [boolean]',
     'Whether to enable `lazyCompilation` which could improve the compilation performance',
     parseBoolean,
-    false,
+    true,
   )
+  .option('--no-lazy', 'Do not enable `lazyCompilation`')
   .action(async function (this: Command, root?: string) {
     setNodeEnv('development')
 
