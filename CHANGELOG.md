@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.2.2
+
+### Patch Changes
+
+- [#86](https://github.com/alauda/doom/pull/86) [`031446a`](https://github.com/alauda/doom/commit/031446a258f2e544213bb80a4ed77df2d2149c35) Thanks [@JounQin](https://github.com/JounQin)! - chore: bump `rspress` to `v2.0.0-beta.13`
+
 ## 1.2.1
 
 ### Patch Changes
