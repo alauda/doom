@@ -16,14 +16,14 @@ __metadata:
     "@eslint/js": "npm:^9.28.0"
     "@inquirer/prompts": "npm:^7.5.3"
     "@openapi-contrib/openapi-schema-to-json-schema": "npm:^5.1.0"
-    "@playwright/browser-chromium": "npm:^1.52.0"
+    "@playwright/browser-chromium": "npm:^1.53.0"
     "@rsbuild/plugin-react": "npm:^1.3.2"
     "@rsbuild/plugin-sass": "npm:^1.3.2"
     "@rsbuild/plugin-svgr": "npm:^1.2.0"
     "@rsbuild/plugin-yaml": "npm:^1.0.2"
-    "@rspress/core": "https://pkg.pr.new/@rspress/core@6b02230"
-    "@rspress/plugin-algolia": "https://pkg.pr.new/@rspress/plugin-algolia@6b02230"
-    "@rspress/plugin-llms": "https://pkg.pr.new/@rspress/plugin-llms@6b02230"
+    "@rspress/core": "npm:2.0.0-beta.13"
+    "@rspress/plugin-algolia": "npm:2.0.0-beta.13"
+    "@rspress/plugin-llms": "npm:2.0.0-beta.13"
     "@shikijs/transformers": "npm:^3.6.0"
     "@swc-node/register": "npm:^1.10.10"
     "@swc/core": "npm:1.12.0"
@@ -60,7 +60,7 @@ __metadata:
     pdf-lib: "npm:^1.17.1"
     pdf-merger-js: "npm:^5.1.2"
     picomatch: "npm:^4.0.2"
-    playwright: "npm:^1.52.0"
+    playwright: "npm:^1.53.0"
     prettier: "npm:^3.5.3"
     prettier-plugin-pkg: "npm:^0.21.1"
     prettier-plugin-properties: "npm:^0.3.0"
@@ -2434,12 +2434,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@playwright/browser-chromium@npm:^1.52.0":
-  version: 1.52.0
-  resolution: "@playwright/browser-chromium@npm:1.52.0"
+"@playwright/browser-chromium@npm:^1.53.0":
+  version: 1.53.0
+  resolution: "@playwright/browser-chromium@npm:1.53.0"
   dependencies:
-    playwright-core: "npm:1.52.0"
-  checksum: 10c0/6cbe1d18550dcbc21279da7bcd65c2c8a94f68f4789ff21525ccb0c60a514ebe137a70843d5da043ba6210806ca845d2a3f52005b80a692801f9f230158a7af4
+    playwright-core: "npm:1.53.0"
+  checksum: 10c0/5ea84e33235745433a14ee9fd7068ec2180fe5741acd3dc97678a45742aca6832f467a586e2109a55087df7f789aa5173d8595f4f8a35bd5160210af75acb7a0
   languageName: node
   linkType: hard
 
@@ -2659,9 +2659,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rspress/core@https://pkg.pr.new/@rspress/core@6b02230":
-  version: 2.0.0-beta.12
-  resolution: "@rspress/core@https://pkg.pr.new/@rspress/core@6b02230"
+"@rspress/core@npm:2.0.0-beta.13":
+  version: 2.0.0-beta.13
+  resolution: "@rspress/core@npm:2.0.0-beta.13"
   dependencies:
     "@mdx-js/loader": "npm:^3.1.0"
     "@mdx-js/mdx": "npm:^3.1.0"
@@ -2669,14 +2669,14 @@ __metadata:
     "@rsbuild/core": "npm:~1.3.22"
     "@rsbuild/plugin-react": "npm:~1.3.2"
     "@rspress/mdx-rs": "npm:0.6.6"
-    "@rspress/plugin-auto-nav-sidebar": "https://pkg.pr.new/web-infra-dev/rspress/@rspress/plugin-auto-nav-sidebar@6b02230"
-    "@rspress/plugin-container-syntax": "https://pkg.pr.new/web-infra-dev/rspress/@rspress/plugin-container-syntax@6b02230"
-    "@rspress/plugin-last-updated": "https://pkg.pr.new/web-infra-dev/rspress/@rspress/plugin-last-updated@6b02230"
-    "@rspress/plugin-medium-zoom": "https://pkg.pr.new/web-infra-dev/rspress/@rspress/plugin-medium-zoom@6b02230"
-    "@rspress/plugin-shiki": "https://pkg.pr.new/web-infra-dev/rspress/@rspress/plugin-shiki@6b02230"
-    "@rspress/runtime": "https://pkg.pr.new/web-infra-dev/rspress/@rspress/runtime@6b02230"
-    "@rspress/shared": "https://pkg.pr.new/web-infra-dev/rspress/@rspress/shared@6b02230"
-    "@rspress/theme-default": "https://pkg.pr.new/web-infra-dev/rspress/@rspress/theme-default@6b02230"
+    "@rspress/plugin-auto-nav-sidebar": "npm:2.0.0-beta.13"
+    "@rspress/plugin-container-syntax": "npm:2.0.0-beta.13"
+    "@rspress/plugin-last-updated": "npm:2.0.0-beta.13"
+    "@rspress/plugin-medium-zoom": "npm:2.0.0-beta.13"
+    "@rspress/plugin-shiki": "npm:2.0.0-beta.13"
+    "@rspress/runtime": "npm:2.0.0-beta.13"
+    "@rspress/shared": "npm:2.0.0-beta.13"
+    "@rspress/theme-default": "npm:2.0.0-beta.13"
     "@types/unist": "npm:^3.0.3"
     "@unhead/react": "npm:^2.0.10"
     enhanced-resolve: "npm:5.18.1"
@@ -2700,7 +2700,7 @@ __metadata:
     unified: "npm:^11.0.5"
     unist-util-visit: "npm:^5.0.0"
     unist-util-visit-children: "npm:^3.0.0"
-  checksum: 10c0/465f2abbb2ec53efd1d283271c4706d0b71affd1c1f3544846fabf7bf19459495be2d56abc85e75aeddb160c147e5857b39748c520623469f03e4ac676917add
+  checksum: 10c0/a61cb8fa1fa761acd8b0e05769aeeb8c00cd79dc294105d69885bdaaba6b3ae91ca4180198ee1a286246e78ab7f19a9cf14ea51b9dc1fcc46ad28f8700aea13a
   languageName: node
   linkType: hard
 
@@ -2793,50 +2793,50 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rspress/plugin-algolia@https://pkg.pr.new/@rspress/plugin-algolia@6b02230":
-  version: 2.0.0-beta.12
-  resolution: "@rspress/plugin-algolia@https://pkg.pr.new/@rspress/plugin-algolia@6b02230"
+"@rspress/plugin-algolia@npm:2.0.0-beta.13":
+  version: 2.0.0-beta.13
+  resolution: "@rspress/plugin-algolia@npm:2.0.0-beta.13"
   dependencies:
     "@docsearch/css": "npm:^3.9.0"
     "@docsearch/react": "npm:^3.9.0"
   peerDependencies:
-    "@rspress/runtime": ^2.0.0-beta.12
-  checksum: 10c0/0a87d2c90f0a9259f2423bcc924a48cae717e049d5750e7d2f0a61d002d3e5fb50f61aa9d57741f4ea96a8b8b441e0bf22f3fd2ff9d8e16310815bf2e479c387
+    "@rspress/runtime": ^2.0.0-beta.13
+  checksum: 10c0/d01c44fd08abc3bd3981ac1206b4acc39cc21c9e8d87a3fe0ee22798cd50fa423750f000c19bb9549505a6df5a615ad985b3cd189dc78d2414280c700b78aed5
   languageName: node
   linkType: hard
 
-"@rspress/plugin-auto-nav-sidebar@https://pkg.pr.new/web-infra-dev/rspress/@rspress/plugin-auto-nav-sidebar@6b02230":
-  version: 2.0.0-beta.12
-  resolution: "@rspress/plugin-auto-nav-sidebar@https://pkg.pr.new/web-infra-dev/rspress/@rspress/plugin-auto-nav-sidebar@6b02230"
+"@rspress/plugin-auto-nav-sidebar@npm:2.0.0-beta.13":
+  version: 2.0.0-beta.13
+  resolution: "@rspress/plugin-auto-nav-sidebar@npm:2.0.0-beta.13"
   dependencies:
-    "@rspress/shared": "https://pkg.pr.new/web-infra-dev/rspress/@rspress/shared@6b02230"
-  checksum: 10c0/c3680e35ad14801ec52c99fcecde3883b9342a54f1aace94c4908c19f765f5686cc9e01e7e48b15a4a657a5e99500a829f9d6f1adc987d272500fa384f3885a1
+    "@rspress/shared": "npm:2.0.0-beta.13"
+  checksum: 10c0/ba8b774d17c5ee011fe1c070235129ec54a9c2180d36b44ec0fb1deafbc5678b58344a9ff9e489a851167355f1abf85a9383cd96b7d01140e67621929eb043e3
   languageName: node
   linkType: hard
 
-"@rspress/plugin-container-syntax@https://pkg.pr.new/web-infra-dev/rspress/@rspress/plugin-container-syntax@6b02230":
-  version: 2.0.0-beta.12
-  resolution: "@rspress/plugin-container-syntax@https://pkg.pr.new/web-infra-dev/rspress/@rspress/plugin-container-syntax@6b02230"
+"@rspress/plugin-container-syntax@npm:2.0.0-beta.13":
+  version: 2.0.0-beta.13
+  resolution: "@rspress/plugin-container-syntax@npm:2.0.0-beta.13"
   dependencies:
-    "@rspress/shared": "https://pkg.pr.new/web-infra-dev/rspress/@rspress/shared@6b02230"
-  checksum: 10c0/df5eb5cf9e72c48b26d7585c86df39f5987f5c2e7db8c8984b11c66ae0beaa97e5740df8feaf34f1f4df3471c227c947afce94bd378ff7fef3ded638d0f49c05
+    "@rspress/shared": "npm:2.0.0-beta.13"
+  checksum: 10c0/2bdd327aa193275b0e2a486c07f9bf4df301a29e554b4b371a05fc187bba69da9b2350328a7c211a3e129fc863711973be7ae4fab7880803d092510672b40fd2
   languageName: node
   linkType: hard
 
-"@rspress/plugin-last-updated@https://pkg.pr.new/web-infra-dev/rspress/@rspress/plugin-last-updated@6b02230":
-  version: 2.0.0-beta.12
-  resolution: "@rspress/plugin-last-updated@https://pkg.pr.new/web-infra-dev/rspress/@rspress/plugin-last-updated@6b02230"
+"@rspress/plugin-last-updated@npm:2.0.0-beta.13":
+  version: 2.0.0-beta.13
+  resolution: "@rspress/plugin-last-updated@npm:2.0.0-beta.13"
   dependencies:
-    "@rspress/shared": "https://pkg.pr.new/web-infra-dev/rspress/@rspress/shared@6b02230"
-  checksum: 10c0/6c40ad255676827cede04e7cb1299704e93b79329c1badb4b62b08199a8f0000e34e54df4636f0393b6f1e4ea7170e6aca37348be7fdf7fafe8afc1cd4f9aea8
+    "@rspress/shared": "npm:2.0.0-beta.13"
+  checksum: 10c0/b13fd1d75e61be7667968c9e05874dee1344f046be80e65792e604561e272ea460700a1e93c3f1b1772d1af686498664a1c0a17cbe670b0bc6cd1cfe63024b7f
   languageName: node
   linkType: hard
 
-"@rspress/plugin-llms@https://pkg.pr.new/@rspress/plugin-llms@6b02230":
-  version: 2.0.0-beta.12
-  resolution: "@rspress/plugin-llms@https://pkg.pr.new/@rspress/plugin-llms@6b02230"
+"@rspress/plugin-llms@npm:2.0.0-beta.13":
+  version: 2.0.0-beta.13
+  resolution: "@rspress/plugin-llms@npm:2.0.0-beta.13"
   dependencies:
-    "@rspress/shared": "https://pkg.pr.new/web-infra-dev/rspress/@rspress/shared@6b02230"
+    "@rspress/shared": "npm:2.0.0-beta.13"
     remark-mdx: "npm:^3.1.0"
     remark-parse: "npm:^11.0.0"
     remark-stringify: "npm:^11.0.0"
@@ -2844,67 +2844,67 @@ __metadata:
     unist-util-visit: "npm:^5.0.0"
     unist-util-visit-children: "npm:^3.0.0"
   peerDependencies:
-    "@rspress/core": ^2.0.0-beta.12
-  checksum: 10c0/274e910f9dfa5638ca3f947677fc3a5acca39983e4d3ca4938dc381a88a3a939dd78825f1cfeabef5df069504a1e4290ff6237edd3380634d10512eced53446f
+    "@rspress/core": ^2.0.0-beta.13
+  checksum: 10c0/dcf72c66c593c76a92d73542350cbb30f19cfbc29a76818eef04aed563a54ff6d3f8f84aea94b97dce3d6c97cfa07b63175ae31d5aa35c99994f4923af3c2145
   languageName: node
   linkType: hard
 
-"@rspress/plugin-medium-zoom@https://pkg.pr.new/web-infra-dev/rspress/@rspress/plugin-medium-zoom@6b02230":
-  version: 2.0.0-beta.12
-  resolution: "@rspress/plugin-medium-zoom@https://pkg.pr.new/web-infra-dev/rspress/@rspress/plugin-medium-zoom@6b02230"
+"@rspress/plugin-medium-zoom@npm:2.0.0-beta.13":
+  version: 2.0.0-beta.13
+  resolution: "@rspress/plugin-medium-zoom@npm:2.0.0-beta.13"
   dependencies:
     medium-zoom: "npm:1.1.0"
   peerDependencies:
-    "@rspress/runtime": ^2.0.0-beta.12
-  checksum: 10c0/ae7f0325f682952a3665b27bbc51848a6e3ec01598e28e7c063e7d4fe1a1e18416d49e49da7e08a4d0ccd0192e25a2c1d55129342af7b422d1e6040d01edfa59
+    "@rspress/runtime": ^2.0.0-beta.13
+  checksum: 10c0/660f440614e3dc1667e2bb198f74562dfe24e889b89d9c7d70ba652b4bb1fd5069192405e58ce15ca3028da3fe829c52fe5d66d185bdf3ff80c8413e962e9b20
   languageName: node
   linkType: hard
 
-"@rspress/plugin-shiki@https://pkg.pr.new/web-infra-dev/rspress/@rspress/plugin-shiki@6b02230":
-  version: 2.0.0-beta.12
-  resolution: "@rspress/plugin-shiki@https://pkg.pr.new/web-infra-dev/rspress/@rspress/plugin-shiki@6b02230"
+"@rspress/plugin-shiki@npm:2.0.0-beta.13":
+  version: 2.0.0-beta.13
+  resolution: "@rspress/plugin-shiki@npm:2.0.0-beta.13"
   dependencies:
-    "@rspress/shared": "https://pkg.pr.new/web-infra-dev/rspress/@rspress/shared@6b02230"
+    "@rspress/shared": "npm:2.0.0-beta.13"
     "@shikijs/rehype": "npm:^3.4.2"
     hast-util-from-html: "npm:^2.0.3"
     shiki: "npm:^3.4.2"
-  checksum: 10c0/ee5777b15cd6cf4e3903c2ac079d0478e31a5deeb2f1410cbd69198d72aa8c289abbdf150fc5c0a3d301c680a7325903d7da10c1039b159110eec3ac41fe0d97
+  checksum: 10c0/35239ddb55b7bd7df2e12eeca184d2700d8b5dd5e6e50831253516effa24dede8c7f9c003adf21144741991d238c82cdde2b2a780bf6fb54bd72eb2d2a96a65a
   languageName: node
   linkType: hard
 
-"@rspress/runtime@https://pkg.pr.new/web-infra-dev/rspress/@rspress/runtime@6b02230":
-  version: 2.0.0-beta.12
-  resolution: "@rspress/runtime@https://pkg.pr.new/web-infra-dev/rspress/@rspress/runtime@6b02230"
+"@rspress/runtime@npm:2.0.0-beta.13":
+  version: 2.0.0-beta.13
+  resolution: "@rspress/runtime@npm:2.0.0-beta.13"
   dependencies:
-    "@rspress/shared": "https://pkg.pr.new/web-infra-dev/rspress/@rspress/shared@6b02230"
+    "@rspress/shared": "npm:2.0.0-beta.13"
     "@unhead/react": "npm:^2.0.10"
     react: "npm:^19.1.0"
     react-dom: "npm:^19.1.0"
     react-router-dom: "npm:^6.29.0"
-  checksum: 10c0/d2623e4df26c298ee9461267144b00d18d5272c31f8cd04760e4182a6c93772b7464792f186100b4c612bf2f0f1c432f2ba10d455cad45b84fb5232eb899af81
+  checksum: 10c0/5bb64e8490884f1a4bc70e90e8b71a68cdd582a7ab70c74f0e2fe4d249dc7c846f429562f775d8c6b502a6b94625ecf43efee60583b82d07dca0172d1d5b37ef
   languageName: node
   linkType: hard
 
-"@rspress/shared@https://pkg.pr.new/web-infra-dev/rspress/@rspress/shared@6b02230":
-  version: 2.0.0-beta.12
-  resolution: "@rspress/shared@https://pkg.pr.new/web-infra-dev/rspress/@rspress/shared@6b02230"
+"@rspress/shared@npm:2.0.0-beta.13":
+  version: 2.0.0-beta.13
+  resolution: "@rspress/shared@npm:2.0.0-beta.13"
   dependencies:
     "@rsbuild/core": "npm:~1.3.22"
     "@shikijs/rehype": "npm:^3.4.2"
     gray-matter: "npm:4.0.3"
     lodash-es: "npm:^4.17.21"
     unified: "npm:^11.0.5"
-  checksum: 10c0/f71b23d61e31c4b1a0d69e31b0d6727d44d798e69773f834eb97fd13fd3bbc79d3c6d89a3d1d0ed4f57630474577a5bf384c7963a31b8916ea8e679ee3d6dd86
+  checksum: 10c0/98e915f327edb64f3200407adabea7c44fbf60443f8132c509fc2580ad0349de58b1c221694e27ba3eeb7618a854a7c863c76165c5a82b0280b9fa4181cef43f
   languageName: node
   linkType: hard
 
-"@rspress/theme-default@https://pkg.pr.new/web-infra-dev/rspress/@rspress/theme-default@6b02230":
-  version: 2.0.0-beta.12
-  resolution: "@rspress/theme-default@https://pkg.pr.new/web-infra-dev/rspress/@rspress/theme-default@6b02230"
+"@rspress/theme-default@npm:2.0.0-beta.13":
+  version: 2.0.0-beta.13
+  resolution: "@rspress/theme-default@npm:2.0.0-beta.13"
   dependencies:
     "@mdx-js/react": "npm:2.3.0"
-    "@rspress/runtime": "https://pkg.pr.new/web-infra-dev/rspress/@rspress/runtime@6b02230"
-    "@rspress/shared": "https://pkg.pr.new/web-infra-dev/rspress/@rspress/shared@6b02230"
+    "@rspress/runtime": "npm:2.0.0-beta.13"
+    "@rspress/shared": "npm:2.0.0-beta.13"
     "@unhead/react": "npm:^2.0.10"
     body-scroll-lock: "npm:4.0.0-beta.0"
     copy-to-clipboard: "npm:^3.3.3"
@@ -2916,7 +2916,7 @@ __metadata:
     react: "npm:^19.1.0"
     react-dom: "npm:^19.1.0"
     shiki: "npm:^3.4.2"
-  checksum: 10c0/9f10c74083496d4645e6a89c86e0329961cbc6c462314af266de57b34f333db01933c8a2dd2743010fac831f77686c26cd8636db843adfaea42883c723e63305
+  checksum: 10c0/98486c9be82de9c1c9bddaaad71dbc229bc9f23aaaf1386012c756b1e5fcf206621e0a1bf1bc01edcf44b8823d812b02bdf849b7c6840608d479c04c53fe2f54
   languageName: node
   linkType: hard
 
@@ -9816,27 +9816,27 @@ __metadata:
   languageName: node
   linkType: hard
 
-"playwright-core@npm:1.52.0":
-  version: 1.52.0
-  resolution: "playwright-core@npm:1.52.0"
+"playwright-core@npm:1.53.0":
+  version: 1.53.0
+  resolution: "playwright-core@npm:1.53.0"
   bin:
     playwright-core: cli.js
-  checksum: 10c0/640945507e6ca2144e9f596b2a6ecac042c2fd3683ff99e6271e9a7b38f3602d415f282609d569456f66680aab8b3c5bb1b257d8fb63a7fc0ed648261110421f
+  checksum: 10c0/fda0cf76115b15b1ca5cbc69e14185904e5c85e9e7cddb0a48121e69d681c638ac497e8a103985976cae260aa02e9c03ea27d6cd0b5f3d3ca914d4c7fd96f930
   languageName: node
   linkType: hard
 
-"playwright@npm:^1.52.0":
-  version: 1.52.0
-  resolution: "playwright@npm:1.52.0"
+"playwright@npm:^1.53.0":
+  version: 1.53.0
+  resolution: "playwright@npm:1.53.0"
   dependencies:
     fsevents: "npm:2.3.2"
-    playwright-core: "npm:1.52.0"
+    playwright-core: "npm:1.53.0"
   dependenciesMeta:
     fsevents:
       optional: true
   bin:
     playwright: cli.js
-  checksum: 10c0/2c6edf1e15e59bbaf77f3fa0fe0ac975793c17cff835d9c8b8bc6395a3b6f1c01898b3058ab37891b2e4d424bcc8f1b4844fe70d943e0143d239d7451408c579
+  checksum: 10c0/8d995114808b92f2005bd12ff5e494cdc3fa2d484f4d85a3e54be1fb99e88ae3e34b24792d83bb987462c73e553a0fa37a2a70264afbf67894b51c1498cf5a11
   languageName: node
   linkType: hard
 
@@ -12218,9 +12218,9 @@ __metadata:
   linkType: hard
 
 "zod@npm:^3.25.56":
-  version: 3.25.57
-  resolution: "zod@npm:3.25.57"
-  checksum: 10c0/3b3d98bf31d4ca9ce92e151ec6a69f6d63a9a7e4e74ce2bd0dfac87a1955d77934fc0fd5caf0017c9c9746e86cdcd27c63b0e3378bbf5e8b62ec5833f94395ac
+  version: 3.25.58
+  resolution: "zod@npm:3.25.58"
+  checksum: 10c0/3525e9104adcb84b48ff2c166a44175e2f4fd502bcab045bde7cb898097a3ff0cc8b03469d949f1c14455266fd9bedeea0b411ec624b42827db48ad942ffb3b1
   languageName: node
   linkType: hard
 
