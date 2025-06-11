@@ -1,5 +1,13 @@
 # @alauda/doom
 
+## 1.2.1
+
+### Patch Changes
+
+- [#84](https://github.com/alauda/doom/pull/84) [`7d0f0ec`](https://github.com/alauda/doom/commit/7d0f0ecc28c3382434f62c702968aa30c6d74dd0) Thanks [@JounQin](https://github.com/JounQin)! - fix: style regression of `VersionsNav`
+
+- [#84](https://github.com/alauda/doom/pull/84) [`7d0f0ec`](https://github.com/alauda/doom/commit/7d0f0ecc28c3382434f62c702968aa30c6d74dd0) Thanks [@JounQin](https://github.com/JounQin)! - chore: bump `rspress` to `v2.0.0-beta.12`
+
 ## 1.2.0
 
 ### Minor Changes
