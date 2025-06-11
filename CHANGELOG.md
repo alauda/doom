@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.2.3
+
+### Patch Changes
+
+- [#88](https://github.com/alauda/doom/pull/88) [`374f7bd`](https://github.com/alauda/doom/commit/374f7bdc2433949fdbff7552bfe3ac962550fec3) Thanks [@JounQin](https://github.com/JounQin)! - chore: enable `lazy` mode by default
+
 ## 1.2.2
 
 ### Patch Changes
