@@ -1,15 +1,15 @@
 import { Tag } from '@rspress/core/theme'
 import {
   isExternalUrl,
-  withoutBase,
+  matchNavbar,
   type NavItem,
   type NavItemWithChildren,
   type NavItemWithLink,
   type NavItemWithLinkAndChildren,
 } from '@rspress/shared'
-import { useCallback, useState, type ReactNode } from 'react'
+import { useRef, useState, type ReactNode } from 'react'
 
-import { SvgDown } from './Down.js'
+import { Down } from './Down.js'
 import {
   NavMenuSingleItem,
   type NavMenuSingleItemProps,
@@ -23,7 +23,7 @@ export interface NavMenuGroupItem {
   tag?: string
   // Design for i18n highlight.
   activeValue?: string
-  // Currrnt pathname.
+  // Current pathname.
   pathname?: string
   // Base path.
   base?: string
@@ -35,32 +35,32 @@ function ActiveGroupItem({ item }: { item: NavItemWithLink }) {
   return (
     <div
       key={item.link}
-      className="rounded-2xl my-1 flex"
+      className="rp-rounded-2xl rp-my-1 rp-flex"
       style={{
         padding: '0.4rem 1.5rem 0.4rem 0.75rem',
       }}
     >
       {item.tag && <Tag tag={item.tag} />}
-      <span className="text-brand">{item.text}</span>
+      <span className="rp-text-brand">{item.text}</span>
     </div>
   )
 }
 
 function NormalGroupItem({ item }: { item: NavItemWithLink }) {
   return (
-    <div key={item.link} className="font-medium my-1">
+    <div key={item.link} className="rp-font-medium rp-my-1">
       <a
         href={item.link}
         target={isExternalUrl(item.link) ? '_blank' : undefined}
         rel="noopener noreferrer"
       >
         <div
-          className="rounded-2xl hover:bg-mute"
+          className="rp-rounded-2xl hover:rp-bg-mute"
           style={{
             padding: '0.4rem 1.5rem 0.4rem 0.75rem',
           }}
         >
-          <div className="flex">
+          <div className="rp-flex">
             {item.tag && <Tag tag={item.tag} />}
             <span>{item.text}</span>
           </div>
@@ -71,21 +71,41 @@ function NormalGroupItem({ item }: { item: NavItemWithLink }) {
 }
 
 export function NavMenuGroup(item: NavMenuGroupItem) {
-  const { activeValue, items: groupItems, base = '', pathname = '' } = item
+  const {
+    activeValue,
+    items: groupItems,
+    base = '',
+    link = '',
+    pathname = '',
+  } = item
   const [isOpen, setIsOpen] = useState(false)
+  const closeTimerRef = useRef<number>(null)
 
-  const onOpen = useCallback(() => {
+  const clearCloseTimer = () => {
+    if (closeTimerRef.current) {
+      clearTimeout(closeTimerRef.current)
+      closeTimerRef.current = null
+    }
+  }
+
+  /**
+   * Handle mouse leave event for the dropdown menu
+   * Closes the menu after a 150ms delay to allow diagonal mouse movement
+   * to the dropdown content area
+   */
+  const handleMouseLeave = () => {
+    closeTimerRef.current = window.setTimeout(() => {
+      setIsOpen(false)
+    }, 150)
+  }
+
+  const handleMouseEnter = () => {
+    clearCloseTimer()
     setIsOpen(true)
-  }, [])
-
-  const onClose = useCallback(() => {
-    setIsOpen(false)
-  }, [])
+  }
 
   const renderLinkItem = (item: NavItemWithLink) => {
-    const isLinkActive = new RegExp(item.activeMatch || item.link).test(
-      withoutBase(pathname, base),
-    )
+    const isLinkActive = matchNavbar(item, pathname, base)
     if (activeValue === item.text || (!activeValue && isLinkActive)) {
       return <ActiveGroupItem key={item.link} item={item} />
     }
@@ -100,7 +120,7 @@ export function NavMenuGroup(item: NavMenuGroupItem) {
         {'link' in item ? (
           renderLinkItem(item)
         ) : (
-          <p className="font-bold text-gray-400 my-1 not:first:border">
+          <p className="rp-font-bold rp-text-gray-400 rp-my-1 not:first:rp-border">
             {item.text}
           </p>
         )}
@@ -109,49 +129,47 @@ export function NavMenuGroup(item: NavMenuGroupItem) {
     )
   }
 
-  const hasMultiItems = groupItems.length > 1
-
-  const Content = hasMultiItems || item.link ? 'button' : 'span'
-
-  const content = (
-    <Content
-      onMouseEnter={hasMultiItems ? onOpen : undefined}
-      className={`${Content === 'button' ? 'rspress-nav-menu-group-button ' : ''}flex-center items-center font-medium text-sm text-text-1${hasMultiItems ? ' hover:text-text-2 transition-colors duration-200' : ''}`}
+  return (
+    <div
+      className="rp-relative rp-flex rp-items-center rp-justify-center rp-h-14"
+      onMouseLeave={handleMouseLeave}
     >
-      {item.link ? (
-        <NavMenuSingleItem
-          {...(item as NavMenuSingleItemProps)}
-          rightIcon={<SvgWrapper icon={SvgDown} />}
-        />
-      ) : (
-        <>
-          <span
-            className="text-sm font-medium flex"
-            style={hasMultiItems ? { marginRight: '2px' } : undefined}
-          >
-            <Tag tag={item.tag} />
-            {item.text}
-          </span>
-          {hasMultiItems && <SvgWrapper icon={SvgDown} />}
-        </>
-      )}
-    </Content>
-  )
-
-  return hasMultiItems ? (
-    <div className="relative flex-center h-14" onMouseLeave={onClose}>
-      {content}
       <div
-        className="rspress-nav-menu-group-content absolute mx-0.8 transition-opacity duration-300"
+        onMouseEnter={handleMouseEnter}
+        className="rspress-nav-menu-group-button rp-flex rp-justify-center rp-items-center rp-font-medium rp-text-sm rp-text-text-1 hover:rp-text-text-2 rp-transition-colors rp-duration-200 rp-cursor-pointer"
+      >
+        {link ? (
+          <NavMenuSingleItem
+            {...(item as NavMenuSingleItemProps)}
+            rightIcon={<SvgWrapper icon={Down} />}
+          />
+        ) : (
+          <>
+            <span
+              className="rp-text-sm rp-font-medium rp-flex"
+              style={{
+                marginRight: '2px',
+              }}
+            >
+              <Tag tag={item.tag} />
+              {item.text}
+            </span>
+            <SvgWrapper icon={Down} />
+          </>
+        )}
+      </div>
+      <div
+        className="rspress-nav-menu-group-content rp-absolute rp-mx-0.8 rp-transition-opacity rp-duration-300"
         style={{
           opacity: isOpen ? 1 : 0,
           visibility: isOpen ? 'visible' : 'hidden',
           right: 0,
           top: '52px',
         }}
+        onMouseEnter={clearCloseTimer}
       >
         <div
-          className="p-3 pr-2 w-full h-full max-h-100vh whitespace-nowrap"
+          className="rp-p-3 rp-pr-2 rp-w-full rp-h-full rp-max-h-100vh rp-whitespace-nowrap"
           style={{
             boxShadow: 'var(--rp-shadow-3)',
             zIndex: 100,
@@ -169,7 +187,5 @@ export function NavMenuGroup(item: NavMenuGroupItem) {
         </div>
       </div>
     </div>
-  ) : (
-    content
   )
 }
