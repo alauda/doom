@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.3.0
+
+### Minor Changes
+
+- [#90](https://github.com/alauda/doom/pull/90) [`5a9e347`](https://github.com/alauda/doom/commit/5a9e347c18af80a48669877feec9ea7efb31dc8a) Thanks [@JounQin](https://github.com/JounQin)! - feat: export `Markdown` component for reusing
+
 ## 1.2.3
 
 ### Patch Changes
