@@ -8,9 +8,9 @@ import { Fragment, useId, useMemo, type ReactNode } from 'react'
 
 import { omitRoutePathRefs, resolveRef } from '../utils.js'
 
+import { Markdown } from './Markdown.js'
 import { OpenAPIProperties, OpenAPIProperty, OpenAPIRef } from './OpenAPIRef.js'
 import { HeadingTitle } from './_HeadingTitle.js'
-import { Markdown } from './_Markdown.js'
 import { RefLink } from './_RefLink.js'
 import { X } from './_X.js'
 
