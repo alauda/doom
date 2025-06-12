@@ -5,8 +5,8 @@ import { type ReactNode, useId, useMemo } from 'react'
 
 import { modelName, omitRoutePathRefs, resolveRef } from '../utils.js'
 
+import { Markdown } from './Markdown.js'
 import { HeadingTitle } from './_HeadingTitle.js'
-import { Markdown } from './_Markdown.js'
 import { RefLink } from './_RefLink.js'
 import { X } from './_X.js'
 

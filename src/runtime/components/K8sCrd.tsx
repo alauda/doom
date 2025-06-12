@@ -10,7 +10,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useIsPrint, useTranslation } from '../hooks/index.js'
 
 import { Directive } from './Directive.js'
-import { Markdown } from './_Markdown.js'
+import { Markdown } from './Markdown.js'
 import { X } from './_X.js'
 
 export interface K8sCrdProps {
