@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.4.0
+
+### Minor Changes
+
+- [#92](https://github.com/alauda/doom/pull/92) [`bb38a14`](https://github.com/alauda/doom/commit/bb38a1461f779932ab25e7a9069e31279ea70889) Thanks [@youyongsong](https://github.com/youyongsong)! - feat: add chunk-based translation for large files to handle TPM limits
+
 ## 1.3.0
 
 ### Minor Changes
