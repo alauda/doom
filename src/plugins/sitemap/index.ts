@@ -70,14 +70,14 @@ export function sitemapPlugin(options?: Options): RspressPlugin {
     ...options,
   }
   const sitemaps: Sitemap[] = []
-  const set = new Set()
+  const set = new Set<string>()
   return {
     name: 'rspress-plugin-sitemap',
     extendPageData(pageData, isProd) {
-      if (!isProd || set.has(pageData.id)) {
+      if (!isProd || set.has(pageData.routePath)) {
         return
       }
-      set.add(pageData.id)
+      set.add(pageData.routePath)
       sitemaps.push({
         loc: `${options.domain}${pageData.routePath}`,
         lastmod: fs.statSync(pageData._filepath).mtime.toISOString(),
