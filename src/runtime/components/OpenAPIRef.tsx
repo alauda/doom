@@ -9,6 +9,7 @@ import { Markdown } from './Markdown.js'
 import { HeadingTitle } from './_HeadingTitle.js'
 import { RefLink } from './_RefLink.js'
 import { X } from './_X.js'
+import { UidProvider, useUid } from './_context.js'
 
 export interface OpenAPIRefProps {
   /**
@@ -19,7 +20,6 @@ export interface OpenAPIRefProps {
    * The specific path to the OpenAPI schema, otherwise the first matched will be used.
    */
   openapiPath?: string
-  uid?: string
   collectRefs?: boolean
 }
 
@@ -150,14 +150,15 @@ const getRefsForSchema = (
 export const OpenAPIRef = ({
   schema,
   openapiPath: openapiPath_,
-  uid,
   collectRefs = true,
 }: OpenAPIRefProps) => {
   const { page } = usePageData()
 
+  let uid = useUid()
+
   const innerUid = useId()
 
-  if (uid == null) {
+  if (!uid) {
     uid = innerUid
   }
 
@@ -190,8 +191,8 @@ export const OpenAPIRef = ({
   }
 
   return (
-    <>
-      <HeadingTitle uid={uid} slug={schema} level={2}>
+    <UidProvider value={uid}>
+      <HeadingTitle slug={schema} level={2}>
         {modelName(schema)}
       </HeadingTitle>
       <Markdown>{schemaItem.description}</Markdown>
@@ -206,11 +207,10 @@ export const OpenAPIRef = ({
           key={schema}
           schema={schema}
           openapiPath={openapiPath}
-          uid={uid}
           collectRefs={false}
         />
       ))}
-    </>
+    </UidProvider>
   )
 }
 

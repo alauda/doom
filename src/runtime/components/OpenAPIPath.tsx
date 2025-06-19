@@ -13,6 +13,7 @@ import { OpenAPIProperties, OpenAPIProperty, OpenAPIRef } from './OpenAPIRef.js'
 import { HeadingTitle } from './_HeadingTitle.js'
 import { RefLink } from './_RefLink.js'
 import { X } from './_X.js'
+import { UidProvider } from './_context.js'
 
 export interface OpenAPIPathProps {
   /**
@@ -212,15 +213,15 @@ export const OpenAPIPath = ({
   }
 
   return (
-    <>
-      <HeadingTitle slugger={slugger} uid={uid} level={2}>
+    <UidProvider value={uid}>
+      <HeadingTitle slugger={slugger} level={2}>
         {pathPrefix}
         {path}
       </HeadingTitle>
 
       {pathItem.parameters && (
         <>
-          <HeadingTitle slugger={slugger} uid={uid} level={3}>
+          <HeadingTitle slugger={slugger} level={3}>
             Common Parameters
           </HeadingTitle>
           <OpenAPIParameters
@@ -254,14 +255,14 @@ export const OpenAPIPath = ({
 
         return (
           <Fragment key={method}>
-            <HeadingTitle slugger={slugger} uid={uid} level={3}>
+            <HeadingTitle slugger={slugger} level={3}>
               <code>{method}</code>
               {summary}
             </HeadingTitle>
             <Markdown>{description}</Markdown>
             {parameters && (
               <>
-                <HeadingTitle slugger={slugger} uid={uid} level={4}>
+                <HeadingTitle slugger={slugger} level={4}>
                   Parameters
                 </HeadingTitle>
                 <OpenAPIParameters parameters={parameters} openapi={openapi} />
@@ -269,7 +270,7 @@ export const OpenAPIPath = ({
             )}
             {requestBodySchema && (
               <>
-                <HeadingTitle slugger={slugger} uid={uid} level={4}>
+                <HeadingTitle slugger={slugger} level={4}>
                   Request Body
                 </HeadingTitle>
                 <X.p>
@@ -281,7 +282,7 @@ export const OpenAPIPath = ({
             {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
             {responses && (
               <>
-                <HeadingTitle slugger={slugger} uid={uid} level={4}>
+                <HeadingTitle slugger={slugger} level={4}>
                   Response
                 </HeadingTitle>
                 <OpenAPIResponses responses={responses} openapi={openapi} />
@@ -297,12 +298,11 @@ export const OpenAPIPath = ({
             key={ref}
             schema={ref}
             openapiPath={openapiPath}
-            uid={uid}
             collectRefs={false}
           />
         )
       })}
-    </>
+    </UidProvider>
   )
 }
 
