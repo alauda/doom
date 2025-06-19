@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.4.1
+
+### Patch Changes
+
+- [#94](https://github.com/alauda/doom/pull/94) [`6b92dab`](https://github.com/alauda/doom/commit/6b92dab3c944112fc92ee54dc7f90c35a7f94038) Thanks [@JounQin](https://github.com/JounQin)! - fix: incorrect auto generated API anchor links
+
 ## 1.4.0
 
 ### Minor Changes
