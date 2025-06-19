@@ -298,6 +298,7 @@ export const OpenAPIPath = ({
             key={ref}
             schema={ref}
             openapiPath={openapiPath}
+            isCommonRef={false}
             collectRefs={false}
           />
         )

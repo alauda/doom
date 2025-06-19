@@ -20,6 +20,17 @@ export interface OpenAPIRefProps {
    * The specific path to the OpenAPI schema, otherwise the first matched will be used.
    */
   openapiPath?: string
+  /**
+   * Whether is a common reference, no `uid` will be generated.
+   *
+   * @default true
+   */
+  isCommonRef?: boolean
+  /**
+   * Whether to collect references from the schema.
+   *
+   * @default true
+   */
   collectRefs?: boolean
 }
 
@@ -150,6 +161,7 @@ const getRefsForSchema = (
 export const OpenAPIRef = ({
   schema,
   openapiPath: openapiPath_,
+  isCommonRef = true,
   collectRefs = true,
 }: OpenAPIRefProps) => {
   const { page } = usePageData()
@@ -158,7 +170,9 @@ export const OpenAPIRef = ({
 
   const innerUid = useId()
 
-  if (!uid) {
+  if (isCommonRef) {
+    uid = '' // common references do not need a unique ID
+  } else if (!uid) {
     uid = innerUid
   }
 
@@ -207,6 +221,7 @@ export const OpenAPIRef = ({
           key={schema}
           schema={schema}
           openapiPath={openapiPath}
+          isCommonRef={isCommonRef}
           collectRefs={false}
         />
       ))}

@@ -14,7 +14,12 @@ export const RefLink = ({ $ref }: RefLinkProps) => {
     return null
   }
 
-  const ref = $ref.replace('/components/schemas/', '').slice(1)
-  const refName = modelName(ref)
-  return <X.a href={COMMON_REFS[ref] || `#${uid}-${ref}`}>{refName}</X.a>
+  const ref = $ref.replace('/components/schemas/', '')
+  const plainRef = ref.slice(1)
+  const refName = modelName(plainRef)
+  return (
+    <X.a href={COMMON_REFS[plainRef] || (uid ? `#${uid}-${plainRef}` : ref)}>
+      {refName}
+    </X.a>
+  )
 }
