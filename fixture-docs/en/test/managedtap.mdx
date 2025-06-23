@@ -1,0 +1,59 @@
+# Configuring Virtual Machines to Use Network Binding Mode for IPv6 Support
+
+The network binding mode is a plugin extension mechanism for virtual machine networking. By default, the platform uses a plugin called ManagedTap to enable IPv6 support for virtual machines. This plugin allows virtual machines to obtain IP addresses through the CNI's DHCP Server. Therefore, as long as the CNI's DHCP Server supports IPv6, virtual machines will also gain IPv6 capabilities.
+
+Currently, we use Kube-OVN as the CNI. Since Kube-OVN's DHCP Server has full IPv6 support, virtual machines can achieve robust IPv6 functionality through the combination of ManagedTap and Kube-OVN.
+
+## Prerequisites
+
+- ACP version must be v4.0.0 or higher.
+- Kube-OVN is used as the CNI, and the virtual machine subnet is configured as Underlay.
+
+## Procedure
+
+<Steps>
+
+### Add IPv6 Configuration to the Virtual Machine Subnet
+
+    ```bash
+    kubectl edit subnet <subnet-name>
+    ```
+
+    Add the following parameters under `spec`:
+
+    ```yaml
+    spec:
+      enableDHCP: true
+      enableIPv6RA: true
+      u2oInterconnection: true
+    ```
+
+### Create a Virtual Machine Using Network Binding Mode in the web console
+
+    When creating a virtual machine, select **Network Binding** as the network mode.
+
+### Access the Virtual Machine via VNC and Configure the Network Interface
+
+    For CentOS systems, edit the `/etc/sysconfig/network-scripts/ifcfg-enp1s0` file and add the following configuration:
+
+    ```bash
+    IPV6INIT=yes
+    DHCPV6C=yes
+    IPV6_AUTOCONF=yes
+    ```
+
+    restart network
+
+    ```bash
+    systemctl restart network
+    ```
+
+### Configure ipv6 Default Route
+
+    If the switch is configured to send Router Advertisement (RA) messages, manual route configuration is not required. The default route can be automatically learned through RA messages from the switch.
+
+    ```bash
+    ip r r default via <subnet-v6-gateway>
+    ```
+
+</Steps>

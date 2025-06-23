@@ -1,0 +1,9 @@
+katanomi
+tekton
+tektonchains
+tektonconfigs
+tektonhubs
+tektoninstallersets
+tektonpipelines
+tektonresults
+tektontriggers

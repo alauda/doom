@@ -1,5 +1,6 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 
 import { pluginReact } from '@rsbuild/plugin-react'
 import { pluginSass } from '@rsbuild/plugin-sass'
@@ -50,7 +51,6 @@ import type { AlgoliaOptions, GlobalCliOptions } from '../types.js'
 import { pathExists, pkgResolve, resolveStaticConfig } from '../utils/index.js'
 
 import {
-  CWD,
   DEFAULT_CONFIG_NAME,
   DEFAULT_EXTENSIONS,
   I18N_FILE,
@@ -150,7 +150,7 @@ const getCommonConfig = async ({
   siteUrl?: boolean
 }): Promise<UserConfig> => {
   const fallbackToZh = 'lang' in config && !config.lang
-  root = resolveDocRoot(CWD, root, config.root)
+  root = resolveDocRoot(root, config.root)
   const localBasePath = configFilePath ? path.dirname(configFilePath) : root
 
   const userBase = (base = addLeadingSlash(
@@ -359,7 +359,7 @@ const findConfig = async (basePath: string) => {
 }
 
 export async function loadConfig(
-  root?: string,
+  root?: string | URL,
   {
     config: configFile,
     base,
@@ -389,6 +389,10 @@ export async function loadConfig(
     configFilePath = path.resolve(configFile)
   } else {
     if (root) {
+      root = root.toString()
+      if (root.startsWith('file:')) {
+        root = fileURLToPath(root)
+      }
       configFilePath = await findConfig(path.resolve(root, DEFAULT_CONFIG_NAME))
     }
     if (!configFilePath) {
@@ -444,7 +448,7 @@ export async function loadConfig(
   const commonConfig = await getCommonConfig({
     config,
     configFilePath,
-    root,
+    root: root as string | undefined,
     base,
     version,
     download,
@@ -523,21 +527,17 @@ export async function loadConfig(
   }
 }
 
-export function resolveDocRoot(
-  cwd: string,
-  cliRoot?: string,
-  configRoot?: string,
-): string {
+export function resolveDocRoot(cliRoot?: string, configRoot?: string): string {
   // CLI root has highest priority
   if (cliRoot) {
-    return path.join(cwd, cliRoot)
+    return path.resolve(cliRoot)
   }
 
   // Config root is next in priority
   if (configRoot) {
-    return path.isAbsolute(configRoot) ? configRoot : path.join(cwd, configRoot)
+    return path.isAbsolute(configRoot) ? configRoot : path.resolve(configRoot)
   }
 
   // Default to 'docs' if no root is specified
-  return path.join(cwd, 'docs')
+  return path.resolve('docs')
 }
