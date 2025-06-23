@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.5.0
+
+### Minor Changes
+
+- [#96](https://github.com/alauda/doom/pull/96) [`189cf9e`](https://github.com/alauda/doom/commit/189cf9e7d99ea5954203628058fd01e80d738fc6) Thanks [@JounQin](https://github.com/JounQin)! - feat: better integration with editor
+
 ## 1.4.1
 
 ### Patch Changes
