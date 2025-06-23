@@ -7,10 +7,13 @@ import { importX } from 'eslint-plugin-import-x'
 import * as reactHooks from 'eslint-plugin-react-hooks'
 import { config, configs } from 'typescript-eslint'
 
+import doom from '@alauda/doom/eslint'
+
 export default config(
   {
-    ignores: ['.yarn', 'dist', 'lib', 'node_modules', 'test', 'pyodide'],
+    ignores: ['pyodide'],
   },
+  ...(await doom(new URL('docs', import.meta.url))),
   eslint.configs.recommended,
   importX.flatConfigs.recommended,
   importX.flatConfigs.typescript,
@@ -35,6 +38,12 @@ export default config(
         'error',
         { allowNumber: true },
       ],
+    },
+  },
+  {
+    files: ['**/*.mdx'],
+    rules: {
+      'react-hooks/rules-of-hooks': 'off',
     },
   },
   {

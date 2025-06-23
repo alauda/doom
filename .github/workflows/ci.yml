@@ -36,7 +36,9 @@ jobs:
         run: yarn --immutable
 
       - name: Build and Lint
-        run: yarn run-p build docs lint typecov
+        run: |
+          yarn build
+          yarn run-p docs lint typecov
         env:
           PARSER_NO_WATCH: true
           RAW_TERMS_URL: ${{ secrets.RAW_TERMS_URL }}

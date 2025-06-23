@@ -1,17 +1,10 @@
-import type { Options } from '@cspell/eslint-plugin'
-import cspellRecommended from '@cspell/eslint-plugin/recommended'
-import js from '@eslint/js'
-import react from '@eslint-react/eslint-plugin'
 import { logger } from '@rspress/shared/logger'
 import { Command } from 'commander'
-import { merge } from 'es-toolkit/compat'
 import { ESLint } from 'eslint'
-import * as mdx from 'eslint-plugin-mdx'
-import tseslint from 'typescript-eslint'
 
+import doom from '../eslint.js'
 import type { GlobalCliOptions } from '../types.js'
 
-import { parseTerms } from './helpers.js'
 import { loadConfig } from './load-config.js'
 
 export const lintCommand = new Command('lint')
@@ -24,65 +17,11 @@ export const lintCommand = new Command('lint')
 
     const docsDir = config.root!
 
-    const parsedTerms = await parseTerms()
-
     const eslint = new ESLint({
       cwd: docsDir,
       overrideConfigFile: true,
       // @ts-expect-error -- stronger types
-      overrideConfig: tseslint.config([
-        {
-          extends: [
-            js.configs.recommended,
-            react.configs.recommended,
-            mdx.configs.flat,
-          ],
-        },
-        {
-          files: ['**/en/**/*.{js,jsx,md,mdx,ts,tsx}'],
-          extends: [cspellRecommended],
-          rules: {
-            '@cspell/spellchecker': [
-              'error',
-              merge(
-                {
-                  autoFix: true,
-                  cspell: {
-                    allowCompoundWords: true,
-                    words: parsedTerms.map((it) => it.en),
-                    flagWords: parsedTerms.flatMap(
-                      ({ badCases }) => badCases?.en ?? [],
-                    ),
-                  },
-                } satisfies Partial<Options>,
-                config.lint?.cspellOptions,
-              ),
-            ],
-          },
-        },
-        {
-          files: ['**/*.{ts,tsx}'],
-          extends: [
-            tseslint.configs.recommendedTypeChecked,
-            react.configs['recommended-typescript'],
-          ],
-          rules: {
-            '@typescript-eslint/no-misused-promises': 'off',
-            '@typescript-eslint/no-non-null-assertion': 'off',
-            '@typescript-eslint/restrict-template-expressions': [
-              'error',
-              { allowNumber: true },
-            ],
-            'prefer-const': ['error', { destructuring: 'all' }],
-          },
-          languageOptions: {
-            parser: tseslint.parser,
-            parserOptions: {
-              projectService: true,
-            },
-          },
-        },
-      ]),
+      overrideConfig: await doom(config.lint?.cspellOptions),
     })
 
     logger.start('Linting...')
