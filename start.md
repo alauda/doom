@@ -252,4 +252,27 @@ Options:
   -h, --help  display help for command
 ```
 
+`doom lint` 基于 [`ESLint`](https://eslint.org/) 和 [`cspell`](https://cspell.org/)，如果希望在编辑器中拥有更好的体验，可以安装相应的插件 [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) / [CSpell](https://marketplace.visualstudio.com/items?itemName=streetsidesoftware.code-spell-checker)，然后创建相应的配置文件:
+
+* `eslint.config.mjs`:
+
+  ```js
+  import doom from '@alauda/doom/eslint'
+
+  export default await doom(new URL('docs', import.meta.url))
+  ```
+
+* `cspell.config.mjs`:
+
+  ```js
+  export { default } from '@alauda/doom/cspell'
+  ```
+
+同时我们约定当前工作目录（`CWD`）下 `.cspell` 文件夹用于存放 CSpell 的字典文件，例如你可以创建 `.cspell/k8s.txt`：
+
+```txt
+k8s
+kubernetes
+```
+
 更多配置请参考[文档检查配置](/zh/usage/configuration.md#lint)
