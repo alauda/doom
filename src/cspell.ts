@@ -70,11 +70,10 @@ export default async function doom(): Promise<CSpellSettings> {
     dictionaries.push(CASE_SENSITIVE_DICTIONARY)
     dictionaryDefinitions.push({
       name: CASE_SENSITIVE_DICTIONARY,
-      supportNonStrictSearches: false,
-      words: caseSensitiveWords.map((it) => it.en),
-      suggestWords: caseSensitiveWords.flatMap((it) =>
-        (it.badCases?.en ?? []).map((c) => `${c}->${it.en}`),
-      ),
+      words: caseSensitiveWords.flatMap((it) => [
+        it.en,
+        ...(it.badCases?.en ?? []).map((c) => `!${c}`),
+      ]),
     })
   }
 
