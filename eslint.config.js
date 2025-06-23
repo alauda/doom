@@ -11,7 +11,7 @@ import doom from '@alauda/doom/eslint'
 
 export default config(
   {
-    ignores: ['.yarn', 'dist', 'lib', 'node_modules', 'test', 'pyodide'],
+    ignores: ['pyodide'],
   },
   ...(await doom(new URL('docs', import.meta.url))),
   eslint.configs.recommended,

@@ -46,6 +46,7 @@ const CASE_SENSITIVE_DICTIONARY = '$$case-sensitive$$'
 
 export default async function doom(): Promise<CSpellSettings> {
   const parsedTerms = await parseTerms()
+
   const words: string[] = []
   const caseSensitiveWords: NormalizedTermItem[] = []
 
@@ -60,7 +61,7 @@ export default async function doom(): Promise<CSpellSettings> {
     }
 
     words.push(word)
-    return badCases
+    return badCases.map((c) => `${c}->${word}`)
   })
 
   const { dictionaries = [], dictionaryDefinitions = [] } =

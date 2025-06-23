@@ -25,6 +25,9 @@ async function doom(cspellOptionsOrRoot?: Partial<Options> | string | URL) {
 
   return tseslint.config([
     {
+      ignores: ['**/.yarn', '**/dist', '**/lib', '**/node_modules'],
+    },
+    {
       extends: [
         js.configs.recommended,
         react.configs.recommended,
@@ -45,6 +48,12 @@ async function doom(cspellOptionsOrRoot?: Partial<Options> | string | URL) {
           'error',
           merge({ autoFix: true } satisfies Partial<Options>, cspellOptions),
         ],
+      },
+    },
+    {
+      files: ['**/*.mdx'],
+      rules: {
+        'no-unused-expressions': 'off',
       },
     },
     {
