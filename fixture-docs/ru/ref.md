@@ -1,22 +1,22 @@
 ---
-sourceSHA: 9a490591c32f57c98d58659926956cdf8e96d93c25211b2ba64126e823042cf0
+sourceSHA: 63852349b39e085dc25a8380aa53621ecbbe7f07d339946bb215db88259d118e
 ---
 
-## Абсолютный
+## Абсолютные
 
 ![](/logo.svg)
 
 текст ![](/logo.svg)
 
-<img src="/logo.svg" alt="logo" />
+<img src="/logo.svg" alt="логотип" />
 
-текст <img src="/logo.svg" alt="logo" />
+текст <img src="/logo.svg" alt="логотип" />
 
-## Относительный
+## Относительные
 
-![](../en/assets/alauda.svg)
+![](./assets/alauda.svg)
 
-текст ![](../en/assets/alauda.svg)
+текст ![](./assets/alauda.svg)
 
 <img src="./assets/alauda.svg" alt="alauda" />
 

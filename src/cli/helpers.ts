@@ -54,7 +54,7 @@ export function escapeMarkdownHeadingIds(content: string): string {
 export const defaultGitHubUrl = (url: string) =>
   /^https?:\/\//.test(url)
     ? url
-    : `https://github.com/${url.replace(/^(\/*github.com)?\/+/i, '')}`
+    : `https://github.com/${url.replace(/^(?:\/*github.com)?\/+/i, '')}`
 
 const parseTerms_ = async () => {
   const terms = await xfetch(

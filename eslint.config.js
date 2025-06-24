@@ -5,6 +5,7 @@ import react from '@eslint-react/eslint-plugin'
 import { createTypeScriptImportResolver } from 'eslint-import-resolver-typescript'
 import { importX } from 'eslint-plugin-import-x'
 import * as reactHooks from 'eslint-plugin-react-hooks'
+import * as regexp from 'eslint-plugin-regexp'
 import { config, configs } from 'typescript-eslint'
 
 import doom from '@alauda/doom/eslint'
@@ -19,6 +20,7 @@ export default config(
   importX.flatConfigs.typescript,
   react.configs.recommended,
   reactHooks.configs['recommended-latest'],
+  regexp.configs['flat/recommended'],
   {
     files: ['**/*.{ts,tsx}'],
     extends: [

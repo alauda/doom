@@ -167,7 +167,7 @@ const resolveTerms = async (
   return terms
 }
 
-const ANCHOR_REGEX = /(\\\\?)\{#([a-zA-Z0-9_-]+)\}/g
+const ANCHOR_REGEX = /\\\\?\{#[\w-]+\}/g
 
 function replaceAnchorsWithPlaceholders(content: string): {
   content: string

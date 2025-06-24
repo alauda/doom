@@ -108,7 +108,7 @@ export async function getOutlineNodes(
         } else {
           const newNode: OutlineNode = {
             // http://perfectionkills.com/the-poor-misunderstood-innerText/
-            title: tag.textContent?.trim().replace(/(^#|#$)/, '') ?? '',
+            title: tag.textContent?.trim().replace(/^#|#$/, '') ?? '',
             destination: dest,
             children: [],
             depth: orderDepth,
