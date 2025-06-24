@@ -59,13 +59,14 @@ export async function extractInfoFromFrontmatter(
   }
   const content = await fs.readFile(realPath, 'utf-8')
   const fileNameWithoutExt = path.basename(realPath, path.extname(realPath))
+  // eslint-disable-next-line regexp/no-super-linear-backtracking
   const h1RegExp = /^#\s+(.*)$/m
   const match = content.match(h1RegExp)
   let contentTitle = match?.[1]?.trim()
   if (contentTitle) {
     contentTitle =
       contentTitle.match(
-        /{\s*useI18n\s*\(\s*\)\s*\(\s*(['"])([^'"]+)\1\s*\)\s*}/m,
+        /\{\s*useI18n\s*\(\s*\)\s*\(\s*(['"])([^'"]+)\1\s*\)\s*\}/,
       )?.[2] ?? contentTitle
   }
   const { frontmatter } = loadFrontMatter<{

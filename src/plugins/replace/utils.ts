@@ -16,10 +16,13 @@ export const RELATIVE_URL_PATTERN = /^\.\.?\//
  * hello world {#custom-id} -> { text: 'hello world', id: 'custom-id' }
  */
 export const extractTextAndId = (title: string) => {
-  const customIdReg = /\\?{#.*}/
+  const customIdReg = /\\?\{#[^}]*\}/
   const text = title.replace(customIdReg, '').trimEnd()
   const customId = title.match(customIdReg)?.[0]?.slice(2, -1) || ''
-  return [text, customId]
+  return [
+    text.replace(/\\{2}/g, '').replace(/(?:[^\\]\\([[\]]))+/g, '$1'),
+    customId,
+  ]
 }
 
 export const normalizeReferenceItems = (items: ReferenceItem[] = []) =>

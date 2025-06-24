@@ -1,0 +1,62 @@
+---
+sourceSHA: 1944264b74bc02daf294c210efc39ccaa8d4762ec1d8d0ce9a9fe05d74fe9f5b
+---
+
+# 配置虚拟机使用网络绑定模式以支持 IPv6
+
+网络绑定模式是虚拟机网络的插件扩展机制。平台默认使用一个名为 ManagedTap 的插件来实现虚拟机的 IPv6 支持。该插件允许虚拟机通过 CNI 的 DHCP Server 获取 IP 地址。因此，只要 CNI 的 DHCP Server 支持 IPv6，虚拟机也将具备 IPv6 能力。
+
+目前，我们使用 Kube-OVN 作为 CNI。由于 Kube-OVN 的 DHCP Server 完全支持 IPv6，虚拟机可以通过 ManagedTap 和 Kube-OVN 的结合，实现完善的 IPv6 功能。
+
+## 前提条件
+
+- ACP 版本必须为 v4.0.0 或更高。
+- 使用 Kube-OVN 作为 CNI，且虚拟机子网配置为 Underlay。
+
+## 操作步骤
+
+<Steps>
+  ### 在虚拟机子网中添加 IPv6 配置
+
+```bash
+kubectl edit subnet <subnet-name>
+```
+
+在 `spec` 下添加以下参数：
+
+```yaml
+spec:
+  enableDHCP: true
+  enableIPv6RA: true
+  u2oInterconnection: true
+```
+
+### 在 Web 控制台中创建使用网络绑定模式的虚拟机
+
+创建虚拟机时，选择 **Network Binding** 作为网络模式。
+
+### 通过 VNC 访问虚拟机并配置网络接口
+
+对于 CentOS 系统，编辑 `/etc/sysconfig/network-scripts/ifcfg-enp1s0` 文件，添加以下配置：
+
+```bash
+IPV6INIT=yes
+DHCPV6C=yes
+IPV6_AUTOCONF=yes
+```
+
+重启网络
+
+```bash
+systemctl restart network
+```
+
+### 配置 IPv6 默认路由
+
+如果交换机配置了发送 Router Advertisement (RA) 消息，则无需手动配置路由。默认路由可以通过交换机发送的 RA 消息自动学习。
+
+```bash
+ip r r default via <subnet-v6-gateway>
+```
+
+</Steps>

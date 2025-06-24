@@ -1,23 +1,27 @@
 ---
-sourceSHA: e752331d6b37e30a460ac29cb4eb13f753c324f2f938af8cf631cb446b280819
+sourceSHA: 7f15c9e90978c98f9621efe840a5f243bd12b7c53b495af9b5a0c03fdd349e91
 ---
 
 import { useI18n } from '@rspress/core/runtime'
 
-# {useI18n()('prod_intro')}
+# {useI18n()('prod_intro')} \{#prod_intro_i18n}
 
-<Term name="company" /> <Term name="product" /> <Term name="productShort" />
+<Term name="company" />
 
-在进行国际化翻译时需要遵循以下规范：
+<Term name="product" />
 
-- 多语言文档(`doc/en`)的目录结构需要与 `doc/zh` 目录下的文档完全一致，确保多语言文档的链接除了语言标识外完全相同。
+<Term name="productShort" />
+
+在国际化翻译过程中，必须遵循以下规范：
+
+- 多语言文档的目录结构（`doc/en`）必须与`doc/zh`目录下的文档完全一致，确保多语言文档的链接除了语言标识外完全相同。
 
   ::: danger
-  如果使用自动化翻译工具进行翻译，则无需担心此问题，因为自动化翻译工具会自动生成目标语言文档的目录结构，依据 `doc/zh` 目录。
+  如果使用自动翻译工具进行翻译，则无需担心此问题，因为自动翻译工具会根据`doc/zh`自动生成目标语言文档的目录结构。
   :::
 
 <Tabs>
-  <Tab label="标签1">
+  <Tab label="label1">
     ```mdx title="AcpApisOverview"
     <AcpApisOverview />
     ```
@@ -26,7 +30,7 @@ import { useI18n } from '@rspress/core/runtime'
 
   </Tab>
 
-  <Tab label="标签2">
+  <Tab label="label2">
     <AcpApisOverview />
   </Tab>
 </Tabs>

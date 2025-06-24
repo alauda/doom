@@ -187,7 +187,10 @@ const getCommonConfig = async ({
     const dirents = await fs.readdir(root, { withFileTypes: true })
     for (const dirent of dirents) {
       const { name } = dirent
-      if (!dirent.isDirectory() || ['public', 'shared'].includes(name)) {
+      if (
+        !dirent.isDirectory() ||
+        ['dist', 'node_modules', 'public', 'shared'].includes(name)
+      ) {
         continue
       }
       allLanguages.push(name)
