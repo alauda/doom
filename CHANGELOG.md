@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.5.1
+
+### Patch Changes
+
+- [#98](https://github.com/alauda/doom/pull/98) [`ba4b05f`](https://github.com/alauda/doom/commit/ba4b05fb723fd277106d049ef8e0ae563086de14) Thanks [@JounQin](https://github.com/JounQin)! - fix: unescape unexpected symbols in sidebar
+
 ## 1.5.0
 
 ### Minor Changes
