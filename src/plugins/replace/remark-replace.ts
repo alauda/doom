@@ -1,3 +1,5 @@
+/* eslint-disable regexp/optimal-quantifier-concatenation, regexp/no-misleading-capturing-group, regexp/no-super-linear-backtracking */
+
 import fs from 'node:fs/promises'
 import path from 'node:path'
 
@@ -15,7 +17,7 @@ import type { NormalizedReferenceSource, ReleaseNotesOptions } from './types.js'
 import { getFrontmatterNode, isCI, mdProcessor, mdxProcessor } from './utils.js'
 
 const MD_REF_START_COMMENT_PATTERN = /<!-{2,} *reference-start#(.+) *-{2,}>/
-const MDX_REF_START_COMMENT_PATTERN = /{\/\*+ *reference-start#(.+) *\*+\/}/
+const MDX_REF_START_COMMENT_PATTERN = /\{\/\*+ *reference-start#(.+) *\*+\/\}/
 const MDX_REF_START_PATTERN = /\/\*+ *reference-start#(.+) *\*+\//
 
 const MD_REF_END_COMMENT_PATTERN = /<!-{2,} *reference-end *-{2,}>/
@@ -24,7 +26,7 @@ const MDX_REF_END_PATTERN = /\/\*+ *reference-end *\*+\//
 export const MD_RELEASE_COMMENT_PATTERN =
   /<!-{2,} *release-notes-for-bugs\?(.+) *-{2,}>/
 export const MDX_RELEASE_COMMENT_PATTERN =
-  /{\/\*+ *release-notes-for-bugs\?(.+) *\*+\/}/
+  /\{\/\*+ *release-notes-for-bugs\?(.+) *\*+\/\}/
 const MDX_RELEASE_PATTERN = /\/\*+ *release-notes-for-bugs\?(.+) *\*+\//
 
 export const maybeHaveRef = (filepath: string, content: string) => {
