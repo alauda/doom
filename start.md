@@ -235,7 +235,7 @@ Options:
 PLAYWRIGHT_DOWNLOAD_HOST="https://cdn.npmmirror.com/binaries/playwright"
 ```
 
-更多配置请参考[文档导出配置](/zh/usage/configuration.md#export)
+除了全站统一导出完整 pdf 文档外，`doom` 还支持指定入口导出单个 pdf 文件，更多配置请参考[文档导出配置](/zh/usage/configuration.md#export)
 
 ### 文档检查 \{#lint}
 

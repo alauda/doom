@@ -232,12 +232,10 @@ editRepoBaseUrl: alauda/doom/tree/main/docs # https://github.com/ 前缀可以�
 
 ## 文档导出配置 {#export}
 
-除了全站统一导出完整 pdf 文档外，`doom` 还支持指定入口导出单个 pdf 文件，配置如下：
-
 ```yaml
 export:
   - name: Concepts # 可选，全局唯一 pdf 名称，默认为文档标题
-    entry: '*/concepts/index.mdx' # 必填，字符串或数组，文档入口，支持 glob 匹配，相对于 doom 配置文件所在目录
+    entry: '*/concepts/index.mdx' # 必填，字符串或数组，文档入口，支持 glob 匹配，相对于 docs 目录
 ```
 
 ## 文档检查配置 {#lint}
