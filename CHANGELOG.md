@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.7.0
+
+### Minor Changes
+
+- [#104](https://github.com/alauda/doom/pull/104) [`c05faa6`](https://github.com/alauda/doom/commit/c05faa6a10f96a123fd52f299d4da32e4949dab6) Thanks [@JounQin](https://github.com/JounQin)! - feat: support remark-attributes extension
+
 ## 1.6.1
 
 ### Patch Changes
