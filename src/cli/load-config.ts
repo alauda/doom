@@ -31,6 +31,7 @@ import { difference } from 'es-toolkit'
 import { globSync } from 'tinyglobby'
 import { cyan } from 'yoctocolors'
 
+import { attributesPlugin } from '../plugins/attributes/index.js'
 import {
   apiPlugin,
   autoSidebarPlugin,
@@ -293,6 +294,7 @@ const getCommonConfig = async ({
       apiPlugin({
         localBasePath,
       }),
+      attributesPlugin(),
       autoSidebarPlugin({ export: export_, ignore }),
       autoTocPlugin(),
       directivesPlugin(),
