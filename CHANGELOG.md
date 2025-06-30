@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.6.1
+
+### Patch Changes
+
+- [#102](https://github.com/alauda/doom/pull/102) [`ab8f238`](https://github.com/alauda/doom/commit/ab8f238b077ce31b2dc3962940098d1fa41a0e23) Thanks [@JounQin](https://github.com/JounQin)! - fix: export entry should be relative to docs directory instead
+
 ## 1.6.0
 
 ### Minor Changes
