@@ -351,10 +351,6 @@ const getCommonConfig = async ({
         },
       },
     },
-    export: config.export?.map((item) => ({
-      ...item,
-      entry: globSync(item.entry, { cwd: localBasePath }),
-    })),
   }
 }
 
@@ -481,7 +477,10 @@ export async function loadConfig(
     root: commonConfig.root,
   })
 
-  mergedConfig.export = commonConfig.export
+  mergedConfig.export = config.export?.map((item) => ({
+    ...item,
+    entry: globSync(item.entry, { cwd: commonConfig.root }),
+  }))
 
   if (base && prefix) {
     mergedConfig.base = (mergedConfig.prefix = normalizeSlash(prefix)) + base
