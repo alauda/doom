@@ -49,6 +49,13 @@ export interface AlgoliaOptions {
   indexName: string
 }
 
+export interface ExportItem {
+  name?: string
+  entry: string | string[]
+  onlyInclude?: string[]
+  exclude?: string[]
+}
+
 declare module '@rspress/shared' {
   interface UserConfig {
     prefix?: string
@@ -66,6 +73,7 @@ declare module '@rspress/shared' {
     lint?: LintOptions
     algolia?: AlgoliaOptions
     siteUrl?: string
+    export?: ExportItem[]
   }
 
   interface SiteData {

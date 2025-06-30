@@ -1,6 +1,5 @@
-import { Buffer } from 'node:buffer'
 import fs from 'node:fs/promises'
-import { join, relative } from 'node:path'
+import path from 'node:path'
 import process from 'node:process'
 
 import {
@@ -12,7 +11,6 @@ import {
   PDFString,
 } from 'pdf-lib'
 import PDFMerger from 'pdf-merger-js'
-import { red } from 'yoctocolors'
 
 import type { OutlineNode } from '../../html-export-pdf/index.js'
 import { mergePDFs } from '../../merge-pdfs/index.js'
@@ -176,21 +174,18 @@ export async function mergePDF(
   outDir: string,
   pdfOutlines: PDFOutline[],
 ) {
-  const saveDirPath = join(process.cwd(), outDir)
+  const saveDirPath = path.resolve(outDir)
 
   if (outDir) {
     await fs.mkdir(saveDirPath, { recursive: true })
   }
 
-  const saveFilePath = join(saveDirPath, outFile)
+  const saveFilePath = path.join(saveDirPath, outFile)
 
   if (pages.length === 0) {
-    process.stderr.write(
-      red(
-        'The website has no pages, please check whether the export path is set correctly',
-      ),
+    throw new Error(
+      'The website has no pages, please check whether the export path is set correctly',
     )
-    process.exit(1)
   } else if (pages.length === 1) {
     await fs.rename(pages[0].pagePath, saveFilePath)
   } else {
@@ -198,7 +193,7 @@ export async function mergePDF(
     if (pdfOutlines.length > 0) {
       pdfData = await mergePDFs(
         pages.map(({ pagePath }) => {
-          const relativePagePath = relative(process.cwd(), pagePath)
+          const relativePagePath = path.relative(process.cwd(), pagePath)
           return convertPathToPosix(relativePagePath)
         }),
       )
@@ -214,5 +209,5 @@ export async function mergePDF(
     await fs.writeFile(saveFilePath, pdfData)
   }
 
-  return relative(process.cwd(), saveFilePath)
+  return path.relative(process.cwd(), saveFilePath)
 }

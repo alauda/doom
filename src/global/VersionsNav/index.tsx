@@ -3,8 +3,9 @@ import {
   NoSSR,
   removeTrailingSlash,
   usePageData,
+  withBase,
 } from '@rspress/core/runtime'
-import type { NavItem } from '@rspress/shared'
+import { type NavItem } from '@rspress/shared'
 import virtual from 'doom-@global-virtual'
 import { noop } from 'es-toolkit'
 import { useEffect, useMemo, useState } from 'react'
@@ -57,8 +58,8 @@ const VersionsNav_ = () => {
       return
     }
 
-    return siteData.base + getPdfName(lang, virtual.userBase, siteTitle)
-  }, [lang, siteData.base, siteTitle])
+    return withBase(getPdfName(lang, virtual.userBase, siteTitle))
+  }, [lang, siteTitle])
 
   const [versionsBase, version] = useMemo(() => {
     const unversionedVersion = getUnversionedVersion(virtual.version)

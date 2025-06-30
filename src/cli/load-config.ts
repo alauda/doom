@@ -28,6 +28,7 @@ import {
   transformerRemoveNotationEscape,
 } from '@shikijs/transformers'
 import { difference } from 'es-toolkit'
+import { globSync } from 'tinyglobby'
 import { cyan } from 'yoctocolors'
 
 import {
@@ -350,6 +351,10 @@ const getCommonConfig = async ({
         },
       },
     },
+    export: config.export?.map((item) => ({
+      ...item,
+      entry: globSync(item.entry, { cwd: localBasePath }),
+    })),
   }
 }
 
@@ -475,6 +480,8 @@ export async function loadConfig(
     lang: commonConfig.lang,
     root: commonConfig.root,
   })
+
+  mergedConfig.export = commonConfig.export
 
   if (base && prefix) {
     mergedConfig.base = (mergedConfig.prefix = normalizeSlash(prefix)) + base

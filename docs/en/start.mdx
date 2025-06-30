@@ -1,5 +1,5 @@
 ---
-sourceSHA: e8aa2b84d58ff17ca57bc7aa4aa8c4479944ae37b389df87676d487ab1ababe9
+sourceSHA: 66020a9ebd1f1f108b82b1bf05e1e8b3e51c7b35cb482a48a6e26a2c0bb74316
 ---
 
 # Getting Started \{#start}
@@ -12,7 +12,7 @@ First, you can create a new directory with the following command:
 mkdir my-docs && cd my-docs
 ```
 
-Run `npm init -y` to initialize a project. You can use npm, yarn, or pnpm to install doom:
+Run `npm init -y` to initialize a project. You can install doom using npm, yarn, or pnpm:
 
 <PackageManagerTabs command="install -D @alauda/doom typescript" />
 
@@ -24,7 +24,7 @@ mkdir docs/en && echo '# Hello World' > docs/en/index.md
 mkdir docs/zh && echo '# 你好世界' > docs/zh/index.md
 ```
 
-Add the following scripts to `package.json`:
+Add the following scripts to your `package.json`:
 
 ```json
 {
@@ -45,7 +45,7 @@ Then initialize a configuration file `doom.config.yml`:
 title: My Docs
 ```
 
-Also create `tsconfig.json` with the following content:
+Also create a `tsconfig.json` file with the following content:
 
 ```jsonc
 {
@@ -121,7 +121,7 @@ For more configuration, please refer to [Configuration](./usage/configuration)
 
 ### Starting the Development Server \{#dev}
 
-Run `yarn dev` to start the development server; the browser will automatically open the documentation homepage.
+Run `yarn dev` to start the development server, the browser will automatically open the documentation homepage.
 
 ```sh
 doom dev -h
@@ -148,11 +148,11 @@ Run `yarn build` to build the production code. After building, static files will
 
 ### Local Preview \{#serve}
 
-Run `yarn serve` to preview the built static files. Note that if you used `-b`, `-p` parameters during build, you need to use the same `-b`, `-p` parameters during preview.
+Run `yarn serve` to preview the built static files. Note that if you used `-b`, `-p` parameters during build, you also need to use `-b`, `-p` parameters during preview.
 
 ### Using Scaffolding Templates \{#new}
 
-Run `yarn new` to generate projects, modules, or documentation from scaffolding templates.
+Run `yarn new` to generate projects, modules, or documentation using scaffolding templates.
 
 ### Translating Documentation \{#translate}
 
@@ -175,24 +175,24 @@ Options:
   -h, --help               display help for command
 ```
 
-- The `-g, --glob` parameter is required and specifies the directories or files to translate, supporting `glob` syntax. Note that the parameter value must be quoted to avoid unexpected behavior from the shell. Examples:
+- The `-g, --glob` parameter is required and can specify the directories or paths of files to translate, supporting `glob` syntax. Note that the parameter value must be quoted, otherwise it may be parsed unexpectedly by the command line. Examples:
   1. `yarn translate -g abc xyz` will translate all documents under `<root>/<source>/abc` and `<root>/<source>/xyz` to `<root>/<target>/abc` and `<root>/<target>/xyz` respectively.
   2. `yarn translate -g '*'` will translate all documents under `<root>/<source>`.
-- The `-C, --copy` parameter is optional and controls whether to copy local asset files to the target directory when the target file does not exist. The default is `false`, which changes the asset reference paths to the source paths. Examples:
+- The `-C, --copy` parameter is optional. It determines whether to copy local asset files to the target directory when the target file does not exist. The default is `false`, which means changing the asset file reference path to the source path. Examples:
   - When enabled:
-    1. `/<source>/abc.jpg` will copy `<root>/public/<source>/abc.jpg` to `<root>/public/<target>/abc.jpg` and update the document reference path to `/<target>/abc.jpg`.
-    2. In `<root>/<source>/abc.mdx`, a reference to `./assets/xyz.jpg` will copy `<root>/<source>/assets/xyz.jpg` to `<root>/<target>/assets/xyz.jpg`, keeping the image reference path unchanged.
-    3. In `<root>/<source>/abc.mdx`, a reference to `./assets/<source>/xyz.jpg` will copy `<root>/<source>/assets/<source>/xyz.jpg` to `<root>/<target>/assets/<target>/xyz.jpg` and update the document reference path to `./assets/<target>/xyz.jpg`.
+    1. When translating `/<source>/abc.jpg`, it will copy `<root>/public/<source>/abc.jpg` to `<root>/public/<target>/abc.jpg` and update the document reference path to `/<target>/abc.jpg`.
+    2. In `<root>/<source>/abc.mdx`, if the document references `./assets/xyz.jpg`, it will copy `<root>/<source>/assets/xyz.jpg` to `<root>/<target>/assets/xyz.jpg`, and the image reference path remains unchanged.
+    3. In `<root>/<source>/abc.mdx`, if the document references `./assets/<source>/xyz.jpg`, it will copy `<root>/<source>/assets/<source>/xyz.jpg` to `<root>/<target>/assets/<target>/xyz.jpg` and update the document reference path to `./assets/<target>/xyz.jpg`.
   - When not enabled:
-    1. For `/<source>/abc.jpg`, if `<root>/public/<target>/abc.jpg` exists, the document reference path will be updated to `/<target>/abc.jpg`; otherwise, the image reference path remains unchanged.
-    2. In `<root>/<source>/abc.mdx`, if `<root>/<target>/assets/<target>/xyz.jpg` exists, the reference path will be updated to `./assets/<target>/xyz.jpg`; otherwise, it will be changed to `../<source>/assets/<target>/xyz.jpg`.
+    1. When translating `/<source>/abc.jpg`, if `<root>/public/<target>/abc.jpg` exists, the document reference path will be updated to `/<target>/abc.jpg`; otherwise, the image reference path remains unchanged.
+    2. In `<root>/<source>/abc.mdx`, if the document references `./assets/<source>/xyz.jpg`, and `<root>/<target>/assets/<target>/xyz.jpg` exists, the reference path will be updated to `./assets/<target>/xyz.jpg`; otherwise, it will be changed to `../<source>/assets/<target>/xyz.jpg`.
 
 :::warning
-Specifically, if you use `-g '*'` for full translation, the file lists of `source` and `target` directories will be compared, and unmatched `target` files except for `internalRoutes` will be automatically deleted.
+Specially, if you use `-g '*'` for full translation, the file lists of `source` and `target` directories will be compared, and unmatched `target` files except for `internalRoutes` will be automatically deleted.
 :::
 
 :::tip
-The translation feature requires the local environment variable `AZURE_OPENAI_API_KEY` to be configured. Please contact your team leader to obtain it.
+The translation feature requires the local environment variable `AZURE_OPENAI_API_KEY` to be configured. Please contact your team Leader to obtain it.
 :::
 
 You can control translation behavior in the document metadata:
@@ -231,13 +231,17 @@ Options:
   -h, --help         display help for command
 ```
 
-Run `yarn export` to export the documentation as PDF files. Note that if you used `-b`, `-p` parameters during build, you need to use the same `-b`, `-p` parameters during export.
+Run `yarn export` to export the documentation as a PDF file. Note that if you used `-b`, `-p` parameters during build, you also need to use `-b`, `-p` parameters during export.
 
-The export feature depends on [`playwright`](https://playwright.dev). For CI pipelines, please use `build-harbor.alauda.cn/frontend/playwright-runner:doom` as the base image for dependency installation and documentation building. Locally, you can set the following environment variable to speed up downloads:
+The export feature depends on [`playwright`](https://playwright.dev). For CI pipelines, please use `build-harbor.alauda.cn/frontend/playwright-runner:doom` as the base image for dependency installation and documentation building.
+
+Locally, you can set the following environment variable to speed up downloads:
 
 ```dotenv title=".env.yarn"
 PLAYWRIGHT_DOWNLOAD_HOST="https://cdn.npmmirror.com/binaries/playwright"
 ```
+
+For more configuration, please refer to [Documentation Export Configuration](./usage/configuration#export)
 
 ### Documentation Linting \{#lint}
 
@@ -272,11 +276,11 @@ Options:
   export { default } from '@alauda/doom/cspell'
   ```
 
-We also agree that the `.cspell` folder under the current working directory (`CWD`) is used to store CSpell dictionary files. For example, you can create `.cspell/k8s.txt`:
+We also conventionally use the `.cspell` folder in the current working directory (`CWD`) to store CSpell dictionary files. For example, you can create `.cspell/k8s.txt`:
 
 ```txt
 k8s
 kubernetes
 ```
 
-For more configuration, please refer to [Lint Configuration](./usage/configuration#lint)
+For more configuration, please refer to [Documentation Linting Configuration](./usage/configuration#lint)
