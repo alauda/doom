@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.6.0
+
+### Minor Changes
+
+- [#100](https://github.com/alauda/doom/pull/100) [`7454e96`](https://github.com/alauda/doom/commit/7454e961e9face439abce2ad3a0f28cbe790eb2b) Thanks [@JounQin](https://github.com/JounQin)! - feat: support export single entry as PDF
+
 ## 1.5.1
 
 ### Patch Changes
