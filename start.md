@@ -235,6 +235,8 @@ Options:
 PLAYWRIGHT_DOWNLOAD_HOST="https://cdn.npmmirror.com/binaries/playwright"
 ```
 
+更多配置请参考[文档导出配置](/zh/usage/configuration.md#export)
+
 ### 文档检查 \{#lint}
 
 ```sh

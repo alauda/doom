@@ -381,6 +381,8 @@ Options:
 PLAYWRIGHT_DOWNLOAD_HOST="https://cdn.npmmirror.com/binaries/playwright"
 ```
 
+更多配置请参考[文档导出配置](/zh/usage/configuration.md#export)
+
 ### 文档检查 \{#lint}
 
 ```sh
@@ -734,6 +736,16 @@ The text for translation is provided below, within triple quotes:
 
 ```yaml
 editRepoBaseUrl: alauda/doom/tree/main/docs # https://github.com/ 前缀可以省略，仅当启用 `-R, --edit-repo` 命令行标志符时生效
+```
+
+## 文档导出配置 {#export}
+
+除了全站统一导出完整 pdf 文档外，`doom` 还支持指定入口导出单个 pdf 文件，配置如下：
+
+```yaml
+export:
+  - name: Concepts # 可选，全局唯一 pdf 名称，默认为文档标题
+    entry: '*/concepts/index.mdx' # 必填，字符串或数组，文档入口，支持 glob 匹配，相对于 doom 配置文件所在目录
 ```
 
 ## 文档检查配置 {#lint}
