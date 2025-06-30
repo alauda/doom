@@ -21,3 +21,11 @@ declare module 'doom-@permission-functionResourcesMap' {
 declare module 'doom-@permission-roleTemplatesMap' {
   export default roleTemplatesMap
 }
+
+declare module 'md-attr-parser' {
+  const parseAttrs: (value?: string | null) => {
+    prop: Record<string, string>
+    eaten: string
+  }
+  export = parseAttrs
+}
