@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.7.1
+
+### Patch Changes
+
+- [#106](https://github.com/alauda/doom/pull/106) [`ccd4988`](https://github.com/alauda/doom/commit/ccd4988ce68ce70513542e56bc0c84b61a23ac62) Thanks [@JounQin](https://github.com/JounQin)! - fix: remove unnecessary lang part in external site link
+
 ## 1.7.0
 
 ### Minor Changes
