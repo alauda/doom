@@ -1,4 +1,4 @@
-import { NoSSR, useLang } from '@rspress/core/runtime'
+import { NoSSR, useLang, usePageData } from '@rspress/core/runtime'
 import {
   addTrailingSlash,
   isExternalUrl,
@@ -31,6 +31,8 @@ const ExternalSiteLink_ = ({
 }: ExternalSiteLinkProps) => {
   const isPrint = useIsPrint()
 
+  const { siteData } = usePageData()
+
   const site = useMemo(
     () => virtual.sites?.find((s) => s.name === name),
     [name],
@@ -52,7 +54,7 @@ const ExternalSiteLink_ = ({
 
   let { url, hash } = parseUrl(href)
 
-  const extname = url.split('.').pop()
+  const extname = url.split('.').at(-1)
 
   if (extname) {
     if (DEFAULT_PAGE_EXTENSIONS.includes(`.${extname}`)) {
@@ -70,7 +72,7 @@ const ExternalSiteLink_ = ({
         (isUnversioned(virtual.version)
           ? site.base
           : addTrailingSlash(site.base + site.version)) +
-        (lang ? addTrailingSlash(lang) : '') +
+        (lang && lang !== siteData.lang ? addTrailingSlash(lang) : '') +
         (hash ? `${url}#${hash}` : url)
       }
       target="_blank"
