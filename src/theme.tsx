@@ -1,12 +1,149 @@
-import { useLang } from '@rspress/core/runtime'
-import { Search as OriginalSearch } from '@rspress/core/theme'
+import { useLang, usePageData, withBase } from '@rspress/core/runtime'
+import {
+  Search as OriginalSearch,
+  Layout as OriginalLayout,
+  getCustomMDXComponent,
+} from '@rspress/core/theme'
 import {
   Search as AlgoliaSearch,
   ZH_LOCALES,
 } from '@rspress/plugin-algolia/runtime'
+import virtual from 'doom-@global-virtual'
 import { useMemo } from 'react'
+import { useLocation } from 'react-router'
 
-const Search =
+import classes from '../styles/link.module.scss'
+
+import type {
+  DoomSidebar,
+  DoomSidebarGroup,
+  DoomSidebarItem,
+} from './plugins/index.js'
+import { useTranslation } from './runtime/index.js'
+import type { ExportItem } from './types.js'
+
+// eslint-disable-next-line import-x/export
+export * from '@rspress/core/theme'
+
+const X = getCustomMDXComponent()
+
+export interface MatchedSidebar {
+  sidebar: DoomSidebarGroup | DoomSidebarItem
+  exportItem: ExportItem
+  depth: number
+}
+
+const getClosestSidebar_ = (
+  sidebarItems: DoomSidebar[],
+  pathname: string,
+  exportItem: ExportItem,
+  matched?: MatchedSidebar,
+  depth = 0,
+): MatchedSidebar | undefined => {
+  for (const sidebar of sidebarItems) {
+    if ('_fileKey' in sidebar && sidebar._fileKey) {
+      if (exportItem.entry.includes(sidebar._fileKey)) {
+        matched = {
+          sidebar,
+          exportItem,
+          depth,
+        }
+      }
+
+      if (
+        withBase(sidebar.link) ===
+        (pathname.endsWith('.html') ? pathname.slice(0, -5) : pathname)
+      ) {
+        return matched
+      }
+    }
+
+    if ('items' in sidebar) {
+      const found = getClosestSidebar_(
+        sidebar.items,
+        pathname,
+        exportItem,
+        matched,
+      )
+      if (found) {
+        return found
+      }
+    }
+  }
+}
+
+const getClosestSidebar = (sidebarItems: DoomSidebar[], pathname: string) => {
+  let found: MatchedSidebar | undefined
+  for (const item of virtual.export!) {
+    const matched = getClosestSidebar_(sidebarItems, pathname, item)
+    if (matched) {
+      if (!found || matched.depth >= found.depth) {
+        found = matched
+      }
+    }
+  }
+  return found
+}
+
+// eslint-disable-next-line import-x/export
+export const Layout = () => {
+  const {
+    siteData: { lang: siteLang, themeConfig },
+  } = usePageData()
+
+  const lang = useLang()
+
+  const t = useTranslation()
+
+  const { pathname } = useLocation()
+
+  const found = useMemo(() => {
+    if (!virtual.export?.length) {
+      return
+    }
+
+    if (themeConfig.locales?.length) {
+      for (const { lang, sidebar } of themeConfig.locales) {
+        const sidebarItems = sidebar![
+          siteLang === lang ? '/' : `/${lang}`
+        ] as DoomSidebar[]
+        return getClosestSidebar(sidebarItems, pathname)
+      }
+    } else {
+      const sidebarItems = themeConfig.sidebar!['/'] as DoomSidebar[]
+      return getClosestSidebar(sidebarItems, pathname)
+    }
+  }, [pathname, siteLang, themeConfig])
+
+  const pdfLink = useMemo(
+    () =>
+      found &&
+      withBase(`${found.exportItem.name ?? found.sidebar.text}-${lang}.pdf`),
+    [found, lang],
+  )
+
+  return (
+    <OriginalLayout
+      beforeOutline={
+        pdfLink && (
+          <X.p>
+            <a
+              className={classes.link}
+              href={pdfLink}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {t('view_docs_as_pdf')}
+            </a>
+          </X.p>
+        )
+      }
+    />
+  )
+}
+
+// eslint-disable-next-line import-x/export
+export const Search =
   process.env.ALGOLIA_APP_ID &&
   process.env.ALGOLIA_API_KEY &&
   process.env.ALGOLIA_INDEX_NAME
@@ -28,8 +165,3 @@ const Search =
         )
       }
     : OriginalSearch
-
-// eslint-disable-next-line import-x/export
-export * from '@rspress/core/theme'
-// eslint-disable-next-line import-x/export
-export { Search }

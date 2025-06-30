@@ -27,6 +27,8 @@ export interface GeneratePdfOptions {
   host: string
   outFile: string
   outDir: string
+  cleanupTempDir?: boolean
+  allOutlines?: PDFOutline[]
   launchOptions?: LaunchOptions
   pdfOptions?: PDFOptions
   pdfOutlines?: boolean
@@ -44,6 +46,8 @@ export async function generatePdf({
   host,
   outFile,
   outDir,
+  cleanupTempDir = true,
+  allOutlines = [],
   urlOrigin,
   pdfOptions,
   pdfOutlines = true,
@@ -77,64 +81,70 @@ export async function generatePdf({
     }
   })
 
-  const singleBar = createProgress()
-  singleBar.start(normalizePages.length)
-
-  const printer = new Printer(printerOptions)
-
-  const page = await printer.setup(launchOptions)
-
-  if (urlOrigin && isValidUrlOrigin) {
-    await page.route('**/*', (route) => {
-      const reqUrl = route.request().url()
-      if (!isValidUrl(reqUrl)) {
-        return route.continue()
-      }
-      // http or https
-      const parsedUrl = new URL(reqUrl)
-      if (userURLOrigin === parsedUrl.origin) {
-        parsedUrl.host = host
-        parsedUrl.protocol = 'http:'
-        parsedUrl.port = `${port}`
-        const parsedUrlString = parsedUrl.toString()
-        return route.continue({
-          url: parsedUrlString,
-          headers: Object.assign({}, route.request().headers(), {
-            refer: parsedUrlString,
-            // Same origin
-            // origin: parsedUrl.origin,
-            // CORS
-            // host: parsedUrl.host,
-          }),
-        })
-      }
+  if (allOutlines.length) {
+    const allOutlinesMapping = new Map(allOutlines)
+    allOutlines = normalizePages.map(({ location }) => {
+      const { link } = getUrlLink(location)
+      return [link, allOutlinesMapping.get(link)!]
     })
-  }
+  } else {
+    const singleBar = createProgress()
+    singleBar.start(normalizePages.length)
 
-  const allOutlines: PDFOutline[] = []
+    const printer = new Printer(printerOptions)
 
-  for (const { location, pagePath, title } of normalizePages) {
-    const { data, outlineNodes } = await printer.pdf(
-      location,
-      {
-        format: 'A4',
-        ...pdfOptions,
-      },
-      pdfOutlines,
-    )
+    const page = await printer.setup(launchOptions)
 
-    if (pdfOutlines) {
-      allOutlines.push([getUrlLink(location).link, outlineNodes])
+    if (urlOrigin && isValidUrlOrigin) {
+      await page.route('**/*', (route) => {
+        const reqUrl = route.request().url()
+        if (!isValidUrl(reqUrl)) {
+          return route.continue()
+        }
+        // http or https
+        const parsedUrl = new URL(reqUrl)
+        if (userURLOrigin === parsedUrl.origin) {
+          parsedUrl.host = host
+          parsedUrl.protocol = 'http:'
+          parsedUrl.port = `${port}`
+          const parsedUrlString = parsedUrl.toString()
+          return route.continue({
+            url: parsedUrlString,
+            headers: Object.assign({}, route.request().headers(), {
+              refer: parsedUrlString,
+              // Same origin
+              // origin: parsedUrl.origin,
+              // CORS
+              // host: parsedUrl.host,
+            }),
+          })
+        }
+      })
     }
 
-    await writeFileSafe(pagePath, data)
+    for (const { location, pagePath, title } of normalizePages) {
+      const { data, outlineNodes } = await printer.pdf(
+        location,
+        {
+          format: 'A4',
+          ...pdfOptions,
+        },
+        pdfOutlines,
+      )
 
-    singleBar.increment(1, { headTitle: title || (await page.title()) })
+      if (pdfOutlines) {
+        allOutlines.push([getUrlLink(location).link, outlineNodes])
+      }
+
+      await writeFileSafe(pagePath, data)
+
+      singleBar.increment(1, { headTitle: title || (await page.title()) })
+    }
+
+    singleBar.stop()
+
+    await printer.closeBrowser()
   }
-
-  singleBar.stop()
-
-  await printer.closeBrowser()
 
   const exportedPath = await mergePDF(
     normalizePages,
@@ -146,6 +156,9 @@ export async function generatePdf({
   const message = `Exported to ${yellow(exportedPath)}\n`
   process.stdout.write(message)
 
-  await fs.rm(tempDir, { force: true, recursive: true })
-  return exportedPath
+  if (cleanupTempDir) {
+    await fs.rm(tempDir, { force: true, recursive: true })
+  }
+
+  return { exportedPath, allOutlines }
 }

@@ -16,6 +16,7 @@ const en = {
   english_bad_cases: 'English Bad Cases',
   download_pdf: 'Download PDF',
   toc: 'TOC',
+  view_docs_as_pdf: 'View full docs as PDF',
 }
 
 export type Translation = typeof en
@@ -38,6 +39,7 @@ const zh: Translation = {
   english_bad_cases: '英文反例',
   download_pdf: '下载 PDF',
   toc: '目录',
+  view_docs_as_pdf: '以 PDF 格式查看完整文档',
 }
 
 const ru: Translation = {
@@ -58,6 +60,7 @@ const ru: Translation = {
   english_bad_cases: 'Примеры ошибок на английском',
   download_pdf: 'Скачать PDF',
   toc: 'Содержание',
+  view_docs_as_pdf: 'Просмотреть полную документацию в формате PDF',
 }
 
 export const TRANSLATIONS = { en, zh, ru }

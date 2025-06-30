@@ -4,6 +4,7 @@ import path from 'node:path'
 import { addTrailingSlash, type RspressPlugin } from '@rspress/core'
 
 import { ACP_BASE, type DoomSite } from '../../shared/index.js'
+import type { ExportItem } from '../../types.js'
 import { baseResolve, pkgResolve } from '../../utils/index.js'
 
 const globalComponentsDir = baseResolve('global')
@@ -18,6 +19,7 @@ export interface GlobalVirtual extends GlobalPluginOptions {
   userBase?: string
   prefix?: string
   sites?: DoomSite[]
+  export?: ExportItem[]
 }
 
 // @internal
@@ -65,6 +67,7 @@ export const globalPlugin = ({
               ),
               version: site.version,
             })),
+            export: config.export,
           },
           null,
           isProd ? 0 : 2,

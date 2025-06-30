@@ -1,10 +1,17 @@
+import fs from 'node:fs/promises'
 import path from 'node:path'
 
 import { removeLeadingSlash, serve } from '@rspress/core'
 import { logger } from '@rspress/shared/logger'
 import { Command } from 'commander'
+import { cyan, yellow } from 'yoctocolors'
 
-import { autoSidebar, type DoomSidebar } from '../plugins/index.js'
+import {
+  autoSidebar,
+  type DoomSidebar,
+  type DoomSidebarGroup,
+  type DoomSidebarItem,
+} from '../plugins/index.js'
 import { getPdfName } from '../shared/index.js'
 import type { GlobalCliOptions, ServeOptions } from '../types.js'
 import { pathExists, setNodeEnv } from '../utils/index.js'
@@ -13,8 +20,27 @@ import {
   generatePdf,
   type GeneratePdfOptions,
   type Page,
+  type PDFOutline,
 } from './export-pdf-core/index.js'
 import { loadConfig } from './load-config.js'
+
+const collectPages = (sidebarItems: DoomSidebar[], base: string) => {
+  const pages: Page[] = []
+  for (const item of sidebarItems) {
+    if ('link' in item && item.link) {
+      const link = removeLeadingSlash(item.link)
+      pages.push({
+        key: link,
+        path: base + link + '.html?print',
+        title: item.text,
+      })
+    }
+    if ('items' in item) {
+      pages.push(...collectPages(item.items, base))
+    }
+  }
+  return pages
+}
 
 export const exportCommand = new Command('export')
   .description(
@@ -56,26 +82,10 @@ export const exportCommand = new Command('export')
 
     await serve({ config, host, port })
 
-    const collectPages = (sidebarItems: DoomSidebar[]) => {
-      const pages: Page[] = []
-      for (const item of sidebarItems) {
-        if ('link' in item && item.link) {
-          const link = removeLeadingSlash(item.link)
-          pages.push({
-            key: link,
-            path: config.base! + link + '.html?print',
-            title: item.text,
-          })
-        }
-        if ('items' in item) {
-          pages.push(...collectPages(item.items))
-        }
-      }
-      return pages
-    }
+    const tempDir = path.resolve(outDir, '.doom')
 
     const commonOptions: Omit<GeneratePdfOptions, 'pages' | 'outFile'> = {
-      tempDir: path.resolve(outDir, '.doom'),
+      tempDir,
       port: port!,
       host: host || 'localhost',
       outDir,
@@ -112,16 +122,65 @@ export const exportCommand = new Command('export')
     const exportPdf = async (
       sidebarItems: DoomSidebar[],
       lang = config.lang!,
+      options?: Partial<GeneratePdfOptions>,
     ) => {
-      const pages = collectPages(sidebarItems)
-      logger.start(
-        `Exporting ${lang} language documents with ${pages.length} pages...`,
-      )
-      await generatePdf({
+      const pages = collectPages(sidebarItems, config.base!)
+      const pdfOptions = {
         pages,
         outFile: getPdfName(lang, config.userBase, config.title),
+        cleanupTempDir: false,
         ...commonOptions,
-      })
+        ...options,
+      }
+      logger.start(
+        `Exporting ${options ? 'custom' : 'all'} ${lang} language documents with ${pages.length} pages into ${yellow(pdfOptions.outFile)}...`,
+      )
+      return generatePdf(pdfOptions)
+    }
+
+    const findEntryFactory = (entry: string[]) =>
+      function findEntry(
+        sidebarItems: DoomSidebar[],
+      ): DoomSidebarGroup | DoomSidebarItem | undefined {
+        for (const item of sidebarItems) {
+          if (!('_fileKey' in item) || !item._fileKey) {
+            continue
+          }
+          if (entry.includes(item._fileKey)) {
+            return item
+          }
+          if ('items' in item) {
+            const found = findEntry(item.items)
+            if (found) {
+              return found
+            }
+          }
+        }
+      }
+
+    const exportItems = config.export || []
+
+    const exportEntries = async (
+      sidebarItems: DoomSidebar[],
+      allOutlines: PDFOutline[],
+      lang = config.lang!,
+    ) => {
+      for (const item of exportItems) {
+        // already normalized by `loadConfig`
+        const entry = item.entry as string[]
+        const findEntry = findEntryFactory(entry)
+        const found = findEntry(sidebarItems)
+        if (!found) {
+          logger.warn(
+            `Cannot find entry \`${cyan(entry.join(', '))}\` for lang ${lang}, skip exporting`,
+          )
+          continue
+        }
+        await exportPdf([found], lang, {
+          allOutlines,
+          outFile: `${item.name || found.text}-${lang}.pdf`,
+        })
+      }
     }
 
     if (themeConfig.locales?.length) {
@@ -129,12 +188,16 @@ export const exportCommand = new Command('export')
         const sidebarItems = sidebar![
           config.lang === lang ? '/' : `/${lang}`
         ] as DoomSidebar[]
-        await exportPdf(sidebarItems, lang)
+        const { allOutlines } = await exportPdf(sidebarItems, lang)
+        await exportEntries(sidebarItems, allOutlines, lang)
       }
     } else {
       const sidebarItems = themeConfig.sidebar!['/'] as DoomSidebar[]
-      await exportPdf(sidebarItems)
+      const { allOutlines } = await exportPdf(sidebarItems)
+      await exportEntries(sidebarItems, allOutlines)
     }
+
+    await fs.rm(tempDir, { force: true, recursive: true })
 
     logger.ready('Closing the server')
     process.exit(0)
