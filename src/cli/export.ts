@@ -138,24 +138,26 @@ export const exportCommand = new Command('export')
       return generatePdf(pdfOptions)
     }
 
-    const findEntryFactory = (entry: string[]) =>
-      function findEntry(
+    const findScopeFactory = (scope: string[]) =>
+      function findScope(
         sidebarItems: DoomSidebar[],
-      ): DoomSidebarGroup | DoomSidebarItem | undefined {
+      ): Set<DoomSidebarGroup | DoomSidebarItem> | undefined {
+        const found = new Set<DoomSidebarGroup | DoomSidebarItem>()
         for (const item of sidebarItems) {
           if (!('_fileKey' in item) || !item._fileKey) {
             continue
           }
-          if (entry.includes(item._fileKey)) {
-            return item
+          if (scope.includes(item._fileKey)) {
+            found.add(item)
           }
           if ('items' in item) {
-            const found = findEntry(item.items)
-            if (found) {
-              return found
+            const found_ = findScope(item.items)
+            if (found_?.size) {
+              found_.forEach((i) => found.add(i))
             }
           }
         }
+        return found
       }
 
     const exportItems = config.export || []
@@ -167,18 +169,18 @@ export const exportCommand = new Command('export')
     ) => {
       for (const item of exportItems) {
         // already normalized by `loadConfig`
-        const entry = item.entry as string[]
-        const findEntry = findEntryFactory(entry)
-        const found = findEntry(sidebarItems)
-        if (!found) {
+        const scope = item.scope as string[]
+        const found = findScopeFactory(scope)(sidebarItems)
+        if (!found?.size) {
           logger.warn(
-            `Cannot find entry \`${cyan(entry.join(', '))}\` for lang ${lang}, skip exporting`,
+            `Cannot find entry \`${cyan(scope.join(', '))}\` for lang ${lang}, skip exporting`,
           )
           continue
         }
-        await exportPdf([found], lang, {
+        const foundSidebarItems = [...found]
+        await exportPdf(foundSidebarItems, lang, {
           allOutlines,
-          outFile: `${item.name || found.text}-${lang}.pdf`,
+          outFile: `${item.name || (foundSidebarItems.find((it) => it.link?.endsWith('/index')) ?? foundSidebarItems[0]).text}-${lang}.pdf`,
         })
       }
     }

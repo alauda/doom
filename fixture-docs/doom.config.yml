@@ -8,9 +8,9 @@ api:
     - shared/openapis/*.json
 export:
   - name: Concepts
-    entry: '*/concepts/index.mdx'
+    scope: '*/concepts/index.mdx'
   - name: Concepts Parameter
-    entry: '*/concepts/parameter/index.mdx'
+    scope: '*/concepts/parameter/index.mdx'
 reference:
   - sources:
       - name: other

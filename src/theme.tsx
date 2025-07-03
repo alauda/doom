@@ -46,7 +46,7 @@ const getClosestSidebar_ = (
         matched = undefined
       }
 
-      if (exportItem.entry.includes(sidebar._fileKey)) {
+      if (exportItem.scope.includes(sidebar._fileKey)) {
         matched = {
           sidebar,
           exportItem,
@@ -103,7 +103,7 @@ export const Layout = () => {
   const { pathname } = useLocation()
 
   const found = useMemo(() => {
-    if (!virtual.export?.length) {
+    if (!virtual.download || !virtual.export?.length) {
       return
     }
 

@@ -481,7 +481,7 @@ export async function loadConfig(
 
   mergedConfig.export = config.export?.map((item) => ({
     ...item,
-    entry: globSync(item.entry, { cwd: commonConfig.root }),
+    scope: globSync(item.scope, { cwd: commonConfig.root }),
   }))
 
   if (base && prefix) {

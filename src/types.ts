@@ -51,7 +51,7 @@ export interface AlgoliaOptions {
 
 export interface ExportItem {
   name?: string
-  entry: string | string[]
+  scope: string | string[]
   onlyInclude?: string[]
   exclude?: string[]
 }
