@@ -42,6 +42,10 @@ const getClosestSidebar_ = (
 ): MatchedSidebar | undefined => {
   for (const sidebar of sidebarItems) {
     if ('_fileKey' in sidebar && sidebar._fileKey) {
+      if (depth === 0) {
+        matched = undefined
+      }
+
       if (exportItem.entry.includes(sidebar._fileKey)) {
         matched = {
           sidebar,
@@ -64,6 +68,7 @@ const getClosestSidebar_ = (
         pathname,
         exportItem,
         matched,
+        depth + 1,
       )
       if (found) {
         return found

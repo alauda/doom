@@ -145,3 +145,14 @@ td {
 @media print {
   @include print;
 }
+
+.rp-list-decimal {
+  list-style: none;
+  counter-reset: section;
+  padding-left: 20px;
+}
+
+.rp-list-decimal > li:before {
+  counter-increment: section;
+  content: counters(section, '.') '. ';
+}
