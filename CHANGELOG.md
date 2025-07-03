@@ -1,5 +1,15 @@
 # @alauda/doom
 
+## 1.8.1
+
+### Patch Changes
+
+- [#111](https://github.com/alauda/doom/pull/111) [`23cd09a`](https://github.com/alauda/doom/commit/23cd09a0cc4310623199ab8ecbe6e24a83092f67) Thanks [@JounQin](https://github.com/JounQin)! - fix: support matching multiple scopes
+
+- [#111](https://github.com/alauda/doom/pull/111) [`23cd09a`](https://github.com/alauda/doom/commit/23cd09a0cc4310623199ab8ecbe6e24a83092f67) Thanks [@JounQin](https://github.com/JounQin)! - fix: should respect `download` flag
+
+- [#112](https://github.com/alauda/doom/pull/112) [`beb7f82`](https://github.com/alauda/doom/commit/beb7f8200d98ee11f062a87519083b3a547fc5ec) Thanks [@zlcnju](https://github.com/zlcnju)! - feat: add `AZURE_OPENAI_MODEL` env support
+
 ## 1.8.0
 
 ### Minor Changes
