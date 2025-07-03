@@ -127,7 +127,6 @@ Check the script logs to confirm that the system configuration items have been s
 Check the following requirements item by item to ensure that the local environment meets the installation needs:
 
 - **Operating System and Kernel Configuration:**
-
   - [x] The grub boot configuration includes the `transparent_hugepage=never` parameter.
   - \[!] CentOS 7.x systems must add the `cgroup.memory=nokmem` parameter in the grub configuration.
   - [x] When the kernel version is below 4.19.0 (or RHEL below 4.18.0), ensure that the `nf_conntrack_ipv4` and (for IPv6) `nf_conntrack_ipv6` modules are enabled.
@@ -137,13 +136,11 @@ Check the following requirements item by item to ensure that the local environme
   - [x] Disable swap.
 
 - **User and Permission Settings:**
-
   - [x] SSH users have `root` privileges and can use `sudo` without a password.
   - [x] The `UseDNS` and `UsePAM` parameters in `/etc/ssh/sshd_config` are set to `no`.
   - [x] `systemctl show --property=DefaultTasksMax` returns `infinity` or a very large value; if not, adjust `/etc/systemd/system.conf`.
 
 - **Network and Hostname:**
-
   - [x] Hostname requirements: No more than 36 characters, starting and ending with letters or numbers, only containing lowercase letters, numbers, `-`, and `.` (must not contain `.-`, `..`, or `-.`).
   - [x] `localhost` in `/etc/hosts` should resolve to `127.0.0.1`.
   - [x] The `/etc/resolv.conf` file exists and contains the `nameserver` configuration, but must not include addresses starting with 172 (disable systemd-resolved).
@@ -350,12 +347,10 @@ To ensure that the management cluster can receive external traffic forwarded by 
 **Other Configuration Requirements:**
 
 1. **LoadBalancer Configuration:**
-
    - Please refer to the relevant documentation for specific configuration methods.
    - It is recommended to configure health checks to monitor port status.
 
 2. **Disaster Recovery Solutions:**
-
    - If planning for disaster recovery, port 2379 must be open for all control nodes to synchronize ETCD data between the primary cluster and disaster recovery cluster.
 
 3. **HTTP Support:**
