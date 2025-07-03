@@ -240,7 +240,7 @@ editRepoBaseUrl: alauda/doom/tree/main/docs # The https://github.com/ prefix can
 ```yaml
 export:
   - name: Concepts # Optional, globally unique PDF name, defaults to the document title
-    entry: '*/concepts/index.mdx' # Required, string or array, document entry point, supports glob matching, relative to docs directory
+    scope: '*/concepts' # Required, string or array, document scope, supports glob matching, relative to docs directory
 ```
 
 ## Documentation Lint Configuration {#lint}
