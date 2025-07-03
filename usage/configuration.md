@@ -235,7 +235,7 @@ editRepoBaseUrl: alauda/doom/tree/main/docs # https://github.com/ 前缀可以�
 ```yaml
 export:
   - name: Concepts # 可选，全局唯一 pdf 名称，默认为文档标题
-    entry: '*/concepts/index.mdx' # 必填，字符串或数组，文档入口，支持 glob 匹配，相对于 docs 目录
+    scope: '*/concepts' # 必填，字符串或数组，文档范围，支持 glob 匹配，相对于 docs 目录
 ```
 
 ## 文档检查配置 {#lint}
