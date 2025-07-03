@@ -28,7 +28,7 @@ import {
   transformerRemoveNotationEscape,
 } from '@shikijs/transformers'
 import { difference } from 'es-toolkit'
-import { globSync } from 'tinyglobby'
+import { glob } from 'tinyglobby'
 import { cyan } from 'yoctocolors'
 
 import { attributesPlugin } from '../plugins/attributes/index.js'
@@ -49,7 +49,7 @@ import {
   UNVERSIONED,
   type DoomSite,
 } from '../shared/index.js'
-import type { AlgoliaOptions, GlobalCliOptions } from '../types.js'
+import type { AlgoliaOptions, ExportItem, GlobalCliOptions } from '../types.js'
 import { pathExists, pkgResolve, resolveStaticConfig } from '../utils/index.js'
 
 import {
@@ -59,7 +59,7 @@ import {
   SITES_FILE,
   YAML_EXTENSIONS,
 } from './constants.js'
-import { defaultGitHubUrl } from './helpers.js'
+import { defaultGitHubUrl, isDoc } from './helpers.js'
 
 const DEFAULT_LOGO = '/logo.svg'
 
@@ -479,10 +479,20 @@ export async function loadConfig(
     root: commonConfig.root,
   })
 
-  mergedConfig.export = config.export?.map((item) => ({
-    ...item,
-    scope: globSync(item.scope, { cwd: commonConfig.root }),
-  }))
+  mergedConfig.export =
+    config.export &&
+    (await Promise.all(
+      config.export.map(
+        async (item) =>
+          ({
+            ...item,
+            scope: Array.isArray(item.scope) ? item.scope : [item.scope],
+            flattenScope: (
+              await glob(item.scope, { cwd: commonConfig.root })
+            ).filter(isDoc),
+          }) satisfies ExportItem,
+      ),
+    ))
 
   if (base && prefix) {
     mergedConfig.base = (mergedConfig.prefix = normalizeSlash(prefix)) + base

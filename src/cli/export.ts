@@ -25,21 +25,25 @@ import {
 import { loadConfig } from './load-config.js'
 
 const collectPages = (sidebarItems: DoomSidebar[], base: string) => {
-  const pages: Page[] = []
+  const pages = new Map<string, Page>()
   for (const item of sidebarItems) {
     if ('link' in item && item.link) {
       const link = removeLeadingSlash(item.link)
-      pages.push({
+      pages.set(link, {
         key: link,
         path: base + link + '.html?print',
         title: item.text,
       })
     }
     if ('items' in item) {
-      pages.push(...collectPages(item.items, base))
+      for (const page of collectPages(item.items, base)) {
+        if (!pages.has(page.key)) {
+          pages.set(page.key, page)
+        }
+      }
     }
   }
-  return pages
+  return [...pages.values()]
 }
 
 export const exportCommand = new Command('export')
@@ -168,12 +172,10 @@ export const exportCommand = new Command('export')
       lang = config.lang!,
     ) => {
       for (const item of exportItems) {
-        // already normalized by `loadConfig`
-        const scope = item.scope as string[]
-        const found = findScopeFactory(scope)(sidebarItems)
+        const found = findScopeFactory(item.flattenScope!)(sidebarItems)
         if (!found?.size) {
           logger.warn(
-            `Cannot find entry \`${cyan(scope.join(', '))}\` for lang ${lang}, skip exporting`,
+            `Cannot find matched scope \`${cyan((item.scope as string[]).join(', '))}\` for lang ${lang}, skip exporting`,
           )
           continue
         }
