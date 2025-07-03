@@ -1,5 +1,17 @@
 # @alauda/doom
 
+## 1.8.0
+
+### Minor Changes
+
+- [#110](https://github.com/alauda/doom/pull/110) [`ed15f67`](https://github.com/alauda/doom/commit/ed15f676a4988a139498deb841be20dc7f6caaa1) Thanks [@JounQin](https://github.com/JounQin)! - feat: better support multiple levels of ol list
+
+### Patch Changes
+
+- [#108](https://github.com/alauda/doom/pull/108) [`44d293a`](https://github.com/alauda/doom/commit/44d293aa9e458b9521dfce9f096442222db15dbb) Thanks [@JounQin](https://github.com/JounQin)! - fix: `has-callouts` CSS level changed
+
+- [#108](https://github.com/alauda/doom/pull/108) [`44d293a`](https://github.com/alauda/doom/commit/44d293aa9e458b9521dfce9f096442222db15dbb) Thanks [@JounQin](https://github.com/JounQin)! - fix: loop all locales, don't `return` on the first item
+
 ## 1.7.1
 
 ### Patch Changes
