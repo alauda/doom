@@ -115,6 +115,7 @@ The text for translation is provided below, within triple quotes:
 `.trim()
 
 let openai: AzureOpenAI | undefined
+const openaiModel = process.env.AZURE_OPENAI_MODEL || 'gpt-4.1-mini'
 
 export interface InternalTranslateOptions extends TranslateOptions {
   source: Language
@@ -367,7 +368,7 @@ export const translate = async ({
         content: contentWithPlaceholders,
       },
     ],
-    model: 'gpt-4.1-mini',
+    model: openaiModel,
     temperature: 0.2,
   })
 
