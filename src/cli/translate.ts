@@ -115,7 +115,7 @@ The text for translation is provided below, within triple quotes:
 `.trim()
 
 let openai: AzureOpenAI | undefined
-const openaiModel = process.env.AZURE_OPENAI_MODEL || 'gpt-4.1-mini';
+const openaiModel = process.env.AZURE_OPENAI_MODEL || 'gpt-4.1-mini'
 
 export interface InternalTranslateOptions extends TranslateOptions {
   source: Language
