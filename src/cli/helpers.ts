@@ -16,7 +16,7 @@ export const parseBooleanOrString = (value?: string) =>
 
 const DOC_PATTERN = /\.mdx?$/
 
-const isDoc = (filename: string) => DOC_PATTERN.test(filename)
+export const isDoc = (filename: string) => DOC_PATTERN.test(filename)
 
 export const getMatchedDocFilePaths = (matched: string[]) =>
   Promise.all(
