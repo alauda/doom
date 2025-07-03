@@ -138,7 +138,6 @@ Explanation:
 - `RELEASE_YAML_PATH`: The address where the configuration list is saved locally.
   - **Must** be stored within the `release` directory, although the file name can be customized.
 - `VERSION_CONFIGMAP_NAME`: The name of the `configmap` that records the component version number in the configuration list.
-
   - For example, the configuration file name for the `tektoncd-pipeline` component is `pipelines-info`.
 
     ```yaml

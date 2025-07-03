@@ -127,47 +127,38 @@ bash setup.sh --network-mode calico
 In the Web UI, configure the key parameters for installing the management cluster as prompted, with details as follows:
 
 - **Kubernetes Version**
-
   - All optional versions have been strictly tested.
   - It is recommended to choose the latest version for optimal features and support.
 
 - **Cluster Network Protocol**
-
   - Supports IPv4 single-stack, IPv6 single-stack, and IPv4/IPv6 dual-stack.
   - Note: When selecting dual-stack mode, all nodes must be correctly configured with IPv6 addresses; the network protocol setting cannot be changed once configured.
 
 - **Cluster Address**
-
   - Enter the prepared `global VIP` for external access to the kube-apiserver.
   - If a LoadBalancer is configured, please fill in its VIP address and disable "Self-built VIP"; otherwise, enable "Self-built VIP" and enter the requested VIP, the installer will automatically deploy keepalived.
 
 - **Platform Access Address**
-
   - Enter the prepared `External IP` or domain name.
   - HTTPS access is enabled by default; if HTTP is needed, enable it in the advanced settings.
   - Supports multiple address configurations: you can fill in internal addresses and add external addresses in "Other Settings > Other Platform Access Addresses."
 
 - **Certificate**
-
   - Defaults to using self-signed certificates to support HTTPS.
   - To customize the certificate, please upload the existing certificate.
 
 - **Image Repository**
-
   - Defaults to using the platform-deployed image repository, which includes all component images.
   - If you need to use an external image repository, please contact technical support to obtain an image synchronization plan for configuration.
 
 - **Container Network**
-
   - The default subnet and Service range for the management cluster must not overlap.
   - When using the Kube-OVN Overlay network, ensure the container network and host network are not in the same subnet to prevent network anomalies.
 
 - **Node Name**
-
   - If you choose "Use Hostname as Node Name," please ensure all node hostnames are unique.
 
 - **Global Cluster Platform Node Isolation**
-
   - Enable this when planning to run workloads on the management cluster.
   - Once enabled, nodes can be set to "Platform Exclusive," meaning they will only run platform components; DaemonSet types are an exception.
 

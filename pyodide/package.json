@@ -50,7 +50,7 @@
     "ws": false
   },
   "dependencies": {
-    "ws": "^8.18.2"
+    "ws": "^8.18.3"
   },
   "types": "./pyodide.d.ts",
   "engines": {

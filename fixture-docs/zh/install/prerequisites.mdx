@@ -122,7 +122,6 @@ bash res/init.sh
 逐项检查以下要求，确保本机环境满足安装需求：
 
 - **操作系统与内核配置：**
-
   - [x] grub 启动配置包含 `transparent_hugepage=never` 参数。
   - [!] CentOS 7.x 系统须在 grub 配置中添加 `cgroup.memory=nokmem` 参数。
   - [x] 内核版本低于 4.19.0（或 RHEL 低于 4.18.0）时，确保 `nf_conntrack_ipv4` 与（IPv6 时）`nf_conntrack_ipv6` 模块启用。
@@ -132,13 +131,11 @@ bash res/init.sh
   - [x] 禁用 swap。
 
 - **用户与权限设置：**
-
   - [x] SSH 用户具备 `root` 权限，并可无密码使用 `sudo`。
   - [x] `/etc/ssh/sshd_config` 中 `UseDNS` 与 `UsePAM` 参数设置为 `no`。
   - [x] `systemctl show --property=DefaultTasksMax` 返回 `infinity` 或极大数值；否则调整 `/etc/systemd/system.conf`。
 
 - **网络与主机名：**
-
   - [x] 主机名要求：不超过36字符，以字母或数字开头和结尾，仅含小写字母、数字、`-` 与 `.`（不得含 `.-`、`..` 或 `-.`）。
   - [x] `/etc/hosts` 中 `localhost` 应解析为 `127.0.0.1`。
   - [x] `/etc/resolv.conf` 文件存在且含 `nameserver` 配置，但不得含 172 开头地址（禁用 systemd-resolved）。
@@ -345,12 +342,10 @@ done
 **其他配置要求：**
 
 1. **LoadBalancer 设置：**
-
    - 具体配置方法请参见相关文档。
    - 建议配置健康检查以监控端口状态。
 
 2. **容灾方案：**
-
    - 若计划容灾，需为所有控制节点开放端口 2379，用于主集群与灾备集群间 ETCD 数据同步。
 
 3. **HTTP 支持：**
