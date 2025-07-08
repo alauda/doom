@@ -1,0 +1,12 @@
+diff --git a/node_modules/unified-engine/lib/configuration.js b/node_modules/unified-engine/lib/configuration.js
+index 77f3969..ebb8c32 100644
+--- a/node_modules/unified-engine/lib/configuration.js
++++ b/node_modules/unified-engine/lib/configuration.js
+@@ -99,6 +99,7 @@ const loaders = {
+   '.cjs': loadScriptOrModule,
+   '.mjs': loadScriptOrModule,
+   '.js': loadScriptOrModule,
++  '.ts': loadScriptOrModule,
+   '.yaml': loadYaml,
+   '.yml': loadYaml
+ }

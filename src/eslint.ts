@@ -1,3 +1,6 @@
+import { createRequire } from 'node:module'
+import { fileURLToPath } from 'node:url'
+
 import type { Options } from '@cspell/eslint-plugin'
 import cspellRecommended from '@cspell/eslint-plugin/recommended'
 import js from '@eslint/js'
@@ -9,10 +12,24 @@ import tseslint from 'typescript-eslint'
 
 import { loadConfig } from './cli/load-config.js'
 
-async function doom(cspellOptions?: Options): Promise<tseslint.ConfigArray>
+const cjsRequire = createRequire(import.meta.url)
+
+let remarkConfigPath: string
+
+try {
+  remarkConfigPath = fileURLToPath(import.meta.resolve('./remarkrc.js'))
+} catch {
+  remarkConfigPath = cjsRequire.resolve('./remarkrc.js')
+}
+
+async function doom(
+  cspellOptions?: Options | null,
+): Promise<tseslint.ConfigArray>
 async function doom(root: string | URL): Promise<tseslint.ConfigArray>
-async function doom(cspellOptionsOrRoot?: Partial<Options> | string | URL) {
-  let cspellOptions: Partial<Options> | undefined
+async function doom(
+  cspellOptionsOrRoot?: Partial<Options> | string | null | URL,
+) {
+  let cspellOptions: Partial<Options> | null | undefined
   if (
     typeof cspellOptionsOrRoot === 'string' ||
     cspellOptionsOrRoot instanceof URL
@@ -22,6 +39,8 @@ async function doom(cspellOptionsOrRoot?: Partial<Options> | string | URL) {
   } else {
     cspellOptions = cspellOptionsOrRoot
   }
+
+  const cspellEnabled = cspellOptions !== null
 
   return tseslint.config([
     {
@@ -39,16 +58,24 @@ async function doom(cspellOptionsOrRoot?: Partial<Options> | string | URL) {
     },
     {
       files: ['**/en/**/*.{js,jsx,md,mdx,ts,tsx}'],
-      extends: [cspellRecommended],
+      extends: cspellEnabled ? [cspellRecommended] : [],
       languageOptions: {
         globals: globals.browser,
+        parserOptions: {
+          remarkConfigPath,
+        },
       },
-      rules: {
-        '@cspell/spellchecker': [
-          'error',
-          merge({ autoFix: true } satisfies Partial<Options>, cspellOptions),
-        ],
-      },
+      rules: cspellEnabled
+        ? {
+            '@cspell/spellchecker': [
+              'error',
+              merge(
+                { autoFix: true } satisfies Partial<Options>,
+                cspellOptions,
+              ),
+            ],
+          }
+        : {},
     },
     {
       files: ['**/*.mdx'],

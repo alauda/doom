@@ -61,6 +61,7 @@ internalRoutes:
 editRepoBaseUrl: alauda/doom/tree/main/fixture-docs
 lint:
   cspellOptions:
+    debugMode: true
     cspell:
       words:
         - openshiftpipelinesascodes

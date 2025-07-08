@@ -15,6 +15,7 @@
       "@alauda/doom/runtime": ["./src/runtime/index.ts"],
       "@alauda/doom/theme": ["./src/theme.tsx"]
     },
+    "rewriteRelativeImportExtensions": true,
     "stripInternal": true,
     "verbatimModuleSyntax": true
   },

@@ -10,7 +10,7 @@ title: Installing
 
 This section outlines the specific steps for installing the management cluster. The following operations follow the "Prepare → Execute → Validate" model, and key parameter descriptions are detailed in the UI configuration.
 
-### Step 1: Download the Installation Package
+## Step 1: Download the Installation Package
 
 **Prepare**
 
@@ -22,19 +22,19 @@ This section outlines the specific steps for installing the management cluster. 
 - After the download is complete, use the GPG tool to verify the integrity of the installation package.
 - Install GPG tool according to your operating system (refer to the commands below).
 
-```bash
-# Ubuntu
-sudo apt-get install gnupg
-# CentOS
-yum install gnupg
-# Mac
-brew install gpg
-```
+  ```bash
+  # Ubuntu
+  sudo apt-get install gnupg
+  # CentOS
+  yum install gnupg
+  # Mac
+  brew install gpg
+  ```
 
 **Validate**
 Follow the steps below to validate:
 
-#### 1.1 Download and Verify the Public Key
+### 1.1 Download and Verify the Public Key
 
 ```bash
 curl -O https://www.alauda.cn/download/verify-key.pub
@@ -43,7 +43,7 @@ md5sum verify-key.pub
 
 - The output MD5 value should be: `2eaddfab97d2951a8915f327acb53562`.
 
-#### 1.2 Import Public Key and Verify Fingerprint
+### 1.2 Import Public Key and Verify Fingerprint
 
 ```bash
 gpg --import verify-key.pub
@@ -55,7 +55,7 @@ gpg --fingerprint BB097AE6
   09EE E7B9 A30C F4B3 5E31 A91B 2704 1C16 BB09 7AE6
   ```
 
-#### 1.3 Verify the Installation Package Signature
+### 1.3 Verify the Installation Package Signature
 
 ```bash
 gpg --verify <signature file> <installation package>
@@ -71,7 +71,7 @@ gpg --verify cpaas-devops-2.14.0.tgz.sig cpaas-devops-2.14.0.tgz
 
 ---
 
-### Step 2: Upload the Installation Package to the Control Node
+## Step 2: Upload the Installation Package to the Control Node
 
 **Prepare**
 
@@ -81,10 +81,10 @@ gpg --verify cpaas-devops-2.14.0.tgz.sig cpaas-devops-2.14.0.tgz
 
 - Upload the installation package to the suggested directory on the control node `/root/cpaas-install`, and extract it:
 
-```shell
-tar -xvf {path_to_installation_package}/{installation_package_name} -C /root/cpaas-install
-cd /root/cpaas-install/installer || exit 1
-```
+  ```shell
+  tar -xvf {path_to_installation_package}/{installation_package_name} -C /root/cpaas-install
+  cd /root/cpaas-install/installer || exit 1
+  ```
 
 **Validate**
 
@@ -92,7 +92,7 @@ cd /root/cpaas-install/installer || exit 1
 
 ---
 
-### Step 3: Start the Installer
+## Step 3: Start the Installer
 
 **Prepare**
 
@@ -103,15 +103,15 @@ cd /root/cpaas-install/installer || exit 1
 
 - Start the installer by default (using the Kube-OVN network plugin):
 
-```bash
-bash setup.sh
-```
+  ```bash
+  bash setup.sh
+  ```
 
 - To use the Calico network plugin, execute:
 
-```bash
-bash setup.sh --network-mode calico
-```
+  ```bash
+  bash setup.sh --network-mode calico
+  ```
 
 - To specify IPv6 or dual-stack mode, you can add the parameters `--ip-family ipv6` or `--ip-family dual`.
 
@@ -121,7 +121,7 @@ bash setup.sh --network-mode calico
 
 ---
 
-### Step 4: Install the Management Cluster (Configure UI Parameters)
+## Step 4: Install the Management Cluster (Configure UI Parameters)
 
 **Prepare**
 In the Web UI, configure the key parameters for installing the management cluster as prompted, with details as follows:
@@ -181,7 +181,7 @@ In the Web UI, configure the key parameters for installing the management cluste
 
 ---
 
-### Step 5: Verify the Installation Success
+## Step 5: Verify the Installation Success
 
 **Prepare**
 
@@ -192,12 +192,12 @@ In the Web UI, configure the key parameters for installing the management cluste
 - In the "Platform Management" view, click on "Cluster Management > Cluster," and find the cluster named `global`;
 - Select "CLI Tools" from the drop-down menu on the right and execute the following commands to check the status:
 
-```shell
-# Check for any failed Charts
-kubectl get apprelease --all-namespaces
-# Check for any failed Pods
-kubectl get pod --all-namespaces | awk '{if ($4 != "Running" && $4 != "Completed")print}' | awk -F'[/ ]+' '{if ($3 != $4)print}'
-```
+  ```shell
+  # Check for any failed Charts
+  kubectl get apprelease --all-namespaces
+  # Check for any failed Pods
+  kubectl get pod --all-namespaces | awk '{if ($4 != "Running" && $4 != "Completed")print}' | awk -F'[/ ]+' '{if ($3 != $4)print}'
+  ```
 
 **Validate**
 

@@ -2,7 +2,7 @@ import Slugger from 'github-slugger'
 import type { Root } from 'mdast'
 import { visitChildren } from 'unist-util-visit-children'
 
-import { extractTextAndId } from './utils.js'
+import { extractTextAndId } from '../../shared/index.js'
 
 export interface TocItem {
   id: string

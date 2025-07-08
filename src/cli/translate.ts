@@ -409,7 +409,10 @@ export const translateCommand = new Command('translate')
     `Document target language, one of ${supportedLanguages}`,
     'zh',
   )
-  .requiredOption('-g, --glob <path...>', 'Glob patterns for source dirs/files')
+  .requiredOption(
+    '-g, --glob <path...>',
+    'Glob patterns of source dirs/files to translate',
+  )
   .option(
     '-C, --copy [boolean]',
     'Wether to copy relative assets to the target directory instead of following links',

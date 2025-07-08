@@ -12,11 +12,11 @@ title: Prerequisites
 
 The following content details the hardware, network, operating system, and kernel requirements for installing the management cluster, as well as the node preprocessing steps.
 
-### 1. Machine Resource Requirements
+## 1. Machine Resource Requirements
 
 **Tip:** This section describes the minimum hardware requirements for building a highly available management cluster. If you have completed capacity planning, please refer to [Capacity Planning](#scale) to prepare the necessary resources, or expand as needed post-installation.
 
-#### 1.1 Basic Configuration Requirements
+### 1.1 Basic Configuration Requirements
 
 At least **3** physical or virtual machines must be provided as control nodes for the management cluster, with the following minimum configurations for each node:
 
@@ -26,20 +26,20 @@ At least **3** physical or virtual machines must be provided as control nodes fo
 | **Memory**   | ≥ 16GB<br />No overselling; at least six-channel DDR4 is recommended           |
 | **Disk**     | Single device IOPS ≥ 2000<br />Throughput ≥ 200MB/s<br />Must use SSD          |
 
-#### 1.2 ARM Architecture Requirements
+### 1.2 ARM Architecture Requirements
 
 For ARM architecture (e.g., Kunpeng 920), it is recommended to increase the minimum configuration to **twice** that of x86, but not less than **1.5 times**.
 For example: If the x86 requirement is 8 cores and 16GB, the minimum for ARM should be 12 cores and 24GB, with a recommended configuration of 16 cores and 32GB.
 
-#### 1.3 Special Environment Description
+### 1.3 Special Environment Description
 
 - **Single Node Deployment:** If only 1 machine is provided, a single-node management cluster can be installed, but **it is limited to non-production environments**. Production environments must be configured with at least 3 machines for high availability.
 
 ---
 
-### 2. Supported Operating Systems and Kernels
+## 2. Supported Operating Systems and Kernels
 
-#### 2.1 x86 Architecture
+### 2.1 x86 Architecture
 
 **Red Hat Enterprise Linux (RHEL)**
 
@@ -72,7 +72,7 @@ For example: If the x86 requirement is 8 cores and 16GB, the minimum for ARM sho
 
 ---
 
-#### 2.2 ARM Architecture (Kunpeng 920)
+### 2.2 ARM Architecture (Kunpeng 920)
 
 **Kylin Linux (Kylin Linux Advanced Server)**
 
@@ -85,7 +85,7 @@ For example: If the x86 requirement is 8 cores and 16GB, the minimum for ARM sho
 
 ---
 
-#### 2.3 Other Important Notes
+### 2.3 Other Important Notes
 
 1. **Kernel Version Requirements:**
    The above kernel versions are official releases that have been tested and verified by the platform. During actual deployment, ensure that the **A.B.C major version number** is consistent; subsequent parts may allow differences.
@@ -101,11 +101,11 @@ For example: If the x86 requirement is 8 cores and 16GB, the minimum for ARM sho
 
 ---
 
-### 3. Machine Preprocessing
+## 3. Machine Preprocessing
 
 Before installing the management cluster, all nodes (control nodes and compute nodes) must complete the preprocessing tasks.
 
-#### 3.1 Execute Quick Configuration Script
+### 3.1 Execute Quick Configuration Script
 
 **Preparation**
 Confirm that the installation package has been unpacked and ensure you have `root` privileges.
@@ -122,7 +122,7 @@ Check the script logs to confirm that the system configuration items have been s
 
 **Note:** The `init.sh` script cannot guarantee that all the following checks are handled properly; you still need to continue with the following steps to confirm that each machine meets all check item requirements.
 
-#### 3.2 Check Local Requirements
+### 3.2 Check Local Requirements
 
 Check the following requirements item by item to ensure that the local environment meets the installation needs:
 
@@ -169,7 +169,7 @@ Check the following requirements item by item to ensure that the local environme
   - [x] Mount parameters for `/tmp` must not include `noexec`.
   - [x] Remove potentially conflicting software packages with platform components (see [Remove Conflicting Packages](#remove_conflicting_packages) for details).
 
-#### 3.3 Cross-Node Checks
+### 3.3 Cross-Node Checks
 
 - There must be no network firewall restrictions between nodes.
 - The hostname of each node must be unique.
@@ -177,9 +177,9 @@ Check the following requirements item by item to ensure that the local environme
 
 ---
 
-### 4. Appendix
+## 4. Appendix
 
-#### 4.1 Remove Conflicting Packages <a id="remove_conflicting_packages" />
+### 4.1 Remove Conflicting Packages <a id="remove_conflicting_packages" />
 
 Please use the following commands to check and uninstall any packages that may conflict with platform components according to your operating system.
 
@@ -295,7 +295,7 @@ done
 
 ---
 
-#### 4.2 Configure Search Domain <a id="config_search" />
+### 4.2 Configure Search Domain <a id="config_search" />
 
 In the `/etc/resolv.conf` file, the `search` line specifies the DNS query search path, and the configuration requirements are as follows:
 
@@ -307,11 +307,11 @@ Failure to meet these requirements may lead to DNS query failures or reduced per
 
 ---
 
-### 5. Network Resource Requirements
+## 5. Network Resource Requirements
 
 Before installing the management cluster, the following network resources must be configured in advance. If hardware LoadBalancer cannot be provided, the installer supports configuring **haproxy + keepalived** as a soft load balancer, but it may affect performance and reliability.
 
-#### 5.1 Network Resource Configuration
+### 5.1 Network Resource Configuration
 
 | **Resource**    | **Mandatory** | **Quantity** | **Description**                                                                                                                                                                                                                                                  |
 | --------------- | ------------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -326,7 +326,7 @@ A domain name must be provided in the following cases:
 1. To support IPv6 access to the management cluster;
 2. To implement disaster recovery solutions for the management cluster.
 
-#### 5.2 Network Configuration Requirements
+### 5.2 Network Configuration Requirements
 
 | **Type**             | **Requirements Description**                                                                                                                                                                                                                                                                                 |
 | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -335,7 +335,7 @@ A domain name must be provided in the following cases:
 | **Network Policy**   | It is recommended that there are no firewall restrictions between the management cluster and service cluster; if there are restrictions, please refer to [Port Forwarding Rules](#port-forward) to ensure necessary ports are open; when using Calico CNI, ensure that the **IP-in-IP** protocol is enabled. |
 | **IP Address Range** | Management cluster nodes should avoid using the 172.16-32 range; if already used, please adjust Docker configuration (by adding the bip parameter) to avoid conflicts.                                                                                                                                       |
 
-#### 5.3 Port Forwarding Rules <a id="port-forward" />
+### 5.3 Port Forwarding Rules <a id="port-forward" />
 
 To ensure that the management cluster can receive external traffic forwarded by the LoadBalancer, please configure the following rules:
 

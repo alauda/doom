@@ -94,7 +94,7 @@ Explanation:
     - `tag`: The image tag.
     - `digest`: The image digest.
     - `replace_image_prefix`: The prefix for replacing image addresses.
-      - Used to automatically replace certain image addresses in the open source community’s configuration file `release.yaml`.
+      - Used to automatically replace certain image addresses in the open source community's configuration file `release.yaml`.
       - This address should be as accurate as possible to prevent incorrect replacements.
       - The address cannot contain the `:@` character.
   - If there are multiple components, you may continue to add them.
@@ -132,7 +132,7 @@ VERSION_CONFIGMAP_NAME ?= pipelines-info
 Explanation:
 
 - `VERSION`: The version number of the current component. **Important**
-  - This version number is used to fetch the corresponding open source community’s configuration list `release.yaml`.
+  - This version number is used to fetch the corresponding open source community's configuration list `release.yaml`.
   - It will also update the `global.version` field in `values.yaml` and the component version information in the open source configuration list `release.yaml`.
 - `RELEASE_YAML`: The address of the open source community's configuration list.
 - `RELEASE_YAML_PATH`: The address where the configuration list is saved locally.
@@ -160,7 +160,7 @@ Explanation:
 
 #### 2.3 Initialize Open Source Configuration List
 
-After configuring the above `Makefile`, you can directly download the open source community’s configuration list by using the command `make download-release-yaml`.
+After configuring the above `Makefile`, you can directly download the open source community's configuration list by using the command `make download-release-yaml`.
 
 Explanation:
 
@@ -217,7 +217,7 @@ Explanation:
 
 Currently, component builds are triggered via PAC, employing internal templates for assembly. We only need to make a few configurations to quickly build corresponding components.
 
-Here’s an example configuration for the build pipeline of the `controller` component within `tektoncd-pipeline`:
+Here's an example configuration for the build pipeline of the `controller` component within `tektoncd-pipeline`:
 
 ```yaml
 apiVersion: tekton.dev/v1
@@ -352,7 +352,7 @@ spec:
 
     # **To adjust** Append additional functionalities. `prepare-tools-image` and `prepare-command` facilitate pre-build preparation of the image.
     # For example, several tasks are executed:
-    #   - Generate the `head` file, documenting the upstream directory’s commit sha. Generally used within the Dockerfile.
+    #   - Generate the `head` file, documenting the upstream directory's commit sha. Generally used within the Dockerfile.
     #   - Set Golang environment variables.
     #   - Update go mod dependencies to address security issues (optional).
 

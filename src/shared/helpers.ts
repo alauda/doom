@@ -1,5 +1,5 @@
-import { UNVERSIONED, UNVERSIONED_PREFIX } from './constants.js'
-import type { UnversionedVersion } from './types.js'
+import { UNVERSIONED, UNVERSIONED_PREFIX } from './constants.ts'
+import type { UnversionedVersion } from './types.ts'
 
 export const removeBothEndsSlashes = (str?: string) =>
   str?.replace(/^\/|\/$/g, '') || ''
@@ -24,4 +24,17 @@ export const getUnversionedVersion = (version?: string) => {
   return version.startsWith(UNVERSIONED_PREFIX)
     ? version.slice(UNVERSIONED_PREFIX.length)
     : version
+}
+
+/**
+ * hello world {#custom-id} -> { text: 'hello world', id: 'custom-id' }
+ */
+export const extractTextAndId = (title: string) => {
+  const customIdReg = /\\?\{#[^}]*\}/
+  const text = title.replace(customIdReg, '').trimEnd()
+  const customId = title.match(customIdReg)?.[0]?.slice(2, -1) || ''
+  return [
+    text.replace(/\\{2}/g, '').replace(/(?:[^\\]\\([[\]]))+/g, '$1'),
+    customId,
+  ]
 }
