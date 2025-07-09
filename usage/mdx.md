@@ -102,7 +102,7 @@ import { SourceCode } from '@rspress/core/theme'
 
 #### `props`
 
-* `name`: 内置术语名称，参考[动态挂载配置文件](/zh/usage/deploy.md#overrides)
+* `name`: 内置术语名称，参考[动态挂载配置文件](/usage/deploy.md#overrides)
 * `textCase`: 文本大小写转换，可选值为`lower`, `upper`, `capitalize`
 
 ### `TermsTable`
@@ -125,7 +125,7 @@ import { SourceCode } from '@rspress/core/theme'
 
 ## 自定义组件复用
 
-根据[约定](/zh/usage/convention.md)，我们可以将需要复用的内容抽取到 `shared` 目录中，然后在需要的地方引入即可，比如：
+根据[约定](/usage/convention.md)，我们可以将需要复用的内容抽取到 `shared` 目录中，然后在需要的地方引入即可，比如：
 
 ```mdx
 import CommonContent from './shared/CommonContent.mdx'

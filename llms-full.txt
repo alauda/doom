@@ -136,7 +136,7 @@ MDX 是一种功能强大的内容开发方式。你不仅仅可以像往常一�
 
 ## 开始尝试
 
-下面让我们[快速开始](/zh/start.md)使用 Doom 吧！
+下面让我们[快速开始](/start.md)使用 Doom 吧！
 
 
 
@@ -257,7 +257,7 @@ Commands:
   help [command]                  display help for command
 ```
 
-更多配置请参考[配置](/zh/usage/configuration.md)
+更多配置请参考[配置](/usage/configuration.md)
 
 ### 启动开发服务 \{#dev}
 
@@ -347,7 +347,7 @@ i18n:
 title: DevOps 连接器
 ```
 
-更多配置请参考[翻译配置](/zh/usage/configuration.md#translate)
+更多配置请参考[翻译配置](/usage/configuration.md#translate)
 
 ### 导出 PDF \{#export}
 
@@ -381,7 +381,7 @@ Options:
 PLAYWRIGHT_DOWNLOAD_HOST="https://cdn.npmmirror.com/binaries/playwright"
 ```
 
-除了全站统一导出完整 pdf 文档外，`doom` 还支持指定入口导出单个 pdf 文件，更多配置请参考[文档导出配置](/zh/usage/configuration.md#export)
+除了全站统一导出完整 pdf 文档外，`doom` 还支持指定入口导出单个 pdf 文件，更多配置请参考[文档导出配置](/usage/configuration.md#export)
 
 ### 文档检查 \{#lint}
 
@@ -425,7 +425,7 @@ k8s
 kubernetes
 ```
 
-更多配置请参考[文档检查配置](/zh/usage/configuration.md#lint)
+更多配置请参考[文档检查配置](/usage/configuration.md#lint)
 
 
 
@@ -1206,7 +1206,7 @@ import { SourceCode } from '@rspress/core/theme'
 
 #### `props`
 
-* `name`: 内置术语名称，参考[动态挂载配置文件](/zh/usage/deploy.md#overrides)
+* `name`: 内置术语名称，参考[动态挂载配置文件](/usage/deploy.md#overrides)
 * `textCase`: 文本大小写转换，可选值为`lower`, `upper`, `capitalize`
 
 ### `TermsTable`
@@ -1229,7 +1229,7 @@ import { SourceCode } from '@rspress/core/theme'
 
 ## 自定义组件复用
 
-根据[约定](/zh/usage/convention.md)，我们可以将需要复用的内容抽取到 `shared` 目录中，然后在需要的地方引入即可，比如：
+根据[约定](/usage/convention.md)，我们可以将需要复用的内容抽取到 `shared` 目录中，然后在需要的地方引入即可，比如：
 
 ```mdx
 import CommonContent from './shared/CommonContent.mdx'

@@ -111,7 +111,7 @@ Commands:
   help [command]                  display help for command
 ```
 
-更多配置请参考[配置](/zh/usage/configuration.md)
+更多配置请参考[配置](/usage/configuration.md)
 
 ### 启动开发服务 \{#dev}
 
@@ -201,7 +201,7 @@ i18n:
 title: DevOps 连接器
 ```
 
-更多配置请参考[翻译配置](/zh/usage/configuration.md#translate)
+更多配置请参考[翻译配置](/usage/configuration.md#translate)
 
 ### 导出 PDF \{#export}
 
@@ -235,7 +235,7 @@ Options:
 PLAYWRIGHT_DOWNLOAD_HOST="https://cdn.npmmirror.com/binaries/playwright"
 ```
 
-除了全站统一导出完整 pdf 文档外，`doom` 还支持指定入口导出单个 pdf 文件，更多配置请参考[文档导出配置](/zh/usage/configuration.md#export)
+除了全站统一导出完整 pdf 文档外，`doom` 还支持指定入口导出单个 pdf 文件，更多配置请参考[文档导出配置](/usage/configuration.md#export)
 
 ### 文档检查 \{#lint}
 
@@ -279,4 +279,4 @@ k8s
 kubernetes
 ```
 
-更多配置请参考[文档检查配置](/zh/usage/configuration.md#lint)
+更多配置请参考[文档检查配置](/usage/configuration.md#lint)
