@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.9.0
+
+### Minor Changes
+
+- [#117](https://github.com/alauda/doom/pull/117) [`0ab2dec`](https://github.com/alauda/doom/commit/0ab2dec10da3a0e164a29b69223940fd445ef13d) Thanks [@JounQin](https://github.com/JounQin)! - feat: integrate `eslint-plugin-mdx` with `remark-lint`
+
 ## 1.8.1
 
 ### Patch Changes
