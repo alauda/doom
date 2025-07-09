@@ -3,19 +3,24 @@ import {
   isEqualPath,
   normalizeHrefInRuntime as normalizeHref,
   usePageData,
-  withBase,
 } from '@rspress/runtime'
 import type {
   Header,
   NormalizedSidebarGroup,
   SidebarDivider,
   SidebarItem,
+  SidebarSectionHeader,
 } from '@rspress/shared'
 import { Fragment, useCallback, useMemo } from 'react'
 
 import classes from '../../../styles/overview.module.scss'
 
-import { findItemByRoutePath } from './_utils.js'
+import {
+  findItemByRoutePath,
+  isSidebarDivider,
+  isSidebarSectionHeader,
+  isSingleFile,
+} from './_utils.js'
 
 interface GroupItem {
   text: string
@@ -30,7 +35,11 @@ interface Group {
 }
 
 const getChildLink = (
-  traverseItem: SidebarDivider | SidebarItem | NormalizedSidebarGroup,
+  traverseItem:
+    | SidebarDivider
+    | SidebarSectionHeader
+    | SidebarItem
+    | NormalizedSidebarGroup,
 ): string => {
   if ('link' in traverseItem && traverseItem.link) {
     return traverseItem.link
@@ -61,8 +70,8 @@ export function Overview(props: {
     (link: string) =>
       // sidebar items link without base path
       // pages route path with base path
-      withBase(link).startsWith(routePath.replace(/overview$/, '')) &&
-      !isEqualPath(withBase(link), routePath),
+      link.startsWith(routePath.replace(/overview$/, '')) &&
+      !isEqualPath(link, routePath),
     [routePath],
   )
 
@@ -88,20 +97,23 @@ export function Overview(props: {
 
   const normalizeSidebarItem = useCallback(
     (
-      item: SidebarItem | SidebarDivider | NormalizedSidebarGroup,
+      item:
+        | SidebarItem
+        | SidebarSectionHeader
+        | SidebarDivider
+        | NormalizedSidebarGroup,
       sidebarGroup?: NormalizedSidebarGroup,
       frontmatter?: Record<string, unknown>,
     ) => {
-      if ('dividerType' in item) {
-        return item
-      }
-      // do not display overview title in sub pages overview
-      if (
-        withBase(item.link) === `${routePath}index` &&
-        frontmatter?.overview === true
-      ) {
+      if (isSidebarDivider(item) || isSidebarSectionHeader(item)) {
         return false
       }
+
+      // do not display overview title in sub pages overview
+      if (item.link === `${routePath}index` && frontmatter?.overview === true) {
+        return false
+      }
+
       // props > frontmatter in single file > _meta.json config in a file > frontmatter in overview page > _meta.json config in sidebar
       const overviewHeaders = props.overviewHeaders ??
         item.overviewHeaders ??
@@ -109,7 +121,7 @@ export function Overview(props: {
         sidebarGroup?.overviewHeaders ?? [2]
       // sidebar items link without base path
       const pageModule = overviewModules.find((m) =>
-        isEqualPath(m.routePath, withBase(item.link || '')),
+        isEqualPath(m.routePath, item.link || ''),
       )
       const link = getChildLink(item)
       return {
@@ -125,14 +137,14 @@ export function Overview(props: {
     [overviewModules, props.overviewHeaders, routePath],
   )
 
-  const isSingleFile = (
-    item: SidebarItem | SidebarDivider | NormalizedSidebarGroup,
-  ): item is SidebarItem | (NormalizedSidebarGroup & { link: string }) =>
-    !('items' in item) && 'link' in item
-
   const getGroup = useCallback(
     (
-      sidebarGroups: (NormalizedSidebarGroup | SidebarItem | SidebarDivider)[],
+      sidebarGroups: (
+        | NormalizedSidebarGroup
+        | SidebarSectionHeader
+        | SidebarItem
+        | SidebarDivider
+      )[],
     ) => {
       const group = sidebarGroups
         .filter((sidebarGroup) => {
@@ -151,13 +163,13 @@ export function Overview(props: {
           return false
         })
         .map((sidebarGroup) => {
-          let items: (GroupItem | SidebarDivider)[] = []
+          let items: GroupItem[] = []
           if ('items' in sidebarGroup) {
             items = sidebarGroup.items
               .map((item) =>
                 normalizeSidebarItem(item, sidebarGroup, frontmatter),
               )
-              .filter((_): _ is GroupItem | SidebarDivider => !!_)
+              .filter(Boolean)
           } else if (isSingleFile(sidebarGroup)) {
             items = [
               normalizeSidebarItem(
@@ -171,7 +183,7 @@ export function Overview(props: {
                 undefined,
                 frontmatter,
               ),
-            ].filter((_): _ is GroupItem | SidebarDivider => !!_)
+            ].filter(Boolean)
           }
           return {
             name: ('text' in sidebarGroup && sidebarGroup.text) || '',

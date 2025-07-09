@@ -328,6 +328,11 @@ const getCommonConfig = async ({
       server: {
         open,
       },
+      performance: {
+        buildCache: {
+          cacheDigest: [root, configFilePath, base, version],
+        },
+      },
       tools: {
         rspack(rspackConfig, { mergeConfig, rspack }) {
           return mergeConfig(rspackConfig, {
@@ -387,7 +392,7 @@ export async function loadConfig(
   }: GlobalCliOptions = {},
 ): Promise<{
   config: UserConfig
-  filepath?: string
+  configFilePath: string
 }> {
   let configFilePath: string | undefined
 
@@ -538,13 +543,9 @@ export async function loadConfig(
     (isExplicitlyUnversioned(version) ? UNVERSIONED : outDir ? version : '')
   }`
 
-  if (mergedConfig.builderConfig?.server?.open === true) {
-    mergedConfig.builderConfig.server.open = mergedConfig.base
-  }
-
   return {
     config: mergedConfig,
-    filepath: configFilePath,
+    configFilePath: configFilePath || '',
   }
 }
 

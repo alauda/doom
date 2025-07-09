@@ -23,18 +23,46 @@ export const isSidebarDivider = (
   return 'dividerType' in item
 }
 
+export const isSidebarSectionHeader = (
+  item:
+    | NormalizedSidebarGroup
+    | SidebarItem
+    | SidebarDivider
+    | SidebarSectionHeader,
+): item is SidebarSectionHeader => {
+  return 'sectionHeaderText' in item
+}
+
+export const isSingleFile = (
+  item:
+    | SidebarItem
+    | SidebarSectionHeader
+    | SidebarDivider
+    | NormalizedSidebarGroup,
+): item is SidebarItem | (NormalizedSidebarGroup & { link: string }) =>
+  !('items' in item) && 'link' in item
+
 /**
  * @zh_CN 如果 index 在 sidebar items 中, 则返回所有平级 item, 如果 index 在 dir 上, 则返回 items
  * @example
  */
 export function findItemByRoutePath(
-  items: (SidebarItem | NormalizedSidebarGroup | SidebarDivider)[],
+  items: (
+    | SidebarItem
+    | SidebarSectionHeader
+    | NormalizedSidebarGroup
+    | SidebarDivider
+  )[],
   routePath: string,
 ): (SidebarItem | NormalizedSidebarGroup)[] {
   function isRoutePathMatch(
-    item: SidebarItem | NormalizedSidebarGroup | SidebarDivider,
+    item:
+      | SidebarItem
+      | SidebarSectionHeader
+      | NormalizedSidebarGroup
+      | SidebarDivider,
   ) {
-    if (isSidebarDivider(item)) {
+    if (isSidebarDivider(item) || isSidebarSectionHeader(item)) {
       return false
     }
     const withBaseUrl = withBase(item.link)

@@ -60,7 +60,7 @@ export const exportCommand = new Command('export')
       ServeOptions & GlobalCliOptions
     >()
 
-    let { config } = await loadConfig(root, {
+    let { config, configFilePath } = await loadConfig(root, {
       ...globalOptions,
       export: true,
     })
@@ -84,7 +84,7 @@ export const exportCommand = new Command('export')
 
     logger.start('Serving...')
 
-    await serve({ config, host, port })
+    await serve({ config, configFilePath, host, port })
 
     const tempDir = path.resolve(outDir, '.doom')
 

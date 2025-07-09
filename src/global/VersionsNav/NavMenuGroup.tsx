@@ -1,13 +1,14 @@
 import { Tag } from '@rspress/core/theme'
 import {
   isExternalUrl,
-  matchNavbar,
   type NavItem,
   type NavItemWithChildren,
   type NavItemWithLink,
   type NavItemWithLinkAndChildren,
 } from '@rspress/shared'
 import { useRef, useState, type ReactNode } from 'react'
+
+import { matchNavbar } from '../../shared/index.js'
 
 import { Down } from './Down.js'
 import {

@@ -22,6 +22,12 @@ declare module 'doom-@permission-roleTemplatesMap' {
   export default roleTemplatesMap
 }
 
+declare module 'virtual-runtime-config' {
+  import type { NormalizedRuntimeConfig } from '@rspress/shared'
+
+  export const base: NormalizedRuntimeConfig['base']
+}
+
 declare module 'md-attr-parser' {
   const parseAttrs: (value?: string | null) => {
     prop: Record<string, string>
