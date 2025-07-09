@@ -1,7 +1,6 @@
 import {
   isProduction,
   NoSSR,
-  removeTrailingSlash,
   usePageData,
   withBase,
 } from '@rspress/core/runtime'
@@ -10,6 +9,7 @@ import virtual from 'doom-@global-virtual'
 import { noop } from 'es-toolkit'
 import { useEffect, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
+import { base } from 'virtual-runtime-config'
 import { parse } from 'yaml'
 
 import {
@@ -71,13 +71,10 @@ const VersionsNav_ = () => {
     return [
       isExplicitlyUnversioned(virtual.version)
         ? undefined
-        : removeTrailingSlash(siteData.base).slice(
-            0,
-            -unversionedVersion.length - 1,
-          ),
+        : base.slice(0, -unversionedVersion.length - 1),
       unversionedVersion,
     ]
-  }, [siteData.base])
+  }, [])
 
   const [navMenu, setNavMenu] = useState(getNavMenu)
 
@@ -91,7 +88,7 @@ const VersionsNav_ = () => {
         }
       } else {
         const res = await fetch(
-          `${isProduction() ? versionsBase : ''}/versions.yaml`,
+          `${isProduction() ? versionsBase : base}/versions.yaml`,
         )
         if (!res.ok) {
           return
@@ -170,7 +167,7 @@ const VersionsNav_ = () => {
           text={version}
           base={versionsBase}
           items={navItems}
-          pathname={siteData.base}
+          pathname={base}
         />
       )}
     </>,

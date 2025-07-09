@@ -1,12 +1,9 @@
 import { Tag } from '@rspress/core/theme'
-import {
-  isExternalUrl,
-  withoutBase,
-  type NavItemWithLink,
-} from '@rspress/shared'
+import { isExternalUrl, type NavItemWithLink } from '@rspress/shared'
 import { useMemo, type ReactNode } from 'react'
 
 import styles from '../../../styles/versions-nav.module.scss'
+import { withoutBase } from '../../shared/index.js'
 
 export interface NavMenuSingleItemProps extends Omit<NavItemWithLink, 'text'> {
   base?: string

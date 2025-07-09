@@ -137,13 +137,14 @@ program
     >()
 
     const startDevServer = async () => {
-      const { config, filepath } = await loadConfig(root, globalOptions)
+      const { config, configFilePath } = await loadConfig(root, globalOptions)
 
       const docDirectory = config.root!
 
       try {
         devServer = await dev({
           config,
+          configFilePath,
           appDirectory: CWD,
           docDirectory,
           extraBuilderConfig: {
@@ -156,8 +157,8 @@ program
       }
 
       cliWatcher = watch(
-        filepath
-          ? [filepath, config.i18nSourcePath!, docDirectory, SITES_FILE]
+        configFilePath
+          ? [configFilePath, config.i18nSourcePath!, docDirectory, SITES_FILE]
           : [...CONFIG_FILES, docDirectory],
         {
           ignoreInitial: true,
@@ -217,7 +218,7 @@ program
   .action(async function (root?: string) {
     setNodeEnv('production')
 
-    const { config } = await loadConfig(
+    const { config, configFilePath } = await loadConfig(
       root,
       this.optsWithGlobals<GlobalCliOptions>(),
     )
@@ -227,6 +228,7 @@ program
     const runBuild = () =>
       build({
         config,
+        configFilePath,
         docDirectory,
       })
 
@@ -252,9 +254,9 @@ program
       ServeOptions & GlobalCliOptions
     >()
 
-    const { config } = await loadConfig(root, globalOptions)
+    const { config, configFilePath } = await loadConfig(root, globalOptions)
 
-    await serve({ config, host, port })
+    await serve({ config, configFilePath, host, port })
   })
 
 program.addCommand(newCommand)

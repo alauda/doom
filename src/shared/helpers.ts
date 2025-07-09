@@ -1,3 +1,9 @@
+import {
+  addLeadingSlash,
+  normalizeSlash,
+  type NavItemWithLink,
+} from '@rspress/shared'
+
 import { UNVERSIONED, UNVERSIONED_PREFIX } from './constants.ts'
 import type { UnversionedVersion } from './types.ts'
 
@@ -38,3 +44,15 @@ export const extractTextAndId = (title: string) => {
     customId,
   ]
 }
+
+export const withoutBase = (path: string, base: string) =>
+  addLeadingSlash(path).replace(normalizeSlash(base), '')
+
+export const matchNavbar = (
+  item: NavItemWithLink,
+  currentPathname: string,
+  base: string,
+): boolean =>
+  new RegExp(item.activeMatch || item.link).test(
+    withoutBase(currentPathname, base),
+  )
