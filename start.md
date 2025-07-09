@@ -164,7 +164,7 @@ Arguments:
 Options:
   -s, --source <language>  Document source language, one of en, zh, ru (default: "en")
   -t, --target <language>  Document target language, one of en, zh, ru (default: "zh")
-  -g, --glob <path...>     Glob patterns for source dirs/files
+  -g, --glob <path...>     Glob patterns of source dirs/files to translate
   -C, --copy [boolean]     Wether to copy relative assets to the target directory instead of following links (default: false)
   -h, --help               display help for command
 ```
@@ -248,10 +248,12 @@ Usage: doom lint [options] [root]
 Lint the documentation
 
 Arguments:
-  root        Root directory of the documentation
+  root                  Root directory of the documentation
 
 Options:
-  -h, --help  display help for command
+  -g, --glob <path...>  Glob patterns of source dirs/files to lint (default: "**/*.{js,jsx,ts,tsx,md,mdx}")
+  --no-cspell           Disable cspell linting
+  -h, --help            display help for command
 ```
 
 `doom lint` 基于 [`ESLint`](https://eslint.org/) 和 [`cspell`](https://cspell.org/)，如果希望在编辑器中拥有更好的体验，可以安装相应的插件 [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) / [CSpell](https://marketplace.visualstudio.com/items?itemName=streetsidesoftware.code-spell-checker)，然后创建相应的配置文件:
