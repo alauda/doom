@@ -5,8 +5,8 @@ import type { NavItem } from '@rspress/shared'
 import { logger } from '@rspress/shared/logger'
 import { loadFrontMatter } from '@rspress/shared/node-utils'
 
+import { extractTextAndId } from '../../shared/index.js'
 import { pathExists } from '../../utils/index.js'
-import { extractTextAndId } from '../replace/utils.js'
 
 import type { DoomSidebar } from './walk.js'
 

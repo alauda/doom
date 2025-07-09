@@ -15,17 +15,17 @@ Source code annotation component
 
 1. Please use inline code comments according to the actual language, such as `;`, `%`, `#`, `//`, `/** */`, `--`, and `<!-- -->`, etc.
 2. If you want to treat them as code comments, please escape with `[\!code callout]`
-3. Sometimes, `:::callouts` may display abnormally due to nested indentation; you can use `<div class="doom-callouts">` or the `<Callouts>` component instead
+3. Sometimes, `:::callouts` may display abnormally due to nested indentation; you can use `<div class="doom-callouts">` or the `<Callouts>` component instead.
 
 :::
 
 ````mdx
 ```sh
 Memory overhead per virtual machine ≈ (1.002 × requested memory) \
-              + 218 MiB \  # [!code callout]
-              + 8 MiB × (number of vCPUs) \  # [!code callout]
-              + 16 MiB × (number of graphics devices) \  # [!code callout]
-              + (additional memory overhead) # [!code callout]
+              + 218 MiB \  # [\!code callout]
+              + 8 MiB × (number of vCPUs) \  # [\!code callout]
+              + 16 MiB × (number of graphics devices) \  # [\!code callout]
+              + (additional memory overhead) # [\!code callout]
 ```
 
 :::callouts

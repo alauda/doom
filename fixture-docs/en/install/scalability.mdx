@@ -10,9 +10,9 @@ title: Capacity Planning
 
 Before installing a management cluster, it is essential to select an appropriate installation scenario based on business objectives and actual needs. Different scenarios have distinct requirements for infrastructure resource allocation and architectural design. The following are planning recommendations for three typical scenarios:
 
-### Installation Scenario Selection \{#scenario}
+## Installation Scenario Selection \{#scenario}
 
-#### Scenario One: Functional Verification
+### Scenario One: Functional Verification
 
 **Applicable Scope**
 This scenario is suitable for platform functional verification, demonstration environment setup, or technical feasibility testing. It is intended solely for validating the core functionalities of the platform and does not handle production-level business traffic, with resource allocation at the minimum level.
@@ -39,7 +39,7 @@ This scenario is suitable for platform functional verification, demonstration en
 
 ---
 
-#### Scenario Two: ISV Integration Delivery
+### Scenario Two: ISV Integration Delivery
 
 **Applicable Scope**
 This scenario caters to the standardized delivery needs of ISVs (Independent Software Vendors). When installing the management cluster, it handles both platform management and directly runs ISV applications without the need for extra business cluster deployment.
@@ -55,9 +55,9 @@ This scenario caters to the standardized delivery needs of ISVs (Independent Sof
 | Deployment Mode            | Node Type    | Quantity | Minimum Specification                     | Recommended Specification | Notes                                                            |
 | -------------------------- | ------------ | -------- | ----------------------------------------- | ------------------------- | ---------------------------------------------------------------- |
 | **Minimum Deployment**     | Control Node | 3        | 8C16GB + ISV Needs                        | 12C24GB + ISV Needs       | Suggest reserving approximately 30% redundancy resources         |
-|                            | Compute Node | 0        | —                                         | —                         | Control nodes share the operation of ISV applications            |
+| -                          | Compute Node | 0        | —                                         | —                         | Control nodes share the operation of ISV applications            |
 | **Recommended Deployment** | Control Node | 3        | 8C16GB                                    | 12C24GB                   | Runs Kubernetes components and platform control plane            |
-|                            | Compute Node | ≥2       | Based on ISV application load requirement | —                         | Run ISV applications independently; HA deployment is recommended |
+| -                          | Compute Node | ≥2       | Based on ISV application load requirement | —                         | Run ISV applications independently; HA deployment is recommended |
 
 **Architecture Description**
 
@@ -67,7 +67,7 @@ This scenario caters to the standardized delivery needs of ISVs (Independent Sof
 
 ---
 
-#### Scenario Three: Multi-Cluster Management (Data Center Level)
+### Scenario Three: Multi-Cluster Management (Data Center Level)
 
 **Applicable Scope**
 This scenario is suitable for large enterprise data center environments, requiring unified management of multiple business clusters across clouds and regions. As the number of business clusters increases, the management cluster must dynamically expand compute nodes and resource configurations to ensure high availability and high performance.

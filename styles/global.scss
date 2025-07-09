@@ -146,13 +146,13 @@ td {
   @include print;
 }
 
-.rp-list-decimal {
+.rp-list-decimal:not(:has(p)) {
   list-style: none;
   counter-reset: section;
   padding-left: 20px;
-}
 
-.rp-list-decimal > li:before {
-  counter-increment: section;
-  content: counters(section, '.') '. ';
+  > li:before {
+    counter-increment: section;
+    content: counters(section, '.') '. ';
+  }
 }

@@ -1,4 +1,4 @@
-import type { UNVERSIONED } from './constants.js'
+import type { UNVERSIONED } from './constants.ts'
 
 export interface DoomSite {
   name: string
