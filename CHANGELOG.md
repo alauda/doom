@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.9.2
+
+### Patch Changes
+
+- [#121](https://github.com/alauda/doom/pull/121) [`3cd8605`](https://github.com/alauda/doom/commit/3cd860508aaed21b98f7ad2e407cf799819fee83) Thanks [@JounQin](https://github.com/JounQin)! - fix: incorrect dismatch index route paths
+
 ## 1.9.1
 
 ### Patch Changes
