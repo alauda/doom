@@ -1,4 +1,3 @@
-import { withBase } from '@rspress/core/runtime'
 import type {
   NormalizedSidebarGroup,
   SidebarDivider,
@@ -65,14 +64,10 @@ export function findItemByRoutePath(
     if (isSidebarDivider(item) || isSidebarSectionHeader(item)) {
       return false
     }
-    const withBaseUrl = withBase(item.link)
-    const removeIndexUrl = removeIndex(withBaseUrl)
+    const removeIndexUrl = removeIndex(item.link || '/')
     const removeBackSlashedRoutePath = routePath.replace(/\/$/, '')
     return (
-      // FIXME: 😅 we should refactor all the path logic, /index.html / or no /, l
-      withBaseUrl === routePath ||
       removeIndexUrl === routePath ||
-      withBaseUrl === removeBackSlashedRoutePath ||
       removeIndexUrl === removeBackSlashedRoutePath
     )
   }
