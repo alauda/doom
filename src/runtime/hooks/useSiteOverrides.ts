@@ -1,8 +1,7 @@
-import { isProduction } from '@rspress/core/runtime'
+import { isProduction, withBase } from '@rspress/core/runtime'
 import virtual from 'doom-@global-virtual'
 import { merge } from 'es-toolkit/compat'
 import { useEffect, useMemo, useState } from 'react'
-import { base } from 'virtual-runtime-config'
 import { parse } from 'yaml'
 
 import { isUnversioned, type Language } from '../../shared/index.js'
@@ -51,7 +50,6 @@ let normalizedSiteOverrides: NormalizedSiteOverrides | undefined
 let promise: Promise<NormalizedSiteOverrides> | undefined
 
 const fetchSiteOverrides = async (
-  base: string,
   version?: string,
   acpSite?: DoomSite,
 ): Promise<NormalizedSiteOverrides> => {
@@ -63,7 +61,7 @@ const fetchSiteOverrides = async (
     acpSite && isProduction()
       ? `${(virtual.prefix || '') + acpSite.base}${isUnversioned(version) ? '' : acpSite.version + '/'}overrides.yaml`
       : null
-  const siteOverridesUrl = `${base}/overrides.yaml`
+  const siteOverridesUrl = withBase('overrides.yaml')
 
   const urls = [acpSiteOverridesUrl]
   if (acpSiteOverridesUrl !== siteOverridesUrl) {
@@ -121,9 +119,7 @@ export const useSiteOverrides = (): SiteOverridesItem => {
     if (normalizedSiteOverrides) {
       return
     }
-    void fetchSiteOverrides(base, virtual.version, acpSite).then(
-      setSiteOverrides,
-    )
+    void fetchSiteOverrides(virtual.version, acpSite).then(setSiteOverrides)
   }, [acpSite])
 
   return siteOverrides?.[lang] || {}
