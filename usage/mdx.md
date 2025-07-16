@@ -14,10 +14,10 @@
 * `Tab/Tabs`
 * `Toc`
 
-其他不常用的组件可以通过 `@rspress/core/theme` 导入使用，例如：
+其他不常用的组件可以通过 `rspress/theme` 导入使用，例如：
 
 ```mdx title="preview.mdx"
-import { SourceCode } from '@rspress/core/theme'
+import { SourceCode } from 'rspress/theme'
 
 <SourceCode href="/" />
 ```
