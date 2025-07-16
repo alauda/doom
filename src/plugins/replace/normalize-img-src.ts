@@ -1,7 +1,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 
-import { isExternalUrl, removeLeadingSlash } from '@rspress/core'
+import { isExternalUrl, removeLeadingSlash } from '@rspress/shared'
 import { cloneDeep } from 'es-toolkit'
 import type { RootContent } from 'mdast'
 import type { MdxJsxFlowElement, MdxJsxTextElement } from 'mdast-util-mdx-jsx'

@@ -4,7 +4,7 @@ import {
   addTrailingSlash,
   type RspressPlugin,
   type UserConfig,
-} from '@rspress/core'
+} from '@rspress/shared'
 
 import { APIS_ROUTES } from '../../shared/index.js'
 

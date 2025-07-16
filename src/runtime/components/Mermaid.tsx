@@ -1,7 +1,7 @@
-import { useDark } from '@rspress/core/runtime'
 import { clsx } from 'clsx'
 import mermaid from 'mermaid'
 import { useEffect, useId, useRef } from 'react'
+import { useDark } from 'rspress/runtime'
 
 export interface MermaidProps {
   className?: string

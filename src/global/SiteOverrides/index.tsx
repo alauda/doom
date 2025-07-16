@@ -1,5 +1,5 @@
-import { usePageData } from '@rspress/core/runtime'
 import { useEffect } from 'react'
+import { usePageData } from 'rspress/runtime'
 
 import { useSiteOverrides } from '@alauda/doom/runtime'
 

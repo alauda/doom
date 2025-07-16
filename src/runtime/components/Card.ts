@@ -1,1 +1,1 @@
-export { Card, Card as default } from '@rspress/core/theme'
+export { Card, Card as default } from 'rspress/theme'

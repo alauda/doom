@@ -1,4 +1,3 @@
-import { NoSSR, useLang, usePageData } from '@rspress/core/runtime'
 import {
   addTrailingSlash,
   isExternalUrl,
@@ -10,6 +9,7 @@ import { DEFAULT_PAGE_EXTENSIONS } from '@rspress/shared/constants'
 import { clsx } from 'clsx'
 import virtual from 'doom-@global-virtual'
 import { type AnchorHTMLAttributes, type ReactNode, useMemo } from 'react'
+import { NoSSR, useLang, usePageData } from 'rspress/runtime'
 
 import classes from '../../../styles/link.module.scss'
 import { isUnversioned } from '../../shared/helpers.js'

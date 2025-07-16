@@ -264,7 +264,7 @@ algolia: # 可选，Algolia 搜索配置，仅当启用 `-a, --algolia` 命令�
 
 由于 `rspress` 当前架构限制，使用 Algolia 搜索功能需通过[自定义主题](https://rspress.dev/zh/guide/advanced/custom-theme) 实现，因此为统一使用相关主题功能，我们提供了 `@alauda/doom/theme` 主题入口，请添加以下主题配置文件启用：
 
-```ts title "theme/index.ts"
+```ts title="theme/index.ts"
 export * from '@alauda/doom/theme'
 ```
 

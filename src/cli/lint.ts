@@ -1,8 +1,8 @@
 import path from 'node:path'
 
-import { logger } from '@rspress/shared/logger'
 import { Command } from 'commander'
 import { ESLint } from 'eslint'
+import { logger } from 'rspress/core'
 import { cyan } from 'yoctocolors'
 
 import doom from '../eslint.js'

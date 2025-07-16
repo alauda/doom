@@ -1,10 +1,10 @@
-import { logger } from '@rspress/shared/logger'
 import type { Root, Yaml } from 'mdast'
 import remarkFrontmatter from 'remark-frontmatter'
 import remarkGfm from 'remark-gfm'
 import remarkMdx from 'remark-mdx'
 import remarkParse from 'remark-parse'
 import remarkStringify, { type Options } from 'remark-stringify'
+import { logger } from 'rspress/core'
 import { unified } from 'unified'
 import { red } from 'yoctocolors'
 

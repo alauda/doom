@@ -1,4 +1,3 @@
-import { Link, renderInlineMarkdown, useSidebarData } from '@rspress/core/theme'
 import {
   isEqualPath,
   normalizeHrefInRuntime as normalizeHref,
@@ -12,6 +11,7 @@ import type {
   SidebarSectionHeader,
 } from '@rspress/shared'
 import { Fragment, useCallback, useMemo } from 'react'
+import { Link, renderInlineMarkdown, useSidebarData } from 'rspress/theme'
 
 import classes from '../../../styles/overview.module.scss'
 

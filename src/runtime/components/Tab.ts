@@ -1,1 +1,1 @@
-export { Tab, Tab as default } from '@rspress/core/theme'
+export { Tab, Tab as default } from 'rspress/theme'

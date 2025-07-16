@@ -6,6 +6,8 @@ import { pluginReact } from '@rsbuild/plugin-react'
 import { pluginSass } from '@rsbuild/plugin-sass'
 import { pluginSvgr } from '@rsbuild/plugin-svgr'
 import { pluginYaml } from '@rsbuild/plugin-yaml'
+import { pluginAlgolia } from '@rspress/plugin-algolia'
+import { pluginLlms } from '@rspress/plugin-llms'
 import {
   addLeadingSlash,
   addTrailingSlash,
@@ -13,10 +15,7 @@ import {
   removeLeadingSlash,
   type LocaleConfig,
   type UserConfig,
-} from '@rspress/core'
-import { pluginAlgolia } from '@rspress/plugin-algolia'
-import { pluginLlms } from '@rspress/plugin-llms'
-import { logger } from '@rspress/shared/logger'
+} from '@rspress/shared'
 import {
   transformerMetaHighlight,
   transformerMetaWordHighlight,
@@ -28,6 +27,7 @@ import {
   transformerRemoveNotationEscape,
 } from '@shikijs/transformers'
 import { difference } from 'es-toolkit'
+import { logger } from 'rspress/core'
 import { glob } from 'tinyglobby'
 import { cyan } from 'yoctocolors'
 
@@ -327,11 +327,6 @@ const getCommonConfig = async ({
       },
       server: {
         open,
-      },
-      performance: {
-        buildCache: {
-          cacheDigest: [root, configFilePath, base, version],
-        },
       },
       tools: {
         rspack(rspackConfig, { mergeConfig, rspack }) {
