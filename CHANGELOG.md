@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.10.0
+
+### Minor Changes
+
+- [#123](https://github.com/alauda/doom/pull/123) [`34eea11`](https://github.com/alauda/doom/commit/34eea11c63e159d3bf61dbb807447bb9dc64d509) Thanks [@JounQin](https://github.com/JounQin)! - feat: bump `rspress` to `v2.0.0-beta.21`
+
 ## 1.9.2
 
 ### Patch Changes
