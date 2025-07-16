@@ -1,10 +1,10 @@
-import { usePageData } from '@rspress/core/runtime'
-import { Badge } from '@rspress/core/theme'
 import openapisMap from 'doom-@api-openapisMap'
 import virtual from 'doom-@api-virtual'
 import BananaSlug from 'github-slugger'
 import { OpenAPIV3, type OpenAPIV3_1 } from 'openapi-types'
 import { Fragment, useId, useMemo, type ReactNode } from 'react'
+import { usePageData } from 'rspress/runtime'
+import { Badge } from 'rspress/theme'
 
 import { omitRoutePathRefs, resolveRef } from '../utils.js'
 

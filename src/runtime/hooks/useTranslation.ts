@@ -1,5 +1,5 @@
-import { useLang as useLang_ } from '@rspress/core/runtime'
 import { useCallback } from 'react'
+import { useLang as useLang_ } from 'rspress/runtime'
 
 import type { Language } from '../../shared/index.js'
 import { TRANSLATIONS } from '../translation.js'

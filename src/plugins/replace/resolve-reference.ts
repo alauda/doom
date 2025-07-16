@@ -1,10 +1,10 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 
-import { isProduction } from '@rspress/core'
-import { logger } from '@rspress/shared/logger'
+import { isProduction } from '@rspress/shared'
 import { render } from 'ejs'
 import type { RootContent } from 'mdast'
+import { logger } from 'rspress/core'
 import { red } from 'yoctocolors'
 
 import { resolveRepo } from '../../utils/index.js'

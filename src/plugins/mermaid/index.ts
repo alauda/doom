@@ -1,8 +1,8 @@
-import type { Plugin } from '@rspress/core'
+import type { RspressPlugin } from 'rspress/core'
 
 import { remarkMermaid } from './remark-mermaid.js'
 
-export const mermaidPlugin = (): Plugin => {
+export const mermaidPlugin = (): RspressPlugin => {
   return {
     name: 'doom-mermaid',
     markdown: {

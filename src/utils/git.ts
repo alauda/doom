@@ -2,7 +2,7 @@ import fs from 'node:fs/promises'
 import os from 'node:os'
 import path from 'node:path'
 
-import { logger } from '@rspress/shared/logger'
+import { logger } from 'rspress/core'
 import { simpleGit } from 'simple-git'
 import { cyan, red } from 'yoctocolors'
 

@@ -1,7 +1,7 @@
-import { isProduction, withBase } from '@rspress/core/runtime'
 import virtual from 'doom-@global-virtual'
 import { merge } from 'es-toolkit/compat'
 import { useEffect, useMemo, useState } from 'react'
+import { isProduction, withBase } from 'rspress/runtime'
 import { parse } from 'yaml'
 
 import { isUnversioned, type Language } from '../../shared/index.js'

@@ -13,9 +13,9 @@ import {
   slash,
   withBase,
 } from '@rspress/shared'
-import { logger } from '@rspress/shared/logger'
 import { unset } from 'es-toolkit/compat'
 import picomatch from 'picomatch'
+import { logger } from 'rspress/core'
 
 import { pathExists, readJson } from '../../utils/index.js'
 

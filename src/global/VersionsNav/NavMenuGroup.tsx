@@ -1,4 +1,3 @@
-import { Tag } from '@rspress/core/theme'
 import {
   isExternalUrl,
   type NavItem,
@@ -7,6 +6,7 @@ import {
   type NavItemWithLinkAndChildren,
 } from '@rspress/shared'
 import { useRef, useState, type ReactNode } from 'react'
+import { Tag } from 'rspress/theme'
 
 import { matchNavbar } from '../../shared/index.js'
 

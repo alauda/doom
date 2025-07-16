@@ -5,12 +5,12 @@ import { setTimeout } from 'node:timers/promises'
 import { isDeepStrictEqual } from 'node:util'
 
 import { removeLeadingSlash } from '@rspress/shared'
-import { logger } from '@rspress/shared/logger'
 import { Command } from 'commander'
 import { render } from 'ejs'
 import matter from 'gray-matter'
 import { AzureOpenAI, RateLimitError } from 'openai'
 import { pRateLimit } from 'p-ratelimit'
+import { logger } from 'rspress/core'
 import { glob } from 'tinyglobby'
 import { cyan, red } from 'yoctocolors'
 

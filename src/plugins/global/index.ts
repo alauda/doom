@@ -1,7 +1,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 
-import { addTrailingSlash, type RspressPlugin } from '@rspress/core'
+import { addTrailingSlash, type RspressPlugin } from '@rspress/shared'
 
 import { ACP_BASE, type DoomSite } from '../../shared/index.js'
 import type { ExportItem } from '../../types.js'

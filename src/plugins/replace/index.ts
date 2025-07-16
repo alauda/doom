@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises'
 
-import type { RspressPlugin, UserConfig } from '@rspress/core'
-import { logger } from '@rspress/shared/logger'
+import type { RspressPlugin, UserConfig } from 'rspress/core'
+import { logger } from 'rspress/core'
 
 import { rehypeNormalizeLink } from './rehype-normalize-link.js'
 import { remarkExplicitJsx } from './remark-explicit-jsx.js'

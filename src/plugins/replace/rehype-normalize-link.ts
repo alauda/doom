@@ -1,4 +1,4 @@
-import { isExternalUrl } from '@rspress/core'
+import { isExternalUrl } from '@rspress/shared'
 import type { Root } from 'hast'
 import type { MdxJsxAttribute, MdxjsEsm } from 'mdast-util-mdx'
 import type { Plugin } from 'unified'

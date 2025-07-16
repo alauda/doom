@@ -1,5 +1,5 @@
 import type { Options } from '@cspell/eslint-plugin'
-import type { serve } from '@rspress/core'
+import type { serve } from 'rspress/core'
 
 import type {
   ApiPluginOptions,

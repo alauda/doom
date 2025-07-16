@@ -265,7 +265,7 @@ Please use `public/robots.txt` for Algolia crawler verification.
 
 Due to current architectural limitations of `rspress`, Algolia search functionality must be implemented via [custom themes](https://rspress.dev/zh/guide/advanced/custom-theme). To unify the use of related theme features, we provide the `@alauda/doom/theme` theme entry. Please add the following theme configuration file to enable:
 
-```ts title "theme/index.ts"
+```ts title="theme/index.ts"
 export * from '@alauda/doom/theme'
 ```
 

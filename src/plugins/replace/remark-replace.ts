@@ -3,9 +3,9 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 
-import { isProduction } from '@rspress/core'
-import { logger } from '@rspress/shared/logger'
+import { isProduction } from '@rspress/shared'
 import type { Root, RootContent } from 'mdast'
+import { logger } from 'rspress/core'
 import type { Plugin } from 'unified'
 import { parse, stringify } from 'yaml'
 import { cyan, red } from 'yoctocolors'

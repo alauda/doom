@@ -12,7 +12,7 @@ import doom from '@alauda/doom/eslint'
 
 export default config(
   {
-    ignores: ['pyodide'],
+    ignores: ['dist', 'lib', 'pyodide'],
   },
   ...(await doom(new URL('docs', import.meta.url))),
   eslint.configs.recommended,
