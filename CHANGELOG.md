@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.10.4
+
+### Patch Changes
+
+- [#131](https://github.com/alauda/doom/pull/131) [`d57693e`](https://github.com/alauda/doom/commit/d57693e355b2836c6bedef06d7a2ae393cfdc77a) Thanks [@JounQin](https://github.com/JounQin)! - fix: disable build cache by default
+
 ## 1.10.3
 
 ### Patch Changes
