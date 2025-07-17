@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.10.2
+
+### Patch Changes
+
+- [#127](https://github.com/alauda/doom/pull/127) [`9068fdf`](https://github.com/alauda/doom/commit/9068fdfc395ec9b4bfba30f42e6831a938c5a54e) Thanks [@JounQin](https://github.com/JounQin)! - fix: callouts style
+
 ## 1.10.1
 
 ### Patch Changes
