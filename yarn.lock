@@ -58,10 +58,10 @@ __metadata:
     mdast-util-mdx-jsx: "npm:^3.2.0"
     mdast-util-phrasing: "npm:^4.1.0"
     mdast-util-to-string: "npm:^4.0.0"
-    mermaid: "npm:^11.8.1"
+    mermaid: "npm:^11.9.0"
     nano-staged: "npm:^0.8.0"
     npm-run-all2: "npm:^8.0.4"
-    openai: "npm:^5.9.2"
+    openai: "npm:^5.10.1"
     openapi-types: "npm:^12.1.3"
     p-ratelimit: "npm:^1.0.1"
     pdf-lib: "npm:^1.17.1"
@@ -83,10 +83,7 @@ __metadata:
     remark-lint-match-punctuation: "npm:^0.2.1"
     remark-lint-no-chinese-punctuation-in-number: "npm:^0.1.2"
     remark-lint-no-duplicate-headings-in-section: "npm:^4.0.1"
-    remark-lint-no-heading-content-indent: "npm:^5.0.1"
-    remark-lint-no-heading-indent: "npm:^5.0.1"
     remark-lint-no-hidden-table-cell: "npm:^1.0.1"
-    remark-lint-no-repeat-punctuation: "npm:^0.1.4"
     remark-mdx: "npm:^3.1.0"
     remark-message-control: "npm:^8.0.0"
     remark-stringify: "npm:^11.0.0"
@@ -2110,12 +2107,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mermaid-js/parser@npm:^0.6.1":
-  version: 0.6.1
-  resolution: "@mermaid-js/parser@npm:0.6.1"
+"@mermaid-js/parser@npm:^0.6.2":
+  version: 0.6.2
+  resolution: "@mermaid-js/parser@npm:0.6.2"
   dependencies:
     langium: "npm:3.3.1"
-  checksum: 10c0/5f7cf90f8bae58f20fdc7eeb150ff027cb00c32787d1e9693d624a81848cd2a414427fbb78cf093b4c6160461ad9a34a7cb93904b213f5bcd31ea957fa494665
+  checksum: 10c0/6059341a5dc3fdf56dd75c858843154e18c582e5cc41c3e73e9a076e218116c6bdbdba729d27154cef61430c900d87342423bbb81e37d8a9968c6c2fdd99e87a
   languageName: node
   linkType: hard
 
@@ -5863,9 +5860,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.5.173":
-  version: 1.5.185
-  resolution: "electron-to-chromium@npm:1.5.185"
-  checksum: 10c0/26820527fc85f64798ec21fcd32d3607efdf4567b701da749bbd1dd407a162373bf18733d7f0b12c56ae71ece721073b45beeba82b7d2692c494fb4b5636c4a8
+  version: 1.5.186
+  resolution: "electron-to-chromium@npm:1.5.186"
+  checksum: 10c0/08b59a337eced18b9553ccbafab90303ecf2f53d50a5c09bfcb8db56ed4d0819776f2fe90b5036cc5626ee1876d9c5985c98170489e4b3291dc20f8ae15d3315
   languageName: node
   linkType: hard
 
@@ -7872,7 +7869,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"katex@npm:^0.16.9":
+"katex@npm:^0.16.22":
   version: 0.16.22
   resolution: "katex@npm:0.16.22"
   dependencies:
@@ -8144,12 +8141,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"marked@npm:^15.0.7":
-  version: 15.0.12
-  resolution: "marked@npm:15.0.12"
+"marked@npm:^16.0.0":
+  version: 16.0.0
+  resolution: "marked@npm:16.0.0"
   bin:
     marked: bin/marked.js
-  checksum: 10c0/e09da211544b787ecfb25fed07af206060bf7cd6d9de6cb123f15c496a57f83b7aabea93340aaa94dae9c94e097ae129377cad6310abc16009590972e85f4212
+  checksum: 10c0/f8bce34edca365dd30dbc435ba5f052404483c254f76e9926ac29f9ddcaf85543e23fee5bda8e28216304111b63f7430e3a00556ce49f24edb92f0a216f52047
   languageName: node
   linkType: hard
 
@@ -8459,13 +8456,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mermaid@npm:^11.8.1":
-  version: 11.8.1
-  resolution: "mermaid@npm:11.8.1"
+"mermaid@npm:^11.9.0":
+  version: 11.9.0
+  resolution: "mermaid@npm:11.9.0"
   dependencies:
     "@braintree/sanitize-url": "npm:^7.0.4"
     "@iconify/utils": "npm:^2.1.33"
-    "@mermaid-js/parser": "npm:^0.6.1"
+    "@mermaid-js/parser": "npm:^0.6.2"
     "@types/d3": "npm:^7.4.3"
     cytoscape: "npm:^3.29.3"
     cytoscape-cose-bilkent: "npm:^4.1.0"
@@ -8475,15 +8472,15 @@ __metadata:
     dagre-d3-es: "npm:7.0.11"
     dayjs: "npm:^1.11.13"
     dompurify: "npm:^3.2.5"
-    katex: "npm:^0.16.9"
+    katex: "npm:^0.16.22"
     khroma: "npm:^2.1.0"
     lodash-es: "npm:^4.17.21"
-    marked: "npm:^15.0.7"
+    marked: "npm:^16.0.0"
     roughjs: "npm:^4.6.6"
     stylis: "npm:^4.3.6"
     ts-dedent: "npm:^2.2.0"
     uuid: "npm:^11.1.0"
-  checksum: 10c0/7865be834d4a9afa96250dafb08b1d0737a3d4543292e357cfd8b9708dcdd2228ad302d9323b61460d97c4c9fec19248f6d6a86a0a3b3a50659bc3e1669ee496
+  checksum: 10c0/f3420d0fd8919b31e36354cbf0ddd26398898c960e0bcb0e52aceae657245fcf1e5fe3e28651bff83c9b1fb8b6d3e07fc8b26d111ef3159fcf780d53ce40a437
   languageName: node
   linkType: hard
 
@@ -9463,13 +9460,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"object-assign@npm:^4.0.1":
-  version: 4.1.1
-  resolution: "object-assign@npm:4.1.1"
-  checksum: 10c0/1f4df9945120325d041ccf7b86f31e8bcc14e73d29171e37a7903050e96b81323784ec59f93f102ec635bcf6fa8034ba3ea0a8c7e69fa202b87ae3b6cec5a414
-  languageName: node
-  linkType: hard
-
 "once@npm:^1.3.1, once@npm:^1.4.0":
   version: 1.4.0
   resolution: "once@npm:1.4.0"
@@ -9507,9 +9497,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"openai@npm:^5.9.2":
-  version: 5.9.2
-  resolution: "openai@npm:5.9.2"
+"openai@npm:^5.10.1":
+  version: 5.10.1
+  resolution: "openai@npm:5.10.1"
   peerDependencies:
     ws: ^8.18.0
     zod: ^3.23.8
@@ -9520,7 +9510,7 @@ __metadata:
       optional: true
   bin:
     openai: bin/cli
-  checksum: 10c0/29cb1b8d6505a59a315429fe669500685bf035f7c640411f456ea833710ec1088b0ac8a70d4f2f4fe43790e7a0d6dc0a412460f45734265ab0d10dc34d16ace8
+  checksum: 10c0/267a843eae4059f86548a6792e00dbb8b0865d712938a04402fa58dcb25b6a3943fa2da04c48b60f1605e90afd131a50c2e535bfbffb997cf161724bf6b78106
   languageName: node
   linkType: hard
 
@@ -10527,34 +10517,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"remark-lint-no-heading-content-indent@npm:^5.0.1":
-  version: 5.0.1
-  resolution: "remark-lint-no-heading-content-indent@npm:5.0.1"
-  dependencies:
-    "@types/mdast": "npm:^4.0.0"
-    mdast-util-phrasing: "npm:^4.0.0"
-    pluralize: "npm:^8.0.0"
-    unified-lint-rule: "npm:^3.0.0"
-    unist-util-position: "npm:^5.0.0"
-    unist-util-visit-parents: "npm:^6.0.0"
-  checksum: 10c0/0bda89dcf404cfde5b3ce4eae754e5820bba7475e423900d3be2c94cbb0309394ceb5e7659e1fb0378f5d341338f33ea151876482dc867c9ac0ea1405da6a01a
-  languageName: node
-  linkType: hard
-
-"remark-lint-no-heading-indent@npm:^5.0.1":
-  version: 5.0.1
-  resolution: "remark-lint-no-heading-indent@npm:5.0.1"
-  dependencies:
-    "@types/mdast": "npm:^4.0.0"
-    mdast-util-phrasing: "npm:^4.0.0"
-    pluralize: "npm:^8.0.0"
-    unified-lint-rule: "npm:^3.0.0"
-    unist-util-position: "npm:^5.0.0"
-    unist-util-visit-parents: "npm:^6.0.0"
-  checksum: 10c0/8f80e68b8279855125cbbe4b1868329421bb98c2bba0c9f1ab8cbb84011359a77874f9ce0dd7202eb9ab3059daf76ee59026edae6c099e34a268fdf794eb439b
-  languageName: node
-  linkType: hard
-
 "remark-lint-no-hidden-table-cell@npm:^1.0.1":
   version: 1.0.1
   resolution: "remark-lint-no-hidden-table-cell@npm:1.0.1"
@@ -10563,17 +10525,6 @@ __metadata:
     unified-lint-rule: "npm:^3.0.0"
     unist-util-visit-parents: "npm:^6.0.0"
   checksum: 10c0/bc6f81f8c9ce3b875752c635b2e6f9be9b11548cb340da9a68baff7e616c2f5025bdab8d18e01695270751697a6678b033382f7950c2cd49b0bfeefe2aa0d69e
-  languageName: node
-  linkType: hard
-
-"remark-lint-no-repeat-punctuation@npm:^0.1.4":
-  version: 0.1.4
-  resolution: "remark-lint-no-repeat-punctuation@npm:0.1.4"
-  dependencies:
-    unified-lint-rule: "npm:^1.0.3"
-    unist-util-map: "npm:^1.0.4"
-    unist-util-to-list-of-char: "npm:^0.1.3"
-  checksum: 10c0/b02399a2845548615ba338f17eb7e1621a1e8b6ac7c6072c1f639a0f5dd652b1ee8361ef7c627b474e2978139c8903689e57de09806961d6df15685d2967adcb
   languageName: node
   linkType: hard
 
@@ -12051,15 +12002,6 @@ __metadata:
   dependencies:
     "@types/unist": "npm:^3.0.0"
   checksum: 10c0/9419352181eaa1da35eca9490634a6df70d2217815bb5938a04af3a662c12c5607a2f1014197ec9c426fbef18834f6371bfdb6f033040fa8aa3e965300d70e7e
-  languageName: node
-  linkType: hard
-
-"unist-util-map@npm:^1.0.4":
-  version: 1.0.5
-  resolution: "unist-util-map@npm:1.0.5"
-  dependencies:
-    object-assign: "npm:^4.0.1"
-  checksum: 10c0/e06db68582514391be03d70fa64202ed81518046e766302cc46e36d34b012e99fc21a8acb943a24575b78611ac667559d7e19c009256162fc544d8f2b126d111
   languageName: node
   linkType: hard
 

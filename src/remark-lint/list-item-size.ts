@@ -17,7 +17,6 @@ export const listItemSize = lintRule<Root>(
             place: list.position,
           },
         )
-        return
       }
     })
   },
