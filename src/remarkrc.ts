@@ -12,7 +12,6 @@ import remarkLintNoDuplicateHeadingsInSection from 'remark-lint-no-duplicate-hea
 import remarkLintNoHiddenTableCell from 'remark-lint-no-hidden-table-cell'
 
 import doomLint, {
-  listItemSize,
   noDeepHeading,
   noDeepList,
   noParagraphIndent,
@@ -32,7 +31,6 @@ export default {
     remarkLintNoDuplicateHeadingsInSection,
     remarkLintNoHiddenTableCell,
     doomLint,
-    listItemSize,
     noDeepHeading,
     noDeepList,
     noParagraphIndent,
