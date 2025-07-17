@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.10.3
+
+### Patch Changes
+
+- [#129](https://github.com/alauda/doom/pull/129) [`48f11ae`](https://github.com/alauda/doom/commit/48f11aec8d885dcd9f2eb8896183e954d27e043b) Thanks [@JounQin](https://github.com/JounQin)! - fix: sidebar style issue
+
 ## 1.10.2
 
 ### Patch Changes
