@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.10.1
+
+### Patch Changes
+
+- [#125](https://github.com/alauda/doom/pull/125) [`883ba0a`](https://github.com/alauda/doom/commit/883ba0aeb68306c2e790f20e3540f4126dbee716) Thanks [@JounQin](https://github.com/JounQin)! - chore: cleanup remark lint rules
+
 ## 1.10.0
 
 ### Minor Changes
