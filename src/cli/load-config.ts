@@ -319,6 +319,9 @@ const getCommonConfig = async ({
       dev: {
         lazyCompilation: lazy,
       },
+      performance: {
+        buildCache: false,
+      },
       plugins: [pluginReact(), pluginSass(), pluginSvgr(), pluginYaml()],
       resolve: {
         alias: {
