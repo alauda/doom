@@ -116,6 +116,12 @@ td {
   --rp-code-block-bg: #{color.adjust($color: #242424, $lightness: 5%)};
 }
 
+.rspress {
+  &-sidebar-item {
+    word-break: break-word;
+  }
+}
+
 @mixin print {
   .rspress {
     &-nav,

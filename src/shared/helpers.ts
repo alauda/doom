@@ -40,7 +40,7 @@ export const extractTextAndId = (title: string) => {
   const text = title.replace(customIdReg, '').trimEnd()
   const customId = title.match(customIdReg)?.[0]?.slice(2, -1) || ''
   return [
-    text.replace(/\\{2}/g, '').replace(/(?:[^\\]\\([[\]]))+/g, '$1'),
+    text.replace(/\\{2}/g, '').replace(/(^|[^\\])\\([[\]])/g, '$1$2'),
     customId,
   ]
 }
