@@ -47,11 +47,14 @@ async function doom(
       ignores: ['**/.yarn', '**/dist', '**/lib', '**/node_modules'],
     },
     {
-      extends: [
-        js.configs.recommended,
-        react.configs.recommended,
-        mdx.configs.flat,
-      ],
+      ...mdx.configs.flat,
+      rules: {
+        ...mdx.configs.flat.rules,
+        'mdx/remark': 'error',
+      },
+    },
+    {
+      extends: [js.configs.recommended, react.configs.recommended],
       languageOptions: {
         globals: globals.node,
       },
