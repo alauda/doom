@@ -1,5 +1,4 @@
 import type { Root } from 'mdast'
-import { directiveToMarkdown } from 'mdast-util-directive'
 import { toMarkdown } from 'mdast-util-to-markdown'
 import type { Plugin } from 'unified'
 import { visit } from 'unist-util-visit'
@@ -47,8 +46,10 @@ export const remarkDirectives: Plugin<[], Root> = function () {
         default: {
           parent!.children[index!] = {
             type: 'text',
+            // https://github.com/remarkjs/remark/blob/ed7b185d304adaf5aa80fc78a912603a5cd6e85a/packages/remark-stringify/lib/index.js#L31-L37
             value: toMarkdown(node, {
-              extensions: [directiveToMarkdown()],
+              ...this.data('settings'),
+              extensions: this.data('toMarkdownExtensions'),
             }),
           }
         }
