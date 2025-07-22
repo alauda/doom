@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.10.6
+
+### Patch Changes
+
+- [#138](https://github.com/alauda/doom/pull/138) [`12b7b6a`](https://github.com/alauda/doom/commit/12b7b6a61e61d2939b1173d12bd2076cee5a463d) Thanks [@JounQin](https://github.com/JounQin)! - fix: rspress built-in container directives
+
 ## 1.10.5
 
 ### Patch Changes
