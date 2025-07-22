@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.10.5
+
+### Patch Changes
+
+- [#136](https://github.com/alauda/doom/pull/136) [`f85e1be`](https://github.com/alauda/doom/commit/f85e1be260d2634eb47c5404cb08f17e15483923) Thanks [@JounQin](https://github.com/JounQin)! - fix: render unsupported directives as text
+
 ## 1.10.4
 
 ### Patch Changes
