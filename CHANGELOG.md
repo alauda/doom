@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.10.7
+
+### Patch Changes
+
+- [#140](https://github.com/alauda/doom/pull/140) [`34ffb8f`](https://github.com/alauda/doom/commit/34ffb8fc017b07ed0bf41a9d8156a6550bae206d) Thanks [@JounQin](https://github.com/JounQin)! - refactor: use toMarkdownExtensions data instead
+
 ## 1.10.6
 
 ### Patch Changes
