@@ -54,7 +54,6 @@ __metadata:
     globals: "npm:^16.3.0"
     html-tag-names: "npm:^2.1.0"
     md-attr-parser: "npm:^1.3.0"
-    mdast-util-directive: "npm:^3.1.0"
     mdast-util-mdx: "npm:^3.0.0"
     mdast-util-mdx-jsx: "npm:^3.2.0"
     mdast-util-phrasing: "npm:^4.1.0"
@@ -8169,7 +8168,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mdast-util-directive@npm:^3.0.0, mdast-util-directive@npm:^3.1.0":
+"mdast-util-directive@npm:^3.0.0":
   version: 3.1.0
   resolution: "mdast-util-directive@npm:3.1.0"
   dependencies:
