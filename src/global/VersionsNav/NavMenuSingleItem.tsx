@@ -1,4 +1,4 @@
-import { type NavItemWithLink } from '@rspress/core'
+import type { NavItemWithLink } from '@rspress/core'
 import { Tag } from '@rspress/core/theme'
 import { isExternalUrl } from '@rspress/shared'
 import { useMemo, type ReactNode } from 'react'
