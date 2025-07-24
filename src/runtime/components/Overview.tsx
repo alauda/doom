@@ -1,17 +1,16 @@
+import type {
+  SidebarDivider,
+  SidebarItem,
+  SidebarSectionHeader,
+} from '@rspress/core'
 import {
   isEqualPath,
   normalizeHrefInRuntime as normalizeHref,
   usePageData,
-} from '@rspress/runtime'
-import type {
-  Header,
-  NormalizedSidebarGroup,
-  SidebarDivider,
-  SidebarItem,
-  SidebarSectionHeader,
-} from '@rspress/shared'
+} from '@rspress/core/runtime'
+import { Link, renderInlineMarkdown, useSidebarData } from '@rspress/core/theme'
+import type { Header, NormalizedSidebarGroup } from '@rspress/shared'
 import { Fragment, useCallback, useMemo } from 'react'
-import { Link, renderInlineMarkdown, useSidebarData } from 'rspress/theme'
 
 import classes from '../../../styles/overview.module.scss'
 

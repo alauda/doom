@@ -1,3 +1,4 @@
+import { logger } from '@rspress/core'
 import { render } from 'ejs'
 import type {
   List,
@@ -6,7 +7,6 @@ import type {
   PhrasingContent,
   RootContent,
 } from 'mdast'
-import { logger } from 'rspress/core'
 import { ResponseError, xfetch } from 'x-fetch'
 import { cyan, red } from 'yoctocolors'
 

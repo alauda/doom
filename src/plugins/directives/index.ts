@@ -1,5 +1,5 @@
+import type { RspressPlugin } from '@rspress/core'
 import remarkDirective from 'remark-directive'
-import type { RspressPlugin } from 'rspress/core'
 
 import { remarkDirectives } from './remark-directives.js'
 

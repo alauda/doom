@@ -1,3 +1,9 @@
+import { useLang, usePageData, withBase } from '@rspress/core/runtime'
+import {
+  Search as OriginalSearch,
+  Layout as OriginalLayout,
+  getCustomMDXComponent,
+} from '@rspress/core/theme'
 import {
   Search as AlgoliaSearch,
   ZH_LOCALES,
@@ -5,12 +11,6 @@ import {
 import virtual from 'doom-@global-virtual'
 import { useMemo } from 'react'
 import { useLocation } from 'react-router'
-import { useLang, usePageData, withBase } from 'rspress/runtime'
-import {
-  Search as OriginalSearch,
-  Layout as OriginalLayout,
-  getCustomMDXComponent,
-} from 'rspress/theme'
 
 import classes from '../styles/link.module.scss'
 
@@ -23,7 +23,7 @@ import { useTranslation } from './runtime/index.js'
 import type { ExportItem } from './types.js'
 
 // eslint-disable-next-line import-x/export
-export * from 'rspress/theme'
+export * from '@rspress/core/theme'
 
 const X = getCustomMDXComponent()
 

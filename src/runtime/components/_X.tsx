@@ -1,3 +1,3 @@
-import { getCustomMDXComponent } from 'rspress/theme'
+import { getCustomMDXComponent } from '@rspress/core/theme'
 
 export const X = getCustomMDXComponent()

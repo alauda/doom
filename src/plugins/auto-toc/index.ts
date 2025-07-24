@@ -1,4 +1,4 @@
-import type { RspressPlugin } from 'rspress/core'
+import type { RspressPlugin } from '@rspress/core'
 
 import { remarkAutoToc } from './remark-auto-toc.js'
 

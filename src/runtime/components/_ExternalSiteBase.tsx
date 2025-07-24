@@ -1,6 +1,6 @@
+import { useLang } from '@rspress/core/runtime'
 import virtual from 'doom-@global-virtual'
 import { type FC, useMemo } from 'react'
-import { useLang } from 'rspress/runtime'
 
 import { handleCJKWhitespaces } from '../utils.js'
 

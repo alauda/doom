@@ -1,10 +1,7 @@
 import path from 'node:path'
 
-import {
-  addTrailingSlash,
-  type RspressPlugin,
-  type UserConfig,
-} from '@rspress/shared'
+import { type RspressPlugin, type UserConfig } from '@rspress/core'
+import { addTrailingSlash } from '@rspress/shared'
 
 import { APIS_ROUTES } from '../../shared/index.js'
 

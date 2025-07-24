@@ -2,20 +2,22 @@ import fs from 'node:fs/promises'
 import path from 'node:path'
 
 import {
-  isExternalUrl,
-  type NavItem,
-  removeLeadingSlash,
+  logger,
   removeTrailingSlash,
+  withBase,
   type SidebarDivider,
   type SidebarGroup,
   type SidebarItem,
   type SidebarSectionHeader,
+} from '@rspress/core'
+import {
+  isExternalUrl,
+  removeLeadingSlash,
   slash,
-  withBase,
+  type NavItem,
 } from '@rspress/shared'
 import { unset } from 'es-toolkit/compat'
 import picomatch from 'picomatch'
-import { logger } from 'rspress/core'
 
 import { pathExists, readJson } from '../../utils/index.js'
 
