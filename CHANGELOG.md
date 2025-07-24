@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.10.9
+
+### Patch Changes
+
+- [`d4dc7ce`](https://github.com/alauda/doom/commit/d4dc7ce011777cc60dd2f05bae0af9233610a3b3) Thanks [@JounQin](https://github.com/JounQin)! - fix: incorrect type import
+
 ## 1.10.8
 
 ### Patch Changes
