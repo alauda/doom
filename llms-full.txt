@@ -531,7 +531,7 @@ export default defineConfig({})
 - `logoText`：文档标题，会显示在左上角的 logo 处
 - `icon`：文档 favicon，默认同 `logo`
 - `base`：文档基础路径，用于部署到非根路径，如 `product-docs`，默认为 `/`
-- `outDir`：构建产物目录，默认为 `dist/{base}/{version}`，如果指定此项，则变更为 `dist/{outDir}/{version}`，其中 `version` 可选，参考[多版本构建](./deploy#多版本构建)
+- `outDir`：构建产物目录，默认为 `dist/{base}/{version}`，如果指定此项，则变更为 `dist/{outDir}/{version}`，其中 `version` 可选，参考[多版本构建](./deploy#multi-version)
 
 ## API 文档配置 {#api}
 
@@ -868,7 +868,7 @@ doom build # 构建静态产物
 doom serve # 以生产模式预览构建产物
 ```
 
-## 多版本构建
+## 多版本构建 \{#multi-version}
 
 默认情况下，`doom build` 会将构建产物输出到 `dist` 目录，如果需要构建多个版本的文档，可以通过 `-v` 参数指定版本号，例如：
 
@@ -967,7 +967,7 @@ url: /usage/i18n.md
 ## `.ts/.tsx`
 
 ```tsx
-import { useI18n } from '@rspress/runtime'
+import { useI18n } from '@rspress/core/runtime'
 
 export const CommonContent = () => {
   const t = useI18n()
@@ -978,7 +978,7 @@ export const CommonContent = () => {
 ## `.mdx`
 
 ```mdx
-import { useI18n } from '@rspress/runtime'
+import { useI18n } from '@rspress/core/runtime'
 
 # {useI18n()('title')}
 
@@ -1121,7 +1121,7 @@ url: /usage/mdx.md
 其他不常用的组件可以通过 `rspress/theme` 导入使用，例如：
 
 ```mdx title="preview.mdx"
-import { SourceCode } from 'rspress/theme'
+import { SourceCode } from '@rspress/core/theme'
 
 <SourceCode href="/" />
 ```

@@ -17,7 +17,7 @@
 其他不常用的组件可以通过 `rspress/theme` 导入使用，例如：
 
 ```mdx title="preview.mdx"
-import { SourceCode } from 'rspress/theme'
+import { SourceCode } from '@rspress/core/theme'
 
 <SourceCode href="/" />
 ```
