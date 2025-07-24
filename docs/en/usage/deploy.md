@@ -1,35 +1,35 @@
 ---
 description: >-
-  After completing the project development, we can deploy the project to the ACP
-  platform.
+  After the documentation project development is completed, we can deploy the
+  project to the ACP platform
 weight: 8
-sourceSHA: c87a4a8346bc7c7c09d4aa01777c7196f17d414fb6f8673371b6c91e8537c5fe
+sourceSHA: 8895eb94077d2ba4d905499090cd1c9c694d34d64046c692bdfe48d0d2a40d6e
 ---
 
 # Deployment
 
 ## Build and Preview
 
-Before deployment, we need to build the project for the production environment and preview it locally to ensure the project runs correctly:
+Before deployment, we need to build the project for production and preview it locally to ensure the project runs correctly:
 
 ```bash
-doom build # Build static artifacts
-doom serve # Preview the build artifacts in production mode
+doom build # Build static assets
+doom serve # Preview the build assets in production mode
 ```
 
-## Multi-Version Builds
+## Multi-version Build {#multi-version}
 
-By default, `doom build` will output the build artifacts to the `dist` directory. If multiple versions of the documentation need to be built, you can specify the version number using the `-v` parameter, for example:
+By default, `doom build` outputs the build artifacts to the `dist` directory. If you need to build multiple versions of the documentation, you can specify the version number with the `-v` parameter, for example:
 
 ```bash
-# Typically determined by the branch name, such as release-4.0 corresponding to version 4.0
-doom build -v 4.0 # Build version 4.0, output artifacts to dist/4.0, documentation access path is {base}/4.0
-doom build -v master # Build master version, output artifacts to dist/master, documentation access path is {base}/master
-doom build -v {other} # Build other versions, output artifacts to dist/{other}, documentation access path is {base}/{other}
+# Usually determined by branch name, e.g., release-4.0 corresponds to version 4.0
+doom build -v 4.0 # Build version 4.0, output to dist/4.0, documentation access path is {base}/4.0
+doom build -v master # Build master version, output to dist/master, documentation access path is {base}/master
+doom build -v {other} # Build other versions, output to dist/{other}, documentation access path is {base}/{other}
 
-# unversioned and unversioned-x.y are special version numbers used for building documents without version prefixes
-doom build -v unversioned # Build document without version prefix, output artifacts to dist/unversioned, documentation access path is {base}
-doom build -v unversioned-4.0 # Build document without version prefix but display version number 4.0 in the navigation bar, output artifacts to dist/unversioned, documentation access path is {base}
+# unversioned and unversioned-x.y are special version numbers used to build documentation without version prefix
+doom build -v unversioned # Build documentation without version prefix, output to dist/unversioned, documentation access path is {base}
+doom build -v unversioned-4.0 # Build documentation without version prefix but showing version 4.0 in the navbar, output to dist/unversioned, documentation access path is {base}
 ```
 
 ## Merged Directory Structure
@@ -68,10 +68,10 @@ doom build -v unversioned-4.0 # Build document without version prefix but displa
 </html>
 ```
 
-## Dynamic Mounting Configuration File {#overrides}
+## Dynamic Mount Configuration File {#overrides}
 
 ```yaml title="overrides.yaml"
-# Document information, each document can mount to override default configuration
+# Documentation information, each document can mount to override default configuration
 title:
   en: Doom - Alauda
   zh: Doom - 灵雀云

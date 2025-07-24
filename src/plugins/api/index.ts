@@ -1,6 +1,6 @@
 import { openapiSchemaToJsonSchema } from '@openapi-contrib/openapi-schema-to-json-schema'
+import type { RspressPlugin } from '@rspress/core'
 import type { OpenAPI, OpenAPIV3_1 } from 'openapi-types'
-import type { RspressPlugin } from 'rspress/core'
 import { convertObj } from 'swagger2openapi'
 
 import { generateRuntimeModule } from '../../utils/index.js'

@@ -1,8 +1,5 @@
-import {
-  addLeadingSlash,
-  normalizeSlash,
-  type NavItemWithLink,
-} from '@rspress/shared'
+import type { NavItemWithLink } from '@rspress/core'
+import { addLeadingSlash, normalizeSlash } from '@rspress/shared'
 
 import { UNVERSIONED, UNVERSIONED_PREFIX } from './constants.ts'
 import type { UnversionedVersion } from './types.ts'

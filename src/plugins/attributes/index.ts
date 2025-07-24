@@ -1,4 +1,4 @@
-import type { RspressPlugin } from 'rspress/core'
+import type { RspressPlugin } from '@rspress/core'
 
 import { remarkAttributes } from './remark-attributes/index.js'
 

@@ -1,9 +1,14 @@
+import {
+  isProduction,
+  NoSSR,
+  usePageData,
+  withBase,
+} from '@rspress/core/runtime'
 import { type NavItem } from '@rspress/shared'
 import virtual from 'doom-@global-virtual'
 import { noop } from 'es-toolkit'
 import { useEffect, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { isProduction, NoSSR, usePageData, withBase } from 'rspress/runtime'
 import { base } from 'virtual-runtime-config'
 import { parse } from 'yaml'
 

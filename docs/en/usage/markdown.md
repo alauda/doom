@@ -1,6 +1,6 @@
 ---
 weight: 3
-sourceSHA: cefdfa4ab48a0034a890ff42657bbf4837b19667ee1b8182b8af5e337dbd0f33
+sourceSHA: 58f870e263d25aa93bd9873aa16a3a850e52a4c5e8015a48b99b12b3837b39ac
 ---
 
 # Markdown
@@ -9,12 +9,12 @@ In addition to the standard [gfm](https://github.github.com/gfm) syntax, Doom ha
 
 ## Callouts
 
-Source code annotation component
+Source code annotation components
 
 ::: note
 
 1. Please use inline code comments according to the actual language, such as `;`, `%`, `#`, `//`, `/** */`, `--`, and `<!-- -->`, etc.
-2. If you want to treat them as code comments, please escape with `[\!code callout]`
+2. If you want to treat them as code comments, please escape them with `[\!code callout]`.
 3. Sometimes, `:::callouts` may display abnormally due to nested indentation; you can use `<div class="doom-callouts">` or the `<Callouts>` component instead.
 
 :::

@@ -1,9 +1,9 @@
 import type {
-  NormalizedSidebarGroup,
   SidebarDivider,
   SidebarItem,
   SidebarSectionHeader,
-} from '@rspress/shared'
+} from '@rspress/core'
+import type { NormalizedSidebarGroup } from '@rspress/shared'
 
 function removeIndex(link: string) {
   if (link.endsWith('/index')) {

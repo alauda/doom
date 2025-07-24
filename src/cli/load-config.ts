@@ -6,6 +6,7 @@ import { pluginReact } from '@rsbuild/plugin-react'
 import { pluginSass } from '@rsbuild/plugin-sass'
 import { pluginSvgr } from '@rsbuild/plugin-svgr'
 import { pluginYaml } from '@rsbuild/plugin-yaml'
+import { logger, type UserConfig } from '@rspress/core'
 import { pluginAlgolia } from '@rspress/plugin-algolia'
 import { pluginLlms } from '@rspress/plugin-llms'
 import {
@@ -14,7 +15,6 @@ import {
   normalizeSlash,
   removeLeadingSlash,
   type LocaleConfig,
-  type UserConfig,
 } from '@rspress/shared'
 import {
   transformerMetaHighlight,
@@ -27,7 +27,6 @@ import {
   transformerRemoveNotationEscape,
 } from '@shikijs/transformers'
 import { difference } from 'es-toolkit'
-import { logger } from 'rspress/core'
 import { glob } from 'tinyglobby'
 import { cyan } from 'yoctocolors'
 

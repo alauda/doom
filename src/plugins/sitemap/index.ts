@@ -3,8 +3,7 @@
 import fs from 'node:fs'
 import { dirname } from 'node:path'
 
-import type { RspressPlugin } from '@rspress/shared'
-import { logger } from 'rspress/core'
+import { logger, type RspressPlugin } from '@rspress/core'
 
 export type ChangeFreq =
   | 'always'

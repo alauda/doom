@@ -1,9 +1,9 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 
+import { logger, serve } from '@rspress/core'
 import { removeLeadingSlash } from '@rspress/shared'
 import { Command } from 'commander'
-import { logger, serve } from 'rspress/core'
 import { cyan, yellow } from 'yoctocolors'
 
 import {

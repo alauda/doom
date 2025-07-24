@@ -1,7 +1,7 @@
+import { usePageData } from '@rspress/core/runtime'
 import openapisMap from 'doom-@api-openapisMap'
 import type { OpenAPIV3_1 } from 'openapi-types'
 import { type ReactNode, useId, useMemo } from 'react'
-import { usePageData } from 'rspress/runtime'
 
 import { modelName, omitRoutePathRefs, resolveRef } from '../utils.js'
 

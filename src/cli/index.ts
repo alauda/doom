@@ -8,9 +8,9 @@ import module from 'node:module'
 import path from 'node:path'
 
 import { logger } from '@rsbuild/core'
+import { build, dev, serve } from '@rspress/core'
 import { type FSWatcher, watch } from 'chokidar'
 import { type Command, program } from 'commander'
-import { build, dev, serve } from 'rspress/core'
 import { green } from 'yoctocolors'
 
 import type { GlobalCliOptions, ServeOptions } from '../types.js'

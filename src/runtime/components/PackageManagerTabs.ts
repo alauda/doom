@@ -1,4 +1,4 @@
 export {
   PackageManagerTabs,
   PackageManagerTabs as default,
-} from 'rspress/theme'
+} from '@rspress/core/theme'

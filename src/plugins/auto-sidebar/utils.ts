@@ -1,9 +1,9 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 
+import { logger } from '@rspress/core'
 import type { NavItem } from '@rspress/shared'
 import { loadFrontMatter } from '@rspress/shared/node-utils'
-import { logger } from 'rspress/core'
 
 import { extractTextAndId } from '../../shared/index.js'
 import { pathExists } from '../../utils/index.js'

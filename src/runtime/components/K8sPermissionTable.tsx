@@ -1,8 +1,8 @@
+import { useLang } from '@rspress/core/runtime'
 import functionResourcesMap from 'doom-@permission-functionResourcesMap'
 import roleTemplatesMap from 'doom-@permission-roleTemplatesMap'
 import { intersection, sortBy } from 'es-toolkit'
 import { Fragment, useMemo } from 'react'
-import { useLang } from 'rspress/runtime'
 
 import type {
   FunctionResource,

@@ -1,1 +1,1 @@
-export { Badge, Badge as default } from 'rspress/theme'
+export { Badge, Badge as default } from '@rspress/core/theme'
