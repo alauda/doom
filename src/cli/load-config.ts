@@ -254,7 +254,6 @@ const getCommonConfig = async ({
       ],
     },
     markdown: {
-      checkDeadLinks: true,
       shiki: {
         transformers: [
           // builtin transformers

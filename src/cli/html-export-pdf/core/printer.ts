@@ -211,7 +211,7 @@ export class Printer extends EventEmitter {
         const meta: Meta = {}
         const title = document.querySelector('title')
         if (title) {
-          meta.title = title.textContent?.trim()
+          meta.title = title.textContent.trim()
         }
 
         const lang = document.querySelector('html')?.getAttribute('lang')

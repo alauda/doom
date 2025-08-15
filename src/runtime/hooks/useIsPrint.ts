@@ -26,7 +26,7 @@ export function useIsPrintMedia() {
   const [isPrint, changeIsPrint] = useState(!!printMediaQuery?.matches)
 
   const onChange = useCallback((mqList: MediaQueryListEvent) => {
-    changeIsPrint(!!mqList.matches)
+    changeIsPrint(mqList.matches)
   }, [])
 
   useEffect(() => {
