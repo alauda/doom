@@ -33,6 +33,16 @@ export interface MatchedSidebar {
   depth: number
 }
 
+const cleanupUrlPath = (urlPath: string) => {
+  if (urlPath.endsWith('.html')) {
+    urlPath = urlPath.slice(0, -5)
+  }
+  if (urlPath.endsWith('/index')) {
+    urlPath = urlPath.slice(0, -5)
+  }
+  return urlPath
+}
+
 const getClosestSidebar_ = (
   sidebarItems: DoomSidebar[],
   pathname: string,
@@ -40,6 +50,7 @@ const getClosestSidebar_ = (
   matched?: MatchedSidebar,
   depth = 0,
 ): MatchedSidebar | undefined => {
+  pathname = cleanupUrlPath(pathname)
   for (const sidebar of sidebarItems) {
     if ('_fileKey' in sidebar && sidebar._fileKey) {
       if (depth === 0) {
@@ -54,10 +65,8 @@ const getClosestSidebar_ = (
         }
       }
 
-      if (
-        withBase(sidebar.link) ===
-        (pathname.endsWith('.html') ? pathname.slice(0, -5) : pathname)
-      ) {
+      const sidebarLink = cleanupUrlPath(withBase(sidebar.link))
+      if (sidebarLink === pathname) {
         return matched
       }
     }
