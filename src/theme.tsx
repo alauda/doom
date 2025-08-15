@@ -94,6 +94,7 @@ const getClosestSidebar = (sidebarItems: DoomSidebar[], pathname: string) => {
 export const Layout = () => {
   const {
     siteData: { lang: siteLang, themeConfig },
+    // eslint-disable-next-line @typescript-eslint/no-deprecated -- `usePage` is not exported...
   } = usePageData()
 
   const lang = useLang()

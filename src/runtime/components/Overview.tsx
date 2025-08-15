@@ -7,8 +7,9 @@ import {
   isEqualPath,
   normalizeHrefInRuntime as normalizeHref,
   usePageData,
+  useSidebar,
 } from '@rspress/core/runtime'
-import { Link, renderInlineMarkdown, useSidebarData } from '@rspress/core/theme'
+import { Link, renderInlineMarkdown } from '@rspress/core/theme'
 import type { Header, NormalizedSidebarGroup } from '@rspress/shared'
 import { Fragment, useCallback, useMemo } from 'react'
 
@@ -62,6 +63,7 @@ export function Overview(props: {
   const {
     siteData,
     page: { routePath, frontmatter, title },
+    // eslint-disable-next-line @typescript-eslint/no-deprecated -- `usePage` is not exported...
   } = usePageData()
   const { content, groups: customGroups, defaultGroupTitle = 'Others' } = props
 
@@ -81,7 +83,7 @@ export function Overview(props: {
     [pages, subFilter],
   )
 
-  let overviewSidebarGroups = useSidebarData()
+  let overviewSidebarGroups = useSidebar()
 
   if (
     overviewSidebarGroups[0] &&

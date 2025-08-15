@@ -181,6 +181,7 @@ export const OpenAPIPath = ({
   openapiPath: openapiPath_,
   pathPrefix: pathPrefix_,
 }: OpenAPIPathProps) => {
+  // eslint-disable-next-line @typescript-eslint/no-deprecated -- `usePage` is not exported...
   const { page } = usePageData()
 
   const pathPrefix = pathPrefix_ ?? (virtual.pathPrefix || '')

@@ -164,6 +164,7 @@ export const OpenAPIRef = ({
   isCommonRef = true,
   collectRefs = true,
 }: OpenAPIRefProps) => {
+  // eslint-disable-next-line @typescript-eslint/no-deprecated -- `usePage` is not exported...
   const { page } = usePageData()
 
   let uid = useUid()

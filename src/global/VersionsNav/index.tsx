@@ -45,6 +45,7 @@ if (!isProduction()) {
 }
 
 const VersionsNav_ = () => {
+  // eslint-disable-next-line @typescript-eslint/no-deprecated -- `usePage` is not exported...
   const { siteData } = usePageData()
 
   const lang = useLang()

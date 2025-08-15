@@ -31,6 +31,7 @@ const ExternalSiteLink_ = ({
 }: ExternalSiteLinkProps) => {
   const isPrint = useIsPrint()
 
+  // eslint-disable-next-line @typescript-eslint/no-deprecated -- `usePage` is not exported...
   const { siteData } = usePageData()
 
   const site = useMemo(
