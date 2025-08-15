@@ -45,8 +45,10 @@ import { SourceCode } from '@rspress/core/theme'
 
 * 多语言文档(`doc/en`)的目录结构需要与 `doc/zh` 目录下的文档完全一致，保证多语言文档的链接除了语言标识外完全相同。
 
-  如果是使用自动化翻译工具进行翻译，则无需关心该问题，自动化翻译工具会自动根据
-  `doc/zh` 生成目标语言文档的目录结构。
+  <Directive type="danger" title="注意">
+    如果是使用自动化翻译工具进行翻译，则无需关心该问题，自动化翻译工具会自动根据
+    `doc/zh` 生成目标语言文档的目录结构。
+  </Directive>
 
 ### `ExternalSite`
 
@@ -56,6 +58,8 @@ import { SourceCode } from '@rspress/core/theme'
 <ExternalSite name="connectors" />
 ```
 
+<ExternalSite name="connectors" />
+
 ### `ExternalSiteLink`
 
 引用外部站点链接组件
@@ -63,6 +67,8 @@ import { SourceCode } from '@rspress/core/theme'
 ```mdx
 <ExternalSiteLink name="connectors" href="link.mdx#hash" children="Content" />
 ```
+
+<ExternalSiteLink name="connectors" href="link.mdx#hash" children="Content" />
 
 :::tip
 
@@ -90,6 +96,10 @@ import { SourceCode } from '@rspress/core/theme'
 <ExternalApisOverview name="connectors" />
 ```
 
+<AcpApisOverview />
+
+<ExternalApisOverview name="connectors" />
+
 ### Term
 
 术语组件，纯文本，动态挂载注入
@@ -99,6 +109,12 @@ import { SourceCode } from '@rspress/core/theme'
 <Term name="product" textCase="lower" />
 <Term name="productShort" textCase="upper" />
 ```
+
+<Term name="company" textCase="capitalize" />
+
+<Term name="product" textCase="lower" />
+
+<Term name="productShort" textCase="upper" />
 
 #### `props`
 
@@ -113,6 +129,8 @@ import { SourceCode } from '@rspress/core/theme'
 <TermsTable />
 ```
 
+<TermsTable />
+
 #### `props`
 
 * `terms`: `NormalizedTermItem[]`，可选，自定义术语列表，方便内部文档渲染自定义术语时复用
@@ -122,6 +140,8 @@ import { SourceCode } from '@rspress/core/theme'
 ```mdx
 <JsonViewer value={{ key: 'value' }} />
 ```
+
+<JsonViewer value={{ key: 'value' }} />
 
 ## 自定义组件复用
 

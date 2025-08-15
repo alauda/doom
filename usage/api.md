@@ -1,4 +1,3 @@
-
 # API 文档
 
 根据实际业务，我们一般会将 API 分为高级 API 和 CRD (Custom Resource Definition) 两种，因此在目录结构上一般分为：
@@ -18,13 +17,13 @@
 <OpenAPIPath path="/plugins/v1alpha1/template/codeQuality/task/{task-id}/summary" />
 ```
 
-参考 [CodeQualityTaskSummary](../apis/advanced-apis/codeQualityTaskSummary)。
+参考 [CodeQualityTaskSummary](/apis/advanced-apis/codeQualityTaskSummary.md)。
 
 ### `props`
 
-- `path`: OpenAPI schema `paths` 下的路径
-- `pathPrefix`: 可以用于覆盖全局配置中的 `api.pathPrefix`
-- `openapiPath`: 参考[指定 openapi 路径](#指定-openapi-路径)
+* `path`: OpenAPI schema `paths` 下的路径
+* `pathPrefix`: 可以用于覆盖全局配置中的 `api.pathPrefix`
+* `openapiPath`: 参考[指定 openapi 路径](#指定-openapi-路径)
 
 ## CRD
 
@@ -34,12 +33,12 @@
 <K8sCrd name="artifactcleanupruns.artifacts.katanomi.dev" />
 ```
 
-参考 [ArtifactCleanupRun](../apis/crds/ArtifactCleanupRun)。
+参考 [ArtifactCleanupRun](/apis/crds/ArtifactCleanupRun.md)。
 
 ### `props`
 
-- `name`: CRD `metadata.name`
-- `crdPath`: 类似[指定 openapi 路径](#指定-openapi-路径)，用于指定特定的 CRD 文件
+* `name`: CRD `metadata.name`
+* `crdPath`: 类似[指定 openapi 路径](#指定-openapi-路径)，用于指定特定的 CRD 文件
 
 ## 公共引用
 
@@ -49,12 +48,12 @@
 <OpenAPIRef schema="v1alpha1.CodeQuality" />
 ```
 
-参考 [CodeQuality](../apis/references/CodeQuality)。
+参考 [CodeQuality](/apis/references/CodeQuality.md)。
 
 ### `props`
 
-- `schema`: OpenAPI schema `definitions`(v2) or `component/schemas`(v3) 下的名称
-- `openapiPath`: 参考[指定 openapi 路径](#指定-openapi-路径)
+* `schema`: OpenAPI schema `definitions`(v2) or `component/schemas`(v3) 下的名称
+* `openapiPath`: 参考[指定 openapi 路径](#指定-openapi-路径)
 
 ## 指定 openapi 路径
 

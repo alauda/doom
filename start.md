@@ -10,6 +10,8 @@ mkdir my-docs && cd my-docs
 
 执行 `npm init -y` 来初始化一个项目。你可以使用 npm、yarn 或 pnpm 安装 doom:
 
+<PackageManagerTabs command="install -D @alauda/doom typescript" />
+
 然后通过如下命令创建文件:
 
 ```bash

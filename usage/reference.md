@@ -1,4 +1,3 @@
-
 # 引用文档
 
 在 Markdown 文件中：
@@ -17,7 +16,7 @@
 {/* reference-end */}
 ```
 
-上述 `name` 为引用文档的名称，参考[引用文档配置](./configuration#reference)，如果引用的文档内容使用了远程仓库图片静态资源，相关静态资源将自动存储在本地 `<root>/public/_remotes/<name>` 目录下。
+上述 `name` 为引用文档的名称，参考[引用文档配置](/usage/configuration.md#reference)，如果引用的文档内容使用了远程仓库图片静态资源，相关静态资源将自动存储在本地 `<root>/public/_remotes/<name>` 目录下。
 
 以下为使用 `<!-- reference-start#ref -->` 的实例：
 
@@ -42,11 +41,11 @@ reference:
 
 ### `frontmatterMode`
 
-- `ignore`：忽略引用文档的 frontmatter，保留使用当前文档的 frontmatter
-- `merge`：合并引用文档的 frontmatter，如果有相同的 key，引用文档的值会覆盖当前文档的值
-- `replace`：使用引用文档的 frontmatter 替换当前文档的 frontmatter
-- `remove`：移除当前文档的 frontmatter
+* `ignore`：忽略引用文档的 frontmatter，保留使用当前文档的 frontmatter
+* `merge`：合并引用文档的 frontmatter，如果有相同的 key，引用文档的值会覆盖当前文档的值
+* `replace`：使用引用文档的 frontmatter 替换当前文档的 frontmatter
+* `remove`：移除当前文档的 frontmatter
 
-文档编写参考[引用文档](./reference#reference)
+文档编写参考[引用文档](/usage/reference.md#reference)
 
 <!-- reference-end -->

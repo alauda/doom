@@ -1,4 +1,3 @@
-
 # Markdown
 
 除了标准的 [gfm](https://github.github.com/gfm) 语法外，Doom 内置了一些额外的 Markdown 扩展功能。
@@ -51,9 +50,9 @@ Memory overhead per virtual machine ≈ (1.002 × requested memory) \
 2. Number of virtual CPUs requested by the virtual machine.
 3. Number of virtual graphics cards requested by the virtual machine.
 4. Additional memory overhead:
-   - If your environment includes a Single Root I/O Virtualization (SR-IOV) network device or a Graphics Processing Unit (GPU), allocate 1 GiB additional memory overhead for each device.
-   - If Secure Encrypted Virtualization (SEV) is enabled, add 256 MiB.
-   - If Trusted Platform Module (TPM) is enabled, add 53 MiB.
+   * If your environment includes a Single Root I/O Virtualization (SR-IOV) network device or a Graphics Processing Unit (GPU), allocate 1 GiB additional memory overhead for each device.
+   * If Secure Encrypted Virtualization (SEV) is enabled, add 256 MiB.
+   * If Trusted Platform Module (TPM) is enabled, add 53 MiB.
 
 :::
 
@@ -83,7 +82,7 @@ graph TD;
 
 配合 [Markdown Preview Mermaid](https://github.com/mjbvz/vscode-markdown-mermaid) 可以在 VSCode 中实时预览。
 
-## 属性扩展 \{#attributes}
+## 属性扩展 {#attributes}
 
 :::warning
 当前仅支持在 `.md` 文件中使用，参考[相关 issue](https://github.com/web-infra-dev/rspress/issues/2215#issuecomment-3018371927)

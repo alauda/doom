@@ -4,13 +4,18 @@ url: /apis/advanced-apis/codeQualityTaskSummary.md
 
 # CodeQualityTaskSummary
 
+<OpenAPIPath path="/plugins/v1alpha1/template/codeQuality/task/{task-id}/summary" />
+
 
 
 ---
 url: /apis/advanced-apis/event/index.md
 ---
 
+
 # Event APIs
+
+<Overview />
 
 
 
@@ -18,7 +23,11 @@ url: /apis/advanced-apis/event/index.md
 url: /apis/advanced-apis/event/search.md
 ---
 
+
 # Search
+
+<OpenAPIPath path="/platform/events.alauda.io/v1/events" />
+<OpenAPIPath path="/platform/events.alauda.io/v1/projects/{project}/clusters/{cluster}/namespaces/{namespace}/events" />
 
 
 
@@ -28,13 +37,20 @@ url: /apis/advanced-apis/index.md
 
 # 高级 API
 
+<Overview />
+
 
 
 ---
 url: /apis/advanced-apis/log/aggregation.md
 ---
 
+
 # Aggregation
+
+<OpenAPIPath path="/platform/logging.alauda.io/v2/logs/aggregation" />
+<OpenAPIPath path="/platform/logging.alauda.io/v2/clusters/{cluster}/logs/aggregation" />
+<OpenAPIPath path="/platform/logging.alauda.io/v2/projects/{project}/clusters/{cluster}/namespaces/{namespace}/logs/aggregation" />
 
 
 
@@ -42,7 +58,10 @@ url: /apis/advanced-apis/log/aggregation.md
 url: /apis/advanced-apis/log/index.md
 ---
 
+
 # Log APIs
+
+<Overview />
 
 
 
@@ -50,7 +69,12 @@ url: /apis/advanced-apis/log/index.md
 url: /apis/advanced-apis/log/search.md
 ---
 
+
 # Search
+
+<OpenAPIPath path="/platform/logging.alauda.io/v2/logs/search" />
+<OpenAPIPath path="/platform/logging.alauda.io/v2/clusters/{cluster}/logs/search" />
+<OpenAPIPath path="/platform/logging.alauda.io/v2/projects/{project}/clusters/{cluster}/namespaces/{namespace}/logs/search" />
 
 
 
@@ -60,6 +84,8 @@ url: /apis/advanced-apis/projects.md
 
 # Projects
 
+<OpenAPIPath path="/plugins/v1alpha1/template/projects" />
+
 
 
 ---
@@ -67,6 +93,8 @@ url: /apis/crds/ArtifactCleanupRun.md
 ---
 
 # ArtifactCleanupRun
+
+<K8sCrd name="artifactcleanupruns.artifacts.katanomi.dev" />
 
 
 
@@ -76,15 +104,20 @@ url: /apis/crds/index.md
 
 # CRDs
 
+<Overview />
+
 
 
 ---
 url: /apis/index.md
 ---
 
+
 # APIs
 
 The `apis` entry is only for demonstration purposes. It is not a real API.
+
+<Overview />
 
 
 
@@ -94,6 +127,8 @@ url: /apis/references/CodeQuality.md
 
 # CodeQuality
 
+<OpenAPIRef schema="v1alpha1.CodeQuality" />
+
 
 
 ---
@@ -102,6 +137,8 @@ url: /apis/references/CodeQualityBranch.md
 
 # CodeQualityBranch
 
+<OpenAPIRef schema="v1alpha1.CodeQualityBranch" />
+
 
 
 ---
@@ -109,6 +146,8 @@ url: /apis/references/index.md
 ---
 
 # 公共引用
+
+<Overview />
 
 
 
@@ -122,9 +161,9 @@ Doom 是基于 [rspress](https://rspress.dev/zh/) 开发的、适用于 Alauda �
 
 ## 基础能力
 
-* 自动生成可配置权重（顺序）的左侧侧边栏
-* 静态文档全文搜索
-* 多语言支持
+- 自动生成可配置权重（顺序）的左侧侧边栏
+- 静态文档全文搜索
+- 多语言支持
 
 ## 基于 Markdown 及其扩展 MDX
 
@@ -136,7 +175,9 @@ MDX 是一种功能强大的内容开发方式。你不仅仅可以像往常一�
 
 ## 开始尝试
 
-下面让我们[快速开始](/start.md)使用 Doom 吧！
+下面让我们[快速开始](./start)使用 Doom 吧！
+
+<Overview />
 
 
 
@@ -155,6 +196,8 @@ mkdir my-docs && cd my-docs
 ```
 
 执行 `npm init -y` 来初始化一个项目。你可以使用 npm、yarn 或 pnpm 安装 doom:
+
+<PackageManagerTabs command="install -D @alauda/doom typescript" />
 
 然后通过如下命令创建文件:
 
@@ -257,7 +300,7 @@ Commands:
   help [command]                  display help for command
 ```
 
-更多配置请参考[配置](/usage/configuration.md)
+更多配置请参考[配置](./usage/configuration)
 
 ### 启动开发服务 \{#dev}
 
@@ -315,16 +358,16 @@ Options:
   -h, --help               display help for command
 ```
 
-* `-g, --glob` 参数必填，可以指定需要翻译的文件目录或路径，支持 `glob` 语法，注意参数值必须带引号否则会被命令行解析造成非预期行为。示例：
+- `-g, --glob` 参数必填，可以指定需要翻译的文件目录或路径，支持 `glob` 语法，注意参数值必须带引号否则会被命令行解析造成非预期行为。示例：
   1. `yarn translate -g abc xyz`，将把 `<root>/<source>/abc`, `<root>/<source>/xyz`
      目录下的所有文档翻译到 `<root>/<target>/abc`, `<root>/<target>/xyz` 目录下
   2. `yarn translate -g '*'` 将翻译 `<root>/<source>` 下的所有文档文件
-* `-C, --copy` 参数可选，是否在目标文件不存在时复制本地路径的资源文件到目标目录，默认为 `false`，即改变资源文件的引用路径为引用源路径。示例：
-  * 当启动此参数
+- `-C, --copy` 参数可选，是否在目标文件不存在时复制本地路径的资源文件到目标目录，默认为 `false`，即改变资源文件的引用路径为引用源路径。示例：
+  - 当启动此参数
     1. `/<source>/abc.jpg` 翻译时将复制 `<root>/public/<source>/abc.jpg` 到 `<root>/public/<target>/abc.jpg`，并修改文档中的引用路径为 `/<target>/abc.jpg`
     2. `<root>/<source>/abc.mdx` 文档中的 `./assets/xyz.jpg` 翻译时将复制 `<root>/<source>/assets/xyz.jpg` 到 `<root>/<target>/assets/xyz.jpg`，图片引用路径保持不变
     3. `<root>/<source>/abc.mdx` 文档中的 `./assets/<source>/xyz.jpg` 翻译时将复制 `<root>/<source>/assets/<source>/xyz.jpg` 到 `<root>/<target>/assets/<target>/xyz.jpg`，并修改文档中的引用路径为 `./assets/<target>/xyz.jpg`
-  * 当没有启用此参数：
+  - 当没有启用此参数：
     1. `/<source>/abc.jpg` 翻译时如果 `<root>/public/<target>/abc.jpg` 已存在，将修改文档中的引用路径为 `/<target>/abc.jpg`，否则保持图片引用路径保持不变
     2. `<root>/<source>/abc.mdx` 文档中的 `./assets/<source>/xyz.jpg` 翻译时，如果 `<root>/<target>/assets/<target>/xyz.jpg` 已存在，将修改文档中的引用路径为 `./assets/<target>/xyz.jpg`，否则将修改为 `../<source>/assets/<target>/xyz.jpg`
 
@@ -347,7 +390,7 @@ i18n:
 title: DevOps 连接器
 ```
 
-更多配置请参考[翻译配置](/usage/configuration.md#translate)
+更多配置请参考[翻译配置](./usage/configuration#translate)
 
 ### 导出 PDF \{#export}
 
@@ -381,7 +424,7 @@ Options:
 PLAYWRIGHT_DOWNLOAD_HOST="https://cdn.npmmirror.com/binaries/playwright"
 ```
 
-除了全站统一导出完整 pdf 文档外，`doom` 还支持指定入口导出单个 pdf 文件，更多配置请参考[文档导出配置](/usage/configuration.md#export)
+除了全站统一导出完整 pdf 文档外，`doom` 还支持指定入口导出单个 pdf 文件，更多配置请参考[文档导出配置](./usage/configuration#export)
 
 ### 文档检查 \{#lint}
 
@@ -404,7 +447,7 @@ Options:
 
 `doom lint` 基于 [`ESLint`](https://eslint.org/) 和 [`cspell`](https://cspell.org/)，如果希望在编辑器中拥有更好的体验，可以安装相应的插件 [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) / [CSpell](https://marketplace.visualstudio.com/items?itemName=streetsidesoftware.code-spell-checker)，然后创建相应的配置文件:
 
-* `eslint.config.mjs`:
+- `eslint.config.mjs`:
 
   ```js
   import doom from '@alauda/doom/eslint'
@@ -412,7 +455,7 @@ Options:
   export default doom(new URL('docs', import.meta.url))
   ```
 
-* `cspell.config.mjs`:
+- `cspell.config.mjs`:
 
   ```js
   export { default } from '@alauda/doom/cspell'
@@ -425,7 +468,7 @@ k8s
 kubernetes
 ```
 
-更多配置请参考[文档检查配置](/usage/configuration.md#lint)
+更多配置请参考[文档检查配置](./usage/configuration#lint)
 
 
 
@@ -993,6 +1036,8 @@ url: /usage/index.md
 
 # 使用
 
+<Overview />
+
 
 
 ---
@@ -1102,6 +1147,7 @@ graph TD;
 url: /usage/mdx.md
 ---
 
+
 # MDX
 
 [MDX](https://mdxjs.com/) 是一种 Markdown 的扩展语法，允许在 Markdown 中使用 JSX 语法，使用方式可以参考 [rspress MDX](https://rspress.dev/zh/guide/basic/use-mdx)。
@@ -1110,13 +1156,13 @@ url: /usage/mdx.md
 
 `rspress` 主题提供的[内置组件](https://rspress.dev/zh/guide/default-theme/components)大部分已调整为全局组件，可以在 `.mdx` 文件中无需导入直接使用，包括：
 
-* `Badge`
-* `Card`
-* `LinkCard`
-* `PackageManagerTabs`
-* `Steps`
-* `Tab/Tabs`
-* `Toc`
+- `Badge`
+- `Card`
+- `LinkCard`
+- `PackageManagerTabs`
+- `Steps`
+- `Tab/Tabs`
+- `Toc`
 
 其他不常用的组件可以通过 `rspress/theme` 导入使用，例如：
 
@@ -1147,10 +1193,12 @@ import { SourceCode } from '@rspress/core/theme'
   </Directive>
 ```
 
-* 多语言文档(`doc/en`)的目录结构需要与 `doc/zh` 目录下的文档完全一致，保证多语言文档的链接除了语言标识外完全相同。
+- 多语言文档(`doc/en`)的目录结构需要与 `doc/zh` 目录下的文档完全一致，保证多语言文档的链接除了语言标识外完全相同。
 
-  如果是使用自动化翻译工具进行翻译，则无需关心该问题，自动化翻译工具会自动根据
-  `doc/zh` 生成目标语言文档的目录结构。
+  <Directive type="danger" title="注意">
+    如果是使用自动化翻译工具进行翻译，则无需关心该问题，自动化翻译工具会自动根据
+    `doc/zh` 生成目标语言文档的目录结构。
+  </Directive>
 
 ### `ExternalSite`
 
@@ -1160,6 +1208,8 @@ import { SourceCode } from '@rspress/core/theme'
 <ExternalSite name="connectors" />
 ```
 
+<ExternalSite name="connectors" />
+
 ### `ExternalSiteLink`
 
 引用外部站点链接组件
@@ -1167,6 +1217,8 @@ import { SourceCode } from '@rspress/core/theme'
 ```mdx
 <ExternalSiteLink name="connectors" href="link.mdx#hash" children="Content" />
 ```
+
+<ExternalSiteLink name="connectors" href="link.mdx#hash" children="Content" />
 
 :::tip
 
@@ -1194,6 +1246,10 @@ import { SourceCode } from '@rspress/core/theme'
 <ExternalApisOverview name="connectors" />
 ```
 
+<AcpApisOverview />
+
+<ExternalApisOverview name="connectors" />
+
 ### Term
 
 术语组件，纯文本，动态挂载注入
@@ -1204,10 +1260,14 @@ import { SourceCode } from '@rspress/core/theme'
 <Term name="productShort" textCase="upper" />
 ```
 
+<Term name="company" textCase="capitalize" />
+<Term name="product" textCase="lower" />
+<Term name="productShort" textCase="upper" />
+
 #### `props`
 
-* `name`: 内置术语名称，参考[动态挂载配置文件](/usage/deploy.md#overrides)
-* `textCase`: 文本大小写转换，可选值为`lower`, `upper`, `capitalize`
+- `name`: 内置术语名称，参考[动态挂载配置文件](./deploy.md#overrides)
+- `textCase`: 文本大小写转换，可选值为`lower`, `upper`, `capitalize`
 
 ### `TermsTable`
 
@@ -1217,9 +1277,11 @@ import { SourceCode } from '@rspress/core/theme'
 <TermsTable />
 ```
 
+<TermsTable />
+
 #### `props`
 
-* `terms`: `NormalizedTermItem[]`，可选，自定义术语列表，方便内部文档渲染自定义术语时复用
+- `terms`: `NormalizedTermItem[]`，可选，自定义术语列表，方便内部文档渲染自定义术语时复用
 
 ### `JsonViewer`
 
@@ -1227,9 +1289,11 @@ import { SourceCode } from '@rspress/core/theme'
 <JsonViewer value={{ key: 'value' }} />
 ```
 
+<JsonViewer value={{ key: 'value' }} />
+
 ## 自定义组件复用
 
-根据[约定](/usage/convention.md)，我们可以将需要复用的内容抽取到 `shared` 目录中，然后在需要的地方引入即可，比如：
+根据[约定](./convention)，我们可以将需要复用的内容抽取到 `shared` 目录中，然后在需要的地方引入即可，比如：
 
 ```mdx
 import CommonContent from './shared/CommonContent.mdx'
@@ -1261,6 +1325,7 @@ import { CommonContent } from './shared/CommonContent'
 url: /usage/permission.md
 ---
 
+
 # 权限说明文档
 
 ```mdx
@@ -1269,9 +1334,11 @@ url: /usage/permission.md
 
 ## `props`
 
-* `functions`: `string[]` - 必填，需要展示的 `FunctionResource` 资源名称数组
+- `functions`: `string[]` - 必填，需要展示的 `FunctionResource` 资源名称数组
 
 ## 示例
+
+<K8sPermissionTable functions={['devops-testplans', 'devops-testmodules']} />
 
 
 

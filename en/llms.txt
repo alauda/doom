@@ -1,0 +1,29 @@
+# Doom
+
+## Other
+
+- [CodeQualityTaskSummary](/en/apis/advanced-apis/codeQualityTaskSummary.md)
+- [Event APIs](/en/apis/advanced-apis/event/index.md)
+- [Search](/en/apis/advanced-apis/event/search.md)
+- [Advanced API](/en/apis/advanced-apis/index.md)
+- [Aggregation](/en/apis/advanced-apis/log/aggregation.md)
+- [Log APIs](/en/apis/advanced-apis/log/index.md)
+- [Search](/en/apis/advanced-apis/log/search.md)
+- [Projects](/en/apis/advanced-apis/projects.md)
+- [ArtifactCleanupRun](/en/apis/crds/ArtifactCleanupRun.md)
+- [CRDs](/en/apis/crds/index.md)
+- [APIs](/en/apis/index.md)
+- [CodeQuality](/en/apis/references/CodeQuality.md)
+- [CodeQualityBranch](/en/apis/references/CodeQualityBranch.md)
+- [Public References](/en/apis/references/index.md)
+- [Getting Started](/en/start.md)
+- [API Documentation](/en/usage/api.md)
+- [Configuration](/en/usage/configuration.md): Configure the `doom` documentation tool
+- [Convention](/en/usage/convention.md): Based on the principle of "convention over configuration", we agree on the organization of documents to automatically generate the left sidebar and related content.
+- [Deployment](/en/usage/deploy.md): After the documentation project development is completed, we can deploy the project to the ACP platform
+- [Internationalization](/en/usage/i18n.md): Using Internationalized Text in Reusable Components
+- [Usage](/en/usage/index.md)
+- [Markdown](/en/usage/markdown.md)
+- [MDX](/en/usage/mdx.md): Using MDX enables dynamic content display and content reuse
+- [Permission Description Document](/en/usage/permission.md)
+- [Referencing Documents](/en/usage/reference.md)

@@ -9,3 +9,5 @@
 * `functions`: `string[]` - 必填，需要展示的 `FunctionResource` 资源名称数组
 
 ## 示例
+
+<K8sPermissionTable functions={['devops-testplans', 'devops-testmodules']} />

@@ -1,4 +1,3 @@
-
 # 配置 {#configuration}
 
 ## 配置文件 {#config-file}
@@ -15,13 +14,13 @@ export default defineConfig({})
 
 ## 基础配置 {#basic}
 
-- `lang`：默认文档语言，为方便大部分项目使用，我们默认支持中英文文档，默认语言为 `en`，如果当前文档项目不需要多语言支持，可以将此项配置为 `null` 或 `undefined`
-- `title`：文档标题，会显示在浏览器标签页上
-- `logo`：文档左上角 logo，支持图片链接、文件路径，绝对路径代表 `public` 目录下的文件，相对路径代表相对于当前工具目录的文件，默认使用 `doom` 包内置的 alauda logo
-- `logoText`：文档标题，会显示在左上角的 logo 处
-- `icon`：文档 favicon，默认同 `logo`
-- `base`：文档基础路径，用于部署到非根路径，如 `product-docs`，默认为 `/`
-- `outDir`：构建产物目录，默认为 `dist/{base}/{version}`，如果指定此项，则变更为 `dist/{outDir}/{version}`，其中 `version` 可选，参考[多版本构建](./deploy#multi-version)
+* `lang`：默认文档语言，为方便大部分项目使用，我们默认支持中英文文档，默认语言为 `en`，如果当前文档项目不需要多语言支持，可以将此项配置为 `null` 或 `undefined`
+* `title`：文档标题，会显示在浏览器标签页上
+* `logo`：文档左上角 logo，支持图片链接、文件路径，绝对路径代表 `public` 目录下的文件，相对路径代表相对于当前工具目录的文件，默认使用 `doom` 包内置的 alauda logo
+* `logoText`：文档标题，会显示在左上角的 logo 处
+* `icon`：文档 favicon，默认同 `logo`
+* `base`：文档基础路径，用于部署到非根路径，如 `product-docs`，默认为 `/`
+* `outDir`：构建产物目录，默认为 `dist/{base}/{version}`，如果指定此项，则变更为 `dist/{outDir}/{version}`，其中 `version` 可选，参考[多版本构建](/usage/deploy.md#multi-version)
 
 ## API 文档配置 {#api}
 
@@ -41,7 +40,7 @@ api:
   pathPrefix: /apis
 ```
 
-文档编写参考 [API 文档](./api)
+文档编写参考 [API 文档](/usage/api.md)
 
 ## 权限说明文档配置 {#permission}
 
@@ -56,7 +55,7 @@ permission:
     - docs/shared/roletemplates/*.yaml
 ```
 
-文档编写参考[权限说明文档](./permission)
+文档编写参考[权限说明文档](/usage/permission.md)
 
 ## 引用文档配置 {#reference}
 
@@ -77,12 +76,12 @@ reference:
 
 ### `frontmatterMode`
 
-- `ignore`：忽略引用文档的 frontmatter，保留使用当前文档的 frontmatter
-- `merge`：合并引用文档的 frontmatter，如果有相同的 key，引用文档的值会覆盖当前文档的值
-- `replace`：使用引用文档的 frontmatter 替换当前文档的 frontmatter
-- `remove`：移除当前文档的 frontmatter
+* `ignore`：忽略引用文档的 frontmatter，保留使用当前文档的 frontmatter
+* `merge`：合并引用文档的 frontmatter，如果有相同的 key，引用文档的值会覆盖当前文档的值
+* `replace`：使用引用文档的 frontmatter 替换当前文档的 frontmatter
+* `remove`：移除当前文档的 frontmatter
 
-文档编写参考[引用文档](./reference#reference)
+文档编写参考[引用文档](/usage/reference.md#reference)
 
 ## 发行说明配置 {#release-notes}
 
@@ -141,7 +140,7 @@ shiki:
 
 ## `sites.yaml` 配置 {#sites}
 
-`sites.yaml` 配置文件用于配置当前文档站点关联的子站点信息，[引用外部站点组件](./mdx#externalsite)和构建单版本文档时会用到此处定义的信息。
+`sites.yaml` 配置文件用于配置当前文档站点关联的子站点信息，[引用外部站点组件](/usage/mdx.md#externalsite)和构建单版本文档时会用到此处定义的信息。
 
 ```yaml
 - name: connectors # 全站唯一名称
