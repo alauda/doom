@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.10.11
+
+### Patch Changes
+
+- [#150](https://github.com/alauda/doom/pull/150) [`271f809`](https://github.com/alauda/doom/commit/271f809e5e0a6e6ee2af85ebd1fd8d6a10f8afdb) Thanks [@JounQin](https://github.com/JounQin)! - fix: cleanup url path before matching
+
 ## 1.10.10
 
 ### Patch Changes
