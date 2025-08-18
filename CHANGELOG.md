@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.10.12
+
+### Patch Changes
+
+- [#152](https://github.com/alauda/doom/pull/152) [`25fe495`](https://github.com/alauda/doom/commit/25fe495c0230f0d924b1ece25c8847c3da86a423) Thanks [@JounQin](https://github.com/JounQin)! - fix: base is not included in pathname
+
 ## 1.10.11
 
 ### Patch Changes
