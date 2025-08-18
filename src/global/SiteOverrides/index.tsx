@@ -34,7 +34,6 @@ const concatTitle = (title: string, suffix?: string) => {
 }
 
 export const SiteOverrides = () => {
-  // eslint-disable-next-line @typescript-eslint/no-deprecated -- `usePage` is not exported...
   const { siteData, page } = usePageData()
   const {
     pageType,

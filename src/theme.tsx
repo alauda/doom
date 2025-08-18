@@ -1,4 +1,4 @@
-import { useLang, usePageData, withBase } from '@rspress/core/runtime'
+import { useLang, useSite, withBase } from '@rspress/core/runtime'
 import {
   Search as OriginalSearch,
   Layout as OriginalLayout,
@@ -65,7 +65,7 @@ const getClosestSidebar_ = (
         }
       }
 
-      const sidebarLink = cleanupUrlPath(withBase(sidebar.link))
+      const sidebarLink = cleanupUrlPath(sidebar.link || '')
       if (sidebarLink === pathname) {
         return matched
       }
@@ -102,9 +102,8 @@ const getClosestSidebar = (sidebarItems: DoomSidebar[], pathname: string) => {
 // eslint-disable-next-line import-x/export
 export const Layout = () => {
   const {
-    siteData: { lang: siteLang, themeConfig },
-    // eslint-disable-next-line @typescript-eslint/no-deprecated -- `usePage` is not exported...
-  } = usePageData()
+    site: { lang: siteLang, themeConfig },
+  } = useSite()
 
   const lang = useLang()
 

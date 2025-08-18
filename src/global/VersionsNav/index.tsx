@@ -1,9 +1,4 @@
-import {
-  isProduction,
-  NoSSR,
-  usePageData,
-  withBase,
-} from '@rspress/core/runtime'
+import { isProduction, NoSSR, useSite, withBase } from '@rspress/core/runtime'
 import { type NavItem } from '@rspress/shared'
 import virtual from 'doom-@global-virtual'
 import { noop } from 'es-toolkit'
@@ -45,14 +40,13 @@ if (!isProduction()) {
 }
 
 const VersionsNav_ = () => {
-  // eslint-disable-next-line @typescript-eslint/no-deprecated -- `usePage` is not exported...
-  const { siteData } = usePageData()
+  const { site } = useSite()
 
   const lang = useLang()
 
   const t = useTranslation()
 
-  const siteTitle = siteData.originalTitle ?? siteData.title
+  const siteTitle = site.originalTitle ?? site.title
 
   const downloadLink = useMemo(() => {
     if (!virtual.download) {

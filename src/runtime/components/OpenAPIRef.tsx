@@ -1,4 +1,4 @@
-import { usePageData } from '@rspress/core/runtime'
+import { usePage } from '@rspress/core/runtime'
 import openapisMap from 'doom-@api-openapisMap'
 import type { OpenAPIV3_1 } from 'openapi-types'
 import { type ReactNode, useId, useMemo } from 'react'
@@ -164,8 +164,7 @@ export const OpenAPIRef = ({
   isCommonRef = true,
   collectRefs = true,
 }: OpenAPIRefProps) => {
-  // eslint-disable-next-line @typescript-eslint/no-deprecated -- `usePage` is not exported...
-  const { page } = usePageData()
+  const { page } = usePage()
 
   let uid = useUid()
 

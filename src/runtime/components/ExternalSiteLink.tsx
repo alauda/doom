@@ -1,4 +1,4 @@
-import { NoSSR, useLang, usePageData } from '@rspress/core/runtime'
+import { NoSSR, useLang, useSite } from '@rspress/core/runtime'
 import {
   addTrailingSlash,
   isExternalUrl,
@@ -31,8 +31,7 @@ const ExternalSiteLink_ = ({
 }: ExternalSiteLinkProps) => {
   const isPrint = useIsPrint()
 
-  // eslint-disable-next-line @typescript-eslint/no-deprecated -- `usePage` is not exported...
-  const { siteData } = usePageData()
+  const { site: siteData } = useSite()
 
   const site = useMemo(
     () => virtual.sites?.find((s) => s.name === name),
