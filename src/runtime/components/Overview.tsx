@@ -63,7 +63,6 @@ export function Overview(props: {
   const {
     siteData,
     page: { routePath, frontmatter, title },
-    // eslint-disable-next-line @typescript-eslint/no-deprecated -- `usePage` is not exported...
   } = usePageData()
   const { content, groups: customGroups, defaultGroupTitle = 'Others' } = props
 
