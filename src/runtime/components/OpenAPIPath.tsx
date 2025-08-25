@@ -1,4 +1,4 @@
-import { usePageData } from '@rspress/core/runtime'
+import { usePage } from '@rspress/core/runtime'
 import { Badge } from '@rspress/core/theme'
 import openapisMap from 'doom-@api-openapisMap'
 import virtual from 'doom-@api-virtual'
@@ -181,8 +181,7 @@ export const OpenAPIPath = ({
   openapiPath: openapiPath_,
   pathPrefix: pathPrefix_,
 }: OpenAPIPathProps) => {
-  // eslint-disable-next-line @typescript-eslint/no-deprecated -- `usePage` is not exported...
-  const { page } = usePageData()
+  const { page } = usePage()
 
   const pathPrefix = pathPrefix_ ?? (virtual.pathPrefix || '')
 
