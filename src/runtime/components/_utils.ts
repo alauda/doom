@@ -3,13 +3,10 @@ import type {
   SidebarItem,
   SidebarSectionHeader,
 } from '@rspress/core'
-import type { NormalizedSidebarGroup } from '@rspress/shared'
+import { normalizeHref, type NormalizedSidebarGroup } from '@rspress/shared'
 
 function removeIndex(link: string) {
-  if (link.endsWith('/index')) {
-    return link.slice(0, -5)
-  }
-  return link
+  return normalizeHref(link, true)
 }
 
 export const isSidebarDivider = (
