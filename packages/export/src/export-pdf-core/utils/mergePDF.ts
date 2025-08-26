@@ -15,8 +15,8 @@ import PDFMerger from 'pdf-merger-js'
 import type { OutlineNode } from '../../html-export-pdf/index.js'
 import { mergePDFs } from '../../merge-pdfs/index.js'
 
-import { convertPathToPosix } from './convertPathToPosix.js'
-import { getUrlLink } from './getUrlLink.js'
+import { convertPathToPosix } from './convertPathToPosix.ts'
+import { getUrlLink } from './getUrlLink.ts'
 
 export interface NormalizePage {
   location: string

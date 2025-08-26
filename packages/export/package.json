@@ -1,0 +1,32 @@
+{
+  "name": "@alauda/doom-export",
+  "version": "0.0.0",
+  "type": "module",
+  "description": "Doctor Doom making docs.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alauda/doom.git",
+    "directory": "packages/export"
+  },
+  "homepage": "https://github.com/alauda/doom#readme",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.17.0 <20 || >=20.1.0"
+  },
+  "exports": {
+    ".": "./lib/index.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "pyodide"
+  ],
+  "dependencies": {
+    "cli-progress": "^3.12.0",
+    "html-entities": "^2.6.0",
+    "pdf-lib": "^1.17.1",
+    "pdf-merger-js": "^5.1.2",
+    "playwright": "^1.55.0",
+    "yoctocolors": "^2.1.2"
+  }
+}

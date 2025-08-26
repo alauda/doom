@@ -12,13 +12,13 @@ import {
   type PrinterOptions,
 } from '../html-export-pdf/index.js'
 
-import type { LaunchOptions, Page, PDFOptions } from './types.js'
+import type { LaunchOptions, Page, PDFOptions } from './types.ts'
 import {
   getUrlLink,
   mergePDF,
   type NormalizePage,
   type PDFOutline,
-} from './utils/index.js'
+} from './utils/index.ts'
 
 export interface GeneratePdfOptions {
   pages: Page[]

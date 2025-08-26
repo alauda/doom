@@ -11,8 +11,8 @@ import {
   getOutlineNodes,
   setOutlineNodes,
   type OutlineNode,
-} from './outline.js'
-import { setMetadata, type Meta } from './postprocesser.js'
+} from './outline.ts'
+import { setMetadata, type Meta } from './postprocesser.ts'
 
 export type PDFOptions = Exclude<Parameters<Page['pdf']>[0], undefined>
 
