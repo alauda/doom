@@ -1,9 +1,0 @@
-{
-  "extends": "..",
-  "compilerOptions": {
-    "declaration": true,
-    "noEmit": false,
-    "outDir": "../lib",
-    "rootDir": "."
-  }
-}

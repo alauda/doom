@@ -1,24 +1,22 @@
 {
+  "extends": "./tsconfig.base",
   "compilerOptions": {
-    "jsx": "react-jsx",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
     "noEmit": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "resolveJsonModule": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "target": "ESNext",
     "paths": {
-      "@alauda/doom/config": ["./src/config.ts"],
-      "@alauda/doom/runtime": ["./src/runtime/index.ts"],
-      "@alauda/doom/theme": ["./src/theme.tsx"]
-    },
-    "rewriteRelativeImportExtensions": true,
-    "stripInternal": true,
-    "verbatimModuleSyntax": true
+      "@alauda/doom/config": ["./packages/doom/src/config.ts"],
+      "@alauda/doom/runtime": ["./packages/doom/src/runtime/index.ts"],
+      "@alauda/doom/theme": ["./packages/doom/src/theme.tsx"],
+      "@alauda/doom-export": ["./packages/export/src/index.ts"]
+    }
   },
+  "references": [
+    {
+      "path": "./packages/export"
+    },
+    {
+      "path": "./packages/doom"
+    }
+  ],
   "mdx": {
     "checkMdx": true
   }
