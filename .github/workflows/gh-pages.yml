@@ -30,6 +30,7 @@ jobs:
 
       - name: Build and Export
         run: |
+          yarn build
           # export the docs as pdf first
           yarn docs:build -e
           yarn docs:export
