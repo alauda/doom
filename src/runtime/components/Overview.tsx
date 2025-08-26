@@ -3,12 +3,7 @@ import type {
   SidebarItem,
   SidebarSectionHeader,
 } from '@rspress/core'
-import {
-  isEqualPath,
-  normalizeHrefInRuntime as normalizeHref,
-  usePageData,
-  useSidebar,
-} from '@rspress/core/runtime'
+import { isEqualPath, usePageData, useSidebar } from '@rspress/core/runtime'
 import { Link, renderInlineMarkdown } from '@rspress/core/theme'
 import type { Header, NormalizedSidebarGroup } from '@rspress/shared'
 import { Fragment, useCallback, useMemo } from 'react'
@@ -68,8 +63,6 @@ export function Overview(props: {
 
   const subFilter = useCallback(
     (link: string) =>
-      // sidebar items link without base path
-      // pages route path with base path
       link.startsWith(routePath.replace(/overview$/, '')) &&
       !isEqualPath(link, routePath),
     [routePath],
@@ -231,10 +224,7 @@ export function Overview(props: {
             {group.items.map((item) => (
               <div className={classes.overviewGroup} key={item.link}>
                 <h3 style={{ marginBottom: 8 }}>
-                  <Link
-                    href={normalizeHref(item.link)}
-                    {...renderInlineMarkdown(item.text)}
-                  />
+                  <Link href={item.link} {...renderInlineMarkdown(item.text)} />
                 </h3>
                 <div className={classes.overviewDescription}>
                   {item.description}
@@ -248,7 +238,7 @@ export function Overview(props: {
                       } first:rp-mt-2`}
                     >
                       <Link
-                        href={`${normalizeHref(item.link)}#${header.id}`}
+                        href={`${item.link}#${header.id}`}
                         {...renderInlineMarkdown(header.text)}
                       />
                     </li>
