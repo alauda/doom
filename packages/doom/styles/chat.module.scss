@@ -1,0 +1,72 @@
+.container {
+  flex: 1;
+  overflow-y: auto;
+  margin: 0 -12px 16px;
+  padding: 0 12px;
+  scroll-behavior: smooth;
+}
+
+.chat {
+  & + & {
+    margin-top: 24px;
+  }
+}
+
+.content {
+  border-radius: 8px;
+  font-size: 14px;
+  width: calc(100% - 36px);
+
+  h2 {
+    margin-bottom: 0;
+    padding-top: 0;
+    border: 0;
+  }
+
+  &,
+  p {
+    line-height: calc(20 / 14);
+  }
+
+  > :global:not(.chat-ref-docs) {
+    + {
+      h3,
+      h4,
+      h5,
+      h6 {
+        margin-top: 0;
+      }
+    }
+
+    &:first-child {
+      margin-top: 0;
+      padding-top: 0;
+      border-top: 0;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: 0;
+    }
+  }
+}
+
+.assistant {
+  display: flex;
+
+  .content {
+    margin-left: 12px;
+  }
+}
+
+.icon {
+  margin-top: 12px;
+  flex-shrink: 0;
+}
+
+.user .content {
+  margin-left: 36px;
+  padding: 12px;
+  background-color: var(--rp-c-bg-mute);
+}

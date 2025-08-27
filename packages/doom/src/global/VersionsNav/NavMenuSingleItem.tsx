@@ -3,8 +3,9 @@ import { Tag } from '@rspress/core/theme'
 import { isExternalUrl } from '@rspress/shared'
 import { useMemo, type ReactNode } from 'react'
 
-import styles from '../../../styles/versions-nav.module.scss'
-import { withoutBase } from '../../shared/index.js'
+import { withoutBase } from '../../shared/index.ts'
+
+import styles from '@alauda/doom/styles/versions-nav.module.scss'
 
 export interface NavMenuSingleItemProps extends Omit<NavItemWithLink, 'text'> {
   base?: string
