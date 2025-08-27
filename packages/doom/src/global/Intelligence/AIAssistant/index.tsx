@@ -177,8 +177,8 @@ export const AIAssistant = ({ open, onOpenChange }: AIAssistantProps) => {
               <span className={classes.username}>
                 ({authInfo.detail.user.name})
               </span>
-              <LogoutIcon className={classes.logout} onClick={onLogout} />
-              <Tooltip anchorSelect={`.${classes.logout}`}>
+              <LogoutIcon className="ai-assistant-logout" onClick={onLogout} />
+              <Tooltip anchorSelect=".ai-assistant-logout">
                 {t('logout')}
               </Tooltip>
             </>
@@ -187,14 +187,17 @@ export const AIAssistant = ({ open, onOpenChange }: AIAssistantProps) => {
         <div className={classes.icons}>
           {messages.length ? (
             <>
-              <NewChatIcon className={classes.newChat} onClick={onNewChat} />
-              <Tooltip anchorSelect={`.${classes.newChat}`}>
+              <NewChatIcon
+                className="ai-assistant-new-chat"
+                onClick={onNewChat}
+              />
+              <Tooltip anchorSelect=".ai-assistant-new-chat">
                 {t('new_chat')}
               </Tooltip>
             </>
           ) : null}
-          <CloseIcon className={classes.close} onClick={onClose} />
-          <Tooltip anchorSelect={`.${classes.close}`}>{t('close')}</Tooltip>
+          <CloseIcon className="ai-assistant-close" onClick={onClose} />
+          <Tooltip anchorSelect=".ai-assistant-close">{t('close')}</Tooltip>
         </div>
       </div>
       {messages.length ? (
