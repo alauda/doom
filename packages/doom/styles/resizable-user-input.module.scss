@@ -1,0 +1,60 @@
+.input {
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  border: 2px solid var(--rp-c-divider-light);
+  border-radius: 8px;
+
+  &.error {
+    border-color: #eb0027;
+  }
+
+  textarea {
+    border: none;
+    resize: none;
+    outline: none;
+    background: none;
+    font-size: 14px;
+    line-height: calc(20 / 14);
+    padding: 0 12px;
+    margin: 0 -12px;
+  }
+
+  &:has(textarea:focus) {
+    &:not(.error) {
+      border-color: var(--rp-c-brand-dark);
+    }
+
+    .send:not(.disabled) {
+      color: var(--rp-c-brand);
+    }
+  }
+}
+
+.actions {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: space-between;
+  line-height: 0;
+  margin-top: 8px;
+}
+
+.error-tip {
+  color: #eb0027;
+}
+
+.send {
+  color: var(--rp-c-divider);
+
+  &.disabled {
+    cursor: not-allowed;
+  }
+
+  &:not(.disabled) {
+    cursor: pointer;
+    &:hover {
+      color: var(--rp-c-brand);
+    }
+  }
+}

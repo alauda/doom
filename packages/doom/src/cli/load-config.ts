@@ -328,6 +328,10 @@ const getCommonConfig = async ({
       },
       server: {
         open,
+        proxy: {
+          '/api/v1': 'https://cloud.alauda.cn',
+          '/smart/api': 'https://docs-dev.alauda.cn',
+        },
       },
       tools: {
         rspack(rspackConfig, { mergeConfig, rspack }) {

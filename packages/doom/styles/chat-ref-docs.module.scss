@@ -1,0 +1,50 @@
+.container {
+  padding: 12px;
+  background-color: #f2f8fe;
+  border-radius: 8px;
+  font-size: 12px;
+  line-height: calc(16 / 12);
+
+  + * {
+    margin-top: 1rem;
+  }
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.title {
+  flex: 1;
+}
+
+.action {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  color: var(--rp-c-link);
+}
+
+.icon {
+  margin-left: 4px;
+  transition: transform 0.2s ease-in-out;
+
+  &.expanded {
+    transform: rotate(180deg);
+  }
+}
+
+.docs {
+  &,
+  .doc + .doc {
+    margin-top: 8px;
+  }
+}
+
+.doc {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
