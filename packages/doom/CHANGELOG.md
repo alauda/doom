@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.12.1
+
+### Patch Changes
+
+- [#162](https://github.com/alauda/doom/pull/162) [`ce2ca1e`](https://github.com/alauda/doom/commit/ce2ca1ed48fcb97b69459b36ef225f9640f5928f) Thanks [@JounQin](https://github.com/JounQin)! - fix: css selector for tooltip
+
 ## 1.12.0
 
 ### Minor Changes
