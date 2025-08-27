@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.12.0
+
+### Minor Changes
+
+- [#160](https://github.com/alauda/doom/pull/160) [`1163f0b`](https://github.com/alauda/doom/commit/1163f0b2deefea323408e2b87f9dddebd2253c20) Thanks [@JounQin](https://github.com/JounQin)! - feat: migrate intelligence support
+
 ## 1.11.0
 
 ### Minor Changes
