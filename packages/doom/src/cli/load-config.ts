@@ -1,3 +1,4 @@
+import fs_ from 'node:fs'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -234,6 +235,8 @@ const getCommonConfig = async ({
         : algolia === 'alauda-ru' && ALAUDA_RU_ALGOLIA_OPTIONS)) ||
     null
 
+  const publicPath = path.resolve(root, 'public')
+
   return {
     userBase,
     root,
@@ -255,6 +258,17 @@ const getCommonConfig = async ({
     },
     markdown: {
       defaultWrapCode: export_,
+      link: {
+        checkDeadLinks: {
+          excludes(url) {
+            if (!url.startsWith('/')) {
+              return false
+            }
+            const { pathname } = new URL(url, 'https://example.com')
+            return fs_.existsSync(path.resolve(publicPath, pathname.slice(1)))
+          },
+        },
+      },
       shiki: {
         transformers: [
           // builtin transformers
@@ -517,7 +531,7 @@ export async function loadConfig(
   }
 
   if (ensureDefaultLogo) {
-    const publicPath = path.resolve(mergedConfig.root!, `public`)
+    const publicPath = path.resolve(mergedConfig.root!, 'public')
     await fs.mkdir(publicPath, { recursive: true })
     const logoPath = path.resolve(publicPath, removeLeadingSlash(DEFAULT_LOGO))
 

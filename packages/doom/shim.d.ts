@@ -22,10 +22,11 @@ declare module 'doom-@permission-roleTemplatesMap' {
   export default roleTemplatesMap
 }
 
-declare module 'virtual-runtime-config' {
-  import type { NormalizedRuntimeConfig } from '@rspress/shared'
+declare module 'virtual-site-data' {
+  import { SiteData } from '@rspress/shared'
 
-  export const base: NormalizedRuntimeConfig['base']
+  const data: SiteData
+  export default data
 }
 
 declare module 'md-attr-parser' {
