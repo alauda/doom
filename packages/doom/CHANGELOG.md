@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.12.2
+
+### Patch Changes
+
+- [#164](https://github.com/alauda/doom/pull/164) [`1540a24`](https://github.com/alauda/doom/commit/1540a24596e9dee4ffef44a410971f6477eeff5b) Thanks [@JounQin](https://github.com/JounQin)! - fix: enable defaultWrapCode on exporting
+
 ## 1.12.1
 
 ### Patch Changes
