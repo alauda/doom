@@ -15,7 +15,7 @@ The left sidebar is automatically generated based on the file directory structur
 We also agree that:
 
 1. The `public` directory is used to store static resources such as images, videos, etc.
-2. The `public/_remotes` directory is used to store static resources associated with [remote reference documents](/en/usage/reference.md). Please do not directly rely on resources from this directory; you may add `*/public/_remotes` to `.gitignore` to prevent these from being committed to the code repository.
+2. The `public/_remotes` directory is used to store static resources associated with [remote reference documents](./reference). Please do not directly rely on resources from this directory; you may add `*/public/_remotes` to `.gitignore` to prevent these from being committed to the code repository.
 3. The `shared` directory is for storing common components, reusable documents, etc., and will not automatically generate document data.
 
 ## Metadata
@@ -31,7 +31,7 @@ category: Category
 ---
 ```
 
-In the body of the document, when using `.mdx` files, you can access these metadata through `frontmatter` as described in [MDX](/en/usage/mdx.md).
+In the body of the document, when using `.mdx` files, you can access these metadata through `frontmatter` as described in [MDX](./mdx).
 
 ## Sorting
 
@@ -57,4 +57,4 @@ Sometimes, we do not need to display special content on the group homepage. In t
 <Overview />
 ```
 
-You can refer to [Usage](/en/usage.md) for the effect.
+You can refer to [Usage](./) for the effect.

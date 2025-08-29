@@ -16,7 +16,7 @@ In MDX files:
 {/* reference-end */}
 ```
 
-The `name` above refers to the name of the referenced document. For more information, please refer to [Document Reference Configuration](/en/usage/configuration.md#reference). If the referenced document content uses static resources from a remote repository, the related static resources will be automatically stored locally in the `<root>/public/_remotes/<name>` directory.
+The `name` above refers to the name of the referenced document. For more information, please refer to [Document Reference Configuration](./configuration#reference). If the referenced document content uses static resources from a remote repository, the related static resources will be automatically stored locally in the `<root>/public/_remotes/<name>` directory.
 
 Here is an example using `<!-- reference-start#ref -->`:
 
@@ -44,4 +44,4 @@ reference:
 * `replace`: Replaces the frontmatter of the current document with that of the referenced document.
 * `remove`: Removes the frontmatter of the current document.
 
-For writing documentation, refer to [Document Reference](/en/usage/reference.md#reference).
+For writing documentation, refer to [Document Reference](./reference#reference).

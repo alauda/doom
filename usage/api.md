@@ -17,7 +17,7 @@
 <OpenAPIPath path="/plugins/v1alpha1/template/codeQuality/task/{task-id}/summary" />
 ```
 
-参考 [CodeQualityTaskSummary](/apis/advanced-apis/codeQualityTaskSummary.md)。
+参考 [CodeQualityTaskSummary](../apis/advanced-apis/codeQualityTaskSummary)。
 
 ### `props`
 
@@ -33,7 +33,7 @@
 <K8sCrd name="artifactcleanupruns.artifacts.katanomi.dev" />
 ```
 
-参考 [ArtifactCleanupRun](/apis/crds/ArtifactCleanupRun.md)。
+参考 [ArtifactCleanupRun](../apis/crds/ArtifactCleanupRun)。
 
 ### `props`
 
@@ -48,7 +48,7 @@
 <OpenAPIRef schema="v1alpha1.CodeQuality" />
 ```
 
-参考 [CodeQuality](/apis/references/CodeQuality.md)。
+参考 [CodeQuality](../apis/references/CodeQuality)。
 
 ### `props`
 

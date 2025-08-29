@@ -17,7 +17,7 @@ Based on actual business needs, we generally categorize APIs into two types: Adv
 <OpenAPIPath path="/plugins/v1alpha1/template/codeQuality/task/{task-id}/summary" />
 ```
 
-Refer to [CodeQualityTaskSummary](/en/apis/advanced-apis/codeQualityTaskSummary.md).
+Refer to [CodeQualityTaskSummary](../apis/advanced-apis/codeQualityTaskSummary).
 
 ### `props`
 
@@ -33,7 +33,7 @@ Refer to [CodeQualityTaskSummary](/en/apis/advanced-apis/codeQualityTaskSummary.
 <K8sCrd name="artifactcleanupruns.artifacts.katanomi.dev" />
 ```
 
-Refer to [ArtifactCleanupRun](/en/apis/crds/ArtifactCleanupRun.md).
+Refer to [ArtifactCleanupRun](../apis/crds/ArtifactCleanupRun).
 
 ### `props`
 
@@ -48,7 +48,7 @@ Refer to [ArtifactCleanupRun](/en/apis/crds/ArtifactCleanupRun.md).
 <OpenAPIRef schema="v1alpha1.CodeQuality" />
 ```
 
-Refer to [CodeQuality](/en/apis/references/CodeQuality.md).
+Refer to [CodeQuality](../apis/references/CodeQuality).
 
 ### `props`
 
