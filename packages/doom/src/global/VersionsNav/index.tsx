@@ -4,7 +4,7 @@ import virtual from 'doom-@global-virtual'
 import { noop } from 'es-toolkit'
 import { useEffect, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { base } from 'virtual-runtime-config'
+import siteData from 'virtual-site-data'
 import { parse } from 'yaml'
 
 import {
@@ -66,7 +66,7 @@ const VersionsNav_ = () => {
     return [
       isExplicitlyUnversioned(virtual.version)
         ? undefined
-        : base.slice(0, -unversionedVersion.length - 1),
+        : siteData.base.slice(0, -unversionedVersion.length - 1),
       unversionedVersion,
     ]
   }, [])
@@ -83,7 +83,7 @@ const VersionsNav_ = () => {
         }
       } else {
         const res = await fetch(
-          `${isProduction() ? versionsBase : base}/versions.yaml`,
+          `${isProduction() ? versionsBase : siteData.base}/versions.yaml`,
         )
         if (!res.ok) {
           return
@@ -162,7 +162,7 @@ const VersionsNav_ = () => {
           text={version}
           base={versionsBase}
           items={navItems}
-          pathname={base}
+          pathname={siteData.base}
         />
       )}
     </>,

@@ -116,11 +116,11 @@ export const Layout = () => {
       return
     }
 
-    if (themeConfig.locales?.length) {
+    if (themeConfig.locales.length) {
       let found: MatchedSidebar | undefined
 
       for (const { lang, sidebar } of themeConfig.locales) {
-        const sidebarItems = sidebar![
+        const sidebarItems = sidebar[
           siteLang === lang ? '/' : `/${lang}`
         ] as DoomSidebar[]
 
@@ -131,7 +131,7 @@ export const Layout = () => {
         }
       }
     } else {
-      const sidebarItems = themeConfig.sidebar!['/'] as DoomSidebar[]
+      const sidebarItems = themeConfig.sidebar['/'] as DoomSidebar[]
       return getClosestSidebar(sidebarItems, pathname)
     }
   }, [pathname, siteLang, themeConfig])

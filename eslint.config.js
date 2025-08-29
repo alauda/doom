@@ -68,7 +68,7 @@ export default config(
             'doom-@global-virtual',
             'doom-@permission-functionResourcesMap',
             'doom-@permission-roleTemplatesMap',
-            'virtual-runtime-config',
+            'virtual-site-data',
           ],
         },
       ],
