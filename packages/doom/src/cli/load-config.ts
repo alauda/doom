@@ -254,6 +254,7 @@ const getCommonConfig = async ({
       ],
     },
     markdown: {
+      defaultWrapCode: export_,
       shiki: {
         transformers: [
           // builtin transformers
