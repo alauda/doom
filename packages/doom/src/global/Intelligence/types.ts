@@ -34,6 +34,6 @@ export interface AuthInfo {
 }
 
 export interface CloudAuthRegion {
-  name: 'global' | 'china' | 'local'
+  name: 'global' | 'china'
   value: string
 }

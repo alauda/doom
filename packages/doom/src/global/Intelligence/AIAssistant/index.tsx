@@ -1,7 +1,13 @@
 import { clsx } from 'clsx'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Tooltip } from 'react-tooltip'
-import { ApiMethod, xfetch } from 'x-fetch'
+import {
+  ApiMethod,
+  interceptors,
+  ResponseError,
+  xfetch,
+  type ApiInterceptor,
+} from 'x-fetch'
 
 import { type CloudAuth, useCloudAuth } from '../context.tsx'
 import type { AuthInfo } from '../types.ts'
@@ -54,6 +60,36 @@ export const AIAssistant = ({ open, onOpenChange }: AIAssistantProps) => {
     onNewChat()
   })
 
+  useEffect(() => {
+    const interceptor: ApiInterceptor = async (req, next) => {
+      if (!req.url.startsWith('/smart/')) {
+        return next(req)
+      }
+      if (!req.headers.has('Authorization')) {
+        req.headers.set('Authorization', `Bearer ${authInfo!.token}`)
+      }
+      if (!req.headers.has('CLOUD_AUTH_ORIGIN')) {
+        req.headers.set('CLOUD_AUTH_ORIGIN', authInfo!.origin)
+      }
+      try {
+        return await next(req)
+      } catch (err) {
+        if (
+          err instanceof ResponseError &&
+          // type-coverage:ignore-next-line -- no idea
+          err.response.status === 401
+        ) {
+          onLogout()
+        }
+        throw err
+      }
+    }
+    interceptors.use(interceptor)
+    return () => {
+      interceptors.eject(interceptor)
+    }
+  }, [authInfo, onLogout])
+
   const onClose = useMemoizedFn(() => {
     onOpenChange(false)
   })
@@ -93,7 +129,6 @@ export const AIAssistant = ({ open, onOpenChange }: AIAssistantProps) => {
         '/smart/api/new_session',
         {
           method: ApiMethod.POST,
-          headers: { username: authInfo!.detail!.user.name },
         },
       )
       sessionIdRef.current = session_id
@@ -152,6 +187,9 @@ export const AIAssistant = ({ open, onOpenChange }: AIAssistantProps) => {
     try {
       await onSend_(content)
     } catch {
+      if (!sessionIdRef.current) {
+        return
+      }
       flushMessages((messages) => {
         const index = assistantMessageIndexRef.current
         return [

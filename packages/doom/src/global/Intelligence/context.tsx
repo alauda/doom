@@ -6,6 +6,7 @@ import { getAuthInfoFromToken, setLocalStorage } from './utils.js'
 
 export interface CloudAuth {
   origin: string
+  token?: string
   detail?: AuthInfo
 }
 
@@ -30,7 +31,7 @@ const getCloudAuth = (): CloudAuth | null => {
     return { origin }
   }
 
-  return { origin, detail: getAuthInfoFromToken(token) }
+  return { origin, token, detail: getAuthInfoFromToken(token) }
 }
 
 export const CloudAuthProvider = ({ children }: { children: ReactNode }) => {
