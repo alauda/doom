@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.12.4
+
+### Patch Changes
+
+- [#168](https://github.com/alauda/doom/pull/168) [`b2d05be`](https://github.com/alauda/doom/commit/b2d05be38b306cf8aca989dd35098b8221e3ad60) Thanks [@JounQin](https://github.com/JounQin)! - fix: throw on jira request errors
+
 ## 1.12.3
 
 ### Patch Changes
