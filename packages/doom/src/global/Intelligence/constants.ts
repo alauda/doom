@@ -1,5 +1,3 @@
-import { isProduction } from '@rspress/shared'
-
 import type { CloudAuthRegion } from './types.js'
 
 export const CLOUD_AUTH_ORIGIN_KEY = '__CLOUD_AUTH_ORIGIN__'
@@ -15,13 +13,6 @@ const CLOUD_AUTH_ORIGINS: CloudAuthRegion[] = [
     value: 'https://cloud.alauda.cn',
   },
 ]
-
-if (!isProduction()) {
-  CLOUD_AUTH_ORIGINS.unshift({
-    name: 'local',
-    value: '',
-  })
-}
 
 export const CLOUD_AUTH_ORIGIN_VALUES = CLOUD_AUTH_ORIGINS.map(
   ({ value }) => value,
