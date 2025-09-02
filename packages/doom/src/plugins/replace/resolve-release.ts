@@ -1,4 +1,5 @@
 import { logger } from '@rspress/core'
+import { isProduction } from '@rspress/shared'
 import { render } from 'ejs'
 import type {
   List,
@@ -11,7 +12,6 @@ import { ResponseError, xfetch } from 'x-fetch'
 import { cyan, red } from 'yoctocolors'
 
 import type { JiraIssue, JiraLanguage } from './types.js'
-import { isCI } from './utils.js'
 
 const releaseCache = new Map<
   string,
@@ -106,7 +106,7 @@ const resolveRelease_ = async (
     }
     warned = true
     const message = `\`${cyan('JIRA_USERNAME')}\` and \`${cyan('JIRA_PASSWORD')}\` environments must be set for fetching Jira issues`
-    if (isCI) {
+    if (isProduction()) {
       throw new Error(message)
     }
     logger.warn(message)
@@ -124,7 +124,9 @@ const resolveRelease_ = async (
 
   const jql = await render(template, data, { async: true })
 
-  logger.info(`Fetching release notes for query \`${cyan(releaseQuery)}\``)
+  logger.info(
+    `Fetching release notes for query \`${cyan(releaseQuery)}\`, JQL: \`${cyan(jql)}\``,
+  )
 
   let issues: JiraIssue[]
 
@@ -139,6 +141,9 @@ const resolveRelease_ = async (
       logger.error(
         `Failed to fetch release notes for query \`${red(releaseQuery)}\` with status \`${error.response.status}\` and ${error.data ? `data ${JSON.stringify(error.data, null, 2)}` : `message \`${error.message}\``}`,
       )
+    }
+    if (isProduction()) {
+      throw err
     }
     return
   }
