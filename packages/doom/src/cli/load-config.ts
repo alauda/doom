@@ -14,7 +14,6 @@ import { pluginSitemap } from '@rspress/plugin-sitemap'
 import {
   addLeadingSlash,
   addTrailingSlash,
-  normalizeSlash,
   removeLeadingSlash,
   type LocaleConfig,
 } from '@rspress/shared'
@@ -46,6 +45,7 @@ import {
 } from '../plugins/index.js'
 import {
   isExplicitlyUnversioned,
+  normalizeSlash,
   UNVERSIONED,
   type DoomSite,
 } from '../shared/index.js'
