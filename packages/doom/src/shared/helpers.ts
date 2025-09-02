@@ -1,5 +1,9 @@
 import type { NavItemWithLink } from '@rspress/core'
-import { addLeadingSlash, normalizeSlash } from '@rspress/shared'
+import {
+  addLeadingSlash,
+  normalizePosixPath,
+  removeTrailingSlash,
+} from '@rspress/shared'
 
 import { UNVERSIONED, UNVERSIONED_PREFIX } from './constants.ts'
 import type { UnversionedVersion } from './types.ts'
@@ -41,6 +45,9 @@ export const extractTextAndId = (title: string) => {
     customId,
   ]
 }
+
+export const normalizeSlash = (url: string) =>
+  removeTrailingSlash(addLeadingSlash(normalizePosixPath(url)))
 
 export const withoutBase = (path: string, base: string) =>
   addLeadingSlash(path).replace(normalizeSlash(base), '')
