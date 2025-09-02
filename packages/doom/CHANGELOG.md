@@ -1,5 +1,13 @@
 # @alauda/doom
 
+## 1.12.5
+
+### Patch Changes
+
+- [#172](https://github.com/alauda/doom/pull/172) [`d23382f`](https://github.com/alauda/doom/commit/d23382fc99b5951e56469fe618148c4a411d6ebc) Thanks [@JounQin](https://github.com/JounQin)! - chore(deps): bump rspress to v2.0.0-beta.30
+
+- [#170](https://github.com/alauda/doom/pull/170) [`cce9a6a`](https://github.com/alauda/doom/commit/cce9a6a8f273224b9d34e8db3cb5972e0769f5b2) Thanks [@JounQin](https://github.com/JounQin)! - feat: add Authorization header support
+
 ## 1.12.4
 
 ### Patch Changes
