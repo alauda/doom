@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.12.6
+
+### Patch Changes
+
+- [#173](https://github.com/alauda/doom/pull/173) [`2a05a10`](https://github.com/alauda/doom/commit/2a05a106b0e39ddf15fa163376a43fef3ebcfa82) Thanks [@JounQin](https://github.com/JounQin)! - fix: lock openai version temporarily
+
 ## 1.12.5
 
 ### Patch Changes
