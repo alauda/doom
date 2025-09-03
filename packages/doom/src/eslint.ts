@@ -6,6 +6,7 @@ import cspellRecommended from '@cspell/eslint-plugin/recommended'
 import js from '@eslint/js'
 import react from '@eslint-react/eslint-plugin'
 import { merge } from 'es-toolkit/compat'
+import { defineConfig } from 'eslint/config'
 import * as mdx from 'eslint-plugin-mdx'
 import globals from 'globals'
 import tseslint from 'typescript-eslint'
@@ -42,7 +43,7 @@ async function doom(
 
   const cspellEnabled = cspellOptions !== null
 
-  return tseslint.config([
+  return defineConfig([
     {
       ignores: ['**/.yarn', '**/dist', '**/lib', '**/node_modules'],
     },
