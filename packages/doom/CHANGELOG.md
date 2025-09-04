@@ -1,5 +1,13 @@
 # @alauda/doom
 
+## 1.12.7
+
+### Patch Changes
+
+- [#176](https://github.com/alauda/doom/pull/176) [`a150af9`](https://github.com/alauda/doom/commit/a150af938ca21ebdc54c7b8661535997f256217f) Thanks [@JounQin](https://github.com/JounQin)! - chore(deps): bump `openai` for `api-key` header compatibility support
+
+- [#176](https://github.com/alauda/doom/pull/176) [`a150af9`](https://github.com/alauda/doom/commit/a150af938ca21ebdc54c7b8661535997f256217f) Thanks [@JounQin](https://github.com/JounQin)! - fix: incorrect login state check
+
 ## 1.12.6
 
 ### Patch Changes
