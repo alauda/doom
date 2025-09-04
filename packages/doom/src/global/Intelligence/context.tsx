@@ -19,7 +19,7 @@ export const CloudAuthContext = createContext<CloudAuthContext>(null!)
 
 export const useCloudAuth = () => use(CloudAuthContext)
 
-const getCloudAuth = (): CloudAuth | null => {
+export const getCloudAuth = (): CloudAuth | null => {
   const origin = localStorage.getItem(CLOUD_AUTH_ORIGIN_KEY)
   const token = localStorage.getItem(CLOUD_AUTH_TOKEN_KEY)
 

@@ -9,7 +9,7 @@ import {
   type ApiInterceptor,
 } from 'x-fetch'
 
-import { type CloudAuth, useCloudAuth } from '../context.tsx'
+import { type CloudAuth, getCloudAuth, useCloudAuth } from '../context.tsx'
 import type { AuthInfo } from '../types.ts'
 
 import { Chat } from './Chat/index.tsx'
@@ -187,7 +187,7 @@ export const AIAssistant = ({ open, onOpenChange }: AIAssistantProps) => {
     try {
       await onSend_(content)
     } catch {
-      if (!sessionIdRef.current) {
+      if (!isLoggedIn(getCloudAuth())) {
         return
       }
       flushMessages((messages) => {
