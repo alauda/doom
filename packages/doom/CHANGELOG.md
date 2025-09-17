@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.13.0
+
+### Minor Changes
+
+- [#178](https://github.com/alauda/doom/pull/178) [`ba7a139`](https://github.com/alauda/doom/commit/ba7a139efaca094302897a8030f9513ac3610934) Thanks [@JounQin](https://github.com/JounQin)! - feat: support fixed language for edit repo
+
 ## 1.12.7
 
 ### Patch Changes
