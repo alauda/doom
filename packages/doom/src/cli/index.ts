@@ -96,8 +96,8 @@ program
     'only-default-lang',
   )
   .option(
-    '-R, --edit-repo [boolean|url]',
-    'Whether to enable or override the `editRepoBaseUrl` config feature, `https://github.com/` prefix could be omitted',
+    '-R, --edit-repo [boolean|url|lang]',
+    'Whether to enable or override the `editRepoBaseUrl` config feature, `https://github.com/` prefix could be omitted; if a language code is provided, all other languages will use the same repo but with the language code as sub-path',
     parseBooleanOrString,
     false,
   )

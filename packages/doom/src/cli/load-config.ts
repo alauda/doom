@@ -168,7 +168,14 @@ const getCommonConfig = async ({
   const editRepoEnabled = !!editRepo
 
   if (typeof editRepo === 'string') {
-    editRepoBaseUrl = editRepo
+    if (editRepo.includes('/')) {
+      editRepoBaseUrl = editRepo
+    } else if (editRepoBaseUrl) {
+      editRepoBaseUrl = addTrailingSlash(editRepoBaseUrl)
+      if (!editRepoBaseUrl.endsWith(`/${editRepo}/`)) {
+        editRepoBaseUrl += editRepo
+      }
+    }
   }
 
   if (editRepoEnabled) {
