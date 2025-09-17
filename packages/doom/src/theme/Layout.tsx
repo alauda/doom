@@ -1,29 +1,20 @@
 import { useLang, useSite, withBase } from '@rspress/core/runtime'
 import {
-  Search as OriginalSearch,
   Layout as OriginalLayout,
   getCustomMDXComponent,
 } from '@rspress/core/theme'
-import {
-  Search as AlgoliaSearch,
-  ZH_LOCALES,
-} from '@rspress/plugin-algolia/runtime'
 import virtual from 'doom-@global-virtual'
 import { useMemo } from 'react'
 import { useLocation } from 'react-router'
 
-import classes from '../styles/link.module.scss'
-
+import classes from '../../styles/link.module.scss'
 import type {
   DoomSidebar,
   DoomSidebarGroup,
   DoomSidebarItem,
-} from './plugins/index.js'
-import { useTranslation } from './runtime/index.js'
-import type { ExportItem } from './types.js'
-
-// eslint-disable-next-line import-x/export
-export * from '@rspress/core/theme'
+} from '../plugins/index.ts'
+import { useTranslation } from '../runtime/index.ts'
+import type { ExportItem } from '../types.ts'
 
 const X = getCustomMDXComponent()
 
@@ -99,7 +90,6 @@ const getClosestSidebar = (sidebarItems: DoomSidebar[], pathname: string) => {
   return found
 }
 
-// eslint-disable-next-line import-x/export
 export const Layout = () => {
   const {
     site: { lang: siteLang, themeConfig },
@@ -162,27 +152,3 @@ export const Layout = () => {
     />
   )
 }
-
-// eslint-disable-next-line import-x/export
-export const Search =
-  process.env.ALGOLIA_APP_ID &&
-  process.env.ALGOLIA_API_KEY &&
-  process.env.ALGOLIA_INDEX_NAME
-    ? () => {
-        const lang = useLang()
-        const docSearchProps = useMemo(
-          () => ({
-            appId: process.env.ALGOLIA_APP_ID!,
-            apiKey: process.env.ALGOLIA_API_KEY!,
-            indexName: process.env.ALGOLIA_INDEX_NAME!,
-            searchParameters: {
-              facetFilters: [`lang:${lang}`],
-            },
-          }),
-          [lang],
-        )
-        return (
-          <AlgoliaSearch docSearchProps={docSearchProps} locales={ZH_LOCALES} />
-        )
-      }
-    : OriginalSearch

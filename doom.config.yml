@@ -25,7 +25,7 @@ reference:
         path: docs/zh/usage/configuration.md#reference
 sidebar:
   collapsed: false
-editRepoBaseUrl: alauda/doom/tree/main/docs
+editRepoBaseUrl: alauda/doom/blob/main/docs
 algolia:
   appId: USO7A9NBAD
   apiKey: 44896d7bbb41e9c1e807699d1dbb7cee
