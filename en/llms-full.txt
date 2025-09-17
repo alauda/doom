@@ -270,7 +270,7 @@ Finally, create a `global.d.ts` file with the following content:
 /// <reference types="@alauda/doom/runtime" />
 ```
 
-This allows you to safely use the global components provided by doom in `.mdx` files with type safety.
+This allows you to use doom's global components in `.mdx` files with type safety.
 
 ## CLI Tool \{#cli}
 
@@ -283,36 +283,36 @@ Usage: doom [options] [command]
 Doctor Doom making docs.
 
 Options:
-  -V, --version                   output the version number
-  -c, --config <config>           Specify the path to the config file
-  -v <version>                    Specify the version of the documentation, can also be `unversioned` or `unversioned-x.y`
-  -b, --base <base>               Override the base of the documentation
-  -p, --prefix <prefix>           Specify the prefix of the documentation base
-  -f, --force [boolean]           Force to
-                                  1. fetch latest reference remotes or scaffolding templates, otherwise use local cache
-                                  2. translate ignore hash equality check and original text (default: false)
-  -i, --ignore [boolean]          Ignore internal routes (default: false)
-  -d, --download [boolean]        Display download pdf link on nav bar (default: false)
-  -e, --export [boolean]          Run or build in exporting PDF mode, `apis/**` and `*/apis/**` routes will be ignored automatically (default: false)
-  -I, --include <language...>     Include **only** the specific language(s), `en ru` for example
-  -E, --exclude <language...>     Include all languages except the specific language(s), `ru` for example
-  -o, --out-dir <path>            Override the `outDir` defined in the config file or the default `dist/{base}/{version}`, the resulting path will be `dist/{outDir}/{version}`
-  -r, --redirect <enum>           Whether to redirect to the locale closest to `navigator.language` when the user visits the site, could be `auto`, `never` or `only-default-lang` (default: "only-default-lang")
-  -R, --edit-repo [boolean|url]   Whether to enable or override the `editRepoBaseUrl` config feature, `https://github.com/` prefix could be omitted (default: false)
-  -a, --algolia [boolean|alauda]  Whether to enable or use the alauda (docs.alauda.io) preset for Algolia search (default: false)
-  -S, --site-url                  Whether to enable the siteUrl for sitemap generation (default: false)
-  -n, --no-open                   Do not open the browser after starting the server
-  -h, --help                      display help for command
+  -V, --version                       output the version number
+  -c, --config <config>               Specify the path to the config file
+  -v <version>                        Specify the version of the documentation, can also be `unversioned` or `unversioned-x.y`
+  -b, --base <base>                   Override the base of the documentation
+  -p, --prefix <prefix>               Specify the prefix of the documentation base
+  -f, --force [boolean]               Force to
+                                      1. fetch latest reference remotes or scaffolding templates, otherwise use local cache
+                                      2. translate ignore hash equality check and original text (default: false)
+  -i, --ignore [boolean]              Ignore internal routes (default: false)
+  -d, --download [boolean]            Display download pdf link on nav bar (default: false)
+  -e, --export [boolean]              Run or build in exporting PDF mode, `apis/**` and `*/apis/**` routes will be ignored automatically (default: false)
+  -I, --include <language...>         Include **only** the specific language(s), `en ru` for example
+  -E, --exclude <language...>         Include all languages except the specific language(s), `ru` for example
+  -o, --out-dir <path>                Override the `outDir` defined in the config file or the default `dist/{base}/{version}`, the resulting path will be `dist/{outDir}/{version}`
+  -r, --redirect <enum>               Whether to redirect to the locale closest to `navigator.language` when the user visits the site, could be `auto`, `never` or `only-default-lang` (default: "only-default-lang")
+  -R, --edit-repo [boolean|url|lang]  Whether to enable or override the `editRepoBaseUrl` config feature, `https://github.com/` prefix could be omitted; if a language code is provided, all other languages will use the same repo but with the language code as sub-path (default: false)
+  -a, --algolia [boolean|alauda]      Whether to enable or use the alauda (docs.alauda.io) preset for Algolia search (default: false)
+  -S, --site-url                      Whether to enable the siteUrl for sitemap generation (default: false)
+  -n, --no-open                       Do not open the browser after starting the server
+  -h, --help                          display help for command
 
 Commands:
-  dev [options] [root]            Start the development server
-  build [root]                    Build the documentation
-  preview|serve [options] [root]  Preview the built documentation
-  new [template]                  Generate scaffolding from templates
-  translate [options] [root]      Translate the documentation
-  export [options] [root]         Export the documentation as PDF, `apis/**` and `*/apis/**` routes will be ignored automatically
-  lint [root]                     Lint the documentation
-  help [command]                  display help for command
+  dev [options] [root]                Start the development server
+  build [root]                        Build the documentation
+  preview|serve [options] [root]      Preview the built documentation
+  new [template]                      Generate scaffolding from templates
+  translate [options] [root]          Translate the documentation
+  export [options] [root]             Export the documentation as PDF, `apis/**` and `*/apis/**` routes will be ignored automatically
+  lint [options] [root]               Lint the documentation
+  help [command]                      display help for command
 ```
 
 For more configuration, please refer to [Configuration](./usage/configuration)
@@ -350,7 +350,7 @@ Run `yarn serve` to preview the built static files. Note that if you used `-b` o
 
 ### Using Scaffolding Templates \{#new}
 
-Run `yarn new` to generate projects, modules, or documentation from scaffolding templates.
+Run `yarn new` to generate projects, modules, or documentation using scaffolding templates.
 
 ### Translating Documentation \{#translate}
 
@@ -373,24 +373,24 @@ Options:
   -h, --help               display help for command
 ```
 
-- The `-g, --glob` parameter is required. You can specify the directories or paths of files to translate, supporting `glob` syntax. Note that the parameter value must be quoted to avoid unexpected behavior from the command line parser. Examples:
+- The `-g, --glob` parameter is required. You can specify the directories or files to translate, supporting `glob` syntax. Note that the parameter value must be quoted to avoid unexpected behavior caused by command line parsing. Examples:
   1. `yarn translate -g abc xyz` will translate all documents under `<root>/<source>/abc` and `<root>/<source>/xyz` to `<root>/<target>/abc` and `<root>/<target>/xyz` respectively.
-  2. `yarn translate -g '*'` will translate all document files under `<root>/<source>`.
-- The `-C, --copy` parameter is optional. It controls whether to copy local asset files to the target directory when the target file does not exist. The default is `false`, which means changing the asset reference path to the source path. Examples:
-  - When this parameter is enabled:
+  2. `yarn translate -g '*'` will translate all documents under `<root>/<source>`.
+- The `-C, --copy` parameter is optional. It controls whether to copy local resource files to the target directory when the target file does not exist. The default is `false`, which means changing the resource file reference path to the source path. Examples:
+  - When enabled:
     1. When translating `/<source>/abc.jpg`, it will copy `<root>/public/<source>/abc.jpg` to `<root>/public/<target>/abc.jpg` and modify the reference path in the document to `/<target>/abc.jpg`.
-    2. For `<root>/<source>/abc.mdx` documents, references like `./assets/xyz.jpg` will copy `<root>/<source>/assets/xyz.jpg` to `<root>/<target>/assets/xyz.jpg`, and the image reference path remains unchanged.
-    3. For `<root>/<source>/abc.mdx` documents, references like `./assets/<source>/xyz.jpg` will copy `<root>/<source>/assets/<source>/xyz.jpg` to `<root>/<target>/assets/<target>/xyz.jpg` and modify the reference path in the document to `./assets/<target>/xyz.jpg`.
-  - When this parameter is not enabled:
+    2. In `<root>/<source>/abc.mdx`, when translating `./assets/xyz.jpg`, it will copy `<root>/<source>/assets/xyz.jpg` to `<root>/<target>/assets/xyz.jpg`, and the image reference path remains unchanged.
+    3. In `<root>/<source>/abc.mdx`, when translating `./assets/<source>/xyz.jpg`, it will copy `<root>/<source>/assets/<source>/xyz.jpg` to `<root>/<target>/assets/<target>/xyz.jpg` and modify the reference path in the document to `./assets/<target>/xyz.jpg`.
+  - When not enabled:
     1. When translating `/<source>/abc.jpg`, if `<root>/public/<target>/abc.jpg` exists, the reference path in the document will be changed to `/<target>/abc.jpg`; otherwise, the image reference path remains unchanged.
-    2. For `<root>/<source>/abc.mdx` documents, references like `./assets/<source>/xyz.jpg`, if `<root>/<target>/assets/<target>/xyz.jpg` exists, the reference path will be changed to `./assets/<target>/xyz.jpg`; otherwise, it will be changed to `../<source>/assets/<target>/xyz.jpg`.
+    2. In `<root>/<source>/abc.mdx`, when translating `./assets/<source>/xyz.jpg`, if `<root>/<target>/assets/<target>/xyz.jpg` exists, the reference path will be changed to `./assets/<target>/xyz.jpg`; otherwise, it will be changed to `../<source>/assets/<target>/xyz.jpg`.
 
 :::warning
-Specifically, if you use `-g '*'` for full translation, the file lists of `source` and `target` directories will be compared, and unmatched `target` files except for `internalRoutes` will be automatically deleted.
+Specially, if you use `-g '*'` for full translation, the file lists of `source` and `target` directories will be compared, and unmatched `target` files except for `internalRoutes` will be automatically deleted.
 :::
 
 :::tip
-The translation feature requires the local environment variable `AZURE_OPENAI_API_KEY` to be configured. Please contact your team leader to obtain it.
+The translation feature requires configuring the `AZURE_OPENAI_API_KEY` environment variable locally. Please contact your team leader to obtain it.
 :::
 
 You can control translation behavior in the document metadata:
@@ -409,7 +409,7 @@ For more configuration, please refer to [Translation Configuration](./usage/conf
 ### Exporting PDF \{#export}
 
 :::warning
-Please run the `yarn build` command before performing the export operation.
+Please run the `yarn build` command before exporting.
 :::
 
 ```sh
@@ -429,7 +429,7 @@ Options:
   -h, --help         display help for command
 ```
 
-Run `yarn export` to export the documentation as a PDF file. Note that if you used `-b` or `-p` parameters during build, you need to use the same `-b` and `-p` parameters during export.
+Run `yarn export` to export the documentation as PDF files. Note that if you used `-b` or `-p` parameters during build, you need to use the same `-b` and `-p` parameters during export.
 
 The export feature depends on [`playwright`](https://playwright.dev). For CI pipelines, please use `build-harbor.alauda.cn/frontend/playwright-runner:doom` as the base image for dependency installation and documentation build. Locally, you can set the following environment variable to speed up downloads:
 
@@ -437,7 +437,7 @@ The export feature depends on [`playwright`](https://playwright.dev). For CI pip
 PLAYWRIGHT_DOWNLOAD_HOST="https://cdn.npmmirror.com/binaries/playwright"
 ```
 
-Besides exporting a full-site unified PDF document, `doom` also supports exporting a single PDF file by specifying an entry point. For more configuration, please refer to [Document Export Configuration](./usage/configuration#export)
+Besides exporting a complete PDF for the entire site, `doom` also supports exporting a single PDF file for a specified entry. For more configuration, please refer to [Documentation Export Configuration](./usage/configuration#export)
 
 ### Documentation Linting \{#lint}
 
@@ -458,7 +458,7 @@ Options:
   -h, --help            display help for command
 ```
 
-`doom lint` is based on [`ESLint`](https://eslint.org/) and [`cspell`](https://cspell.org/). For a better experience in editors, you can install the corresponding plugins [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) / [CSpell](https://marketplace.visualstudio.com/items?itemName=streetsidesoftware.code-spell-checker), then create the corresponding configuration files:
+`doom lint` is based on [`ESLint`](https://eslint.org/) and [`cspell`](https://cspell.org/). For a better experience in your editor, you can install the corresponding plugins [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) / [CSpell](https://marketplace.visualstudio.com/items?itemName=streetsidesoftware.code-spell-checker), then create the corresponding configuration files:
 
 - `eslint.config.mjs`:
 
@@ -474,7 +474,7 @@ Options:
   export { default } from '@alauda/doom/cspell'
   ```
 
-We also agree that the `.cspell` folder in the current working directory (`CWD`) is used to store CSpell dictionary files. For example, you can create `.cspell/k8s.txt`:
+We also agree that the `.cspell` folder under the current working directory (`CWD`) is used to store CSpell dictionary files. For example, you can create `.cspell/k8s.txt`:
 
 ```txt
 k8s

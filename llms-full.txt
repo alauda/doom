@@ -268,36 +268,36 @@ Usage: doom [options] [command]
 Doctor Doom making docs.
 
 Options:
-  -V, --version                   output the version number
-  -c, --config <config>           Specify the path to the config file
-  -v <version>                    Specify the version of the documentation, can also be `unversioned` or `unversioned-x.y`
-  -b, --base <base>               Override the base of the documentation
-  -p, --prefix <prefix>           Specify the prefix of the documentation base
-  -f, --force [boolean]           Force to
-                                  1. fetch latest reference remotes or scaffolding templates, otherwise use local cache
-                                  2. translate ignore hash equality check and original text (default: false)
-  -i, --ignore [boolean]          Ignore internal routes (default: false)
-  -d, --download [boolean]        Display download pdf link on nav bar (default: false)
-  -e, --export [boolean]          Run or build in exporting PDF mode, `apis/**` and `*/apis/**` routes will be ignored automatically (default: false)
-  -I, --include <language...>     Include **only** the specific language(s), `en ru` for example
-  -E, --exclude <language...>     Include all languages except the specific language(s), `ru` for example
-  -o, --out-dir <path>            Override the `outDir` defined in the config file or the default `dist/{base}/{version}`, the resulting path will be `dist/{outDir}/{version}`
-  -r, --redirect <enum>           Whether to redirect to the locale closest to `navigator.language` when the user visits the site, could be `auto`, `never` or `only-default-lang` (default: "only-default-lang")
-  -R, --edit-repo [boolean|url]   Whether to enable or override the `editRepoBaseUrl` config feature, `https://github.com/` prefix could be omitted (default: false)
-  -a, --algolia [boolean|alauda]  Whether to enable or use the alauda (docs.alauda.io) preset for Algolia search (default: false)
-  -S, --site-url                  Whether to enable the siteUrl for sitemap generation (default: false)
-  -n, --no-open                   Do not open the browser after starting the server
-  -h, --help                      display help for command
+  -V, --version                       output the version number
+  -c, --config <config>               Specify the path to the config file
+  -v <version>                        Specify the version of the documentation, can also be `unversioned` or `unversioned-x.y`
+  -b, --base <base>                   Override the base of the documentation
+  -p, --prefix <prefix>               Specify the prefix of the documentation base
+  -f, --force [boolean]               Force to
+                                      1. fetch latest reference remotes or scaffolding templates, otherwise use local cache
+                                      2. translate ignore hash equality check and original text (default: false)
+  -i, --ignore [boolean]              Ignore internal routes (default: false)
+  -d, --download [boolean]            Display download pdf link on nav bar (default: false)
+  -e, --export [boolean]              Run or build in exporting PDF mode, `apis/**` and `*/apis/**` routes will be ignored automatically (default: false)
+  -I, --include <language...>         Include **only** the specific language(s), `en ru` for example
+  -E, --exclude <language...>         Include all languages except the specific language(s), `ru` for example
+  -o, --out-dir <path>                Override the `outDir` defined in the config file or the default `dist/{base}/{version}`, the resulting path will be `dist/{outDir}/{version}`
+  -r, --redirect <enum>               Whether to redirect to the locale closest to `navigator.language` when the user visits the site, could be `auto`, `never` or `only-default-lang` (default: "only-default-lang")
+  -R, --edit-repo [boolean|url|lang]  Whether to enable or override the `editRepoBaseUrl` config feature, `https://github.com/` prefix could be omitted; if a language code is provided, all other languages will use the same repo but with the language code as sub-path (default: false)
+  -a, --algolia [boolean|alauda]      Whether to enable or use the alauda (docs.alauda.io) preset for Algolia search (default: false)
+  -S, --site-url                      Whether to enable the siteUrl for sitemap generation (default: false)
+  -n, --no-open                       Do not open the browser after starting the server
+  -h, --help                          display help for command
 
 Commands:
-  dev [options] [root]            Start the development server
-  build [root]                    Build the documentation
-  preview|serve [options] [root]  Preview the built documentation
-  new [template]                  Generate scaffolding from templates
-  translate [options] [root]      Translate the documentation
-  export [options] [root]         Export the documentation as PDF, `apis/**` and `*/apis/**` routes will be ignored automatically
-  lint [root]                     Lint the documentation
-  help [command]                  display help for command
+  dev [options] [root]                Start the development server
+  build [root]                        Build the documentation
+  preview|serve [options] [root]      Preview the built documentation
+  new [template]                      Generate scaffolding from templates
+  translate [options] [root]          Translate the documentation
+  export [options] [root]             Export the documentation as PDF, `apis/**` and `*/apis/**` routes will be ignored automatically
+  lint [options] [root]               Lint the documentation
+  help [command]                      display help for command
 ```
 
 更多配置请参考[配置](./usage/configuration)
