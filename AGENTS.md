@@ -9,13 +9,16 @@ This monorepo contains the Doom documentation tool, export functionality, and re
 
 ## Commands
 
-- **Build**: `yarn build` (all packages) | `yarn build:all` (workspace packages)
-- **Clean**: `yarn clean` (main build) | `yarn clean:all` (all workspace packages)
-- **Lint**: `yarn lint` (main project) | `yarn lint:all` (all workspace packages)
-- **Format**: `yarn format` (format code)
-- **Dev**: `yarn dev` (development mode)
+- **Build**: `yarn build` (clean and compile TypeScript)
+- **Clean**: `yarn clean` (clean TypeScript build artifacts)
+- **Dev**: `yarn dev` (development mode with file watching)
 - **Docs**: `yarn docs` (build and export docs) | `yarn docs:build` | `yarn docs:export`
-- **Workspace**: `yarn workspace:info` (list packages) | `yarn workspace @alauda/doom <command>`
+- **Format**: `yarn format` (format code with Prettier)
+- **Lint**: `yarn lint` (ESLint check)
+- **Serve**: `yarn serve` (serve built documentation)
+- **Test**: `yarn typecov` (type coverage check)
+- **Release**: `yarn release` (build and publish packages)
+- **Workspace**: `yarn workspaces list` (list packages) | `yarn workspace <name> <command>`
 
 ## Code style
 
@@ -31,7 +34,7 @@ This monorepo contains the Doom documentation tool, export functionality, and re
   - `packages/export/`: Document export functionality
   - `docs/`: Project documentation
   - `fixture-docs/`: Test documentation
-- **Testing**: Currently uses existing build validation
+- **Testing**: Type coverage validation (`yarn typecov`)
 - **Configuration**:
   - `doom.config.yml`: Main configuration
   - `tsconfig.json`: TypeScript configuration
