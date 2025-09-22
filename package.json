@@ -12,7 +12,7 @@
   ],
   "packageManager": "yarn@4.9.4",
   "scripts": {
-    "build": "tsc -b",
+    "build": "yarn clean && tsc -b",
     "clean": "tsc -b --clean",
     "dev": "yarn swc-node --watch-path packages/doom/src/cli --watch-path packages/doom/src/plugins packages/doom/src/cli/index.ts",
     "docs": "run-s docs:build docs:export",
