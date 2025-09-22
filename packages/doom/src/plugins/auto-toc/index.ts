@@ -1,6 +1,6 @@
 import type { RspressPlugin } from '@rspress/core'
 
-import { remarkAutoToc } from './remark-auto-toc.js'
+import { remarkAutoToc } from './remark-auto-toc.ts'
 
 export const autoTocPlugin = (): RspressPlugin => {
   return {

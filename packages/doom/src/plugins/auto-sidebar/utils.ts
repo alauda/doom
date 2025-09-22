@@ -5,10 +5,10 @@ import { logger } from '@rspress/core'
 import type { NavItem } from '@rspress/shared'
 import { loadFrontMatter } from '@rspress/shared/node-utils'
 
-import { extractTextAndId } from '../../shared/index.js'
-import { pathExists } from '../../utils/index.js'
+import { extractTextAndId } from '../../shared/index.ts'
+import { pathExists } from '../../utils/index.ts'
 
-import type { DoomSidebar } from './walk.js'
+import type { DoomSidebar } from './walk.ts'
 
 export async function detectFilePath(rawPath: string, extensions: string[]) {
   // The params doesn't have extension name, so we need to try to find the file with the extension name.

@@ -7,8 +7,8 @@ import type {
   PermissionPluginOptions,
   ReferenceItem,
   ReleaseNotesOptions,
-} from './plugins/index.js'
-import type { DoomSite } from './shared/index.js'
+} from './plugins/index.ts'
+import type { DoomSite } from './shared/index.ts'
 
 export type BaseServeOptions = Parameters<typeof serve>[0]
 

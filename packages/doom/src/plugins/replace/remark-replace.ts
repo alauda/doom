@@ -10,11 +10,11 @@ import type { Plugin } from 'unified'
 import { parse, stringify } from 'yaml'
 import { cyan, red } from 'yoctocolors'
 
-import { normalizeImgSrc } from './normalize-img-src.js'
-import { resolveReference } from './resolve-reference.js'
-import { resolveRelease } from './resolve-release.js'
-import type { NormalizedReferenceSource, ReleaseNotesOptions } from './types.js'
-import { getFrontmatterNode, isCI, mdProcessor, mdxProcessor } from './utils.js'
+import { normalizeImgSrc } from './normalize-img-src.ts'
+import { resolveReference } from './resolve-reference.ts'
+import { resolveRelease } from './resolve-release.ts'
+import type { NormalizedReferenceSource, ReleaseNotesOptions } from './types.ts'
+import { getFrontmatterNode, isCI, mdProcessor, mdxProcessor } from './utils.ts'
 
 const MD_REF_START_COMMENT_PATTERN = /<!-{2,} *reference-start#(.+) *-{2,}>/
 const MDX_REF_START_COMMENT_PATTERN = /\{\/\*+ *reference-start#(.+) *\*+\/\}/

@@ -1,6 +1,6 @@
 import type { RspressPlugin } from '@rspress/core'
 
-import { remarkAttributes } from './remark-attributes/index.js'
+import { remarkAttributes } from './remark-attributes/index.ts'
 
 export const attributesPlugin = (): RspressPlugin => {
   return {

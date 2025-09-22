@@ -12,6 +12,7 @@ import remarkLintNoDuplicateHeadingsInSection from 'remark-lint-no-duplicate-hea
 import remarkLintNoHiddenTableCell from 'remark-lint-no-hidden-table-cell'
 
 import doomLint, {
+  checkDeadLinks,
   noDeepHeading,
   noDeepList,
   noParagraphIndent,
@@ -31,6 +32,7 @@ export default {
     remarkLintNoDuplicateHeadingsInSection,
     remarkLintNoHiddenTableCell,
     doomLint,
+    checkDeadLinks,
     noDeepHeading,
     noDeepList,
     noParagraphIndent,

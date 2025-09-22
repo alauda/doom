@@ -1,15 +1,15 @@
 import type { RspressPlugin } from '@rspress/core'
 
-import type { K8sTypeList } from '../../shared/types.js'
-import { generateRuntimeModule } from '../../utils/index.js'
+import type { K8sTypeList } from '../../shared/types.ts'
+import { generateRuntimeModule } from '../../utils/index.ts'
 
 import type {
   FunctionResource,
   PermissionPluginOptions,
   RoleTemplate,
-} from './types.js'
+} from './types.ts'
 
-export type * from './types.js'
+export type * from './types.ts'
 
 // @internal
 declare module 'doom-@permission-functionResourcesMap' {

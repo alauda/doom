@@ -4,9 +4,9 @@ import path from 'node:path'
 import type { RspressPlugin } from '@rspress/core'
 import { addTrailingSlash } from '@rspress/shared'
 
-import { ACP_BASE, type DoomSite } from '../../shared/index.js'
-import type { ExportItem } from '../../types.js'
-import { baseResolve, pkgResolve } from '../../utils/index.js'
+import { ACP_BASE, type DoomSite } from '../../shared/index.ts'
+import type { ExportItem } from '../../types.ts'
+import { baseResolve, pkgResolve } from '../../utils/index.ts'
 
 const globalComponentsDir = baseResolve('global')
 const componentsDir = baseResolve('runtime/components')
