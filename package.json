@@ -13,7 +13,9 @@
   "packageManager": "yarn@4.9.4",
   "scripts": {
     "build": "yarn clean && tsc -b",
+    "build:all": "yarn workspaces foreach --all run build",
     "clean": "tsc -b --clean",
+    "clean:all": "yarn workspaces foreach --all run clean",
     "dev": "yarn swc-node --watch-path packages/doom/src/cli --watch-path packages/doom/src/plugins packages/doom/src/cli/index.ts",
     "docs": "run-s docs:build docs:export",
     "docs:build": "yarn doom build",
@@ -22,13 +24,16 @@
     "fixture": "yarn dev fixture-docs",
     "format": "prettier --write .",
     "lint": "eslint .",
+    "lint:all": "yarn workspaces foreach --all run lint",
     "prepare": "simple-git-hooks && patch-package && yarn-berry-deduplicate || exit 0",
     "release": "yarn build && changeset publish",
     "serve": "yarn doom serve",
     "swc-node": "node --enable-source-maps --import @swc-node/register/esm-register",
+    "test:all": "yarn workspaces foreach --all run test",
     "translate": "yarn doom translate -s zh -t en",
     "typecov": "type-coverage",
-    "version": "changeset version && yarn --no-immutable"
+    "version": "changeset version && yarn --no-immutable",
+    "workspace:info": "yarn workspaces list"
   },
   "devDependencies": {
     "@changesets/changelog-github": "^0.5.1",

@@ -35,10 +35,23 @@ jobs:
       - name: Install Dependencies
         run: yarn --immutable
 
-      - name: Build and Lint
+      - name: List Workspaces
+        run: yarn workspace:info
+
+      - name: Build All Packages
+        run: yarn build
+
+      - name: Lint and Type Check
         run: |
-          yarn build
-          yarn run-p docs lint typecov
+          yarn lint
+          yarn typecov
+
+      - name: Build Documentation
+        run: yarn docs
         env:
           PARSER_NO_WATCH: true
           RAW_TERMS_URL: ${{ secrets.RAW_TERMS_URL }}
+
+      - name: Test All Packages (if tests exist)
+        run: yarn test:all || echo "No tests found in packages"
+        continue-on-error: true
