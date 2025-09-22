@@ -1,14 +1,9 @@
 {
   "extends": "./tsconfig.base",
   "compilerOptions": {
-    "noEmit": true,
-    "paths": {
-      "@alauda/doom/config": ["./packages/doom/src/config.ts"],
-      "@alauda/doom/runtime": ["./packages/doom/src/runtime/index.ts"],
-      "@alauda/doom/theme": ["./packages/doom/src/theme/index.ts"],
-      "@alauda/doom-export": ["./packages/export/src/index.ts"]
-    }
+    "noEmit": true
   },
+  "files": [],
   "references": [
     {
       "path": "./packages/export"
@@ -16,8 +11,5 @@
     {
       "path": "./packages/doom"
     }
-  ],
-  "mdx": {
-    "checkMdx": true
-  }
+  ]
 }
