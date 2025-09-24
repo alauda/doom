@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.13.1
+
+### Patch Changes
+
+- [#182](https://github.com/alauda/doom/pull/182) [`71926d0`](https://github.com/alauda/doom/commit/71926d0e4363dd1405c15f779cd6c73d14583253) Thanks [@JounQin](https://github.com/JounQin)! - fix: ignore `internalRoutes` when `--ignore` enabled
+
 ## 1.13.0
 
 ### Minor Changes
