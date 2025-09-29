@@ -17,8 +17,6 @@ import { OPTIONS_FILE } from '../utils/index.ts'
 let config: UserConfig | undefined
 let configFilePath: string | undefined
 
-let pluginDriver: PluginDriver | undefined
-
 export const checkDeadLinks = lintRule<Root>(
   'doom-lint:check-dead-links',
   async (tree, vfile) => {
@@ -33,18 +31,15 @@ export const checkDeadLinks = lintRule<Root>(
       ;({ config, configFilePath } = await loadConfig(root, globalOptions))
     }
 
-    if (!pluginDriver) {
-      pluginDriver = await PluginDriver.create(
-        config,
-        configFilePath,
-        isProduction(),
-      )
-    }
-
     let routeService = RouteService.getInstance()
 
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!routeService) {
+      const pluginDriver = await PluginDriver.create(
+        config,
+        configFilePath,
+        isProduction(),
+      )
       routeService = await RouteService.create({
         config,
         scanDir: config.root!,
