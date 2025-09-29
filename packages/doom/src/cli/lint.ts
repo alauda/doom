@@ -1,3 +1,4 @@
+import fs from 'node:fs/promises'
 import path from 'node:path'
 
 import { logger } from '@rspress/core'
@@ -5,14 +6,16 @@ import { Command } from 'commander'
 import { ESLint } from 'eslint'
 import { cyan } from 'yoctocolors'
 
-import doom from '../eslint.js'
-import type { GlobalCliOptions } from '../types.js'
+import doom from '../eslint.ts'
+import type { GlobalCliOptions } from '../types.ts'
+import { OPTIONS_FILE, STORAGE_DIR } from '../utils/index.ts'
 
-import { loadConfig } from './load-config.js'
+import { loadConfig } from './load-config.ts'
 
 export interface LintCommandOptions {
   cspell?: boolean
   glob: string | string[]
+  debug?: boolean
 }
 
 export const lintCommand = new Command('lint')
@@ -24,10 +27,22 @@ export const lintCommand = new Command('lint')
     '**/*.{js,jsx,ts,tsx,md,mdx}',
   )
   .option('--no-cspell', 'Disable cspell linting')
+  .option('--debug', 'Show debug logs', false)
   .action(async function (root?: string) {
-    const { cspell, glob, ...globalOptions } = this.optsWithGlobals<
-      LintCommandOptions & GlobalCliOptions
-    >()
+    const {
+      cspell,
+      glob,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      debug,
+      ...globalOptions
+    } = this.optsWithGlobals<LintCommandOptions & GlobalCliOptions>()
+
+    await fs.mkdir(STORAGE_DIR, { recursive: true })
+
+    await fs.writeFile(
+      OPTIONS_FILE,
+      JSON.stringify({ root, globalOptions }, null, 2),
+    )
 
     const { config } = await loadConfig(root, globalOptions)
 

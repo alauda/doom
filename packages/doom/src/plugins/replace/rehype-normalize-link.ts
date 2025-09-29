@@ -4,7 +4,7 @@ import type { MdxJsxAttribute, MdxjsEsm } from 'mdast-util-mdx'
 import type { Plugin } from 'unified'
 import { visit } from 'unist-util-visit'
 
-import { getASTNodeImport } from '../shared.js'
+import { getASTNodeImport } from '../shared.ts'
 
 const getMdxSrcAttribute = (tempVar: string): MdxJsxAttribute => {
   return {

@@ -2,10 +2,10 @@ import type { Root } from 'mdast'
 import type { Extension as FromMarkdownExtension } from 'mdast-util-from-markdown'
 import type { Plugin } from 'unified'
 
-import { attributesTransformer } from './attributes-transformer.js'
-import { mdastAttributes } from './mdast-attributes.js'
-import { micromarkAttributes } from './micromark-attributes.js'
-import type { AttributesExtension } from './types.js'
+import { attributesTransformer } from './attributes-transformer.ts'
+import { mdastAttributes } from './mdast-attributes.ts'
+import { micromarkAttributes } from './micromark-attributes.ts'
+import type { AttributesExtension } from './types.ts'
 
 export interface AttributesData {
   micromarkExtensions?: AttributesExtension[]

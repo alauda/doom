@@ -4,10 +4,10 @@ import path from 'node:path'
 import { glob } from 'tinyglobby'
 import { parse } from 'yaml'
 
-import { JSON_EXTENSION, YAML_EXTENSIONS } from '../cli/constants.js'
-import type { StringMapper } from '../shared/types.js'
+import { JSON_EXTENSION, YAML_EXTENSIONS } from '../cli/constants.ts'
+import type { StringMapper } from '../shared/types.ts'
 
-import { BASE_DIR, PKG_DIR } from './constants.js'
+import { BASE_DIR, PKG_DIR } from './constants.ts'
 
 export const baseResolve = (...paths: string[]) =>
   path.resolve(BASE_DIR, ...paths)

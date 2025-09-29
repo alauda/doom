@@ -1,7 +1,7 @@
 import type { Root } from 'mdast'
 import type { Plugin } from 'unified'
 
-import { getASTNodeImport } from '../shared.js'
+import { getASTNodeImport } from '../shared.ts'
 
 export const remarkAutoToc: Plugin<[], Root> = function () {
   return (root) => {

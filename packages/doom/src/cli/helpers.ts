@@ -4,8 +4,8 @@ import { glob } from 'tinyglobby'
 import { xfetch } from 'x-fetch'
 import { parse } from 'yaml'
 
-import { FALSY_VALUES, TRUTHY_VALUES } from '../shared/index.js'
-import type { NormalizedTermItem } from '../terms.js'
+import { FALSY_VALUES, TRUTHY_VALUES } from '../shared/index.ts'
+import type { NormalizedTermItem } from '../terms.ts'
 
 export const parseBoolean = (value?: string) =>
   value === undefined || !FALSY_VALUES.has(value)

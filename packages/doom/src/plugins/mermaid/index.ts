@@ -1,6 +1,6 @@
 import type { RspressPlugin } from '@rspress/core'
 
-import { remarkMermaid } from './remark-mermaid.js'
+import { remarkMermaid } from './remark-mermaid.ts'
 
 export const mermaidPlugin = (): RspressPlugin => {
   return {

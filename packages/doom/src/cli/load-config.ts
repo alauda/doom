@@ -31,7 +31,7 @@ import { difference } from 'es-toolkit'
 import { glob } from 'tinyglobby'
 import { cyan } from 'yoctocolors'
 
-import { attributesPlugin } from '../plugins/attributes/index.js'
+import { attributesPlugin } from '../plugins/attributes/index.ts'
 import {
   apiPlugin,
   autoSidebarPlugin,
@@ -42,15 +42,15 @@ import {
   mermaidPlugin,
   permissionPlugin,
   replacePlugin,
-} from '../plugins/index.js'
+} from '../plugins/index.ts'
 import {
   isExplicitlyUnversioned,
   normalizeSlash,
   UNVERSIONED,
   type DoomSite,
-} from '../shared/index.js'
-import type { AlgoliaOptions, ExportItem, GlobalCliOptions } from '../types.js'
-import { pathExists, pkgResolve, resolveStaticConfig } from '../utils/index.js'
+} from '../shared/index.ts'
+import type { AlgoliaOptions, ExportItem, GlobalCliOptions } from '../types.ts'
+import { pathExists, pkgResolve, resolveStaticConfig } from '../utils/index.ts'
 
 import {
   DEFAULT_CONFIG_NAME,
@@ -58,8 +58,8 @@ import {
   I18N_FILE,
   SITES_FILE,
   YAML_EXTENSIONS,
-} from './constants.js'
-import { defaultGitHubUrl, isDoc } from './helpers.js'
+} from './constants.ts'
+import { defaultGitHubUrl, isDoc } from './helpers.ts'
 
 const DEFAULT_LOGO = '/logo.svg'
 

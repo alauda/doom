@@ -3,19 +3,19 @@ import fs from 'node:fs/promises'
 import type { RspressPlugin, UserConfig } from '@rspress/core'
 import { logger } from '@rspress/core'
 
-import { rehypeNormalizeLink } from './rehype-normalize-link.js'
-import { remarkExplicitJsx } from './remark-explicit-jsx.js'
+import { rehypeNormalizeLink } from './rehype-normalize-link.ts'
+import { remarkExplicitJsx } from './remark-explicit-jsx.ts'
 import {
   MD_RELEASE_COMMENT_PATTERN,
   MDX_RELEASE_COMMENT_PATTERN,
   remarkReplace,
-} from './remark-replace.js'
-import type { NormalizedReferenceSource } from './types.js'
-import { mdProcessor, mdxProcessor, normalizeReferenceItems } from './utils.js'
+} from './remark-replace.ts'
+import type { NormalizedReferenceSource } from './types.ts'
+import { mdProcessor, mdxProcessor, normalizeReferenceItems } from './utils.ts'
 
-export * from './normalize-img-src.js'
-export type * from './types.js'
-export * from './utils.js'
+export * from './normalize-img-src.ts'
+export type * from './types.ts'
+export * from './utils.ts'
 
 declare module 'unified' {
   interface Data {
