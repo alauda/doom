@@ -1,4 +1,5 @@
 import fs from 'node:fs/promises'
+import path from 'node:path'
 
 import {
   PluginDriver,
@@ -21,14 +22,29 @@ export const checkDeadLinks = lintRule<Root>(
   'doom-lint:check-dead-links',
   async (tree, vfile) => {
     if (!config || !configFilePath) {
-      const { root, globalOptions } = JSON.parse(
-        await fs.readFile(OPTIONS_FILE, 'utf8'),
+      let optionsText: string | undefined
+
+      try {
+        optionsText = await fs.readFile(OPTIONS_FILE, 'utf8')
+      } catch {
+        //
+      }
+
+      const { root, globalOptions } = (
+        optionsText ? JSON.parse(optionsText) : {}
       ) as {
         root?: string
         globalOptions: GlobalCliOptions
       }
 
       ;({ config, configFilePath } = await loadConfig(root, globalOptions))
+    }
+
+    const relativePath = path.relative(config.root!, vfile.path)
+
+    // Ignore files outside the root directory
+    if (relativePath.startsWith('..')) {
+      return
     }
 
     let routeService = RouteService.getInstance()
