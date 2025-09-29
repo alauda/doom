@@ -1,5 +1,14 @@
 # @alauda/doom
 
+## 1.13.2
+
+### Patch Changes
+
+- [#184](https://github.com/alauda/doom/pull/184) [`3153e59`](https://github.com/alauda/doom/commit/3153e59e0feba6d5dd5270224651879ffff840b8) Thanks [@JounQin](https://github.com/JounQin)! - feat: support check dead links in lint command
+
+- Updated dependencies [[`3153e59`](https://github.com/alauda/doom/commit/3153e59e0feba6d5dd5270224651879ffff840b8)]:
+  - @alauda/doom-export@0.1.1
+
 ## 1.13.1
 
 ### Patch Changes

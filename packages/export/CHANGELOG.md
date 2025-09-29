@@ -1,5 +1,11 @@
 # @alauda/doom-export
 
+## 0.1.1
+
+### Patch Changes
+
+- [#184](https://github.com/alauda/doom/pull/184) [`3153e59`](https://github.com/alauda/doom/commit/3153e59e0feba6d5dd5270224651879ffff840b8) Thanks [@JounQin](https://github.com/JounQin)! - chore(deps): lock playwright version
+
 ## 0.1.0
 
 ### Minor Changes
