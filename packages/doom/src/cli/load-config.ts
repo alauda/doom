@@ -359,7 +359,7 @@ const getCommonConfig = async ({
           return mergeConfig(rspackConfig, {
             resolve: {
               extensionAlias: {
-                '.ts': ['.ts', '.tsx', '.ts'],
+                '.js': ['.ts', '.tsx', '.js'],
               },
             },
             plugins: [
