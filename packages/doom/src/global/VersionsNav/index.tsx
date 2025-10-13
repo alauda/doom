@@ -26,14 +26,14 @@ const getNavMenu = () => {
   return document.querySelector('.rspress-nav-menu')
 }
 
-const LEGACY_VERSIONS = ['v3.18.1', 'v3.18.0', 'v3.16', 'v3.14']
+const LEGACY_VERSIONS = ['3.18.1', '3.18.0', '3.16', '3.14']
 
 const LEGACY_NAV_ITEMS = LEGACY_VERSIONS.map((v) => ({
   text: v,
-  link: `https://docs.alauda.io/document/release-notes?version=${v}`,
+  link: `https://cloud.alauda.cn/v3/document/navigation?version=v${v}&language=true`,
 }))
 
-const ALLOWED_LEGACY_DOMAINS = new Set(['docs.alauda.cn', 'docs.alauda.io'])
+const ALLOWED_LEGACY_DOMAINS = new Set(['docs.alauda.cn'])
 
 if (!isProduction()) {
   ALLOWED_LEGACY_DOMAINS.add('localhost')
