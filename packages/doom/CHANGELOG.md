@@ -1,5 +1,13 @@
 # @alauda/doom
 
+## 1.13.3
+
+### Patch Changes
+
+- [#189](https://github.com/alauda/doom/pull/189) [`d29c615`](https://github.com/alauda/doom/commit/d29c615d1e314b2ae58f2b3ce0daaa99d814cb5d) Thanks [@JounQin](https://github.com/JounQin)! - chore: change legacy docs usage
+
+- [#187](https://github.com/alauda/doom/pull/187) [`2373559`](https://github.com/alauda/doom/commit/237355938fd6557a7cb8b4c1b01c5344295c712f) Thanks [@JounQin](https://github.com/JounQin)! - feat: specify lang via cli
+
 ## 1.13.2
 
 ### Patch Changes
