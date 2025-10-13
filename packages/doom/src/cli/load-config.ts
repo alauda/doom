@@ -132,6 +132,7 @@ const getCommonConfig = async ({
   editRepo,
   algolia,
   siteUrl,
+  lang,
 }: {
   config: UserConfig
   configFilePath?: string
@@ -150,7 +151,12 @@ const getCommonConfig = async ({
   editRepo?: boolean | string
   algolia?: boolean | 'alauda' | 'alauda-ru'
   siteUrl?: boolean
+  lang?: string
 }): Promise<UserConfig> => {
+  if (lang != null) {
+    config.lang = lang
+  }
+
   const fallbackToZh = 'lang' in config && !config.lang
   root = resolveDocRoot(root, config.root)
   const localBasePath = configFilePath ? path.dirname(configFilePath) : root
@@ -410,6 +416,7 @@ export async function loadConfig(
     editRepo,
     algolia,
     siteUrl,
+    lang,
   }: GlobalCliOptions = {},
 ): Promise<{
   config: UserConfig
@@ -495,6 +502,7 @@ export async function loadConfig(
     editRepo,
     algolia,
     siteUrl,
+    lang,
   })
 
   base = commonConfig.base!

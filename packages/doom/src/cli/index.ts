@@ -114,6 +114,7 @@ program
     false,
   )
   .option('-n, --no-open', 'Do not open the browser after starting the server')
+  .option('--lang <language>', 'Specify the language of the documentation')
   .command('dev', { isDefault: true })
   .description('Start the development server')
   .argument('[root]', 'Root directory of the documentation')

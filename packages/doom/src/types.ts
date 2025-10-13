@@ -32,6 +32,7 @@ export interface GlobalCliOptions {
   editRepo?: boolean | string
   algolia?: boolean | 'alauda'
   siteUrl?: boolean
+  lang?: string
 }
 
 export interface TranslateOptions {
