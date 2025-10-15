@@ -1,6 +1,10 @@
 :global .overview-index.doom-overview-index {
   padding-left: 0;
   padding-right: 0;
+
+  h2:first-child:before {
+    display: none;
+  }
 }
 
 .overview-groups a {
