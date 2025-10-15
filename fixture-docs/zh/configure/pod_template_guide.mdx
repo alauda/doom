@@ -1,0 +1,616 @@
+---
+title: Pod 模板配置指南
+weight: 30
+sourceSHA: dcf54c883b29ba3c5375092d18fd499ed6d5c24d684b2b721ba7fd964bf06494
+---
+
+# Pod 模板配置指南
+
+## 快速导航
+
+**入门指南：**
+
+- [如何配置 Pod 模板？](#how-to-configure-pod-templates) - 查看 4 种配置方法
+- [我应该选择哪种方法？](#which-configuration-method-to-choose) - 决策指南
+- [如何验证我的配置？](#verification) - 验证命令
+
+**常见场景：**
+
+- [我的自定义镜像需要 root 权限](#example-4-override-for-custom-images-requiring-root-access) - 如何安全地覆盖配置
+- [我从 Tekton v3 迁移，使用了全局 runAsUser: 0](#example-5-using-official-tasks-with-legacy-global-configuration) - 如何使用官方 Tekton Tasks
+
+**故障排查：**
+
+- [我的 Pod 创建失败](#common-pitfalls) - 检查常见陷阱及解决方案
+
+## 为什么使用 Pod 模板？
+
+在生产环境中运行 Tekton Pipelines 时，您可能会遇到默认 Pod 配置无法满足需求的情况：
+
+**常见挑战：**
+
+- **安全策略要求**：组织的安全策略要求所有容器以非 root 用户身份运行，但部分 Pipeline 执行因权限错误失败。
+- **私有镜像仓库访问**：Pipeline 使用私有仓库中的自定义镜像，但 Pod 无法拉取镜像，缺少凭据。
+- **资源调度**：需要构建任务在配备 SSD 存储的高性能节点上运行，但 Pod 被调度到普通节点，导致构建缓慢。
+- **多租户环境**：不同团队需要不同的安全设置、资源配额或节点调度策略。
+- **合规要求**：必须满足特定合规标准（如 PCI DSS、HIPAA 等），要求特定的 Pod 安全配置。
+
+**没有 Pod 模板时：**
+
+您需要修改单个 Task 定义或创建多个不同配置版本的 Task，导致：
+
+- 配置重复，维护成本高
+- 难以统一执行安全策略
+- 无法灵活适配社区 Tasks（如 Tekton catalog Tasks）
+
+**Pod 模板如何解决这些问题：**
+
+Pod 模板提供灵活的多层级配置系统，允许您：
+
+- 为集群中所有 Pipeline 设置安全基线配置
+- 针对特定 Pipeline 或 Task 进行覆盖配置
+- 使用官方 Tekton catalog Tasks 并适配您的环境
+- 保持 Task 逻辑与执行环境配置的分离
+
+## 什么是 Pod 模板？
+
+Pod 模板是允许您自定义 Tekton TaskRun 和 PipelineRun 所创建 Pod 规格的配置字段。它定义了 Tekton 用于配置执行 Task 和 Pipeline 的 PodSpec 的一部分。
+
+Pod 模板可在不同层级配置（全局、单 Pipeline、单 Task），提供灵活的配置范围和优先级。
+
+有关 Pod 模板概念及支持字段的详细信息，请参见 [Pod Templates Concepts](../pipelines/concepts/pod_templates_concept.mdx)。
+
+## 何时使用 Pod 模板
+
+Pod 模板适用于以下场景：
+
+- **安全需求**：配置安全上下文（如 `runAsUser`、`fsGroup`）以满足安全策略
+- **私有仓库访问**：配置镜像拉取凭据
+- **节点调度**：配置节点选择器、容忍度或亲和规则控制 Pod 调度
+- **资源管理**：配置计算资源、卷和存储需求
+- **环境变量**：设置 Pipeline 执行的环境变量
+- **网络配置**：配置 DNS 策略和网络设置
+- **一致性**：确保多次 Pipeline 执行环境一致
+
+## 选择哪种配置方法
+
+使用此决策指南快速确定适合您的配置方法：
+
+| 场景                                   | 推荐方法                                                                            | 原因                                                           |
+| -------------------------------------- | ----------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| 一次性执行，带特殊需求                 | [方法 1：TaskRun](#method-1-taskrun-level-configuration)                            | 仅应用于单个 TaskRun。                                         |
+| 先测试配置再全局应用                   | [方法 1：TaskRun](#method-1-taskrun-level-configuration)                            | 安全测试，不影响其他执行。                                     |
+| 某个特定 Pipeline 需要特殊配置         | [方法 2：PipelineRun](#method-2-pipelinerun-level-configuration)                    | 仅覆盖该 Pipeline，不影响其他 Pipeline。                       |
+| 同一 Pipeline 中不同 Task 需要不同配置 | [方法 3：TaskRunSpecs](#method-3-pipelinerun-taskrunspecs-configuration)            | 细粒度控制每个 Task，适合混合工作负载（官方 + 自定义 Tasks）。 |
+| 为集群中所有 Pipeline 设置基线配置     | [方法 4：全局（TektonConfig）](#method-4-global-default-configuration-tektonconfig) | 一次配置，影响所有执行。适合安全默认、镜像拉取凭据等。         |
+
+## 如何配置 Pod 模板
+
+Pod 模板可在四个不同层级配置，每个层级用途和影响范围不同。
+
+### 方法 1：TaskRun 级别配置
+
+直接在 TaskRun 中配置 Pod 模板，仅影响该 TaskRun 执行。
+
+**适用场景**：为单个 TaskRun 执行应用特定配置。
+
+**配置位置**：TaskRun 的 `spec.podTemplate`
+
+**示例**：
+
+```yaml
+apiVersion: tekton.dev/v1
+kind: TaskRun
+metadata:
+  name: build-task-run
+spec:
+  taskRef:
+    name: build-task
+  podTemplate:
+    securityContext:
+      runAsUser: 65532 # 可根据需要修改（如 0 表示 root，1000 表示自定义用户）
+      fsGroup: 65532
+    nodeSelector:
+      disktype: ssd
+```
+
+### 方法 2：PipelineRun 级别配置
+
+在 PipelineRun 级别配置 Pod 模板，影响该 PipelineRun 中所有 Task，除非被 taskRunSpecs 覆盖。
+
+**适用场景**：为 Pipeline 执行中的所有 Task 应用一致配置。
+
+**配置位置**：PipelineRun 的 `spec.taskRunTemplate.podTemplate`
+
+**示例**：
+
+```yaml
+apiVersion: tekton.dev/v1
+kind: PipelineRun
+metadata:
+  name: build-deploy-pipeline-run
+spec:
+  pipelineRef:
+    name: build-deploy-pipeline
+  taskRunTemplate:
+    podTemplate:
+      securityContext:
+        runAsUser: 65532 # 可根据需要修改（如 0 表示 root）
+        fsGroup: 65532
+      nodeSelector:
+        environment: production
+      imagePullSecrets:
+        - name: private-registry-secret
+```
+
+### 方法 3：PipelineRun TaskRunSpecs 配置
+
+为 PipelineRun 中的特定 Task 配置 Pod 模板，实现对单个 Task 的细粒度控制。
+
+**适用场景**：同一 Pipeline 执行中不同 Task 需要不同配置。
+
+**配置位置**：PipelineRun 的 `spec.taskRunSpecs[].podTemplate`
+
+**示例**：
+
+```yaml
+apiVersion: tekton.dev/v1
+kind: PipelineRun
+metadata:
+  name: build-deploy-pipeline-run
+spec:
+  pipelineRef:
+    name: build-deploy-pipeline
+  taskRunSpecs:
+    - pipelineTaskName: build
+      podTemplate:
+        securityContext:
+          runAsUser: 0 # 针对该任务的覆盖配置
+        nodeSelector:
+          disktype: ssd
+          performance: high
+        tolerations:
+          - key: 'dedicated'
+            operator: 'Equal'
+            value: 'build'
+            effect: 'NoSchedule'
+    - pipelineTaskName: deploy
+      podTemplate:
+        securityContext:
+          runAsUser: 65532 # 该任务使用安全默认
+          runAsNonRoot: true
+        nodeSelector:
+          environment: production
+```
+
+### 方法 4：全局默认配置（TektonConfig）
+
+配置集群范围的全局默认 Pod 模板，应用于所有 TaskRun 和 PipelineRun。
+
+**适用场景**：为集群中所有 Pipeline 执行设置统一基线配置。
+
+**配置位置**：TektonConfig 的 `spec.pipeline.default-pod-template`
+
+:::tip\[安全最佳实践]
+建议使用非 root 用户（如 `runAsUser: 65532`）作为默认配置，遵循最小权限原则。官方 Tekton Tasks 设计为支持 UID 65532。仅在自定义镜像或遗留应用确实需要时，针对特定 TaskRun/PipelineRun 覆盖为 `runAsUser: 0`。
+:::
+
+:::note\[为什么选择 UID 65532？]
+UID 65532 是官方 Tekton Tasks 及大多数 Tekton catalog Tasks 使用的标准非 root 用户 ID。该 ID 遵循最小权限原则，是 Tekton 生态中广泛采用的安全最佳实践。
+
+**fsGroup**：设置 Pod 中所有容器的组 ID，确保 Pod 创建的文件归属该组，保证文件访问权限。
+:::
+
+**步骤**：
+
+<Steps>
+  ### 第 1 步
+
+编辑 TektonConfig 资源：
+
+```bash
+$ kubectl edit tektonconfigs.operator.tekton.dev config
+```
+
+### 第 2 步
+
+添加或修改 `spec.pipeline.default-pod-template` 配置：
+
+```yaml
+apiVersion: operator.tekton.dev/v1alpha1
+kind: TektonConfig
+metadata:
+  name: config
+spec:
+  pipeline:
+    default-pod-template: |
+      securityContext:
+        runAsUser: 65532
+        fsGroup: 65532
+      imagePullSecrets:
+        - name: private-registry-secret
+```
+
+### 第 3 步
+
+验证配置：
+
+```bash
+$ kubectl get configmap -n tekton-pipelines config-defaults -o yaml | grep 'default-pod-template: |' -A5
+```
+
+</Steps>
+
+### 配置方法对比
+
+| 方法                             | 作用范围                       | 优先级   | 适用场景                            | 优点                               | 缺点                      |
+| -------------------------------- | ------------------------------ | -------- | ----------------------------------- | ---------------------------------- | ------------------------- |
+| **方法 1：TaskRun**              | 单个 TaskRun 执行              | 中等     | 测试、一次性执行                    | 安全隔离，易于测试                 | 需为每个 TaskRun 配置     |
+| **方法 2：PipelineRun**          | 单个 PipelineRun 中所有任务    | 中等     | 针对 Pipeline 的统一需求            | 易管理，应用于 Pipeline 中所有任务 | 需为每个 PipelineRun 指定 |
+| **方法 3：TaskRunSpecs**         | PipelineRun 中特定任务         | **最高** | 混合工作负载（官方 + 自定义 Tasks） | 细粒度控制每个任务                 | 配置较复杂                |
+| **方法 4：全局（TektonConfig）** | 集群中所有 TaskRun/PipelineRun | **最低** | 安全基线和默认配置                  | 一次配置，影响所有执行             | 全局影响，需集群权限      |
+
+**优先级规则**：同一字段在多个层级配置时，优先级高的配置生效。TaskRunSpecs（最高）> PipelineRun/TaskRun（中等）> 全局（最低）。
+
+## 配置优先级
+
+Pod 模板配置遵循明确的优先级层级。存在多重配置时，优先级高的覆盖优先级低的。
+
+**优先级顺序（从高到低）**：
+
+1. **PipelineRun taskRunSpecs podTemplate** - 最高优先级，针对特定任务
+2. **PipelineRun podTemplate 或 TaskRun podTemplate** - 中等优先级，针对 Pipeline 或 Task 级别
+3. **全局 default-pod-template** - 最低优先级，针对所有执行
+
+**合并行为**：
+
+- **环境变量**：按名称合并，优先级高的值覆盖低的
+- **卷**：按名称合并，优先级高的值覆盖低的
+- **其他字段**：优先级高的配置完全替换低优先级配置
+
+**示例**：
+
+假设：
+
+- 全局配置：`runAsUser: 65532`（安全默认）
+- PipelineRun 配置：`runAsUser: 0`（为自定义镜像覆盖）
+- TaskRunSpec 配置：`runAsUser: 65532`（为官方 Tasks 恢复安全默认）
+
+结果：
+
+- 特定任务（使用官方 Task）：`runAsUser: 65532`
+- Pipeline 中其他任务（使用自定义镜像）：`runAsUser: 0`
+
+## 配置示例
+
+### 示例 1：安全默认配置（推荐）
+
+**场景**：为所有 Pipeline 任务设置非 root 用户的安全默认配置，遵循安全最佳实践。
+
+**全局配置**：
+
+```yaml
+apiVersion: operator.tekton.dev/v1alpha1
+kind: TektonConfig
+metadata:
+  name: config
+spec:
+  pipeline:
+    default-pod-template: |
+      securityContext:
+        runAsUser: 65532
+        runAsNonRoot: true
+        fsGroup: 65532
+        fsGroupChangePolicy: "OnRootMismatch"
+```
+
+**说明**：官方 Tekton Tasks 和 catalog Tasks 设计为支持 UID 65532，确保所有 Pipeline 执行默认安全运行。
+
+### 示例 2：镜像拉取凭据
+
+**场景**：配置访问私有镜像仓库的镜像拉取凭据。
+
+**PipelineRun 配置**：
+
+```yaml
+apiVersion: tekton.dev/v1
+kind: PipelineRun
+metadata:
+  name: build-pipeline-run
+spec:
+  pipelineRef:
+    name: build-pipeline
+  taskRunTemplate:
+    podTemplate:
+      imagePullSecrets:
+        - name: private-registry-secret
+        - name: enterprise-registry-secret
+```
+
+### 示例 3：节点调度
+
+**场景**：让构建任务运行在高性能节点上。
+
+**TaskRunSpecs 配置**：
+
+```yaml
+apiVersion: tekton.dev/v1
+kind: PipelineRun
+metadata:
+  name: build-deploy-pipeline-run
+spec:
+  pipelineRef:
+    name: build-deploy-pipeline
+  taskRunSpecs:
+    - pipelineTaskName: build
+      podTemplate:
+        nodeSelector:
+          disktype: ssd
+          performance: high
+        tolerations:
+          - key: 'dedicated'
+            operator: 'Equal'
+            value: 'build'
+            effect: 'NoSchedule'
+```
+
+### 示例 4：为需要 root 权限的自定义镜像覆盖配置
+
+**场景**：全局默认使用安全非 root 用户（65532），但某 Pipeline 中自定义镜像需要 root 权限。使用 TaskRunSpecs 针对特定任务覆盖，同时保持官方 Tasks 的安全默认。
+
+```yaml
+# 全局基线配置（安全默认）
+apiVersion: operator.tekton.dev/v1alpha1
+kind: TektonConfig
+metadata:
+  name: config
+spec:
+  pipeline:
+    default-pod-template: |
+      securityContext:
+        runAsUser: 65532
+        fsGroup: 65532
+        fsGroupChangePolicy: "OnRootMismatch"
+      imagePullSecrets:
+        - name: default-registry-secret
+
+---
+# Pipeline 执行，选择性覆盖
+apiVersion: tekton.dev/v1
+kind: PipelineRun
+metadata:
+  name: mixed-workload-pipeline-run
+spec:
+  pipelineRef:
+    name: build-deploy-pipeline
+  taskRunSpecs:
+    # 仅覆盖使用需要 root 的自定义镜像的任务
+    - pipelineTaskName: custom-build
+      podTemplate:
+        securityContext:
+          runAsUser: 0
+        nodeSelector:
+          disktype: ssd
+    # 使用官方 Tekton catalog Tasks 的任务继承安全默认（65532）
+    # 无需覆盖 'git-clone'、'kaniko-build' 等任务
+```
+
+**最佳实践**：仅对确实需要 root 权限的任务覆盖 `runAsUser` 为 `0`，官方 Tasks 使用安全默认（65532）。
+
+### 示例 5：使用官方 Tasks 兼容遗留全局配置
+
+**场景**：从 Alauda DevOps Tekton v3 迁移至 Alauda DevOps Pipelines，因兼容旧自定义镜像，全局 `default-pod-template` 设置为 `runAsUser: 0`。现在想使用官方 Tekton catalog Tasks，它们需要 `runAsUser: 65532` 和 `fsGroup: 65532`。
+
+**解决方案**：针对使用官方 Tasks 的 Pipeline，在 PipelineRun 级别覆盖全局配置。
+
+**当前全局配置**（迁移时设置）：
+
+```yaml
+apiVersion: operator.tekton.dev/v1alpha1
+kind: TektonConfig
+metadata:
+  name: config
+spec:
+  pipeline:
+    default-pod-template: |
+      securityContext:
+        runAsUser: 0  # 兼容旧自定义镜像的全局设置
+```
+
+**官方 Tasks 的 PipelineRun 配置**：
+
+```yaml
+apiVersion: tekton.dev/v1
+kind: PipelineRun
+metadata:
+  name: catalog-tasks-pipeline-run
+spec:
+  pipelineRef:
+    name: pipeline-using-catalog-tasks # 使用 git-clone、buildah 等的 Pipeline
+  taskRunTemplate:
+    podTemplate:
+      # 覆盖全局 runAsUser: 0，使用官方 Tasks 需要的安全配置
+      securityContext:
+        runAsUser: 65532
+        fsGroup: 65532
+```
+
+**替代方案**：混合场景使用 TaskRunSpecs：
+
+```yaml
+apiVersion: tekton.dev/v1
+kind: PipelineRun
+metadata:
+  name: mixed-pipeline-run
+spec:
+  pipelineRef:
+    name: mixed-pipeline
+  # 大多数任务使用全局 runAsUser: 0（自定义镜像）
+  taskRunSpecs:
+    # 仅覆盖使用官方 catalog Tasks 的任务
+    - pipelineTaskName: git-clone
+      podTemplate:
+        securityContext:
+          runAsUser: 65532
+          fsGroup: 65532
+    - pipelineTaskName: buildah
+      podTemplate:
+        securityContext:
+          runAsUser: 65532
+          fsGroup: 65532
+    # 其他任务（自定义镜像）继承全局 runAsUser: 0
+```
+
+**长期建议**：逐步更新自定义镜像支持非 root 用户，随后将全局默认改为 `runAsUser: 65532`，提升安全性。
+
+### 示例 6：迁移期间的临时覆盖
+
+**场景**：正在从 Alauda DevOps Tekton v3 迁移到 Alauda DevOps Pipelines，自定义镜像尚未支持非 root 用户。需要临时方案运行遗留 Pipeline。
+
+**背景**：与示例 5（迁移完成，使用全局 `runAsUser: 0`）不同，此场景针对：
+
+- 已配置安全全局默认（`runAsUser: 65532`）
+- 正在迁移遗留 Pipeline
+- 需要临时覆盖以支持旧容器镜像
+
+**临时 PipelineRun 配置**：
+
+```yaml
+apiVersion: tekton.dev/v1
+kind: PipelineRun
+metadata:
+  name: legacy-pipeline-run
+spec:
+  pipelineRef:
+    name: legacy-pipeline-requiring-root
+  taskRunTemplate:
+    podTemplate:
+      # 迁移期间临时覆盖，计划后续移除
+      securityContext:
+        runAsUser: 0
+```
+
+**迁移路径**：
+
+1. **短期**：对需要 root 的遗留 Pipeline 使用此覆盖
+2. **中期**：更新自定义镜像支持非 root 用户（UID 65532）
+3. **长期**：移除覆盖，依赖安全全局默认
+
+**重要**：此为迁移期间的**临时解决方案**。
+
+## 重要注意事项
+
+### 常见陷阱
+
+以下是用户最常遇到的问题，配置前请务必检查：
+
+1. **❌ 全局设置 runAsUser 为 0**：**切勿**在全局 `default-pod-template` 中设置 `runAsUser: 0`，这违反安全最佳实践，使所有 Pipeline 执行暴露风险。应始终使用 `runAsUser: 65532` 作为全局默认。需要 root 权限时，仅在 TaskRun/PipelineRun 级别覆盖。
+
+2. **❌ 安全上下文冲突**：确保 Task 级别的安全上下文（如 `runAsNonRoot: true`）与 Pod 模板安全上下文兼容。常见错误：`container's runAsUser breaks non-root policy`。详见 [故障排查：自定义镜像 Pod 创建失败](../pipelines/trouble_shooting/custom_image_pod_creation_failed.mdx)。
+
+3. **❌ 配置优先级误解**：记住优先级规则：
+   - TaskRunSpecs（最高）> PipelineRun/TaskRun（中等）> 全局（最低）
+   - 配置无效时，检查是否被更高优先级配置覆盖。
+
+4. **❌ 全局配置影响范围**：修改全局 `default-pod-template` 会影响集群中所有 Pipeline 执行。建议先用 TaskRun/PipelineRun 测试。
+
+5. **❌ YAML 格式**：在 TektonConfig 中配置 `default-pod-template` 时，使用管道符 (`|`) 保持多行字符串格式：
+
+   ```yaml
+   default-pod-template: |
+     securityContext:
+       runAsUser: 65532
+   ```
+
+### 配置范围与生效时机
+
+- **全局配置**：影响配置生效后新创建的 TaskRun 和 PipelineRun，不影响已运行的执行。
+- **TaskRun/PipelineRun 配置**：仅影响对应执行。
+- **配置变更**：对新执行立即生效，无需重启 Tekton 组件。
+
+### 所需权限
+
+- **全局配置**：需集群级权限修改 TektonConfig（通常为 cluster-admin 或等效权限）。
+- **TaskRun/PipelineRun 配置**：需命名空间级权限创建/修改 TaskRun 或 PipelineRun。
+
+### 最佳实践
+
+1. **遵循安全最佳实践**：全局默认使用非 root 用户（`runAsUser: 65532`）。官方 Tasks 设计支持 UID 65532。仅对确实需要 root 权限的任务覆盖为 `runAsUser: 0`。
+
+2. **从安全全局默认开始**：在全局 `default-pod-template` 中配置安全基线：
+
+   ```yaml
+   securityContext:
+     runAsUser: 65532
+     runAsNonRoot: true
+     fsGroup: 65532
+   ```
+
+3. **选择性覆盖**：自定义镜像需要 root 权限时，仅在 TaskRun 或 taskRunSpecs 级别覆盖。不要修改全局默认为 `runAsUser: 0`。
+
+4. **使用 TaskRunSpecs 实现细粒度控制**：当 Pipeline 中不同任务需要不同安全上下文时，使用 `taskRunSpecs` 分别配置。
+
+5. **记录安全例外**：清晰记录为何特定任务需要 root 权限，定期审查是否可取消例外。
+
+6. **测试配置变更**：在非生产环境测试 Pod 模板配置，尤其是安全上下文变更，确保无误后再应用生产。
+
+## 验证
+
+应用 Pod 模板配置后，验证其生效情况：
+
+### 验证全局配置
+
+检查配置是否应用到 ConfigMap：
+
+```bash
+# 查看 ConfigMap
+$ kubectl get configmap -n tekton-pipelines config-defaults -o yaml | grep 'default-pod-template' -A 10
+
+  default-pod-template: |
+    securityContext:
+      runAsUser: 65532
+```
+
+预期输出应显示您配置的 Pod 模板。
+
+### 验证 TaskRun/PipelineRun 配置
+
+**步骤 1：查找 TaskRun 或 PipelineRun 创建的 Pod**
+
+```bash
+# 查询 TaskRun 相关 Pod
+$ kubectl get pods -n <namespace> -l tekton.dev/taskRun=<taskrun-name>
+
+# 查询 PipelineRun 相关 Pod（显示该 PipelineRun 创建的所有 Pod）
+$ kubectl get pods -n <namespace> -l tekton.dev/pipelineRun=<pipelinerun-name>
+
+# 示例输出：
+# NAME                                      READY   STATUS      RESTARTS   AGE
+# build-task-run-pod                        0/1     Completed   0          2m
+```
+
+**步骤 2：验证 Pod 规格**
+
+```bash
+# 查看 Pod 的 securityContext
+$ kubectl get pod -n <namespace> <pod-name> -o yaml | grep -A 10 "securityContext:"
+
+  securityContext:
+    runAsUser: 65532
+    fsGroup: 65532
+
+# 查看具体字段
+$ kubectl get pod -n <namespace> <pod-name> -o jsonpath='{.spec.securityContext.runAsUser}'
+# 应输出：65532（或您配置的值）
+
+# 查看 fsGroup
+$ kubectl get pod -n <namespace> <pod-name> -o jsonpath='{.spec.securityContext.fsGroup}'
+# 应输出：65532（或您配置的值）
+```
+
+## 相关文档
+
+- [Pod Templates Concepts](../pipelines/concepts/pod_templates_concept.mdx) - Pod 模板概念、支持字段及合并行为详解
+- [故障排查：自定义镜像 Pod 创建失败](../pipelines/trouble_shooting/custom_image_pod_creation_failed.mdx) - 常见 Pod 模板配置问题解决方案
+- [调整可选配置项](./customize_options.mdx) - TektonConfig 配置自定义指南
+- [Kubernetes PodSpec 文档](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#podspec-v1-core) - 官方 Kubernetes PodSpec 参考文档
