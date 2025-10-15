@@ -11,7 +11,11 @@ import { CloudAuthProvider } from './context.tsx'
 import assistantIcon from '@alauda/doom/assets/assistant.svg'
 import { useMemoizedFn, useTranslation } from '@alauda/doom/runtime'
 
-const ALLOWED_DOMAINS = new Set(['docs-dev.alauda.cn', 'docs.alauda.io'])
+const ALLOWED_DOMAINS = new Set([
+  'docs-dev.alauda.cn',
+  'docs.alauda.cn',
+  'docs.alauda.io',
+])
 
 if (!isProduction()) {
   ALLOWED_DOMAINS.add('localhost')
