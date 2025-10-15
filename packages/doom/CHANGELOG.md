@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.14.2
+
+### Patch Changes
+
+- [#195](https://github.com/alauda/doom/pull/195) [`b5f3948`](https://github.com/alauda/doom/commit/b5f39485f41a68ded33b2e9e0d9672353b1fea34) Thanks [@JounQin](https://github.com/JounQin)! - fix: choices could be empty
+
 ## 1.14.1
 
 ### Patch Changes
