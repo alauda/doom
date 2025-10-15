@@ -58,7 +58,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@alauda/doom-export@npm:^0.1.1, @alauda/doom-export@workspace:packages/export":
+"@alauda/doom-export@npm:^0.2.0, @alauda/doom-export@workspace:packages/export":
   version: 0.0.0-use.local
   resolution: "@alauda/doom-export@workspace:packages/export"
   dependencies:
@@ -76,7 +76,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@alauda/doom@workspace:packages/doom"
   dependencies:
-    "@alauda/doom-export": "npm:^0.1.1"
+    "@alauda/doom-export": "npm:^0.2.0"
     "@cspell/eslint-plugin": "npm:^9.2.1"
     "@eslint-react/eslint-plugin": "npm:^2.2.2"
     "@inquirer/prompts": "npm:^7.9.0"

@@ -1,5 +1,16 @@
 # @alauda/doom
 
+## 1.14.0
+
+### Minor Changes
+
+- [#190](https://github.com/alauda/doom/pull/190) [`d131ade`](https://github.com/alauda/doom/commit/d131adec79419ffc4c28693de89338b7002fb70c) Thanks [@JounQin](https://github.com/JounQin)! - chore: bump all (dev)Dependencies
+
+### Patch Changes
+
+- Updated dependencies [[`d131ade`](https://github.com/alauda/doom/commit/d131adec79419ffc4c28693de89338b7002fb70c)]:
+  - @alauda/doom-export@0.2.0
+
 ## 1.13.3
 
 ### Patch Changes

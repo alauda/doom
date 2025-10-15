@@ -1,6 +1,6 @@
 {
   "name": "@alauda/doom",
-  "version": "1.13.3",
+  "version": "1.14.0",
   "type": "module",
   "description": "Doctor Doom making docs.",
   "repository": {
@@ -40,7 +40,7 @@
     "rspress-plugins"
   ],
   "dependencies": {
-    "@alauda/doom-export": "^0.1.1",
+    "@alauda/doom-export": "^0.2.0",
     "@cspell/eslint-plugin": "^9.2.1",
     "@eslint-react/eslint-plugin": "^2.2.2",
     "@inquirer/prompts": "^7.9.0",
