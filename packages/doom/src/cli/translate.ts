@@ -310,7 +310,7 @@ export const translate = async ({
         process.env.AZURE_OPENAI_ENDPOINT ||
         'https://azure-ai-api-gateway.alauda.cn',
       apiKey: process.env.AZURE_OPENAI_API_KEY,
-      apiVersion: process.env.OPENAI_API_VERSION || '2025-03-01-preview',
+      apiVersion: process.env.OPENAI_API_VERSION || '2025-04-01-preview',
     })
   }
 
