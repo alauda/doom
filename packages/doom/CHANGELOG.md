@@ -1,5 +1,13 @@
 # @alauda/doom
 
+## 1.14.1
+
+### Patch Changes
+
+- [#192](https://github.com/alauda/doom/pull/192) [`225863c`](https://github.com/alauda/doom/commit/225863c4c6c0c265314f0e3f06fa946b3f24c81b) Thanks [@JounQin](https://github.com/JounQin)! - fix: use streaming response instead
+
+- [#194](https://github.com/alauda/doom/pull/194) [`25d9a02`](https://github.com/alauda/doom/commit/25d9a028b1d5606fab7a47b719cdfaf7106580a8) Thanks [@JounQin](https://github.com/JounQin)! - chore: enable intelligence on docs.alauda.cn
+
 ## 1.14.0
 
 ### Minor Changes
