@@ -4,7 +4,7 @@ import eslint from '@eslint/js'
 import react from '@eslint-react/eslint-plugin'
 import { createTypeScriptImportResolver } from 'eslint-import-resolver-typescript'
 import { importX } from 'eslint-plugin-import-x'
-import * as reactHooks from 'eslint-plugin-react-hooks'
+import reactHooks from 'eslint-plugin-react-hooks'
 import * as regexp from 'eslint-plugin-regexp'
 import { config, configs } from 'typescript-eslint'
 
@@ -19,7 +19,7 @@ export default config(
   importX.flatConfigs.recommended,
   importX.flatConfigs.typescript,
   react.configs.recommended,
-  reactHooks.configs['recommended-latest'],
+  reactHooks.configs.flat.recommended,
   regexp.configs['flat/recommended'],
   {
     files: ['**/*.{ts,tsx}'],

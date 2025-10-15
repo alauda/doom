@@ -21,12 +21,13 @@ const getPrintMediaQuery = () => {
 }
 
 export function useIsPrintMedia() {
+  // eslint-disable-next-line @eslint-react/naming-convention/use-state
   const [printMediaQuery] = useState(getPrintMediaQuery)
 
-  const [isPrint, changeIsPrint] = useState(!!printMediaQuery?.matches)
+  const [isPrint, setIsPrint] = useState(!!printMediaQuery?.matches)
 
   const onChange = useCallback((mqList: MediaQueryListEvent) => {
-    changeIsPrint(mqList.matches)
+    setIsPrint(mqList.matches)
   }, [])
 
   useEffect(() => {

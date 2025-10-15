@@ -176,6 +176,7 @@ export const OpenAPIRef = ({
     uid = innerUid
   }
 
+  // eslint-disable-next-line react-hooks/preserve-manual-memoization
   const [schemaItem, openapi, openapiPath] = useMemo(() => {
     for (const [pathname, openapi] of Object.entries(openapisMap)) {
       if (openapiPath_ && pathname !== openapiPath_) {
