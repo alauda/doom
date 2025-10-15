@@ -310,7 +310,7 @@ export const translate = async ({
         process.env.AZURE_OPENAI_ENDPOINT ||
         'https://azure-ai-api-gateway.alauda.cn',
       apiKey: process.env.AZURE_OPENAI_API_KEY,
-      apiVersion: process.env.OPENAI_API_VERSION || '2025-03-01-preview',
+      apiVersion: process.env.OPENAI_API_VERSION || '2025-04-01-preview',
     })
   }
 
@@ -357,7 +357,7 @@ export const translate = async ({
   )
 
   logger.debug('Final system prompt:\n', finalSystemPrompt)
-  const { choices } = await openai.chat.completions.parse({
+  const stream = await openai.chat.completions.create({
     messages: [
       {
         role: 'system',
@@ -370,15 +370,16 @@ export const translate = async ({
     ],
     model: openaiModel,
     temperature: 0.2,
+    stream: true,
   })
 
-  const { content, refusal } = choices[0].message
+  let content = ''
 
-  if (refusal) {
-    throw new Error(refusal)
+  for await (const chunk of stream) {
+    content += chunk.choices[0].delta.content ?? ''
   }
 
-  return restoreAnchors(content!, anchors)
+  return restoreAnchors(content, anchors)
 }
 
 const limit = pRateLimit({
