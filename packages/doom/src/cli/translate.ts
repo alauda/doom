@@ -376,7 +376,7 @@ export const translate = async ({
   let content = ''
 
   for await (const chunk of stream) {
-    content += chunk.choices[0].delta.content ?? ''
+    content += chunk.choices[0]?.delta.content ?? ''
   }
 
   return restoreAnchors(content, anchors)
