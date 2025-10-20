@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.14.3
+
+### Patch Changes
+
+- [#197](https://github.com/alauda/doom/pull/197) [`31697e7`](https://github.com/alauda/doom/commit/31697e7f8532586025e430a83c0f4cc7e5dd6525) Thanks [@JounQin](https://github.com/JounQin)! - fix: incompatible styles with new rspress versions
+
 ## 1.14.2
 
 ### Patch Changes
