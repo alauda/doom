@@ -1,4 +1,4 @@
-import type { Link, LinkReference, Root } from 'mdast'
+import type { Root } from 'mdast'
 import stringWidth from 'string-width'
 import { lintRule } from 'unified-lint-rule'
 import { visit } from 'unist-util-visit'
@@ -11,8 +11,7 @@ const MAX_LENGTH = 40
 export const maximumLinkContentLength = lintRule<Root>(
   'doom-lint:maximum-link-content-length',
   (root, vfile) => {
-    visit(root, ['link', 'lintReference'] as const, (node_) => {
-      const node = node_ as Link | LinkReference
+    visit(root, ['link', 'linkReference'] as const, (node) => {
       visitParents(node, 'text', (text, parents) => {
         let value = text.value
         try {

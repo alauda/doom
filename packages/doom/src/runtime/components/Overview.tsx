@@ -208,7 +208,7 @@ export function Overview(props: {
   const groups = customGroups ?? defaultGroups
 
   return (
-    <div className="overview-index doom-overview-index rp-mx-auto">
+    <div className="overview-index doom-overview-index">
       {content}
       {groups.map((group) => (
         <Fragment key={group.name}>
@@ -223,19 +223,19 @@ export function Overview(props: {
           <div className={classes.overviewGroups}>
             {group.items.map((item) => (
               <div className={classes.overviewGroup} key={item.link}>
-                <h3 style={{ marginBottom: 8 }}>
+                <h3>
                   <Link href={item.link} {...renderInlineMarkdown(item.text)} />
                 </h3>
                 <div className={classes.overviewDescription}>
                   {item.description}
                 </div>
-                <ul className="rp-list-none">
+                <ul className={classes.overviewList}>
                   {item.headers?.map((header) => (
                     <li
                       key={header.id}
                       className={`${classes.overviewGroupLi} ${
                         classes[`level${header.depth}`]
-                      } first:rp-mt-2`}
+                      }`}
                     >
                       <Link
                         href={`${item.link}#${header.id}`}

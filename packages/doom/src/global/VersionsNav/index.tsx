@@ -83,7 +83,7 @@ const VersionsNav_ = () => {
         }
       } else {
         const res = await fetch(
-          `${isProduction() ? versionsBase : siteData.base}/versions.yaml`,
+          `${isProduction() ? versionsBase : siteData.base}versions.yaml`,
         )
         if (!res.ok) {
           return
@@ -127,7 +127,7 @@ const VersionsNav_ = () => {
     const versionItems: NavItem[] = versions.map((v) =>
       versionsBase == null
         ? { text: v, items: [] }
-        : { text: v, link: `${versionsBase}/${v}/`, activeMatch: v },
+        : { text: v, link: `${versionsBase}${v}/`, activeMatch: v },
     )
     if (
       versionsBase != null &&

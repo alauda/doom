@@ -1,10 +1,22 @@
 :global .overview-index.doom-overview-index {
+  margin-left: auto;
+  margin-right: auto;
   padding-left: 0;
   padding-right: 0;
 
   h2:first-child:before {
     display: none;
   }
+
+  .rp-link:hover {
+    border-bottom: 0;
+  }
+}
+
+.overview-list {
+  list-style: none;
+  margin: 0;
+  padding-left: 0;
 }
 
 .overview-groups a {
@@ -53,6 +65,11 @@
   border-radius: var(--rp-radius);
   padding: 28px 32px;
   transition: background-color 0.5s;
+
+  h3 {
+    margin-top: 0;
+    margin-bottom: 8px;
+  }
 }
 
 .overview-description {
