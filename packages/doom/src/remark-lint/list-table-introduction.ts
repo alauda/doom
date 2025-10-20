@@ -1,12 +1,11 @@
-import type { List, Root, Table } from 'mdast'
+import type { Root } from 'mdast'
 import { lintRule } from 'unified-lint-rule'
 import { visitParents } from 'unist-util-visit-parents'
 
 export const listTableIntroduction = lintRule<Root>(
   'doom-lint:list-table-introduction',
   (root, vfile) => {
-    visitParents(root, ['list', 'table'] as const, (node_, parents) => {
-      const node = node_ as List | Table
+    visitParents(root, ['list', 'table'] as const, (node, parents) => {
       const parent = parents[parents.length - 1]
       const index = parent.children.indexOf(node)
       const prevSibling = parent.children[index - 1]
