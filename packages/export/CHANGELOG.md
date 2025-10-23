@@ -1,5 +1,11 @@
 # @alauda/doom-export
 
+## 0.2.1
+
+### Patch Changes
+
+- [#201](https://github.com/alauda/doom/pull/201) [`104bc64`](https://github.com/alauda/doom/commit/104bc6425a72c457400bfc5e42920669b55b44b3) Thanks [@JounQin](https://github.com/JounQin)! - chore: bump all (dev)Dependencies
+
 ## 0.2.0
 
 ### Minor Changes

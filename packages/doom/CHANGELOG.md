@@ -1,5 +1,18 @@
 # @alauda/doom
 
+## 1.15.0
+
+### Minor Changes
+
+- [#199](https://github.com/alauda/doom/pull/199) [`33bfc84`](https://github.com/alauda/doom/commit/33bfc84de23c39a014e8b3fd4bff32ed12c23c78) Thanks [@JounQin](https://github.com/JounQin)! - feat: require auth login for russian docs
+
+### Patch Changes
+
+- [#201](https://github.com/alauda/doom/pull/201) [`104bc64`](https://github.com/alauda/doom/commit/104bc6425a72c457400bfc5e42920669b55b44b3) Thanks [@JounQin](https://github.com/JounQin)! - chore: bump all (dev)Dependencies
+
+- Updated dependencies [[`104bc64`](https://github.com/alauda/doom/commit/104bc6425a72c457400bfc5e42920669b55b44b3)]:
+  - @alauda/doom-export@0.2.1
+
 ## 1.14.3
 
 ### Patch Changes
