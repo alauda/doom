@@ -6,7 +6,6 @@ import { Tooltip } from 'react-tooltip'
 import { ACP_BASE } from '../../shared/index.ts'
 
 import { AIAssistant } from './AIAssistant/index.tsx'
-import { CloudAuthProvider } from './context.tsx'
 
 import assistantIcon from '@alauda/doom/assets/assistant.svg'
 import { useMemoizedFn, useTranslation } from '@alauda/doom/runtime'
@@ -31,7 +30,7 @@ const Intelligence_ = () => {
   })
 
   return (
-    <CloudAuthProvider>
+    <>
       <AIAssistant open={open} onOpenChange={toggleOpen} />
       {open || (
         <button
@@ -45,7 +44,7 @@ const Intelligence_ = () => {
       <Tooltip anchorSelect=".intelligence-entry" place="left">
         {t('ai_assistant')}
       </Tooltip>
-    </CloudAuthProvider>
+    </>
   )
 }
 

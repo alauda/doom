@@ -1,12 +1,10 @@
-import { useState, useEffect, useMemo, useCallback } from 'react'
-import { useLocation } from 'react-router'
+import { useSearchParams } from '@rspress/core/dist/runtime.js'
+import { useState, useEffect, useCallback } from 'react'
 
 import { FALSY_VALUES } from '../../shared/index.js'
 
 export function useIsPrintQuery() {
-  const { search } = useLocation()
-
-  const searchParams = useMemo(() => new URLSearchParams(search), [search])
+  const [searchParams] = useSearchParams()
 
   const print = searchParams.get('print')
 

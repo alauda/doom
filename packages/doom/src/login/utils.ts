@@ -1,8 +1,9 @@
 import { decodeUrl } from 'ab64'
+import siteData from 'virtual-site-data'
 
-import type { AuthInfo, AuthTokenInfo } from './types.ts'
+import type { AuthInfo, AuthTokenInfo, CloudAuth } from './types.ts'
 
-export const setLocalStorage = (key: string, value?: string) => {
+export const setLocalStorage = (key: string, value?: string | null) => {
   if (value == null) {
     localStorage.removeItem(key)
   } else {
@@ -37,3 +38,14 @@ export const getAuthInfoFromToken = (
     },
   }
 }
+
+export const isLoggedIn = (
+  authInfo: CloudAuth | null,
+): authInfo is CloudAuth & { detail: AuthInfo } => Boolean(authInfo?.detail)
+
+export const isIoSite = () =>
+  siteData.base.startsWith('/russian/') ||
+  location.hostname.endsWith('.alauda.io')
+
+export const getCloudOrigin = () =>
+  `https://cloud.alauda.${isIoSite() ? 'io' : 'cn'}`

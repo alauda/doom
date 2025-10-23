@@ -1,0 +1,1 @@
+export const CLOUD_AUTH_TOKEN_KEY = '__CLOUD_AUTH_TOKEN__'

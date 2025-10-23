@@ -1,0 +1,9 @@
+body:has(.container) :global {
+  #search-container,
+  .rspress-nav-search-button,
+  aside,
+  .rspress-doc-footer,
+  [class^='aside-container'] {
+    display: none;
+  }
+}

@@ -37,9 +37,7 @@ export const globalPlugin = ({
     globalStyles: pkgResolve('styles/global.scss'),
     globalUIComponents: fs
       .readdirSync(globalComponentsDir, 'utf8')
-      .map((component) =>
-        path.resolve(globalComponentsDir, component, 'index'),
-      ),
+      .map((component) => path.resolve(globalComponentsDir, component)),
     markdown: {
       globalComponents: fs
         .readdirSync(componentsDir)
@@ -74,6 +72,22 @@ export const globalPlugin = ({
           isProd ? 0 : 2,
         )}`,
       }
+    },
+    addPages(config) {
+      const loginPath = baseResolve('login')
+      if ((config.themeConfig?.locales?.length ?? 0) < 1) {
+        return [
+          {
+            routePath: '/login',
+            filepath: loginPath,
+          },
+        ]
+      }
+      const lang = config.lang
+      return config.themeConfig!.locales!.map((l) => ({
+        routePath: l.lang && l.lang !== lang ? `/${l.lang}/login` : '/login',
+        filepath: loginPath,
+      }))
     },
   }
 }
