@@ -1,3 +1,22 @@
+import type { ResponseError } from 'x-fetch'
+
+export interface ApiErrorOptions<
+  R extends string = string,
+  E extends object = object,
+  T = unknown,
+> {
+  code: number
+  reason: R
+  message: string
+  extra?: E
+  details?: T[]
+}
+
+export type ApiError<
+  T extends string = string,
+  E extends object = object,
+> = ResponseError<ApiErrorOptions<T, E>>
+
 export type ValueOf<T> = T[keyof T]
 
 export const TenantType = {
@@ -33,7 +52,7 @@ export interface AuthInfo {
   user: AuthUser
 }
 
-export interface CloudAuthRegion {
-  name: 'global' | 'china'
-  value: string
+export interface CloudAuth {
+  token?: string
+  detail?: AuthInfo
 }

@@ -24,13 +24,10 @@ const en = {
   period: '. ',
   colon: ': ',
   user_login: 'User login',
-  user_login_tip: 'Use the same credentials as for the "Customer Portal" site.',
+  user_login_tip1: 'Use the same credentials as for the "',
+  user_login_tip2: '" site.',
   customer_portal_global: 'Customer Portal Global',
   customer_portal_china: 'Customer Portal China',
-  user_login_region_china_tip:
-    'If you are a customer in the Chinese Mainland, select Customer Portal China;',
-  user_login_region_global_tip:
-    'if you are a customer outside the Chinese Mainland, select Customer Portal Global.',
   account_id: 'Account ID',
   username: 'Username',
   password: 'Password',
@@ -91,12 +88,10 @@ const zh: Translation = {
   period: '。',
   colon: '：',
   user_login: '用户登录',
-  user_login_tip: '使用与“客户门户”站点相同的凭据。',
+  user_login_tip1: '使用与“',
+  user_login_tip2: '”站点相同的凭据。',
   customer_portal_global: '客户门户全球',
   customer_portal_china: '客户门户中国',
-  user_login_region_china_tip: '如果您是中国大陆的客户，请选择客户门户中国；',
-  user_login_region_global_tip:
-    '如果您是中国大陆以外的客户，请选择客户门户全球。',
   account_id: '账号 ID',
   username: '用户名',
   password: '密码',
@@ -150,14 +145,10 @@ const ru: Translation = {
   period: '. ',
   colon: ': ',
   user_login: 'Вход пользователя',
-  user_login_tip:
-    'Используйте те же учетные данные, что и для сайта "Портал клиентов".',
+  user_login_tip1: 'Используйте те же учетные данные, что и для сайта "',
+  user_login_tip2: '".',
   customer_portal_global: 'Портал клиентов Глобальный',
   customer_portal_china: 'Портал клиентов Китай',
-  user_login_region_china_tip:
-    'Если вы клиент в материковом Китае, выберите Портал клиентов Китай;',
-  user_login_region_global_tip:
-    'если вы клиент за пределами материкового Китая, выберите Портал клиентов Глобальный.',
   account_id: 'Идентификатор аккаунта',
   username: 'Имя пользователя',
   password: 'Пароль',

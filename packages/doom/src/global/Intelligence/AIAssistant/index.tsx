@@ -9,8 +9,8 @@ import {
   type ApiInterceptor,
 } from 'x-fetch'
 
-import { type CloudAuth, getCloudAuth, useCloudAuth } from '../context.tsx'
-import type { AuthInfo } from '../types.ts'
+import { getCloudAuth, useCloudAuth } from '../../../login/store.ts'
+import { getCloudOrigin, isLoggedIn } from '../../../login/utils.ts'
 
 import { Chat } from './Chat/index.tsx'
 import { Preamble } from './Preamble/index.tsx'
@@ -30,10 +30,6 @@ export interface AIAssistantProps {
   onOpenChange: (open: boolean) => void
   onCleanup?: () => void
 }
-
-const isLoggedIn = (
-  authInfo: CloudAuth | null,
-): authInfo is CloudAuth & { detail: AuthInfo } => Boolean(authInfo?.detail)
 
 let textDecoder: TextDecoder | undefined
 
@@ -69,7 +65,7 @@ export const AIAssistant = ({ open, onOpenChange }: AIAssistantProps) => {
         req.headers.set('Authorization', `Bearer ${authInfo!.token}`)
       }
       if (!req.headers.has('CLOUD_AUTH_ORIGIN')) {
-        req.headers.set('CLOUD_AUTH_ORIGIN', authInfo!.origin)
+        req.headers.set('CLOUD_AUTH_ORIGIN', getCloudOrigin())
       }
       try {
         return await next(req)
