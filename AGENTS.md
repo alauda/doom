@@ -5,7 +5,7 @@ This monorepo contains the Doom documentation tool, export functionality, and re
 ## Setup
 
 - Install dependencies: `yarn install`
-- Node.js 18.17.0+ (but not 20.0.0, use 20.1.0+)
+- Node.js 20.19.0+
 
 ## Commands
 
