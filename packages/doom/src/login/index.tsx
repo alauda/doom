@@ -1,5 +1,5 @@
 import { NoSSR, useSearchParams } from '@rspress/core/runtime'
-import { useCallback } from 'react'
+import { useCallback, type CSSProperties } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { X } from '../runtime/components/_X.tsx'
@@ -8,6 +8,7 @@ import { useTranslation } from '../runtime/index.ts'
 import { LoginForm } from './LoginForm/index.tsx'
 import { getCloudOrigin, isIoSite } from './utils.ts'
 
+import darkBg from '@alauda/doom/assets/login-bg.dark.svg'
 import bg from '@alauda/doom/assets/login-bg.svg'
 import classes from '@alauda/doom/styles/login.module.scss'
 
@@ -22,7 +23,12 @@ const Login = () => {
   return (
     <div
       className={classes.container}
-      style={{ background: `no-repeat 0 100px url(${bg})` }}
+      style={
+        {
+          '--login-bg': `url(${bg})`,
+          '--login-bg-dark': `url(${darkBg})`,
+        } as CSSProperties
+      }
     >
       <div className={classes.loginForm}>
         <div className={classes.title}>{t('user_login')}</div>
