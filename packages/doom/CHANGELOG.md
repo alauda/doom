@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.15.1
+
+### Patch Changes
+
+- [#202](https://github.com/alauda/doom/pull/202) [`b747fc6`](https://github.com/alauda/doom/commit/b747fc66e6c689ee8bb7bc285da669e3ca9b2586) Thanks [@JounQin](https://github.com/JounQin)! - fix: improve login style
+
 ## 1.15.0
 
 ### Minor Changes
