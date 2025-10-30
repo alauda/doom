@@ -5,7 +5,7 @@ import {
   useNavigate,
   useSite,
 } from '@rspress/core/runtime'
-import { useEffect, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import siteData from 'virtual-site-data'
 import { createXFetch } from 'x-fetch'
 
@@ -26,15 +26,17 @@ const AuthCheck = () => {
 
   const { authInfo, setAuthBasic } = useCloudAuth()
 
+  const pathname_ = useMemo(() => pathname.replace(/\.html$/, ''), [pathname])
+
   const login = useMemoizedFn(() => {
     if (
-      pathname === '/login' ||
-      site.themeConfig.locales.some((l) => pathname === `/${l.lang}/login`)
+      pathname_ === '/login' ||
+      site.themeConfig.locales.some((l) => pathname_ === `/${l.lang}/login`)
     ) {
       return
     }
     navigate(
-      `${lang === site.lang ? '' : `/${lang}`}/login?from=${encodeURIComponent(`${pathname}${search}${hash}`)}`,
+      `${lang === site.lang ? '' : `/${lang}`}/login.html?from=${encodeURIComponent(`${pathname}${search}${hash}`)}`,
     )
   })
 
