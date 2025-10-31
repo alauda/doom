@@ -46,10 +46,10 @@ export function attributesTransformer(root: Root): void {
       }
 
       for (const [index, attrNode] of ids) {
-        const sibling = children[index - 1]
-        if (sibling.type === 'text') {
-          const data = parent!.data
-          parent!.data = {
+        const sibling = children.at(index - 1)
+        if (sibling?.type === 'text' && parent) {
+          const data = parent.data
+          parent.data = {
             ...data,
             hProperties: {
               ...data?.hProperties,
