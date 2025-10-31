@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.16.0
+
+### Minor Changes
+
+- [#207](https://github.com/alauda/doom/pull/207) [`39e0f2f`](https://github.com/alauda/doom/commit/39e0f2f9f284b3a96e95a676aa05ce331a917aa4) Thanks [@JounQin](https://github.com/JounQin)! - refactor: remove bad attributes plugin
+
 ## 1.15.2
 
 ### Patch Changes
