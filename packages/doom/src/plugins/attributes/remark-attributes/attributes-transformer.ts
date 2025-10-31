@@ -46,7 +46,8 @@ export function attributesTransformer(root: Root): void {
       }
 
       for (const [index, attrNode] of ids) {
-        const sibling = children.at(index - 1)
+        const sibling = children[index - 1]
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         if (sibling?.type === 'text' && parent) {
           const data = parent.data
           parent.data = {

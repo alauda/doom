@@ -80,7 +80,7 @@ export function Overview(props: {
   if (
     overviewSidebarGroups[0] &&
     'link' in overviewSidebarGroups[0] &&
-    overviewSidebarGroups[0]?.link !== routePath
+    overviewSidebarGroups[0].link !== routePath
   ) {
     overviewSidebarGroups = findItemByRoutePath(
       overviewSidebarGroups,
