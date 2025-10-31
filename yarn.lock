@@ -103,7 +103,6 @@ __metadata:
     globals: "npm:^16.4.0"
     html-tag-names: "npm:^2.1.0"
     jsencrypt: "npm:^3.5.4"
-    md-attr-parser: "npm:^1.3.0"
     mdast-util-mdx: "npm:^3.0.0"
     mdast-util-mdx-jsx: "npm:^3.2.0"
     mdast-util-phrasing: "npm:^4.1.0"
@@ -8457,13 +8456,6 @@ __metadata:
   bin:
     marked: bin/marked.js
   checksum: 10c0/5d5e34a913e888b3ec42b9ad69409cc674d3fb91c75fd66749280c5f0c6cf69de9f3a2076af2a952ca577dd226f05b2f3d00d6850df71c37e662f3492377a582
-  languageName: node
-  linkType: hard
-
-"md-attr-parser@npm:^1.3.0":
-  version: 1.3.0
-  resolution: "md-attr-parser@npm:1.3.0"
-  checksum: 10c0/97284ba2c937287f2c568291dd6ead1b570ba096274c5fde985a17d1e197cc13d7a4ca8293ecf9a5db9007383fdbfeba97e17cf5f7d46ca5222c36a6c519e37b
   languageName: node
   linkType: hard
 

@@ -28,11 +28,3 @@ declare module 'virtual-site-data' {
   const data: SiteData
   export default data
 }
-
-declare module 'md-attr-parser' {
-  const parseAttrs: (value?: string | null) => {
-    prop: Record<string, string>
-    eaten: string
-  }
-  export = parseAttrs
-}
