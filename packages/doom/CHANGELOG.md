@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.15.2
+
+### Patch Changes
+
+- [#205](https://github.com/alauda/doom/pull/205) [`e1a2a42`](https://github.com/alauda/doom/commit/e1a2a421bac741aaebba62257662776aeb08ca55) Thanks [@JounQin](https://github.com/JounQin)! - fix: sibling could be undefined
+
 ## 1.15.1
 
 ### Patch Changes
