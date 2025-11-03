@@ -4,7 +4,7 @@
 
 ## rspress Components
 
-Most of the [built-in components](https://rspress.dev/zh/guide/default-theme/components) provided by the `rspress` theme have been adjusted to global components, which can be used directly in `.mdx` files without importing, including:
+Most of the [built-in components](https://rspress.dev/zh/guide/default-theme/components) provided by the `rspress` theme have been adjusted to global components, which can be used directly in `.mdx` files without import, including:
 
 * `Badge`
 * `Card`
@@ -28,19 +28,19 @@ import { SourceCode } from '@rspress/core/theme'
 
 ### `Overview`
 
-Document overview component, used to display the document directory
+Document overview component used to display the document directory
 
 ### `Directive`
 
-Sometimes, due to nested indentation, the [custom container](https://rspress.dev/zh/guide/basic/use-mdx#%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AE%B9%E5%99%A8) syntax may fail. You can use the `Directive` component as a substitute.
+Sometimes, due to nested indentation, the [custom container](https://rspress.dev/zh/guide/basic/use-mdx#%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AE%B9%E5%99%A8) syntax may fail. You can use the `Directive` component as a replacement.
 
 ```mdx
 - The directory structure of multilingual documents (`doc/en`) needs to be exactly the same as the documents under the `doc/zh` directory to ensure that the links in multilingual documents are identical except for the language identifier.
 
   <Directive type="danger" title="Note">
     If you are using automated translation tools, you do not need to worry about
-    this issue, as the automated translation tools will automatically generate
-    the target language document directory structure based on `doc/zh`.
+    this issue. The automated translation tools will automatically generate the
+    target language document directory structure based on `doc/zh`.
   </Directive>
 ```
 
@@ -48,8 +48,8 @@ Sometimes, due to nested indentation, the [custom container](https://rspress.dev
 
   <Directive type="danger" title="Note">
     If you are using automated translation tools, you do not need to worry about
-    this issue, as the automated translation tools will automatically generate
-    the target language document directory structure based on `doc/zh`.
+    this issue. The automated translation tools will automatically generate the
+    target language document directory structure based on `doc/zh`.
   </Directive>
 
 ### `ExternalSite`
@@ -74,15 +74,15 @@ Component for referencing external site links
 
 :::tip
 
-In mdx, `<ExternalSiteLink name="connectors" href="link" children="Content" />` has a different meaning from the following:
+In mdx, `<ExternalSiteLink name="connectors" href="link" children="Content" />` has a different meaning from the following content:
 
 ```mdx
 <ExternalSiteLink name="connectors" href="link">
-  Content {/* This will be rendered inside a `p` element */}
+  Content {/* will be rendered inside a `p` element */}
 </ExternalSiteLink>
 ```
 
-If you do not want the text to be rendered inside a `p` element, you can pass it via the `children` prop as shown in the example above.
+If you do not want the text to be rendered inside a `p` element, you can pass it using the `children` attribute as shown in the example above.
 
 :::
 
@@ -110,6 +110,7 @@ Term component, plain text, dynamically mounted and injected
 <Term name="company" textCase="capitalize" />
 <Term name="product" textCase="lower" />
 <Term name="productShort" textCase="upper" />
+<Term name="alaudaCloudLink" />
 ```
 
 <Term name="company" textCase="capitalize" />
@@ -118,9 +119,11 @@ Term component, plain text, dynamically mounted and injected
 
 <Term name="productShort" textCase="upper" />
 
+<Term name="alaudaCloudLink" />
+
 #### `props`
 
-* `name`: Built-in term name, refer to [dynamic mounting configuration file](./deploy.md#overrides)
+* `name`: Built-in term name, refer to [dynamic mount configuration file](./deploy.md#overrides)
 * `textCase`: Text case transformation, optional values are `lower`, `upper`, `capitalize`
 
 ### `TermsTable`
@@ -135,7 +138,7 @@ Built-in term list display component
 
 #### `props`
 
-* `terms`: `NormalizedTermItem[]`, optional, custom term list to facilitate reuse when rendering custom terms in internal documentation
+* `terms`: `NormalizedTermItem[]`, optional, custom term list for convenient reuse when rendering custom terms in internal documentation
 
 ### `JsonViewer`
 
@@ -147,7 +150,7 @@ Built-in term list display component
 
 ## Custom Component Reuse
 
-According to the [convention](./convention), we can extract reusable content into the `shared` directory and then import it where needed, for example:
+According to the [convention](./convention), we can extract reusable content into the `shared` directory, then import it where needed, for example:
 
 ```mdx
 import CommonContent from './shared/CommonContent.mdx'
@@ -155,7 +158,7 @@ import CommonContent from './shared/CommonContent.mdx'
 <CommonContent />
 ```
 
-If you need to use more [runtime](https://rspress.dev/zh/api/client-api/api-runtime) related APIs, you can implement components in `.jsx/.tsx` and then import and use them in `.mdx` files.
+If you need to use more [runtime](https://rspress.dev/zh/api/client-api/api-runtime) related APIs, you can implement components with `.jsx/.tsx` and then import and use them in `.mdx` files.
 
 ```tsx
 // shared/CommonContent.tsx

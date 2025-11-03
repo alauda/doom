@@ -108,6 +108,7 @@ import { SourceCode } from '@rspress/core/theme'
 <Term name="company" textCase="capitalize" />
 <Term name="product" textCase="lower" />
 <Term name="productShort" textCase="upper" />
+<Term name="alaudaCloudLink" />
 ```
 
 <Term name="company" textCase="capitalize" />
@@ -115,6 +116,8 @@ import { SourceCode } from '@rspress/core/theme'
 <Term name="product" textCase="lower" />
 
 <Term name="productShort" textCase="upper" />
+
+<Term name="alaudaCloudLink" />
 
 #### `props`
 
