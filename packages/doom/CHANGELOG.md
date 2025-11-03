@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.16.2
+
+### Patch Changes
+
+- [#212](https://github.com/alauda/doom/pull/212) [`9976fc6`](https://github.com/alauda/doom/commit/9976fc6dbd4e6515d612b1d95416f83da5fb8edd) Thanks [@JounQin](https://github.com/JounQin)! - fix: schema in requestBody could be undefined
+
 ## 1.16.1
 
 ### Patch Changes
