@@ -16,32 +16,24 @@ body:has(.container) :global {
 .container {
   padding: 100px 0 200px;
   background: no-repeat 0 100px;
-  background-image: var(--login-bg);
 }
 
 :root {
   &:global(.dark) {
-    .container {
-      background-image: var(--login-bg-dark);
-    }
-
     .login-form {
-      --login-form-bg: #434652;
-      --login-form-shadow: 0 3px 5px #000;
+      background-color: #434652;
+      box-shadow: 0 3px 5px #000;
     }
   }
 }
 
 .login-form {
-  --login-form-bg: #fefefe;
-  --login-form-shadow: 0 0 8px #3c3c3c4a;
-
   margin-left: auto;
   padding: 40px 60px;
   width: min(452px, 100%);
   border-radius: 4px;
-  box-shadow: var(--login-form-shadow);
-  background-color: var(--login-form-bg);
+  background-color: #fefefe;
+  box-shadow: 0 0 8px #3c3c3c4a;
 }
 
 .title {

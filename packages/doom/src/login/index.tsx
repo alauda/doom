@@ -1,5 +1,5 @@
-import { NoSSR, useSearchParams } from '@rspress/core/runtime'
-import { useCallback, type CSSProperties } from 'react'
+import { NoSSR, useDark, useSearchParams } from '@rspress/core/runtime'
+import { useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { X } from '../runtime/components/_X.tsx'
@@ -19,16 +19,14 @@ const Login = () => {
   const onLoggedIn = useCallback(() => {
     navigate(from || '/')
   }, [from, navigate])
+  const dark = useDark()
   const t = useTranslation()
   return (
     <div
       className={classes.container}
-      style={
-        {
-          '--login-bg': `url(${bg})`,
-          '--login-bg-dark': `url(${darkBg})`,
-        } as CSSProperties
-      }
+      style={{
+        backgroundImage: `url(${dark ? darkBg : bg})`,
+      }}
     >
       <div className={classes.loginForm}>
         <div className={classes.title}>{t('user_login')}</div>
