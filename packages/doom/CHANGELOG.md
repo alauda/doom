@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.16.1
+
+### Patch Changes
+
+- [#210](https://github.com/alauda/doom/pull/210) [`81178e6`](https://github.com/alauda/doom/commit/81178e6726cb5d7925c08ea6d99c37485d8fdaa0) Thanks [@JounQin](https://github.com/JounQin)! - feat: support markdown for terms
+
 ## 1.16.0
 
 ### Minor Changes
