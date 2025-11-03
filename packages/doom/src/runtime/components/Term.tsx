@@ -5,6 +5,8 @@ import type { TermName } from '../../terms.js'
 import { useSiteOverrides } from '../hooks/index.js'
 import { handleCJKWhitespaces } from '../utils.js'
 
+import { Markdown } from './Markdown.js'
+
 export interface TermProps {
   name: TermName
   textCase?: 'lower' | 'upper' | 'capitalize'
@@ -32,7 +34,7 @@ export const Term = ({ name, textCase }: TermProps) => {
       }
     }
   }, [terms, name, textCase])
-  return text
+  return <Markdown inline>{text}</Markdown>
 }
 
 export default Term

@@ -27,6 +27,10 @@ const terms = {
     en: 'ACP',
     description: '产品品牌简称',
   },
+  alaudaCloudLink: {
+    en: '[Alauda Cloud](https://cloud.alauda.io)',
+    zh: '[Alauda Cloud](https://cloud.alauda.cn)',
+  },
 } as const satisfies Record<string, TermItem>
 
 export type TermName = keyof typeof terms
