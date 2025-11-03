@@ -243,11 +243,15 @@ export const OpenAPIPath = ({
           requestBody &&
           ('$ref' in requestBody
             ? requestBody.$ref
-            : (
-                requestBody.content['application/json'].schema as
-                  | OpenAPIV3_1.ReferenceObject
-                  | undefined
+            : /* eslint-disable @typescript-eslint/no-unnecessary-condition */
+              (
+                (
+                  requestBody.content['application/json'] ||
+                  requestBody.content['application/json-patch+json'] ||
+                  requestBody.content['*/*']
+                )?.schema as OpenAPIV3_1.ReferenceObject | undefined
               )?.$ref)
+        /* eslint-enable @typescript-eslint/no-unnecessary-condition */
 
         const requestBodySchema = requestBodyRef
           ? resolveRef(openapi, requestBodyRef)
