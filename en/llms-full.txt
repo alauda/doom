@@ -97,6 +97,50 @@ url: /en/apis/advanced-apis/projects.md
 
 
 ---
+url: /en/apis/advanced-apis/workload/daemonset.md
+---
+
+
+# DaemonSet \[apps/v1]
+
+<OpenAPIPath
+  path="/apis/apps/v1/daemonsets"
+  pathPrefix="/kubernetes/{cluster}"
+/>
+
+
+
+---
+url: /en/apis/advanced-apis/workload/deployment.md
+---
+
+
+# Deployments \[apps/v1]
+
+<OpenAPIPath
+  path="/apis/apps/v1/deployments"
+  pathPrefix="/kubernetes/{cluster}"
+/>
+
+<OpenAPIPath
+  path="/apis/apps/v1/namespaces/{namespace}/deployments/{name}"
+  pathPrefix="/kubernetes/{cluster}"
+/>
+
+
+
+---
+url: /en/apis/advanced-apis/workload/index.md
+---
+
+
+# Workload APIs
+
+<Overview overviewHeaders={[]} />
+
+
+
+---
 url: /en/apis/crds/ArtifactCleanupRun.md
 ---
 

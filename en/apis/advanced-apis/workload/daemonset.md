@@ -1,0 +1,3 @@
+# DaemonSet \[apps/v1]
+
+<OpenAPIPath path="/apis/apps/v1/daemonsets" pathPrefix="/kubernetes/{cluster}" />
