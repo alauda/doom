@@ -56,6 +56,7 @@
     "@rspress/shared": "2.0.0-beta.34",
     "@shikijs/transformers": "^3.14.0",
     "@total-typescript/ts-reset": "^0.6.1",
+    "@types/react": "^19.2.2",
     "ab64": "^0.1.6",
     "chokidar": "^4.0.3",
     "clsx": "^2.1.1",
