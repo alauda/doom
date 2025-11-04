@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.16.3
+
+### Patch Changes
+
+- [#214](https://github.com/alauda/doom/pull/214) [`08c103a`](https://github.com/alauda/doom/commit/08c103ae5a83609c0e8562e79b7046b3d89072ae) Thanks [@JounQin](https://github.com/JounQin)! - chore: add @types/react as dependency for editor experience
+
 ## 1.16.2
 
 ### Patch Changes
