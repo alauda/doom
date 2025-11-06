@@ -18,6 +18,8 @@
 - [APIs](/apis/index.md)
 - [CodeQuality](/apis/references/CodeQuality.md)
 - [CodeQualityBranch](/apis/references/CodeQualityBranch.md)
+- [DaemonSet](/apis/references/DaemonSet.md)
+- [Deployment](/apis/references/Deployment.md)
 - [公共引用](/apis/references/index.md)
 - [开始](/start.md)
 - [API 文档](/usage/api.md)

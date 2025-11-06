@@ -99,6 +99,11 @@ url: /apis/advanced-apis/workload/daemonset.md
   pathPrefix="/kubernetes/{cluster}"
 />
 
+<OpenAPIPath
+  path="/apis/apps/v1/namespaces/{namespace}/daemonsets/{name}"
+  pathPrefix="/kubernetes/{cluster}"
+/>
+
 
 
 ---
@@ -179,6 +184,26 @@ url: /apis/references/CodeQualityBranch.md
 # CodeQualityBranch
 
 <OpenAPIRef schema="v1alpha1.CodeQualityBranch" />
+
+
+
+---
+url: /apis/references/DaemonSet.md
+---
+
+# DaemonSet
+
+<OpenAPIRef schema="io.k8s.api.apps.v1.DaemonSet" />
+
+
+
+---
+url: /apis/references/Deployment.md
+---
+
+# Deployment
+
+<OpenAPIRef schema="io.k8s.api.apps.v1.Deployment" />
 
 
 
