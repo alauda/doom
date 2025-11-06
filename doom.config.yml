@@ -13,7 +13,16 @@ api:
   openapis:
     - docs/shared/openapis/*.json
   references:
-    v1alpha1.CodeQualityBranch: /apis/references/CodeQualityBranch#CodeQualityBranch
+    v1alpha1.CodeQualityBranch: /apis/references/CodeQualityBranch#v1alpha1.CodeQualityBranch
+    io.k8s.api.apps.v1.DaemonSet: /apis/references/Daemonset#io.k8s.api.apps.v1.DaemonSet
+    io.k8s.api.apps.v1.Deployment: /apis/references/Deployment#io.k8s.api.apps.v1.Deployment
+    io.k8s.api.core.v1.ObjectFieldSelector: https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/object-field-selector/
+    io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions: https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/delete-options/
+    io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelector: https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/label-selector/
+    io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta: https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/list-meta/
+    io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta: https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/object-meta/
+    io.k8s.apimachinery.pkg.apis.meta.v1.Patch: https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/patch/
+    io.k8s.apimachinery.pkg.apis.meta.v1.Status: https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/status/
 permission:
   functionresources:
     - docs/shared/functionresources/*.yaml

@@ -22,11 +22,12 @@ export const resolveRef = <
 }
 
 const DEFAULT_COMMON_REFS = {
-  'v1alpha1.ListMeta': 'common-definitions/list-meta/#ListMeta',
-  'v1.ObjectMeta': 'common-definitions/object-meta/#ObjectMeta',
+  'v1alpha1.ListMeta': 'list-meta/',
+  'v1.ObjectMeta': 'object-meta/',
 }
 
-const K8S_DOC_PREFIX = 'https://kubernetes.io/docs/reference/kubernetes-api/'
+const K8S_DOC_PREFIX =
+  'https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/'
 
 export const COMMON_REFS = {
   ...Object.fromEntries(

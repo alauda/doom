@@ -34,6 +34,21 @@ export interface OpenAPIRefProps {
   collectRefs?: boolean
 }
 
+export const get$Ref = (
+  obj: OpenAPIV3_1.ReferenceObject | OpenAPIV3_1.SchemaObject,
+) => {
+  if ('$ref' in obj && obj.$ref) {
+    return obj.$ref
+  }
+  if ('allOf' in obj && Array.isArray(obj.allOf)) {
+    for (const item of obj.allOf) {
+      if ('$ref' in item && item.$ref) {
+        return item.$ref
+      }
+    }
+  }
+}
+
 export const OpenAPIProperty = ({
   name,
   property,
@@ -43,53 +58,74 @@ export const OpenAPIProperty = ({
   property: OpenAPIV3_1.ReferenceObject | OpenAPIV3_1.SchemaObject
   openapi: OpenAPIV3_1.Document
 }) => {
-  const propObj =
-    '$ref' in property ? resolveRef(openapi, property.$ref) : property
+  const prop$Ref = get$Ref(property)
+
+  const propObj = prop$Ref
+    ? resolveRef(openapi, prop$Ref)
+    : (property as OpenAPIV3_1.SchemaObject)
+
   const type = propObj.type
+
   let typeNode: ReactNode
   let extraNode: ReactNode
+
   if (type === 'array') {
     const { items } = propObj
-    const itemsObj = '$ref' in items ? resolveRef(openapi, items.$ref) : items
+    const items$Ref = get$Ref(items)
+    const itemsObj = items$Ref
+      ? resolveRef(openapi, items$Ref)
+      : (items as OpenAPIV3_1.SchemaObject)
     const itemsType = itemsObj.type
     typeNode = (
       <code>
         []
-        {'$ref' in items ? <RefLink $ref={items.$ref} /> : itemsType}
+        {items$Ref ? <RefLink $ref={items$Ref} /> : itemsType}
       </code>
     )
   } else if (type === 'object') {
-    if ('properties' in property && property.properties) {
-      extraNode = (
-        <div className="my-4">
-          <em>Properties:</em>
-          <OpenAPIProperties
-            properties={property.properties}
-            openapi={openapi}
-          />
-        </div>
-      )
+    if (prop$Ref) {
+      typeNode = <RefLink $ref={prop$Ref} />
     }
+
     if (typeof propObj.additionalProperties === 'object') {
       const props = propObj.additionalProperties
-      const propsObj = '$ref' in props ? resolveRef(openapi, props.$ref) : props
+      const props$Ref = get$Ref(props)
+      const propsObj = props$Ref
+        ? resolveRef(openapi, props$Ref)
+        : (props as OpenAPIV3_1.SchemaObject)
       const propsType = propsObj.type
       typeNode = (
-        <code>
-          map[string]
-          {typeof propsType === 'string'
-            ? propsType
-            : '$ref' in props && <RefLink $ref={props.$ref} />}
-        </code>
+        <>
+          {typeNode}
+          <code>
+            map[string]
+            {typeof propsType === 'string'
+              ? propsType
+              : props$Ref && <RefLink $ref={props$Ref} />}
+          </code>
+        </>
       )
-    } else {
+
+      if ('properties' in property && property.properties) {
+        extraNode = (
+          <div className="my-4">
+            <em>Properties:</em>
+            <OpenAPIProperties
+              properties={property.properties}
+              openapi={openapi}
+            />
+          </div>
+        )
+      }
+    } else if (!prop$Ref) {
       typeNode = <code>{type}</code>
     }
   } else if (typeof type === 'string') {
     typeNode = <code>{type}</code>
-  } else if ('$ref' in property) {
-    typeNode = <RefLink $ref={property.$ref} />
+  } else if (prop$Ref) {
+    typeNode = <RefLink $ref={prop$Ref} />
   }
+
   return (
     <>
       {name && (
