@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.16.4
+
+### Patch Changes
+
+- [#216](https://github.com/alauda/doom/pull/216) [`9f7c838`](https://github.com/alauda/doom/commit/9f7c838bc5c77bbc7190fb99e788222b6816585e) Thanks [@JounQin](https://github.com/JounQin)! - fix: $ref compatibility
+
 ## 1.16.3
 
 ### Patch Changes
