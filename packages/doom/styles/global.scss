@@ -109,6 +109,20 @@ td {
   @media (min-width: 1280px) {
     display: none;
   }
+
+  .rp-link:hover {
+    border-bottom: 0;
+    background-color: var(--rp-c-bg-mute);
+    border-radius: var(--rp-radius-small);
+
+    &:not(.rp-toc-item--active) .rp-toc-item__text {
+      color: var(--rp-c-text-1);
+    }
+  }
+
+  .rp-toc-item__text {
+    padding: 6px 12px;
+  }
 }
 
 .dark .doom-tabs .language-mdx {

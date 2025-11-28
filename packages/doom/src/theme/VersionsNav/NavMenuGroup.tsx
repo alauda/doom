@@ -132,7 +132,7 @@ export function NavMenuGroup(item: NavMenuGroupItem) {
 
   return (
     <div
-      className="rp-relative rp-flex rp-items-center rp-justify-center rp-h-14"
+      className="rp-relative rp-flex rp-items-center rp-justify-center rp-text-sm rp-h-14"
       onMouseLeave={handleMouseLeave}
     >
       <div

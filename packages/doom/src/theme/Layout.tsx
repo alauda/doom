@@ -16,6 +16,8 @@ import type {
 import { useTranslation } from '../runtime/index.ts'
 import type { ExportItem } from '../types.ts'
 
+import { VersionsNav } from './VersionsNav/index.tsx'
+
 const X = getCustomMDXComponent()
 
 export interface MatchedSidebar {
@@ -135,9 +137,10 @@ export const Layout = () => {
 
   return (
     <OriginalLayout
+      afterNavMenu={<VersionsNav />}
       beforeOutline={
         pdfLink && (
-          <X.p>
+          <X.p style={{ marginBottom: 16 }}>
             <a
               className={classes.link}
               href={pdfLink}

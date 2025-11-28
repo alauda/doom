@@ -63,41 +63,25 @@ import { defaultGitHubUrl, isDoc } from './helpers.ts'
 const DEFAULT_LOGO = '/logo.svg'
 
 const KNOWN_LOCALE_CONFIGS: Partial<
-  Record<
-    string,
-    Omit<LocaleConfig, 'lang' | 'editLink'> & { editLink: { text: string } }
-  >
+  Record<string, Omit<LocaleConfig, 'lang'>>
 > = {
   en: {
     label: 'English',
-    editLink: {
-      text: '📝 Edit this page on GitHub',
-    },
   },
   zh: {
     label: '简体中文',
-    searchPlaceholderText: '搜索文档',
-    searchNoResultsText: '未搜索到相关结果',
-    searchSuggestedQueryText: '可更换不同的关键字后重试',
-    outlineTitle: '本页概览',
-    prevPageText: '上一页',
-    nextPageText: '下一页',
-    editLink: {
-      text: '📝 在 GitHub 上编辑此页',
-    },
+    // searchSuggestedQueryText: '可更换不同的关键字后重试',
+    // outlineTitle: '本页概览',
+    // prevPageText: '上一页',
+    // nextPageText: '下一页',
   },
   ru: {
     label: 'Русский',
-    searchPlaceholderText: 'Поиск документов',
-    searchNoResultsText: 'Не найдено соответствующих результатов',
-    searchSuggestedQueryText:
-      'Попробуйте изменить ключевые слова и повторить поиск',
-    outlineTitle: 'Обзор страницы',
-    prevPageText: 'Предыдущая страница',
-    nextPageText: 'Следующая страница',
-    editLink: {
-      text: '📝 Редактировать эту страницу на GitHub',
-    },
+    // searchSuggestedQueryText:
+    //   'Попробуйте изменить ключевые слова и повторить поиск',
+    // outlineTitle: 'Обзор страницы',
+    // prevPageText: 'Предыдущая страница',
+    // nextPageText: 'Следующая страница',
   },
 }
 
@@ -221,14 +205,6 @@ const getCommonConfig = async ({
         lang: name,
         label: name,
         ...KNOWN_LOCALE_CONFIGS[name],
-        editLink:
-          editRepoEnabled && editRepoBaseUrl
-            ? {
-                docRepoBaseUrl: editRepoBaseUrl,
-                ...KNOWN_LOCALE_CONFIGS.en!.editLink,
-                ...KNOWN_LOCALE_CONFIGS[name]?.editLink,
-              }
-            : undefined,
       })
     }
   }
@@ -238,7 +214,7 @@ const getCommonConfig = async ({
     locales.map(({ lang }) => lang),
   )
 
-  const { editLink, ...zhLocale } = KNOWN_LOCALE_CONFIGS.zh!
+  const zhLocale = KNOWN_LOCALE_CONFIGS.zh!
 
   const algoliaOptions =
     ((algolia && config.algolia) ??
@@ -298,19 +274,121 @@ const getCommonConfig = async ({
         ],
       },
     },
+    i18nSource: {
+      languagesText: {
+        en: 'Languages',
+        zh: '语言',
+        ru: 'Языки',
+      },
+      themeText: {
+        en: 'Theme',
+        zh: '主题',
+        ru: 'Тема',
+      },
+      versionsText: {
+        en: 'Versions',
+        zh: '版本',
+        ru: 'Версии',
+      },
+      menuTitle: {
+        en: 'Menu',
+        zh: '菜单',
+        ru: 'Меню',
+      },
+      outlineTitle: {
+        en: 'ON THIS PAGE',
+        zh: '目录',
+        ru: 'НА ЭТОЙ СТРАНИЦЕ',
+      },
+      scrollToTopText: {
+        en: 'Back to top',
+        zh: '回到顶部',
+        ru: 'Наверх',
+      },
+      lastUpdatedText: {
+        en: 'Last Updated',
+        zh: '最后更新于',
+        ru: 'Последнее обновление',
+      },
+      prevPageText: {
+        en: 'Previous page',
+        zh: '上一页',
+        ru: 'Предыдущая страница',
+      },
+      nextPageText: {
+        en: 'Next page',
+        zh: '下一页',
+        ru: 'Следующая страница',
+      },
+      sourceCodeText: {
+        en: 'Source Code',
+        zh: '源码',
+        ru: 'Исходный код',
+      },
+      searchPlaceholderText: {
+        en: 'Search',
+        zh: '搜索',
+        ru: 'Поиск',
+      },
+      searchPanelCancelText: {
+        en: 'Cancel',
+        zh: '取消',
+        ru: 'Отмена',
+      },
+      searchNoResultsText: {
+        en: 'No matching results',
+        zh: '未找到与之匹配的结果',
+        ru: 'Нет совпадающих результатов',
+      },
+      searchSuggestedQueryText: {
+        en: 'Try searching for different keywords',
+        zh: '试试搜索不同关键词',
+        ru: 'Попробуйте изменить ключевые слова и повторить поиск',
+      },
+      'overview.filterNameText': {
+        en: 'Filter',
+        zh: '筛选',
+        ru: 'Фильтр',
+      },
+      'overview.filterPlaceholderText': {
+        en: 'Search API',
+        zh: '搜索 API',
+        ru: 'Поиск API',
+      },
+      'overview.filterNoResultText': {
+        en: 'No matching API found',
+        zh: '未找到匹配的 API',
+        ru: 'Совпадающие API не найдены',
+      },
+      editLinkText: {
+        en: '📝 Edit this page',
+        zh: '📝 编辑此页面',
+        ru: '📝 Редактировать эту страницу',
+      },
+      codeButtonGroupCopyButtonText: {
+        en: 'Copy code',
+        zh: '复制代码',
+        ru: 'Скопировать код',
+      },
+      notFoundText: {
+        en: 'PAGE NOT FOUND',
+        zh: '页面未找到',
+        ru: 'СТРАНИЦА НЕ НАЙДЕНА',
+      },
+      takeMeHomeText: {
+        en: 'Take me home',
+        zh: '返回首页',
+        ru: 'Вернуться на главную',
+      },
+    },
     themeConfig: {
       enableScrollToTop: true,
-      // https://github.com/web-infra-dev/rspress/issues/2011
-      outline: true,
       localeRedirect: redirect,
-      ...(fallbackToZh
-        ? editRepoEnabled && editRepoBaseUrl
-          ? {
-              ...zhLocale,
-              editLink: { ...editLink, docRepoBaseUrl: editRepoBaseUrl },
-            }
-          : zhLocale
-        : { locales }),
+      ...(editRepoEnabled &&
+        editRepoBaseUrl && {
+          editLink: { docRepoBaseUrl: editRepoBaseUrl },
+        }),
+      ...(fallbackToZh ? zhLocale : { locales }),
     },
     plugins: [
       algoliaOptions && pluginAlgolia(),
@@ -383,6 +461,10 @@ const getCommonConfig = async ({
         },
       },
     },
+    ssg: {
+      experimentalWorker: true,
+    },
+    llms: true,
   }
 }
 

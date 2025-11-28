@@ -4,7 +4,11 @@ import type {
   SidebarSectionHeader,
 } from '@rspress/core'
 import { isEqualPath, usePageData, useSidebar } from '@rspress/core/runtime'
-import { Link, renderInlineMarkdown } from '@rspress/core/theme'
+import {
+  FallbackHeading,
+  Link,
+  renderInlineMarkdown,
+} from '@rspress/core/theme'
 import type { Header, NormalizedSidebarGroup } from '@rspress/shared'
 import { Fragment, useCallback, useMemo } from 'react'
 
@@ -217,7 +221,7 @@ export function Overview(props: {
           groups.length === 1 ? (
             <h2 style={{ paddingTop: 0 }} />
           ) : (
-            <h2 {...renderInlineMarkdown(group.name)} />
+            <FallbackHeading level={2} title={group.name} />
           )}
 
           <div className={classes.overviewGroups}>

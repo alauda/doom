@@ -86,15 +86,3 @@ graph TD;
 ```
 
 With [Markdown Preview Mermaid](https://github.com/mjbvz/vscode-markdown-mermaid), you can preview in real time in VSCode.
-
-## Attribute Extensions {#attributes}
-
-:::warning
-Currently only supported in `.md` files, see [related issue](https://github.com/web-infra-dev/rspress/issues/2215#issuecomment-3018371927)
-:::
-
-```md
-![](/logo.svg){width="100" height="100"}
-```
-
-![](/logo.svg){width="100" height="100"}
