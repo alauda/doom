@@ -1,4 +1,4 @@
-import { CodeBlockRuntime, Tab, Tabs } from '@rspress/core/theme'
+import { CodeBlockRuntime, Tab, Tabs } from '@rspress/core/theme-original'
 import type { JsonValue } from 'type-fest'
 import { stringify } from 'yaml'
 

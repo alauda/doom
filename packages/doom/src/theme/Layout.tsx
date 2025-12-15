@@ -2,7 +2,7 @@ import { useLang, useSite, withBase } from '@rspress/core/runtime'
 import {
   Layout as OriginalLayout,
   getCustomMDXComponent,
-} from '@rspress/core/theme'
+} from '@rspress/core/theme-original'
 import virtual from 'doom-@global-virtual'
 import { useMemo } from 'react'
 import { useLocation } from 'react-router'

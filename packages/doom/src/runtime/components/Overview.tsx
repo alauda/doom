@@ -8,7 +8,7 @@ import {
   FallbackHeading,
   Link,
   renderInlineMarkdown,
-} from '@rspress/core/theme'
+} from '@rspress/core/theme-original'
 import type { Header, NormalizedSidebarGroup } from '@rspress/shared'
 import { Fragment, useCallback, useMemo } from 'react'
 

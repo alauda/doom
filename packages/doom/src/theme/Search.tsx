@@ -1,5 +1,5 @@
 import { useLang } from '@rspress/core/runtime'
-import { Search as OriginalSearch } from '@rspress/core/theme'
+import { Search as OriginalSearch } from '@rspress/core/theme-original'
 import {
   Search as AlgoliaSearch,
   ZH_LOCALES,

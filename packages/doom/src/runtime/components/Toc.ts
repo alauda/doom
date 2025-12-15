@@ -1,1 +1,1 @@
-export { Toc, Toc as default } from '@rspress/core/theme'
+export { Toc, Toc as default } from '@rspress/core/theme-original'

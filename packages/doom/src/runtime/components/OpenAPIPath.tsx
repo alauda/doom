@@ -1,5 +1,5 @@
 import { usePage } from '@rspress/core/runtime'
-import { Badge } from '@rspress/core/theme'
+import { Badge } from '@rspress/core/theme-original'
 import openapisMap from 'doom-@api-openapisMap'
 import virtual from 'doom-@api-virtual'
 import BananaSlug from 'github-slugger'

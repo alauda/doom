@@ -1,4 +1,4 @@
-import { Tabs as Tabs_ } from '@rspress/core/theme'
+import { Tabs as Tabs_ } from '@rspress/core/theme-original'
 import { Children, type RefAttributes } from 'react'
 
 import { useIsPrint } from '../hooks/index.js'

@@ -2,7 +2,7 @@
  * modified based on @see https://github.com/crdsdev/doc/blob/main/template/doc.html
  */
 
-import { Badge, Button } from '@rspress/core/theme'
+import { Badge, Button } from '@rspress/core/theme-original'
 import crdsMap from 'doom-@api-crdsMap'
 import type { OpenAPIV3_1 } from 'openapi-types'
 import { useCallback, useEffect, useMemo, useState } from 'react'

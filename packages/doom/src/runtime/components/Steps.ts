@@ -1,1 +1,1 @@
-export { Steps, Steps as default } from '@rspress/core/theme'
+export { Steps, Steps as default } from '@rspress/core/theme-original'
