@@ -1,5 +1,11 @@
 # @alauda/doom-export
 
+## 0.3.0
+
+### Minor Changes
+
+- [#221](https://github.com/alauda/doom/pull/221) [`b105395`](https://github.com/alauda/doom/commit/b105395cdf4c1b5a0f9939542e8d950733b4cc82) Thanks [@JounQin](https://github.com/JounQin)! - fix: bump @alauda/doom-export
+
 ## 0.2.1
 
 ### Patch Changes
