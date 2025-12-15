@@ -22,8 +22,7 @@ export interface ReferenceItem extends ReferenceItemRemote {
 }
 
 export interface NormalizedReferenceSource
-  extends ReferenceItemRemote,
-    ReferenceItemSource {
+  extends ReferenceItemRemote, ReferenceItemSource {
   anchor?: string
 }
 

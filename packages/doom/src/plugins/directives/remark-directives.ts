@@ -11,6 +11,7 @@ const CONTAINER_DIRECTIVE_TYPES = new Set([
   'danger',
   'info',
   'details',
+  '$$$callout$$$',
 ])
 
 export const remarkDirectives: Plugin<[], Root> = function () {
@@ -28,12 +29,7 @@ export const remarkDirectives: Plugin<[], Root> = function () {
 
       if (
         node.type === 'containerDirective' &&
-        (CONTAINER_DIRECTIVE_TYPES.has(node.name) ||
-          // https://github.com/web-infra-dev/rspress/pull/2403
-          (!node.name &&
-            data.hProperties?.class
-              ?.toString()
-              .startsWith('rspress-directive')))
+        CONTAINER_DIRECTIVE_TYPES.has(node.name)
       ) {
         return
       }

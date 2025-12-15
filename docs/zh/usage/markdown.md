@@ -85,15 +85,3 @@ graph TD;
 ```
 
 配合 [Markdown Preview Mermaid](https://github.com/mjbvz/vscode-markdown-mermaid) 可以在 VSCode 中实时预览。
-
-## 属性扩展 \{#attributes}
-
-:::warning
-当前仅支持在 `.md` 文件中使用，参考[相关 issue](https://github.com/web-infra-dev/rspress/issues/2215#issuecomment-3018371927)
-:::
-
-```md
-![](/logo.svg){width="100" height="100"}
-```
-
-![](/logo.svg){width="100" height="100"}

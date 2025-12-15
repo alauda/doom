@@ -1,13 +1,13 @@
-import { useLocaleSiteData, usePageData } from '@rspress/runtime'
+import { useI18n, usePageData } from '@rspress/runtime'
 
 export function useEditLink() {
   const { siteData, page } = usePageData()
-  // eslint-disable-next-line @typescript-eslint/no-deprecated
-  const locales = useLocaleSiteData()
+  const editLink = siteData.themeConfig.editLink
 
-  const editLink = locales.editLink ?? siteData.themeConfig.editLink
+  const t = useI18n()
+  const text = t('editLinkText')
 
-  if (!editLink?.docRepoBaseUrl || !editLink.text) {
+  if (!editLink?.docRepoBaseUrl || !text) {
     return null
   }
 
@@ -19,7 +19,7 @@ export function useEditLink() {
 
   const lastSegment = docRepoBaseUrl.split('/').at(-2)
 
-  const fixedLang = siteData.themeConfig.locales?.some(
+  const fixedLang = siteData.themeConfig.locales.some(
     ({ lang }) => lang === lastSegment,
   )
 
@@ -27,7 +27,7 @@ export function useEditLink() {
   const link = `${docRepoBaseUrl}${fixedLang ? relativePagePath.split('/').slice(1).join('/') : relativePagePath}`
 
   return {
-    text: editLink.text,
+    text,
     link,
   }
 }

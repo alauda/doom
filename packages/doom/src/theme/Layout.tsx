@@ -2,7 +2,7 @@ import { useLang, useSite, withBase } from '@rspress/core/runtime'
 import {
   Layout as OriginalLayout,
   getCustomMDXComponent,
-} from '@rspress/core/theme'
+} from '@rspress/core/theme-original'
 import virtual from 'doom-@global-virtual'
 import { useMemo } from 'react'
 import { useLocation } from 'react-router'
@@ -15,6 +15,8 @@ import type {
 } from '../plugins/index.ts'
 import { useTranslation } from '../runtime/index.ts'
 import type { ExportItem } from '../types.ts'
+
+import { VersionsNav } from './VersionsNav/index.tsx'
 
 const X = getCustomMDXComponent()
 
@@ -135,9 +137,10 @@ export const Layout = () => {
 
   return (
     <OriginalLayout
+      afterNavMenu={<VersionsNav />}
       beforeOutline={
         pdfLink && (
-          <X.p>
+          <X.p style={{ marginBottom: 16 }}>
             <a
               className={classes.link}
               href={pdfLink}

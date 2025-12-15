@@ -35,7 +35,7 @@ const AuthCheck = () => {
     ) {
       return
     }
-    navigate(
+    void navigate(
       `${lang === site.lang ? '' : `/${lang}`}/login.html?from=${encodeURIComponent(`${pathname}${search}${hash}`)}`,
     )
   })

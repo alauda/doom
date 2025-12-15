@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 import { useSiteOverrides } from '@alauda/doom/runtime'
 
 const setNavBarSpans = (logoText: string) => {
-  const navBarLinks = document.querySelectorAll('[class^=navBarTitle] > a')
+  const navBarLinks = document.querySelectorAll('.rp-nav__title__link')
 
   if (!navBarLinks.length) {
     return

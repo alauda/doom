@@ -3,7 +3,6 @@ import { type NavItem } from '@rspress/shared'
 import virtual from 'doom-@global-virtual'
 import { noop } from 'es-toolkit'
 import { useEffect, useMemo, useState } from 'react'
-import { createPortal } from 'react-dom'
 import siteData from 'virtual-site-data'
 import { parse } from 'yaml'
 
@@ -18,13 +17,6 @@ import { NavMenuGroup } from './NavMenuGroup.js'
 import { NavMenuSingleItem } from './NavMenuSingleItem.js'
 
 import { useLang, useTranslation } from '@alauda/doom/runtime'
-
-const getNavMenu = () => {
-  if (typeof document === 'undefined') {
-    return null
-  }
-  return document.querySelector('.rspress-nav-menu')
-}
 
 const LEGACY_VERSIONS = ['3.18.1', '3.18.0', '3.16', '3.14']
 
@@ -71,8 +63,6 @@ const VersionsNav_ = () => {
     ]
   }, [])
 
-  const [navMenu, setNavMenu] = useState(getNavMenu)
-
   const [versions, setVersions] = useState<string[]>(version ? [version] : [])
 
   useEffect(() => {
@@ -95,33 +85,10 @@ const VersionsNav_ = () => {
         }
         setVersions(versions)
       }
-      setNavMenu(getNavMenu)
     }
 
     void fetchVersions().catch(noop)
   }, [version, versionsBase])
-
-  // hack way to detect nav menu recreation on theme change
-  useEffect(() => {
-    if (!navMenu) {
-      return
-    }
-    const observer = new MutationObserver((mutations) => {
-      if (mutations.some((m) => m.removedNodes.length)) {
-        setNavMenu(getNavMenu)
-      }
-    })
-    const newNavMenu = getNavMenu()
-    if (newNavMenu !== navMenu) {
-      // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect, react-hooks/set-state-in-effect
-      setNavMenu(newNavMenu)
-    } else if (navMenu.parentNode) {
-      observer.observe(navMenu.parentNode, { childList: true })
-    }
-    return () => {
-      observer.disconnect()
-    }
-  }, [navMenu])
 
   const navItems = useMemo(() => {
     const versionItems: NavItem[] = versions.map((v) =>
@@ -139,16 +106,7 @@ const VersionsNav_ = () => {
     return versionItems
   }, [versionsBase, versions])
 
-  let finalNavMenu: Element | null
-
-  if (
-    (!navItems.length && !virtual.download) ||
-    !(finalNavMenu = getNavMenu())
-  ) {
-    return
-  }
-
-  return createPortal(
+  return (
     <>
       {downloadLink && (
         <NavMenuSingleItem
@@ -165,8 +123,7 @@ const VersionsNav_ = () => {
           pathname={siteData.base}
         />
       )}
-    </>,
-    finalNavMenu,
+    </>
   )
 }
 

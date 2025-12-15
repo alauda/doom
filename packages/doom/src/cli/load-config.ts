@@ -63,41 +63,16 @@ import { defaultGitHubUrl, isDoc } from './helpers.ts'
 const DEFAULT_LOGO = '/logo.svg'
 
 const KNOWN_LOCALE_CONFIGS: Partial<
-  Record<
-    string,
-    Omit<LocaleConfig, 'lang' | 'editLink'> & { editLink: { text: string } }
-  >
+  Record<string, Omit<LocaleConfig, 'lang'>>
 > = {
   en: {
     label: 'English',
-    editLink: {
-      text: '📝 Edit this page on GitHub',
-    },
   },
   zh: {
     label: '简体中文',
-    searchPlaceholderText: '搜索文档',
-    searchNoResultsText: '未搜索到相关结果',
-    searchSuggestedQueryText: '可更换不同的关键字后重试',
-    outlineTitle: '本页概览',
-    prevPageText: '上一页',
-    nextPageText: '下一页',
-    editLink: {
-      text: '📝 在 GitHub 上编辑此页',
-    },
   },
   ru: {
     label: 'Русский',
-    searchPlaceholderText: 'Поиск документов',
-    searchNoResultsText: 'Не найдено соответствующих результатов',
-    searchSuggestedQueryText:
-      'Попробуйте изменить ключевые слова и повторить поиск',
-    outlineTitle: 'Обзор страницы',
-    prevPageText: 'Предыдущая страница',
-    nextPageText: 'Следующая страница',
-    editLink: {
-      text: '📝 Редактировать эту страницу на GitHub',
-    },
   },
 }
 
@@ -221,14 +196,6 @@ const getCommonConfig = async ({
         lang: name,
         label: name,
         ...KNOWN_LOCALE_CONFIGS[name],
-        editLink:
-          editRepoEnabled && editRepoBaseUrl
-            ? {
-                docRepoBaseUrl: editRepoBaseUrl,
-                ...KNOWN_LOCALE_CONFIGS.en!.editLink,
-                ...KNOWN_LOCALE_CONFIGS[name]?.editLink,
-              }
-            : undefined,
       })
     }
   }
@@ -238,7 +205,7 @@ const getCommonConfig = async ({
     locales.map(({ lang }) => lang),
   )
 
-  const { editLink, ...zhLocale } = KNOWN_LOCALE_CONFIGS.zh!
+  const zhLocale = KNOWN_LOCALE_CONFIGS.zh!
 
   const algoliaOptions =
     ((algolia && config.algolia) ??
@@ -300,17 +267,12 @@ const getCommonConfig = async ({
     },
     themeConfig: {
       enableScrollToTop: true,
-      // https://github.com/web-infra-dev/rspress/issues/2011
-      outline: true,
       localeRedirect: redirect,
-      ...(fallbackToZh
-        ? editRepoEnabled && editRepoBaseUrl
-          ? {
-              ...zhLocale,
-              editLink: { ...editLink, docRepoBaseUrl: editRepoBaseUrl },
-            }
-          : zhLocale
-        : { locales }),
+      ...(editRepoEnabled &&
+        editRepoBaseUrl && {
+          editLink: { docRepoBaseUrl: editRepoBaseUrl },
+        }),
+      ...(fallbackToZh ? zhLocale : { locales }),
     },
     plugins: [
       algoliaOptions && pluginAlgolia(),
@@ -361,6 +323,11 @@ const getCommonConfig = async ({
       tools: {
         rspack(rspackConfig, { mergeConfig, rspack }) {
           return mergeConfig(rspackConfig, {
+            ignoreWarnings: [
+              {
+                module: /\bflexsearch\b/,
+              },
+            ],
             resolve: {
               extensionAlias: {
                 '.js': ['.ts', '.tsx', '.js'],
@@ -383,6 +350,11 @@ const getCommonConfig = async ({
         },
       },
     },
+    ssg: {
+      experimentalWorker: true,
+    },
+    // https://github.com/web-infra-dev/rspress/issues/2894
+    // llms: true,
   }
 }
 

@@ -24,7 +24,7 @@
 
 .link,
 :global(summary) .link {
-  &:not(:global(.header-anchor)) {
+  &:not(:global(.rp-header-anchor)) {
     font-weight: 500;
     color: var(--rp-c-link);
     transition: color 0.25s;

@@ -16,9 +16,7 @@ const Login = () => {
   const navigate = useNavigate()
   const [query] = useSearchParams()
   const from = query.get('from')
-  const onLoggedIn = useCallback(() => {
-    navigate(from || '/')
-  }, [from, navigate])
+  const onLoggedIn = useCallback(() => navigate(from || '/'), [from, navigate])
   const dark = useDark()
   const t = useTranslation()
   return (

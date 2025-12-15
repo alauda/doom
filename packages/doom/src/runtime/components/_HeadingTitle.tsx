@@ -40,10 +40,10 @@ export const HeadingTitle = ({
   )
   return (
     <HeadingComponent id={id}>
-      {children}
-      <X.a className="header-anchor" href={`#${id}`} aria-hidden>
+      <X.a className="rp-header-anchor" href={`#${id}`} aria-hidden>
         #
       </X.a>
+      {children}
     </HeadingComponent>
   )
 }
