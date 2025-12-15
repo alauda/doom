@@ -17,8 +17,7 @@ import { useIsPrint } from '../hooks/index.js'
 
 import { Directive } from './Directive.js'
 
-export interface ExternalSiteLinkProps
-  extends AnchorHTMLAttributes<HTMLAnchorElement> {
+export interface ExternalSiteLinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
   name: string
   children: ReactNode
 }
