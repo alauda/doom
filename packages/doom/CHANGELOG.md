@@ -1,5 +1,14 @@
 # @alauda/doom
 
+## 1.17.1
+
+### Patch Changes
+
+- [#221](https://github.com/alauda/doom/pull/221) [`b105395`](https://github.com/alauda/doom/commit/b105395cdf4c1b5a0f9939542e8d950733b4cc82) Thanks [@JounQin](https://github.com/JounQin)! - fix: bump @alauda/doom-export
+
+- Updated dependencies [[`b105395`](https://github.com/alauda/doom/commit/b105395cdf4c1b5a0f9939542e8d950733b4cc82)]:
+  - @alauda/doom-export@0.3.0
+
 ## 1.17.0
 
 ### Minor Changes
