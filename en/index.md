@@ -18,6 +18,6 @@ For more details, you can refer to the [“Using MDX” documentation](https://r
 
 ## Get Started
 
-Let's [get started quickly](./start) with Doom!
+Let's [get started quickly](/en/start.md) with Doom!
 
 <Overview />

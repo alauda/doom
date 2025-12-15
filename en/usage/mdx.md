@@ -123,7 +123,7 @@ Term component, plain text, dynamically mounted and injected
 
 #### `props`
 
-* `name`: Built-in term name, refer to [dynamic mount configuration file](./deploy.md#overrides)
+* `name`: Built-in term name, refer to [dynamic mount configuration file](/en/usage/deploy.md#overrides)
 * `textCase`: Text case transformation, optional values are `lower`, `upper`, `capitalize`
 
 ### `TermsTable`
@@ -150,7 +150,7 @@ Built-in term list display component
 
 ## Custom Component Reuse
 
-According to the [convention](./convention), we can extract reusable content into the `shared` directory, then import it where needed, for example:
+According to the [convention](/en/usage/convention.md), we can extract reusable content into the `shared` directory, then import it where needed, for example:
 
 ```mdx
 import CommonContent from './shared/CommonContent.mdx'

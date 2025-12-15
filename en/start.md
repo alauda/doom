@@ -114,7 +114,7 @@ Commands:
   help [command]                      display help for command
 ```
 
-For more configuration, please refer to [Configuration](./usage/configuration)
+For more configuration, please refer to [Configuration](/en/usage/configuration.md)
 
 ### Starting the Development Server \{#dev}
 
@@ -203,7 +203,7 @@ i18n:
 title: DevOps Connectors
 ```
 
-For more configuration, please refer to [Translation Configuration](./usage/configuration#translate)
+For more configuration, please refer to [Translation Configuration](/en/usage/configuration.md#translate)
 
 ### Exporting PDF \{#export}
 
@@ -236,7 +236,7 @@ The export feature depends on [`playwright`](https://playwright.dev). For CI pip
 PLAYWRIGHT_DOWNLOAD_HOST="https://cdn.npmmirror.com/binaries/playwright"
 ```
 
-Besides exporting a complete PDF for the entire site, `doom` also supports exporting a single PDF file for a specified entry. For more configuration, please refer to [Documentation Export Configuration](./usage/configuration#export)
+Besides exporting a complete PDF for the entire site, `doom` also supports exporting a single PDF file for a specified entry. For more configuration, please refer to [Documentation Export Configuration](/en/usage/configuration.md#export)
 
 ### Documentation Linting \{#lint}
 
@@ -280,4 +280,4 @@ k8s
 kubernetes
 ```
 
-For more configuration, please refer to [Lint Configuration](./usage/configuration#lint)
+For more configuration, please refer to [Lint Configuration](/en/usage/configuration.md#lint)

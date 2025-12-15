@@ -20,7 +20,7 @@ export default defineConfig({})
 * `logoText`: Documentation title, displayed next to the logo at the top left.
 * `icon`: Documentation favicon, defaults to the same as `logo`.
 * `base`: Base path for the documentation, used when deploying to a non-root path, such as `product-docs`. Defaults to `/`.
-* `outDir`: Directory for build outputs, defaults to `dist/{base}/{version}`. If specified, it changes to `dist/{outDir}/{version}`, where `version` is optional. See [Multi-version Build](./deploy#multi-version) for reference.
+* `outDir`: Directory for build outputs, defaults to `dist/{base}/{version}`. If specified, it changes to `dist/{outDir}/{version}`, where `version` is optional. See [Multi-version Build](/en/usage/deploy.md#multi-version) for reference.
 
 ## API Documentation Configuration {#api}
 
@@ -40,7 +40,7 @@ api:
   pathPrefix: /apis
 ```
 
-Refer to [API Documentation](./api) for writing documentation.
+Refer to [API Documentation](/en/usage/api.md) for writing documentation.
 
 ## Permission Documentation Configuration {#permission}
 
@@ -55,7 +55,7 @@ permission:
     - docs/shared/roletemplates/*.yaml
 ```
 
-Refer to [Permission Documentation](./permission) for writing documentation.
+Refer to [Permission Documentation](/en/usage/permission.md) for writing documentation.
 
 ## Reference Documentation Configuration {#reference}
 
@@ -81,7 +81,7 @@ reference:
 * `replace`: Replace the current document's frontmatter with that of the referenced document.
 * `remove`: Remove the current document's frontmatter.
 
-Refer to [Reference Documentation](./reference#reference) for writing documentation.
+Refer to [Reference Documentation](/en/usage/reference.md#reference) for writing documentation.
 
 ## Release Notes Configuration {#release-notes}
 
@@ -140,7 +140,7 @@ Unconfigured languages will trigger warnings in the command line and fall back t
 
 ## `sites.yaml` Configuration {#sites}
 
-The `sites.yaml` configuration file is used to configure subsite information associated with the current documentation site. This information is used by [External Site Components](./mdx#externalsite) and when building single-version documentation.
+The `sites.yaml` configuration file is used to configure subsite information associated with the current documentation site. This information is used by [External Site Components](/en/usage/mdx.md#externalsite) and when building single-version documentation.
 
 ```yaml
 - name: connectors # Globally unique name
