@@ -73,10 +73,11 @@ export async function getOutlineNodes(
   page: Page,
   tags: string[],
   outlineContainerSelector = '',
+  outlineExcludeSelector = '',
 ) {
   const preSelector = formatOutlineContainerSelector(outlineContainerSelector)
   return await page.evaluate(
-    ([tags, outlineSelector]) => {
+    ([tags, outlineSelector, outlineExcludeSelector]) => {
       const tagsToProcess = Array.from(
         document.querySelectorAll<HTMLElement>(outlineSelector),
       ).reverse()
@@ -85,6 +86,7 @@ export async function getOutlineNodes(
         depth: -1,
         parent: undefined,
       }
+
       let currentOutlineNode = root
 
       const linkHolder = document.createElement('div')
@@ -94,6 +96,11 @@ export async function getOutlineNodes(
 
       while (tagsToProcess.length > 0) {
         const tag = tagsToProcess.pop()!
+
+        if (outlineExcludeSelector && tag.matches(outlineExcludeSelector)) {
+          continue
+        }
+
         const orderDepth = tags.indexOf(tag.tagName.toLowerCase())
         const dest = encodeURIComponent(tag.id)
 
@@ -143,6 +150,7 @@ export async function getOutlineNodes(
     [
       tags,
       tags.map((titleItem) => `${preSelector}${titleItem}`).join(','),
+      outlineExcludeSelector,
     ] as const,
   )
 }

@@ -119,7 +119,8 @@ export const exportCommand = new Command('export')
             localStorage.setItem('rspress-visited', '1')
           },
         ],
-        outlineContainerSelector: '.rspress-doc',
+        outlineContainerSelector: '.rp-doc',
+        outlineExcludeSelector: '.rp-toc-exclude *',
       },
     }
 
