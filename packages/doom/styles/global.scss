@@ -137,24 +137,23 @@ td {
 }
 
 @mixin print {
-  .rspress {
+  .rp {
     &-nav,
-    &-sidebar-menu,
-    &-doc-footer {
+    &-doc-layout__menu,
+    &-doc-footer,
+    &-doc-layout__sidebar {
       display: none;
     }
 
-    &-doc-container {
+    &-doc-layout__doc-container {
       padding: 0;
+      // https://github.com/web-infra-dev/rspress/issues/2909
+      min-height: unset;
     }
 
-    &-directive-title::marker {
-      content: none;
+    &-toc-item--active .rp-toc-item__text {
+      color: var(--rp-c-text-2);
     }
-  }
-
-  [class^='scroll-to-top_'] {
-    display: none;
   }
 }
 

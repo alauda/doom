@@ -38,6 +38,7 @@ export interface PrinterOptions {
   emulateMedia?: null | 'screen' | 'print'
   enableWarnings?: boolean
   outlineContainerSelector?: string
+  outlineExcludeSelector?: string
 }
 
 export class Printer extends EventEmitter {
@@ -58,6 +59,7 @@ export class Printer extends EventEmitter {
   private emulateMedia: 'screen' | 'print'
   private enableWarnings: boolean
   private outlineContainerSelector: string
+  private outlineExcludeSelector: string
 
   private browser?: Browser
   private browserContext?: BrowserContext
@@ -92,6 +94,7 @@ export class Printer extends EventEmitter {
     this.emulateMedia = options.emulateMedia ?? 'print'
     this.enableWarnings = options.enableWarnings ?? false
     this.outlineContainerSelector = options.outlineContainerSelector ?? ''
+    this.outlineExcludeSelector = options.outlineExcludeSelector ?? ''
 
     if (this.debug) {
       this.headless = false
@@ -269,6 +272,7 @@ export class Printer extends EventEmitter {
           page,
           this.outlineTags,
           this.outlineContainerSelector,
+          this.outlineExcludeSelector,
         )
         setOutlineNodes(pdfDoc, outlineNodes, this.enableWarnings)
       }
