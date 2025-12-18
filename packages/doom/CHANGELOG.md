@@ -1,5 +1,14 @@
 # @alauda/doom
 
+## 1.17.2
+
+### Patch Changes
+
+- [#223](https://github.com/alauda/doom/pull/223) [`4d78da5`](https://github.com/alauda/doom/commit/4d78da5075197d445dc08fa8f7488ac36edb6f80) Thanks [@JounQin](https://github.com/JounQin)! - fix: exporting pdf style
+
+- Updated dependencies [[`4d78da5`](https://github.com/alauda/doom/commit/4d78da5075197d445dc08fa8f7488ac36edb6f80)]:
+  - @alauda/doom-export@0.3.1
+
 ## 1.17.1
 
 ### Patch Changes
