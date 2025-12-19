@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.17.3
+
+### Patch Changes
+
+- [#225](https://github.com/alauda/doom/pull/225) [`ea31a4c`](https://github.com/alauda/doom/commit/ea31a4c62120121e293b69921e98ff5f75b9a02b) Thanks [@JounQin](https://github.com/JounQin)! - fix: assistant style compatibility
+
 ## 1.17.2
 
 ### Patch Changes
