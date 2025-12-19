@@ -68,9 +68,13 @@ export const SiteOverrides = () => {
       newTitle = title
     }
 
-    requestAnimationFrame(() => {
+    const timeoutId = setTimeout(() => {
       document.title = newTitle
-    })
+    }, 1)
+
+    return () => {
+      clearTimeout(timeoutId)
+    }
   }, [
     articleTitle,
     frontmatter.title,

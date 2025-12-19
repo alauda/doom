@@ -4,10 +4,10 @@
   position: fixed;
   right: 1rem;
   bottom: 1rem;
-  z-index: 10;
+  z-index: var(--rp-z-index-nav);
   background-color: var(--rp-c-bg);
-  width: calc(min(100vw, 440px));
-  height: calc(min(100vh, 700px));
+  width: min(100vw, 440px);
+  height: min(calc(100vh - 2rem), 700px);
   padding: 16px;
   box-shadow: 0px 0px 8px 0px var(--rp-c-divider);
   border-radius: 8px;
