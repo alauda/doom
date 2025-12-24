@@ -353,8 +353,7 @@ const getCommonConfig = async ({
     ssg: {
       experimentalWorker: true,
     },
-    // https://github.com/web-infra-dev/rspress/issues/2894
-    // llms: true,
+    llms: true,
   }
 }
 
