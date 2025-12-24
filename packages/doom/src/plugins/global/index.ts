@@ -74,12 +74,18 @@ export const globalPlugin = ({
       }
     },
     addPages(config) {
-      const loginPath = baseResolve('login')
+      let loginPath: string
+      for (const ext of ['.js', '.tsx']) {
+        loginPath = baseResolve(`login/index${ext}`)
+        if (fs.existsSync(loginPath)) {
+          break
+        }
+      }
       if ((config.themeConfig?.locales?.length ?? 0) < 1) {
         return [
           {
             routePath: '/login',
-            filepath: loginPath,
+            filepath: loginPath!,
           },
         ]
       }

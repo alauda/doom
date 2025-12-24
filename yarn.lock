@@ -87,7 +87,6 @@ __metadata:
     "@rsbuild/plugin-yaml": "npm:^1.0.3"
     "@rspress/core": "npm:2.0.0-rc.3"
     "@rspress/plugin-algolia": "npm:2.0.0-rc.3"
-    "@rspress/plugin-llms": "npm:2.0.0-rc.3"
     "@rspress/plugin-sitemap": "npm:2.0.0-rc.3"
     "@rspress/shared": "npm:2.0.0-rc.3"
     "@shikijs/transformers": "npm:^3.20.0"
@@ -3147,21 +3146,6 @@ __metadata:
   peerDependencies:
     "@rspress/core": ^2.0.0-rc.3
   checksum: 10c0/9d4a0326e18adc80bd40b351e91e53b7f7de7221e7d99d1029a3fce8a1cc46ebaccc739a69c194fdf0757b1e0eeaeef56fcc374c020c05892760e7f4ccabfff0
-  languageName: node
-  linkType: hard
-
-"@rspress/plugin-llms@npm:2.0.0-rc.3":
-  version: 2.0.0-rc.3
-  resolution: "@rspress/plugin-llms@npm:2.0.0-rc.3"
-  dependencies:
-    remark-mdx: "npm:^3.1.1"
-    remark-parse: "npm:^11.0.0"
-    remark-stringify: "npm:^11.0.0"
-    unified: "npm:^11.0.5"
-    unist-util-visit: "npm:^5.0.0"
-  peerDependencies:
-    "@rspress/core": ^2.0.0-rc.3
-  checksum: 10c0/f37c43a865052ca9c6f613e4ebe221cd95dae3c23b722b113c1e896460d0ed5366a85ee7a1e4e23b60dc96731ceb86608866ee40c3a0a8c272f5700ed62d46bc
   languageName: node
   linkType: hard
 

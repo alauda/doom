@@ -14,7 +14,8 @@ jobs:
     strategy:
       matrix:
         node:
-          - 20
+          # https://github.com/web-infra-dev/rspress/pull/2923
+          # - 20
           - 22
           - 24
         os:

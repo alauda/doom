@@ -51,7 +51,6 @@
     "@rsbuild/plugin-yaml": "^1.0.3",
     "@rspress/core": "2.0.0-rc.3",
     "@rspress/plugin-algolia": "2.0.0-rc.3",
-    "@rspress/plugin-llms": "2.0.0-rc.3",
     "@rspress/plugin-sitemap": "2.0.0-rc.3",
     "@rspress/shared": "2.0.0-rc.3",
     "@shikijs/transformers": "^3.20.0",
