@@ -244,6 +244,7 @@ export async function scanSideMeta(
       }
 
       const {
+        // eslint-disable-next-line @typescript-eslint/no-useless-default-assignment
         type = 'file',
         name,
         label = '',

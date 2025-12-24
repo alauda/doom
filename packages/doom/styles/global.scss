@@ -147,8 +147,6 @@ td {
 
     &-doc-layout__doc-container {
       padding: 0;
-      // https://github.com/web-infra-dev/rspress/issues/2909
-      min-height: unset;
     }
 
     &-toc-item--active .rp-toc-item__text {

@@ -39,6 +39,7 @@ export const SiteOverrides = () => {
     pageType,
     // Inject by remark-plugin-toc
     title: articleTitle,
+    // eslint-disable-next-line @typescript-eslint/no-useless-default-assignment
     frontmatter = {},
   } = page
 

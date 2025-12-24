@@ -9,7 +9,6 @@ import { pluginSvgr } from '@rsbuild/plugin-svgr'
 import { pluginYaml } from '@rsbuild/plugin-yaml'
 import { logger, type UserConfig } from '@rspress/core'
 import { pluginAlgolia } from '@rspress/plugin-algolia'
-import { pluginLlms } from '@rspress/plugin-llms'
 import { pluginSitemap } from '@rspress/plugin-sitemap'
 import {
   addLeadingSlash,
@@ -276,7 +275,6 @@ const getCommonConfig = async ({
     },
     plugins: [
       algoliaOptions && pluginAlgolia(),
-      pluginLlms(),
       siteUrl &&
         config.siteUrl &&
         pluginSitemap({
@@ -353,8 +351,7 @@ const getCommonConfig = async ({
     ssg: {
       experimentalWorker: true,
     },
-    // https://github.com/web-infra-dev/rspress/issues/2894
-    // llms: true,
+    llms: true,
   }
 }
 
