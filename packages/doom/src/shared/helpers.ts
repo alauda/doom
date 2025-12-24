@@ -12,7 +12,7 @@ export const removeBothEndsSlashes = (str?: string) =>
   str?.replace(/^\/|\/$/g, '') || ''
 
 export const getPdfName = (lang: string, userBase?: string, title?: string) =>
-  `${removeBothEndsSlashes(userBase) || title || 'exported'}-${lang}.pdf`
+  `/${removeBothEndsSlashes(userBase) || title || 'exported'}-${lang}.pdf`
 
 export const isExplicitlyUnversioned = (
   version?: string,

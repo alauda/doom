@@ -19,11 +19,9 @@ export const Directive = ({
   open,
   onToggle,
 }: DirectiveProps) => {
-  const rootClassName = clsx('rspress-directive', type, className)
+  const rootClassName = clsx('rp-callout', `rp-callout--${type}`, className)
   const titleNode = title || upperCase(type)
-  const contentNode = (
-    <div className="rspress-directive-content">{children}</div>
-  )
+  const contentNode = <div className="rp-callout__content">{children}</div>
 
   const handleToggle: ReactEventHandler<HTMLDetailsElement> = useCallback(
     (ev) => {
@@ -35,7 +33,7 @@ export const Directive = ({
   if (type === 'details') {
     return (
       <details className={rootClassName} open={open} onToggle={handleToggle}>
-        <summary className="rspress-directive-title">{titleNode}</summary>
+        <summary className="rp-callout__title">{titleNode}</summary>
         {contentNode}
       </details>
     )
@@ -43,7 +41,7 @@ export const Directive = ({
 
   return (
     <div className={rootClassName}>
-      <div className="rspress-directive-title">{titleNode}</div>
+      <div className="rp-callout__title">{titleNode}</div>
       {contentNode}
     </div>
   )

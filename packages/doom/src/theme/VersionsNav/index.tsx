@@ -1,5 +1,10 @@
-import { isProduction, NoSSR, useSite, withBase } from '@rspress/core/runtime'
-import { type NavItem } from '@rspress/shared'
+import {
+  isProduction,
+  NoSSR,
+  useLocaleSiteData,
+  useSite,
+} from '@rspress/core/runtime'
+import { type NavItem, type NavItemWithLink } from '@rspress/shared'
 import virtual from 'doom-@global-virtual'
 import { noop } from 'es-toolkit'
 import { useEffect, useMemo, useState } from 'react'
@@ -11,10 +16,9 @@ import {
   getPdfName,
   getUnversionedVersion,
   isExplicitlyUnversioned,
-} from '../../shared/index.js'
+} from '../../shared/index.ts'
 
-import { NavMenuGroup } from './NavMenuGroup.js'
-import { NavMenuSingleItem } from './NavMenuSingleItem.js'
+import { useForceRender } from './context.tsx'
 
 import { useLang, useTranslation } from '@alauda/doom/runtime'
 
@@ -33,6 +37,18 @@ if (!isProduction()) {
 
 const VersionsNav_ = () => {
   const { site } = useSite()
+  // eslint-disable-next-line @typescript-eslint/no-deprecated
+  const { nav } = useLocaleSiteData()
+
+  const configNav = useMemo(
+    () => (Array.isArray(nav) ? nav : nav!.default),
+    [nav],
+  )
+
+  const originalConfigNav = useMemo(() => [...configNav], [configNav])
+
+  // hack to rerender nav when configNav is changed
+  const forceRender = useForceRender()
 
   const lang = useLang()
 
@@ -45,7 +61,7 @@ const VersionsNav_ = () => {
       return
     }
 
-    return withBase(getPdfName(lang, virtual.userBase, siteTitle))
+    return getPdfName(lang, virtual.userBase, siteTitle)
   }, [lang, siteTitle])
 
   const [versionsBase, version] = useMemo(() => {
@@ -68,63 +84,64 @@ const VersionsNav_ = () => {
   useEffect(() => {
     const fetchVersions = async () => {
       if (versionsBase == null) {
-        if (!version) {
-          return
-        }
-      } else {
-        const res = await fetch(
-          `${isProduction() ? versionsBase : siteData.base}versions.yaml`,
-        )
-        if (!res.ok) {
-          return
-        }
-        const text = await res.text()
-        const versions = parse(text) as string[]
-        if (version && !versions.includes(version)) {
-          versions.unshift(version)
-        }
-        setVersions(versions)
+        return
       }
+      const res = await fetch(
+        `${isProduction() ? versionsBase : siteData.base}versions.yaml`,
+      )
+      if (!res.ok) {
+        return
+      }
+      const text = await res.text()
+      const versions = parse(text) as string[]
+      if (version && !versions.includes(version)) {
+        versions.unshift(version)
+      }
+      setVersions(versions)
     }
 
     void fetchVersions().catch(noop)
   }, [version, versionsBase])
 
-  const navItems = useMemo(() => {
-    const versionItems: NavItem[] = versions.map((v) =>
-      versionsBase == null
-        ? { text: v, items: [] }
-        : { text: v, link: `${versionsBase}${v}/`, activeMatch: v },
-    )
-    if (
-      versionsBase != null &&
-      ALLOWED_LEGACY_DOMAINS.has(location.hostname) &&
-      virtual.userBase === ACP_BASE
-    ) {
-      versionItems.push(...LEGACY_NAV_ITEMS)
+  const navList = useMemo(() => {
+    const navList: NavItem[] = []
+    if (downloadLink) {
+      navList.push({
+        text: t('download_pdf'),
+        link: downloadLink,
+      })
     }
-    return versionItems
-  }, [versionsBase, versions])
 
-  return (
-    <>
-      {downloadLink && (
-        <NavMenuSingleItem
-          text={t('download_pdf')}
-          link={downloadLink}
-          download
-        />
-      )}
-      {!navItems.length || (
-        <NavMenuGroup
-          text={version}
-          base={versionsBase}
-          items={navItems}
-          pathname={siteData.base}
-        />
-      )}
-    </>
-  )
+    if (versionsBase == null) {
+      navList.push({ text: version, items: [] })
+    } else {
+      const versionItems: NavItem[] = versions.map((v) => ({
+        text: v,
+        link: `${location.protocol}//${location.host}${versionsBase}${v}/`,
+        activeMatch: v === version ? '.' : undefined,
+      }))
+      if (
+        ALLOWED_LEGACY_DOMAINS.has(location.hostname) &&
+        virtual.userBase === ACP_BASE
+      ) {
+        versionItems.push(...LEGACY_NAV_ITEMS)
+      }
+      navList.push({
+        text: version,
+        items: versionItems as NavItemWithLink[],
+      })
+    }
+    return navList
+  }, [downloadLink, t, version, versionsBase, versions])
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/immutability
+    configNav.length = originalConfigNav.length
+    configNav.push(...navList)
+    forceRender()
+  }, [configNav, forceRender, navList, originalConfigNav])
+
+  return null
 }
 
 export const VersionsNav = () => (
