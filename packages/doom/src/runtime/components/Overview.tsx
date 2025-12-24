@@ -230,24 +230,28 @@ export function Overview(props: {
                 <h3>
                   <Link href={item.link} {...renderInlineMarkdown(item.text)} />
                 </h3>
-                <div className={classes.overviewDescription}>
-                  {item.description}
-                </div>
-                <ul className={classes.overviewList}>
-                  {item.headers?.map((header) => (
-                    <li
-                      key={header.id}
-                      className={`${classes.overviewGroupLi} ${
-                        classes[`level${header.depth}`]
-                      }`}
-                    >
-                      <Link
-                        href={`${item.link}#${header.id}`}
-                        {...renderInlineMarkdown(header.text)}
-                      />
-                    </li>
-                  ))}
-                </ul>
+                {item.description && (
+                  <div className={classes.overviewDescription}>
+                    {item.description}
+                  </div>
+                )}
+                {!item.headers?.length || (
+                  <ul className={classes.overviewList}>
+                    {item.headers.map((header) => (
+                      <li
+                        key={header.id}
+                        className={`${classes.overviewGroupLi} ${
+                          classes[`level${header.depth}`]
+                        }`}
+                      >
+                        <Link
+                          href={`${item.link}#${header.id}`}
+                          {...renderInlineMarkdown(header.text)}
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
             ))}
           </div>
