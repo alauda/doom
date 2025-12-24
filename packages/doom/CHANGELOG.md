@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.17.4
+
+### Patch Changes
+
+- [#227](https://github.com/alauda/doom/pull/227) [`ca079e6`](https://github.com/alauda/doom/commit/ca079e69cfff16822dae1a3dd7069cd1f86fbef3) Thanks [@JounQin](https://github.com/JounQin)! - feat: support exporting APIs documents manually
+
 ## 1.17.3
 
 ### Patch Changes
