@@ -13,7 +13,13 @@ export const Link = (props: LinkProps) => {
   return (
     <OriginalLink
       {...props}
-      download={props.href?.endsWith('.pdf') && props.download !== false}
+      download={
+        // type-coverage:ignore-next-line -- out of control
+        props.download == null
+          ? props.href?.endsWith('.pdf')
+          : // type-coverage:ignore-next-line -- out of control
+            (props.download as unknown)
+      }
     />
   )
 }

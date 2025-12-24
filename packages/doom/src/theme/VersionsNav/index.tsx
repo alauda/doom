@@ -113,7 +113,9 @@ const VersionsNav_ = () => {
     }
 
     if (versionsBase == null) {
-      navList.push({ text: version, items: [] })
+      if (version) {
+        navList.push({ text: version, items: [] })
+      }
     } else {
       const versionItems: NavItem[] = versions.map((v) => ({
         text: v,

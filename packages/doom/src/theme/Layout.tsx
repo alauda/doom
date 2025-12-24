@@ -150,11 +150,13 @@ export const Layout = () => {
       <VersionsNav />
       <OriginalLayout
         beforeOutline={
-          <X.p className="rp-doc" style={{ marginBottom: 16 }}>
-            <Link href={pdfLink} target="_blank" rel="noopener noreferrer">
-              {t('view_docs_as_pdf')}
-            </Link>
-          </X.p>
+          pdfLink && (
+            <X.p className="rp-doc" style={{ marginBottom: 16 }}>
+              <Link href={pdfLink} target="_blank" rel="noopener noreferrer">
+                {t('view_docs_as_pdf')}
+              </Link>
+            </X.p>
+          )
         }
       />
     </ForceRenderContext>
