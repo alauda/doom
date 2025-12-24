@@ -1,13 +1,13 @@
-import { useLang, useSite, withBase } from '@rspress/core/runtime'
+import { useLang, useSite } from '@rspress/core/runtime'
 import {
+  Link,
   Layout as OriginalLayout,
   getCustomMDXComponent,
 } from '@rspress/core/theme-original'
 import virtual from 'doom-@global-virtual'
-import { useMemo } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useLocation } from 'react-router'
 
-import classes from '../../styles/link.module.scss'
 import type {
   DoomSidebar,
   DoomSidebarGroup,
@@ -16,6 +16,7 @@ import type {
 import { useTranslation } from '../runtime/index.ts'
 import type { ExportItem } from '../types.ts'
 
+import { ForceRenderContext } from './VersionsNav/context.tsx'
 import { VersionsNav } from './VersionsNav/index.tsx'
 
 const X = getCustomMDXComponent()
@@ -130,28 +131,34 @@ export const Layout = () => {
 
   const pdfLink = useMemo(
     () =>
-      found &&
-      withBase(`${found.exportItem.name ?? found.sidebar.text}-${lang}.pdf`),
+      found && `/${found.exportItem.name ?? found.sidebar.text}-${lang}.pdf`,
     [found, lang],
   )
 
+  const [render, setRender] = useState(false)
+  const forceRender = useCallback(() => {
+    setRender((v) => !v)
+  }, [])
+
   return (
-    <OriginalLayout
-      afterNavMenu={<VersionsNav />}
-      beforeOutline={
-        pdfLink && (
-          <X.p style={{ marginBottom: 16 }}>
-            <a
-              className={classes.link}
-              href={pdfLink}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {t('view_docs_as_pdf')}
-            </a>
-          </X.p>
-        )
-      }
-    />
+    <ForceRenderContext
+      value={useMemo(
+        () => ({ value: render, setValue: forceRender }),
+        [forceRender, render],
+      )}
+    >
+      <VersionsNav />
+      <OriginalLayout
+        beforeOutline={
+          pdfLink && (
+            <X.p className="rp-doc" style={{ marginBottom: 16 }}>
+              <Link href={pdfLink} target="_blank" rel="noopener noreferrer">
+                {t('view_docs_as_pdf')}
+              </Link>
+            </X.p>
+          )
+        }
+      />
+    </ForceRenderContext>
   )
 }

@@ -11,7 +11,6 @@ import { clsx } from 'clsx'
 import virtual from 'doom-@global-virtual'
 import { type AnchorHTMLAttributes, type ReactNode, useMemo } from 'react'
 
-import classes from '../../../styles/link.module.scss'
 import { isUnversioned } from '../../shared/helpers.js'
 import { useIsPrint } from '../hooks/index.js'
 
@@ -76,7 +75,7 @@ const ExternalSiteLink_ = ({
       }
       target="_blank"
       rel="noopener noreferrer"
-      className={clsx(classes.link, 'rp-cursor-pointer', className)}
+      className={clsx('rp-link', className)}
       {...props}
     />
   )
