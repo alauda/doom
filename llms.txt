@@ -1,6 +1,6 @@
 # Doom
 
-## Other
+## Others
 
 - [CodeQualityTaskSummary](/apis/advanced-apis/codeQualityTaskSummary.md)
 - [Event APIs](/apis/advanced-apis/event/index.md)
@@ -32,4 +32,4 @@
 - [MDX](/usage/mdx.md): 使用 MDX 可以实现动态内容的展示和内容复用
 - [权限说明文档](/usage/permission.md)
 - [引用文档](/usage/reference.md)
-- [](/login.md)
+- [index](/login.md)

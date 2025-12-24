@@ -1,6 +1,6 @@
-# 配置 {#configuration}
+# 配置 \{#configuration}
 
-## 配置文件 {#config-file}
+## 配置文件 \{#config-file}
 
 大部分情况下，我们只需要使用静态 `yaml` 配置文件即可，支持 `doom.config.yaml` 或 `doom.config.yml`，对于复杂场景，比如需要动态配置或自定义 `rspress` 插件时，可以使用 `js/ts` 配置文件，支持 `.js/.ts/.mjs/.mts/.cjs/.cts` 多种文件格式。
 
@@ -12,17 +12,17 @@ import { defineConfig } from '@alauda/doom/config'
 export default defineConfig({})
 ```
 
-## 基础配置 {#basic}
+## 基础配置 \{#basic}
 
-* `lang`：默认文档语言，为方便大部分项目使用，我们默认支持中英文文档，默认语言为 `en`，如果当前文档项目不需要多语言支持，可以将此项配置为 `null` 或 `undefined`
-* `title`：文档标题，会显示在浏览器标签页上
-* `logo`：文档左上角 logo，支持图片链接、文件路径，绝对路径代表 `public` 目录下的文件，相对路径代表相对于当前工具目录的文件，默认使用 `doom` 包内置的 alauda logo
-* `logoText`：文档标题，会显示在左上角的 logo 处
-* `icon`：文档 favicon，默认同 `logo`
-* `base`：文档基础路径，用于部署到非根路径，如 `product-docs`，默认为 `/`
-* `outDir`：构建产物目录，默认为 `dist/{base}/{version}`，如果指定此项，则变更为 `dist/{outDir}/{version}`，其中 `version` 可选，参考[多版本构建](/usage/deploy.md#multi-version)
+- `lang`：默认文档语言，为方便大部分项目使用，我们默认支持中英文文档，默认语言为 `en`，如果当前文档项目不需要多语言支持，可以将此项配置为 `null` 或 `undefined`
+- `title`：文档标题，会显示在浏览器标签页上
+- `logo`：文档左上角 logo，支持图片链接、文件路径，绝对路径代表 `public` 目录下的文件，相对路径代表相对于当前工具目录的文件，默认使用 `doom` 包内置的 alauda logo
+- `logoText`：文档标题，会显示在左上角的 logo 处
+- `icon`：文档 favicon，默认同 `logo`
+- `base`：文档基础路径，用于部署到非根路径，如 `product-docs`，默认为 `/`
+- `outDir`：构建产物目录，默认为 `dist/{base}/{version}`，如果指定此项，则变更为 `dist/{outDir}/{version}`，其中 `version` 可选，参考[多版本构建](/usage/deploy.md#multi-version)
 
-## API 文档配置 {#api}
+## API 文档配置 \{#api}
 
 ```yaml
 api:
@@ -42,7 +42,7 @@ api:
 
 文档编写参考 [API 文档](/usage/api.md)
 
-## 权限说明文档配置 {#permission}
+## 权限说明文档配置 \{#permission}
 
 ```yaml
 # 以下资源文件路径，相对于 doom.config.* 所在目录，支持 glob 匹配，json/yaml 文件
@@ -57,7 +57,7 @@ permission:
 
 文档编写参考[权限说明文档](/usage/permission.md)
 
-## 引用文档配置 {#reference}
+## 引用文档配置 \{#reference}
 
 ```yaml
 reference:
@@ -76,14 +76,14 @@ reference:
 
 ### `frontmatterMode`
 
-* `ignore`：忽略引用文档的 frontmatter，保留使用当前文档的 frontmatter
-* `merge`：合并引用文档的 frontmatter，如果有相同的 key，引用文档的值会覆盖当前文档的值
-* `replace`：使用引用文档的 frontmatter 替换当前文档的 frontmatter
-* `remove`：移除当前文档的 frontmatter
+- `ignore`：忽略引用文档的 frontmatter，保留使用当前文档的 frontmatter
+- `merge`：合并引用文档的 frontmatter，如果有相同的 key，引用文档的值会覆盖当前文档的值
+- `replace`：使用引用文档的 frontmatter 替换当前文档的 frontmatter
+- `remove`：移除当前文档的 frontmatter
 
 文档编写参考[引用文档](/usage/reference.md#reference)
 
-## 发行说明配置 {#release-notes}
+## 发行说明配置 \{#release-notes}
 
 ```yaml
 releaseNotes:
@@ -102,21 +102,21 @@ releaseNotes:
 
 以上述 `template=fixed&project=DevOps` 为例，`fixed` 为 `queryTemplates` 中定义的模板名称，剩余的 `query` 参数 `project=DevOps` 将作为 [`ejs`](https://github.com/mde/ejs) 模板参数传递给 `fixed` 模板处理后作为 jira [`jql`](https://www.atlassian.com/zh/software/jira/guides/jql/overview#what-is-jql) 发起 `https://jira.alauda.cn/rest/api/2/search?jql=<jql>` 请求，此 API 要求鉴权，须提供 `JIRA_USERNAME` 和 `JIRA_PASSWORD` 环境变量才能预览生效
 
-## 左导航配置 {#sidebar}
+## 左导航配置 \{#sidebar}
 
 ```yaml
 sidebar:
   collapsed: false # 可选，是否默认折叠左导航，默认折叠，文档内容不多时可以考虑设置为 false
 ```
 
-## 内部文档路由配置 {#internal-routes}
+## 内部文档路由配置 \{#internal-routes}
 
 ```yaml
 internalRoutes: # 可选，支持 glob 匹配，相对于 docs 目录，在 cli 启用 `-i, --ignore` 选项时匹配到的路由/文件会被忽略
   - '*/internal/**'
 ```
 
-## 仅包含文档路由配置 {#only-include-routes}
+## 仅包含文档路由配置 \{#only-include-routes}
 
 ```yaml
 onlyIncludeRoutes: # 可选，支持 glob 匹配，相对于 docs 目录，在 cli 启用 `-i, --ignore` 选项时只有此配置下的路由/文件会被启用，可同时配合 `internalRoutes` 进一步排除其中的部分路由
@@ -125,7 +125,7 @@ internalRoutes:
   - '*/internal/overview.mdx'
 ```
 
-## 语言高亮插件配置 {#highlight}
+## 语言高亮插件配置 \{#highlight}
 
 ```yaml
 shiki:
@@ -138,7 +138,7 @@ shiki:
 未配置的语言将在命令行提示告警，并回退到 `plaintext` 渲染
 :::
 
-## `sites.yaml` 配置 {#sites}
+## `sites.yaml` 配置 \{#sites}
 
 `sites.yaml` 配置文件用于配置当前文档站点关联的子站点信息，[引用外部站点组件](/usage/mdx.md#externalsite)和构建单版本文档时会用到此处定义的信息。
 
@@ -157,7 +157,7 @@ shiki:
   image: devops/connectors-docs # 站点构建镜像，用于构建全站点时拉取镜像
 ```
 
-## 翻译配置 {#translate}
+## 翻译配置 \{#translate}
 
 ```yaml
 translate:
@@ -223,13 +223,13 @@ The text for translation is provided below, within triple quotes:
 <% } %>
 ```
 
-## 在代码仓库编辑文档 {#edit-repo}
+## 在代码仓库编辑文档 \{#edit-repo}
 
 ```yaml
 editRepoBaseUrl: alauda/doom/tree/main/docs # https://github.com/ 前缀可以省略，仅当启用 `-R, --edit-repo` 命令行标志符时生效
 ```
 
-## 文档导出配置 {#export}
+## 文档导出配置 \{#export}
 
 ```yaml
 export:
@@ -237,14 +237,14 @@ export:
     scope: '*/concepts' # 必填，字符串或数组，文档范围，支持 glob 匹配，相对于 docs 目录
 ```
 
-## 文档检查配置 {#lint}
+## 文档检查配置 \{#lint}
 
 ```yaml
 lint:
   cspellOptions: # 可选，cspell 配置项，参考 https://github.com/streetsidesoftware/cspell/tree/main/packages/cspell-eslint-plugin#options
 ```
 
-## Algolia 搜索配置 {#algolia}
+## Algolia 搜索配置 \{#algolia}
 
 ```yaml
 algolia: # 可选，Algolia 搜索配置，仅当启用 `-a, --algolia` 命令行标志符时生效
@@ -265,7 +265,7 @@ export * from '@alauda/doom/theme'
 
 :::
 
-## Sitemap 配置 {#sitemap}
+## Sitemap 配置 \{#sitemap}
 
 ```yaml
 siteUrl: https://docs.alauda.cn # 可选，站点 URL，用于生成 sitemap，仅当启用 `-S, --site-url` 命令行标志符时生效

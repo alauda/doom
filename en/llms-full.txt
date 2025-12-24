@@ -2,10 +2,84 @@
 url: /en/apis/advanced-apis/codeQualityTaskSummary.md
 ---
 
-
 # CodeQualityTaskSummary
 
-<OpenAPIPath path="/plugins/v1alpha1/template/codeQuality/task/{task-id}/summary" />
+## [#](#_r_0_-pluginsv1alpha1templatecodequalitytasktask-idsummary)/plugins/v1alpha1/template/codeQuality/task/{task-id}/summary
+
+### [#](#_r_0_-getsummarybytaskid)`get`GetSummaryByTaskID
+
+#### [#](#_r_0_-parameters)Parameters
+
+- `task-id` (*in path*): `string` required code scan task id
+
+
+- `project-key` (*in query*): `string` identifier of the project
+
+
+- `branch` (*in query*): `string` branch name
+
+
+- `pullRequest` (*in query*): `string` pull request id
+
+
+
+#### [#](#_r_0_-response)Response
+
+- `200`[CodeQualityTaskMetrics](#_r_0_-v1alpha1.CodeQualityTaskMetrics): OK
+
+## [#](#_r_0_-v1alpha1.CodeQualityTaskMetrics)CodeQualityTaskMetrics
+
+- `apiVersion`: `string`APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: [https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources](https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources)
+
+
+- `kind`: `string`Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: [https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds](https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds)
+
+
+- `metadata`: [ObjectMeta](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/object-meta/)ObjectMeta is metadata that all persisted resources must have, which includes all objects users must create.
+
+
+- `spec`: [CodeQualityTaskMetricsSpec](#_r_0_-v1alpha1.CodeQualityTaskMetricsSpec)
+- `status`: [CodeQualityTaskMetricsStatus](#_r_0_-v1alpha1.CodeQualityTaskMetricsStatus)
+
+## [#](#_r_0_-v1alpha1.CodeQualityTaskMetricsSpec)CodeQualityTaskMetricsSpec
+
+- `component`: [CodeQualityTaskMetricsSpecComponent](#_r_0_-v1alpha1.CodeQualityTaskMetricsSpecComponent)
+- `metrics`: `map[string]string`
+- `summary`: [CodeQualityTaskMetricsSpecSummary](#_r_0_-v1alpha1.CodeQualityTaskMetricsSpecSummary)
+- `task`: [CodeQualityTaskMetricsSpecTask](#_r_0_-v1alpha1.CodeQualityTaskMetricsSpecTask)
+
+## [#](#_r_0_-v1alpha1.CodeQualityTaskMetricsSpecComponent)CodeQualityTaskMetricsSpecComponent
+
+- `id`: `string`
+- `key`: `string`
+- `name`: `string`
+
+## [#](#_r_0_-v1alpha1.CodeQualityTaskMetricsSpecSummary)CodeQualityTaskMetricsSpecSummary
+
+- `new`: [CodeQualityTaskMetricsSpecSummaryOverview](#_r_0_-v1alpha1.CodeQualityTaskMetricsSpecSummaryOverview)
+- `total`: [CodeQualityTaskMetricsSpecSummaryOverview](#_r_0_-v1alpha1.CodeQualityTaskMetricsSpecSummaryOverview)
+
+## [#](#_r_0_-v1alpha1.CodeQualityTaskMetricsSpecSummaryOverview)CodeQualityTaskMetricsSpecSummaryOverview
+
+- `bugs`: `string`
+- `codeSmells`: `string`
+- `duplicatedLinesDensity`: `string`
+- `vulnerabilities`: `string`
+
+## [#](#_r_0_-v1alpha1.CodeQualityTaskMetricsSpecTask)CodeQualityTaskMetricsSpecTask
+
+- `analysisId`: `string`
+- `executedAt`: `string`
+- `executionTimeMs`: `string`
+- `id`: `string`
+- `startedAt`: `string`
+- `status`: `string`
+
+## [#](#_r_0_-v1alpha1.CodeQualityTaskMetricsStatus)CodeQualityTaskMetricsStatus
+
+- `reason`: `string`
+- `status`: `string`
+
 
 
 
@@ -13,10 +87,13 @@ url: /en/apis/advanced-apis/codeQualityTaskSummary.md
 url: /en/apis/advanced-apis/event/index.md
 ---
 
-
 # Event APIs
 
-<Overview />
+## 
+
+### [Search](/en/apis/advanced-apis/event/search.html)
+
+
 
 
 
@@ -24,12 +101,140 @@ url: /en/apis/advanced-apis/event/index.md
 url: /en/apis/advanced-apis/event/search.md
 ---
 
-
 # Search
 
-<OpenAPIPath path="/platform/events.alauda.io/v1/events" />
+## [#](#_r_8_-platformeventsalaudaiov1events)/platform/events.alauda.io/v1/events
 
-<OpenAPIPath path="/platform/events.alauda.io/v1/projects/{project}/clusters/{cluster}/namespaces/{namespace}/events" />
+### [#](#_r_8_-retrieve-kubernetes-events)`get`Retrieve Kubernetes events
+
+Retrieve the k8s events using query parameters.
+
+#### [#](#_r_8_-parameters)Parameters
+
+- `start_time` (*in query*): `number` required Required: Unix timestamp for start time.
+
+
+- `end_time` (*in query*): `number` required Required: Unix timestamp for end time.
+
+
+- `cluster` (*in query*): `string` required Required: Name of the Kubernetes cluster.
+
+
+- `pageno` (*in query*): `number` Optional: Page number to retrieve.
+
+
+- `size` (*in query*): `number` Optional: Page size, defaults to 30.
+
+
+- `project` (*in query*): `string` Optional: Name of the project.
+
+
+- `namespace` (*in query*): `string` Optional: Event's namespace. Use comma-separated values for multiple namespaces.
+
+
+- `kind` (*in query*): `string` Optional: Event related resource kind. Use comma-separated values for multiple kinds.
+
+
+- `name` (*in query*): `string` Optional: Filter events by name (fuzzy matching).
+
+
+- `filters` (*in query*): `string` Optional: Custom filters.
+
+
+- `type` (*in query*): `string` Optional: Event type (e.g. Normal, Warning, etc.).
+
+
+
+#### [#](#_r_8_-response)Response
+
+- `200`[EventsResponse](#_r_8_-EventsResponse): Successful retrieval of events.
+
+## [#](#_r_8_-EventsResponse)EventsResponse
+
+- `items`: `[][EventItem](#_r_8_-EventItem)`List of event items.
+
+
+- `total_items`: `integer`Total number of event items.
+
+
+- `total_page`: `integer`Total number of pages.
+
+
+
+## [#](#_r_8_-EventItem)EventItem
+
+- `spec`: `object`Specification details for the event.
+
+
+
+
+## [#](#_r_b_-platformeventsalaudaiov1projectsprojectclustersclusternamespacesnamespaceevents)/platform/events.alauda.io/v1/projects/{project}/clusters/{cluster}/namespaces/{namespace}/events
+
+### [#](#_r_b_-retrieve-kubernetes-events-for-a-specific-project-and-namespace)`get`Retrieve Kubernetes events for a specific project and namespace
+
+Retrieve the k8s events with a business view. For these requests, the cluster, project, and namespace fields must be provided.
+
+#### [#](#_r_b_-parameters)Parameters
+
+- `projectName` (*in path*): `string` required Required: Name of the project.
+
+
+- `clusterName` (*in path*): `string` required Required: Name of the cluster.
+
+
+- `namespace` (*in path*): `string` required Required: Namespace for the events.
+
+
+- `start_time` (*in query*): `number` required Required: Unix timestamp for start time.
+
+
+- `end_time` (*in query*): `number` required Required: Unix timestamp for end time.
+
+
+- `cluster` (*in query*): `string` required Required: Name of the Kubernetes cluster.
+
+
+- `pageno` (*in query*): `number` Optional: Page number to retrieve.
+
+
+- `size` (*in query*): `number` Optional: Page size, defaults to 30.
+
+
+- `kind` (*in query*): `string` Optional: Event related resource kind. Use comma-separated values for multiple kinds.
+
+
+- `name` (*in query*): `string` Optional: Filter events by name (fuzzy matching).
+
+
+- `filters` (*in query*): `string` Optional: Custom filters.
+
+
+- `type` (*in query*): `string` Optional: Event type (e.g. Normal, Warning, etc.).
+
+
+
+#### [#](#_r_b_-response)Response
+
+- `200`[EventsResponse](#_r_b_-EventsResponse): Successful retrieval of events.
+
+## [#](#_r_b_-EventsResponse)EventsResponse
+
+- `items`: `[][EventItem](#_r_b_-EventItem)`List of event items.
+
+
+- `total_items`: `integer`Total number of event items.
+
+
+- `total_page`: `integer`Total number of pages.
+
+
+
+## [#](#_r_b_-EventItem)EventItem
+
+- `spec`: `object`Specification details for the event.
+
+
+
 
 
 
@@ -37,10 +242,39 @@ url: /en/apis/advanced-apis/event/search.md
 url: /en/apis/advanced-apis/index.md
 ---
 
-
 # Advanced API
 
-<Overview />
+## Event APIs[#](#event-apis)
+
+### [Search](/en/apis/advanced-apis/event/search.html)
+
+
+## Log APIs[#](#log-apis)
+
+### [Aggregation](/en/apis/advanced-apis/log/aggregation.html)
+
+
+### [Search](/en/apis/advanced-apis/log/search.html)
+
+
+## CodeQualityTaskSummary[#](#codequalitytasksummary)
+
+### [CodeQualityTaskSummary](/en/apis/advanced-apis/codeQualityTaskSummary.html)
+
+
+## Projects[#](#projects)
+
+### [Projects](/en/apis/advanced-apis/projects.html)
+
+
+## Workload APIs[#](#workload-apis)
+
+### [DaemonSet [apps/v1]](/en/apis/advanced-apis/workload/daemonset.html)
+
+
+### [Deployments [apps/v1]](/en/apis/advanced-apis/workload/deployment.html)
+
+
 
 
 
@@ -48,14 +282,208 @@ url: /en/apis/advanced-apis/index.md
 url: /en/apis/advanced-apis/log/aggregation.md
 ---
 
-
 # Aggregation
 
-<OpenAPIPath path="/platform/logging.alauda.io/v2/logs/aggregation" />
+## [#](#_r_e_-platformloggingalaudaiov2logsaggregation)/platform/logging.alauda.io/v2/logs/aggregation
 
-<OpenAPIPath path="/platform/logging.alauda.io/v2/clusters/{cluster}/logs/aggregation" />
+### [#](#_r_e_-log-aggregation)`get`Log Aggregation
 
-<OpenAPIPath path="/platform/logging.alauda.io/v2/projects/{project}/clusters/{cluster}/namespaces/{namespace}/logs/aggregation" />
+Aggregate logs into buckets for chart display with authentication.
+
+#### [#](#_r_e_-parameters)Parameters
+
+- `buckets` (*in query*): `integer` Number of buckets for aggregation. Default is 30.
+
+
+- `start` (*in query*): `number` required Start time of the time range.
+
+
+- `end` (*in query*): `number` required End time of the time range.
+
+
+- `cluster` (*in query*): `string` required Name of the cluster.
+
+
+- `logType` (*in query*): `string` Type of log. Options: system, platform, kubernetes, workload. Default is workload.
+
+
+- `projects` (*in query*): `string` Project names for application logs, comma separated.
+
+
+- `namespaces` (*in query*): `string` Namespace names for application logs, comma separated.
+
+
+- `workloads` (*in query*): `string` Workload type and name pairs for application logs, e.g., Deployment:lanaya. Multiple values separated by commas.
+
+
+- `podNames` (*in query*): `string` Pod names, comma separated.
+
+
+- `containerNames` (*in query*): `string` Container names, comma separated.
+
+
+- `nodes` (*in query*): `string` Node names, comma separated.
+
+
+- `paths` (*in query*): `string` Path names, comma separated.
+
+
+- `products` (*in query*): `string` Product names for product logs, comma separated.
+
+
+- `components` (*in query*): `string` Component names for product logs or Kubernetes logs, comma separated.
+
+
+- `query` (*in query*): `string` Query keywords, supports AND, OR, and escape with backslash.
+
+
+
+#### [#](#_r_e_-response)Response
+
+- `200``object`: Successful aggregation response*Properties:*- `buckets`: `[][Bucket](#_r_e_-Bucket)`
+
+
+
+## [#](#_r_e_-Bucket)Bucket
+
+- `time`: `number`
+- `count`: `integer`
+
+
+## [#](#_r_g_-platformloggingalaudaiov2clustersclusterlogsaggregation)/platform/logging.alauda.io/v2/clusters/{cluster}/logs/aggregation
+
+### [#](#_r_g_-log-aggregation-by-cluster)`get`Log Aggregation by Cluster
+
+Aggregate logs by cluster into buckets with authentication.
+
+#### [#](#_r_g_-parameters)Parameters
+
+- `cluster` (*in path*): `string` required Name of the cluster.
+
+
+- `buckets` (*in query*): `integer` Number of buckets for aggregation. Default is 30.
+
+
+- `start` (*in query*): `number` required Start time of the time range.
+
+
+- `end` (*in query*): `number` required End time of the time range.
+
+
+- `logType` (*in query*): `string` Type of log. Options: system, platform, kubernetes, workload. Default is workload.
+
+
+- `projects` (*in query*): `string` Project names for application logs, comma separated.
+
+
+- `namespaces` (*in query*): `string` Namespace names for application logs, comma separated.
+
+
+- `workloads` (*in query*): `string` Workload type and name pairs for application logs, e.g., Deployment:lanaya. Multiple values separated by commas.
+
+
+- `podNames` (*in query*): `string` Pod names, comma separated.
+
+
+- `containerNames` (*in query*): `string` Container names, comma separated.
+
+
+- `nodes` (*in query*): `string` Node names, comma separated.
+
+
+- `paths` (*in query*): `string` Path names, comma separated.
+
+
+- `products` (*in query*): `string` Product names for product logs, comma separated.
+
+
+- `components` (*in query*): `string` Component names for product logs or Kubernetes logs, comma separated.
+
+
+- `query` (*in query*): `string` Query keywords, supports AND, OR, and escape with backslash.
+
+
+
+#### [#](#_r_g_-response)Response
+
+- `200``object`: Successful aggregation response*Properties:*- `buckets`: `[][Bucket](#_r_g_-Bucket)`
+
+
+
+## [#](#_r_g_-Bucket)Bucket
+
+- `time`: `number`
+- `count`: `integer`
+
+
+## [#](#_r_i_-platformloggingalaudaiov2projectsprojectclustersclusternamespacesnamespacelogsaggregation)/platform/logging.alauda.io/v2/projects/{project}/clusters/{cluster}/namespaces/{namespace}/logs/aggregation
+
+### [#](#_r_i_-log-aggregation-by-project-cluster-and-namespace)`get`Log Aggregation by Project, Cluster and Namespace
+
+Aggregate logs within a specific project, cluster, and namespace into buckets with authentication.
+
+#### [#](#_r_i_-parameters)Parameters
+
+- `project` (*in path*): `string` required Name of the project.
+
+
+- `cluster` (*in path*): `string` required Name of the cluster.
+
+
+- `namespace` (*in path*): `string` required Name of the namespace.
+
+
+- `buckets` (*in query*): `integer` Number of buckets for aggregation. Default is 30.
+
+
+- `start` (*in query*): `number` required Start time of the time range.
+
+
+- `end` (*in query*): `number` required End time of the time range.
+
+
+- `logType` (*in query*): `string` Type of log. Options: system, platform, kubernetes, workload. Default is workload.
+
+
+- `workloads` (*in query*): `string` Workload type and name pairs for application logs, e.g., Deployment:lanaya. Multiple values separated by commas.
+
+
+- `podNames` (*in query*): `string` Pod names, comma separated.
+
+
+- `containerNames` (*in query*): `string` Container names, comma separated.
+
+
+- `namespaces` (*in query*): `string` Namespace names for application logs, comma separated.
+
+
+- `nodes` (*in query*): `string` Node names, comma separated.
+
+
+- `paths` (*in query*): `string` Path names, comma separated.
+
+
+- `products` (*in query*): `string` Product names for product logs, comma separated.
+
+
+- `components` (*in query*): `string` Component names for product logs or Kubernetes logs, comma separated.
+
+
+- `query` (*in query*): `string` Query keywords, supports AND, OR, and escape with backslash.
+
+
+
+#### [#](#_r_i_-response)Response
+
+- `200``object`: Successful aggregation response*Properties:*- `buckets`: `[][Bucket](#_r_i_-Bucket)`
+
+
+
+## [#](#_r_i_-Bucket)Bucket
+
+- `time`: `number`
+- `count`: `integer`
+
 
 
 
@@ -63,10 +491,16 @@ url: /en/apis/advanced-apis/log/aggregation.md
 url: /en/apis/advanced-apis/log/index.md
 ---
 
-
 # Log APIs
 
-<Overview />
+## 
+
+### [Aggregation](/en/apis/advanced-apis/log/aggregation.html)
+
+
+### [Search](/en/apis/advanced-apis/log/search.html)
+
+
 
 
 
@@ -74,14 +508,403 @@ url: /en/apis/advanced-apis/log/index.md
 url: /en/apis/advanced-apis/log/search.md
 ---
 
-
 # Search
 
-<OpenAPIPath path="/platform/logging.alauda.io/v2/logs/search" />
+## [#](#_r_k_-platformloggingalaudaiov2logssearch)/platform/logging.alauda.io/v2/logs/search
 
-<OpenAPIPath path="/platform/logging.alauda.io/v2/clusters/{cluster}/logs/search" />
+### [#](#_r_k_-log-search)`get`Log Search
 
-<OpenAPIPath path="/platform/logging.alauda.io/v2/projects/{project}/clusters/{cluster}/namespaces/{namespace}/logs/search" />
+Search logs with authentication.
+
+#### [#](#_r_k_-parameters)Parameters
+
+- `start` (*in query*): `number` required Start time of the time range.
+
+
+- `end` (*in query*): `number` required End time of the time range.
+
+
+- `page` (*in query*): `integer` required Page number for the query results.
+
+
+- `pageSize` (*in query*): `integer` Number of records per page. For export, 0 means export all.
+
+
+- `ascending` (*in query*): `boolean` Sort order. Default is false (descending).
+
+
+- `cluster` (*in query*): `string` required Name of the cluster.
+
+
+- `logType` (*in query*): `string` Type of log. Options: system, platform, kubernetes, workload. Default is workload.
+
+
+- `projects` (*in query*): `string` Project names for application logs, comma separated.
+
+
+- `namespaces` (*in query*): `string` Namespace names for application logs, comma separated.
+
+
+- `workloads` (*in query*): `string` Workload type and name pairs for application logs, e.g., Deployment:lanaya. Multiple values separated by commas.
+
+
+- `podNames` (*in query*): `string` Pod names, comma separated.
+
+
+- `containerNames` (*in query*): `string` Container names, comma separated.
+
+
+- `nodes` (*in query*): `string` Node names, comma separated.
+
+
+- `paths` (*in query*): `string` Path names, comma separated.
+
+
+- `products` (*in query*): `string` Product names for product logs, comma separated.
+
+
+- `components` (*in query*): `string` Component names for product logs or Kubernetes logs, comma separated.
+
+
+- `query` (*in query*): `string` Query keywords, supports AND, OR, and escape with backslash.
+
+
+
+#### [#](#_r_k_-response)Response
+
+- `200``object`: Successful log search response*Properties:*- `items`: `[][LogEntry](#_r_k_-LogEntry)`
+
+
+
+## [#](#_r_k_-LogEntry)LogEntry
+
+- `time`: `number`Time of the log entry.
+
+
+- `node`: `string`Name of the node.
+
+
+- `podName`: `string`Name of the pod.
+
+
+- `podId`: `string`Identifier of the pod.
+
+
+- `logData`: `string`Log data as a JSON string.
+
+
+- `logLevel`: `string`Severity level of the log.
+
+
+- `containerName`: `string`Name of the container.
+
+
+- `cluster`: `string`Name of the cluster.
+
+
+- `containerId`: `string`Identifier of the container.
+
+
+- `containerId8`: `string`Shortened container identifier.
+
+
+- `@timestamp`: `string`Timestamp in string format.
+
+
+- `namespace`: `string`Namespace of the log.
+
+
+- `project`: `string`Project associated with the log.
+
+
+- `path`: `string`Log path.
+
+
+- `logId`: `string`Unique identifier of the log.
+
+
+- `logType`: `string`Type of the log.
+
+
+- `logIndex`: `string`Index name for the log.
+
+
+- `component`: `string`Component related to the log.
+
+
+- `product`: `string`Product name associated with the log.
+
+
+- `workload`: `string`Workload details.
+
+
+
+
+## [#](#_r_m_-platformloggingalaudaiov2clustersclusterlogssearch)/platform/logging.alauda.io/v2/clusters/{cluster}/logs/search
+
+### [#](#_r_m_-log-search-by-cluster)`get`Log Search by Cluster
+
+Search logs by cluster with authentication.
+
+#### [#](#_r_m_-parameters)Parameters
+
+- `cluster` (*in path*): `string` required Name of the cluster.
+
+
+- `start` (*in query*): `number` required Start time of the time range.
+
+
+- `end` (*in query*): `number` required End time of the time range.
+
+
+- `page` (*in query*): `integer` required Page number for the query results.
+
+
+- `pageSize` (*in query*): `integer` Number of records per page. For export, 0 means export all.
+
+
+- `ascending` (*in query*): `boolean` Sort order. Default is false (descending).
+
+
+- `logType` (*in query*): `string` Type of log. Options: system, platform, kubernetes, workload. Default is workload.
+
+
+- `projects` (*in query*): `string` Project names for application logs, comma separated.
+
+
+- `namespaces` (*in query*): `string` Namespace names for application logs, comma separated.
+
+
+- `workloads` (*in query*): `string` Workload type and name pairs for application logs, e.g., Deployment:lanaya. Multiple values separated by commas.
+
+
+- `podNames` (*in query*): `string` Pod names, comma separated.
+
+
+- `containerNames` (*in query*): `string` Container names, comma separated.
+
+
+- `nodes` (*in query*): `string` Node names, comma separated.
+
+
+- `paths` (*in query*): `string` Path names, comma separated.
+
+
+- `products` (*in query*): `string` Product names for product logs, comma separated.
+
+
+- `components` (*in query*): `string` Component names for product logs or Kubernetes logs, comma separated.
+
+
+- `query` (*in query*): `string` Query keywords, supports AND, OR, and escape with backslash.
+
+
+
+#### [#](#_r_m_-response)Response
+
+- `200``object`: Successful log search response*Properties:*- `items`: `[][LogEntry](#_r_m_-LogEntry)`
+
+
+
+## [#](#_r_m_-LogEntry)LogEntry
+
+- `time`: `number`Time of the log entry.
+
+
+- `node`: `string`Name of the node.
+
+
+- `podName`: `string`Name of the pod.
+
+
+- `podId`: `string`Identifier of the pod.
+
+
+- `logData`: `string`Log data as a JSON string.
+
+
+- `logLevel`: `string`Severity level of the log.
+
+
+- `containerName`: `string`Name of the container.
+
+
+- `cluster`: `string`Name of the cluster.
+
+
+- `containerId`: `string`Identifier of the container.
+
+
+- `containerId8`: `string`Shortened container identifier.
+
+
+- `@timestamp`: `string`Timestamp in string format.
+
+
+- `namespace`: `string`Namespace of the log.
+
+
+- `project`: `string`Project associated with the log.
+
+
+- `path`: `string`Log path.
+
+
+- `logId`: `string`Unique identifier of the log.
+
+
+- `logType`: `string`Type of the log.
+
+
+- `logIndex`: `string`Index name for the log.
+
+
+- `component`: `string`Component related to the log.
+
+
+- `product`: `string`Product name associated with the log.
+
+
+- `workload`: `string`Workload details.
+
+
+
+
+## [#](#_r_o_-platformloggingalaudaiov2projectsprojectclustersclusternamespacesnamespacelogssearch)/platform/logging.alauda.io/v2/projects/{project}/clusters/{cluster}/namespaces/{namespace}/logs/search
+
+### [#](#_r_o_-log-search-by-project-cluster-and-namespace)`get`Log Search by Project, Cluster and Namespace
+
+Search logs within a specific project, cluster, and namespace with authentication.
+
+#### [#](#_r_o_-parameters)Parameters
+
+- `project` (*in path*): `string` required Name of the project.
+
+
+- `cluster` (*in path*): `string` required Name of the cluster.
+
+
+- `namespace` (*in path*): `string` required Name of the namespace.
+
+
+- `start` (*in query*): `number` required Start time of the time range.
+
+
+- `end` (*in query*): `number` required End time of the time range.
+
+
+- `page` (*in query*): `integer` required Page number for the query results.
+
+
+- `pageSize` (*in query*): `integer` Number of records per page. For export, 0 means export all.
+
+
+- `ascending` (*in query*): `boolean` Sort order. Default is false (descending).
+
+
+- `logType` (*in query*): `string` Type of log. Options: system, platform, kubernetes, workload. Default is workload.
+
+
+- `projects` (*in query*): `string` Project names for application logs, comma separated.
+
+
+- `workloads` (*in query*): `string` Workload type and name pairs for application logs, e.g., Deployment:lanaya. Multiple values separated by commas.
+
+
+- `podNames` (*in query*): `string` Pod names, comma separated.
+
+
+- `containerNames` (*in query*): `string` Container names, comma separated.
+
+
+- `namespaces` (*in query*): `string` Namespace names for application logs, comma separated.
+
+
+- `nodes` (*in query*): `string` Node names, comma separated.
+
+
+- `paths` (*in query*): `string` Path names, comma separated.
+
+
+- `products` (*in query*): `string` Product names for product logs, comma separated.
+
+
+- `components` (*in query*): `string` Component names for product logs or Kubernetes logs, comma separated.
+
+
+- `query` (*in query*): `string` Query keywords, supports AND, OR, and escape with backslash.
+
+
+
+#### [#](#_r_o_-response)Response
+
+- `200``object`: Successful log search response*Properties:*- `items`: `[][LogEntry](#_r_o_-LogEntry)`
+
+
+
+## [#](#_r_o_-LogEntry)LogEntry
+
+- `time`: `number`Time of the log entry.
+
+
+- `node`: `string`Name of the node.
+
+
+- `podName`: `string`Name of the pod.
+
+
+- `podId`: `string`Identifier of the pod.
+
+
+- `logData`: `string`Log data as a JSON string.
+
+
+- `logLevel`: `string`Severity level of the log.
+
+
+- `containerName`: `string`Name of the container.
+
+
+- `cluster`: `string`Name of the cluster.
+
+
+- `containerId`: `string`Identifier of the container.
+
+
+- `containerId8`: `string`Shortened container identifier.
+
+
+- `@timestamp`: `string`Timestamp in string format.
+
+
+- `namespace`: `string`Namespace of the log.
+
+
+- `project`: `string`Project associated with the log.
+
+
+- `path`: `string`Log path.
+
+
+- `logId`: `string`Unique identifier of the log.
+
+
+- `logType`: `string`Type of the log.
+
+
+- `logIndex`: `string`Index name for the log.
+
+
+- `component`: `string`Component related to the log.
+
+
+- `product`: `string`Product name associated with the log.
+
+
+- `workload`: `string`Workload details.
+
+
+
 
 
 
@@ -89,10 +912,105 @@ url: /en/apis/advanced-apis/log/search.md
 url: /en/apis/advanced-apis/projects.md
 ---
 
-
 # Projects
 
-<OpenAPIPath path="/plugins/v1alpha1/template/projects" />
+## [#](#_r_q_-pluginsv1alpha1templateprojects)/plugins/v1alpha1/template/projects
+
+### [#](#_r_q_-listprojects)`get`ListProjects
+
+#### [#](#_r_q_-parameters)Parameters
+
+- `itemsPerPage` (*in query*): `string` items to be returned in a page
+
+
+- `page` (*in query*): `string` page to be returned
+
+
+
+#### [#](#_r_q_-response)Response
+
+- `200`[ProjectList](#_r_q_-v1alpha1.ProjectList): OK
+
+### [#](#_r_q_-createproject)`post`CreateProject
+
+#### [#](#_r_q_-request-body)Request Body
+
+[Project](#_r_q_-v1alpha1.Project)required
+
+#### [#](#_r_q_-response-1)Response
+
+- `201`[Project](#_r_q_-v1alpha1.Project): Project Created
+
+## [#](#_r_q_-v1alpha1.ProjectList)ProjectList
+
+TypeMeta describes an individual object in an API response or request with strings representing the type of the object and its API schema version. Structures that are versioned or persisted should inline TypeMeta.
+
+- `apiVersion`: `string`APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: [https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources](https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources)
+
+
+- `items`: `[][Project](#_r_q_-v1alpha1.Project)`
+- `kind`: `string`Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: [https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds](https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds)
+
+
+- `metadata`: [ListMeta](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/list-meta/)ListMeta describes metadata that synthetic resources must have, including lists and various status objects. A resource may have only one of {ObjectMeta, ListMeta}.
+
+
+
+## [#](#_r_q_-v1alpha1.Project)Project
+
+- `apiVersion`: `string`APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: [https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources](https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources)
+
+
+- `kind`: `string`Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: [https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds](https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds)
+
+
+- `metadata`: [ObjectMeta](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/object-meta/)ObjectMeta is metadata that all persisted resources must have, which includes all objects users must create.
+
+
+- `spec`: [ProjectSpec](#_r_q_-v1alpha1.ProjectSpec)
+
+## [#](#_r_q_-v1alpha1.ProjectSpec)ProjectSpec
+
+- `access`: [Addressable](#_r_q_-v1.Addressable)
+- `address`: [Addressable](#_r_q_-v1.Addressable)
+- `extendedAddresses`: `map[string][Addressable](#_r_q_-v1.Addressable)`
+- `limited`: `boolean`
+- `namespaceRefs`: `[][ObjectReference](#_r_q_-v1.ObjectReference)`
+- `properties`: `string`
+- `public`: `boolean`
+- `readOnly`: `boolean`
+- `subType`: `string`
+
+## [#](#_r_q_-v1.Addressable)Addressable
+
+- `url`: `string`
+
+## [#](#_r_q_-v1.ObjectReference)ObjectReference
+
+ObjectReference contains enough information to let you inspect or modify the referred object.
+
+- `apiVersion`: `string`API version of the referent.
+
+
+- `fieldPath`: `string`If referring to a piece of an object instead of an entire object, this string should contain a valid JSON/Go field access statement, such as desiredState.manifest.containers[2]. For example, if the object reference is to a container within a pod, this would take on a value like: "spec.containers{name}" (where "name" refers to the name of the container that triggered the event) or if no container name is specified "spec.containers[2]" (container with index 2 in this pod). This syntax is chosen only to have some well-defined way of referencing a part of an object.
+
+
+- `kind`: `string`Kind of the referent. More info: [https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds](https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds)
+
+
+- `name`: `string`Name of the referent. More info: [https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names)
+
+
+- `namespace`: `string`Namespace of the referent. More info: [https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
+
+
+- `resourceVersion`: `string`Specific resourceVersion to which this reference is made, if any. More info: [https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency](https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency)
+
+
+- `uid`: `string`UID of the referent. More info: [https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids)
+
+
+
 
 
 
@@ -100,13 +1018,105 @@ url: /en/apis/advanced-apis/projects.md
 url: /en/apis/advanced-apis/workload/daemonset.md
 ---
 
-
 # DaemonSet \[apps/v1]
 
-<OpenAPIPath
-  path="/apis/apps/v1/daemonsets"
-  pathPrefix="/kubernetes/{cluster}"
-/>
+## [#](#_r_10_-kubernetesclusterapisappsv1daemonsets)/kubernetes/{cluster}/apis/apps/v1/daemonsets
+
+### [#](#_r_10_-common-parameters)Common Parameters
+
+- `cluster` (*in path*): `string` required The name of the kuberentes cluster to access.
+
+
+- `allowWatchBookmarks` (*in query*): `boolean` allowWatchBookmarks requests watch events with type "BOOKMARK". Servers that do not implement bookmarks may ignore this flag and bookmarks are sent at the server's discretion. Clients should not assume bookmarks are returned at any specific interval, nor may they assume the server will send any BOOKMARK event during a session. If this is not a watch, this field is ignored.
+
+
+- `continue` (*in query*): `string` The continue option should be set when retrieving more results from the server. Since this value is server defined, clients may only use the continue value from a previous query result with identical query parameters (except for the value of continue) and the server may reject a continue value it does not recognize. If the specified continue value is no longer valid whether due to expiration (generally five to fifteen minutes) or a configuration change on the server, the server will respond with a 410 ResourceExpired error together with a continue token. If the client needs a consistent list, it must restart their list without the continue field. Otherwise, the client may send another list request with the token received with the 410 error, the server will respond with a list starting from the next key, but from the latest snapshot, which is inconsistent from the previous list results - objects that are created, modified, or deleted after the first list request will be included in the response, as long as their keys are after the "next key".
+
+
+This field is not supported when watch is true. Clients may start a watch from the last resourceVersion value returned by the server and not miss any modifications.
+
+
+- `fieldSelector` (*in query*): `string` A selector to restrict the list of returned objects by their fields. Defaults to everything.
+
+
+- `labelSelector` (*in query*): `string` A selector to restrict the list of returned objects by their labels. Defaults to everything.
+
+
+- `limit` (*in query*): `integer` limit is a maximum number of responses to return for a list call. If more items exist, the server will set the `continue` field on the list metadata to a value that can be used with the same initial query to retrieve the next set of results. Setting a limit may return fewer than the requested amount of items (up to zero items) in the event all requested objects are filtered out and clients should only use the presence of the continue field to determine whether more results are available. Servers may choose not to support the limit argument and will return all of the available results. If limit is specified and the continue field is empty, clients may assume that no more results are available. This field is not supported if watch is true.
+
+
+The server guarantees that the objects returned when using continue will be identical to issuing a single list call without a limit - that is, no objects created, modified, or deleted after the first request is issued will be included in any subsequent continued requests. This is sometimes referred to as a consistent snapshot, and ensures that a client that is using limit to receive smaller chunks of a very large result can ensure they see all possible objects. If objects are updated during a chunked list the version of the object that was present at the time the first list result was calculated is returned.
+
+
+- `pretty` (*in query*): `string` If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget).
+
+
+- `resourceVersion` (*in query*): `string` resourceVersion sets a constraint on what resource versions a request may be served from. See [https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions](https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions) for details.
+
+
+Defaults to unset
+
+
+- `resourceVersionMatch` (*in query*): `string` resourceVersionMatch determines how resourceVersion is applied to list calls. It is highly recommended that resourceVersionMatch be set for list calls where resourceVersion is set See [https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions](https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions) for details.
+
+
+Defaults to unset
+
+
+- `sendInitialEvents` (*in query*): `boolean` `sendInitialEvents=true` may be set together with `watch=true`. In that case, the watch stream will begin with synthetic events to produce the current state of objects in the collection. Once all such events have been sent, a synthetic "Bookmark" event  will be sent. The bookmark will report the ResourceVersion (RV) corresponding to the set of objects, and be marked with `"k8s.io/initial-events-end": "true"` annotation. Afterwards, the watch stream will proceed as usual, sending watch events corresponding to changes (subsequent to the RV) to objects watched.
+
+
+When `sendInitialEvents` option is set, we require `resourceVersionMatch` option to also be set. The semantic of the watch request is as following: - `resourceVersionMatch` = NotOlderThan
+is interpreted as "data at least as new as the provided `resourceVersion`"
+and the bookmark event is send when the state is synced
+to a `resourceVersion` at least as fresh as the one provided by the ListOptions.
+If `resourceVersion` is unset, this is interpreted as "consistent read" and the
+bookmark event is send when the state is synced at least to the moment
+when request started being processed.
+
+
+
+- `resourceVersionMatch` set to any other value or unset
+Invalid error is returned.
+
+
+
+Defaults to true if `resourceVersion=""` or `resourceVersion="0"` (for backward compatibility reasons) and to false otherwise.
+
+
+- `timeoutSeconds` (*in query*): `integer` Timeout for the list/watch call. This limits the duration of the call, regardless of any activity or inactivity.
+
+
+- `watch` (*in query*): `boolean` Watch for changes to the described resources and return them as a stream of add, update, and remove notifications. Specify resourceVersion.
+
+
+
+### [#](#_r_10_)`get`
+
+list or watch objects of kind DaemonSet
+
+#### [#](#_r_10_-response)Response
+
+- `200`[DaemonSetList](#_r_10_-io.k8s.api.apps.v1.DaemonSetList): OK
+- `401`: Unauthorized
+
+## [#](#_r_10_-io.k8s.api.apps.v1.DaemonSetList)DaemonSetList
+
+DaemonSetList is a collection of daemon sets.
+
+- `apiVersion`: `string`APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: [https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources](https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources)
+
+
+- `items`: `[][DaemonSet](/apis/references/DaemonSet#io.k8s.api.apps.v1.DaemonSet)`A list of daemon sets.
+
+
+- `kind`: `string`Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: [https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds](https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds)
+
+
+- `metadata`: [ListMeta](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/list-meta/)ListMeta describes metadata that synthetic resources must have, including lists and various status objects. A resource may have only one of {ObjectMeta, ListMeta}.
+
+
+
 
 
 
@@ -114,18 +1124,219 @@ url: /en/apis/advanced-apis/workload/daemonset.md
 url: /en/apis/advanced-apis/workload/deployment.md
 ---
 
-
 # Deployments \[apps/v1]
 
-<OpenAPIPath
-  path="/apis/apps/v1/deployments"
-  pathPrefix="/kubernetes/{cluster}"
-/>
+## [#](#_r_12_-kubernetesclusterapisappsv1deployments)/kubernetes/{cluster}/apis/apps/v1/deployments
 
-<OpenAPIPath
-  path="/apis/apps/v1/namespaces/{namespace}/deployments/{name}"
-  pathPrefix="/kubernetes/{cluster}"
-/>
+### [#](#_r_12_-common-parameters)Common Parameters
+
+- `cluster` (*in path*): `string` required The name of the kuberentes cluster to access.
+
+
+- `allowWatchBookmarks` (*in query*): `boolean` allowWatchBookmarks requests watch events with type "BOOKMARK". Servers that do not implement bookmarks may ignore this flag and bookmarks are sent at the server's discretion. Clients should not assume bookmarks are returned at any specific interval, nor may they assume the server will send any BOOKMARK event during a session. If this is not a watch, this field is ignored.
+
+
+- `continue` (*in query*): `string` The continue option should be set when retrieving more results from the server. Since this value is server defined, clients may only use the continue value from a previous query result with identical query parameters (except for the value of continue) and the server may reject a continue value it does not recognize. If the specified continue value is no longer valid whether due to expiration (generally five to fifteen minutes) or a configuration change on the server, the server will respond with a 410 ResourceExpired error together with a continue token. If the client needs a consistent list, it must restart their list without the continue field. Otherwise, the client may send another list request with the token received with the 410 error, the server will respond with a list starting from the next key, but from the latest snapshot, which is inconsistent from the previous list results - objects that are created, modified, or deleted after the first list request will be included in the response, as long as their keys are after the "next key".
+
+
+This field is not supported when watch is true. Clients may start a watch from the last resourceVersion value returned by the server and not miss any modifications.
+
+
+- `fieldSelector` (*in query*): `string` A selector to restrict the list of returned objects by their fields. Defaults to everything.
+
+
+- `labelSelector` (*in query*): `string` A selector to restrict the list of returned objects by their labels. Defaults to everything.
+
+
+- `limit` (*in query*): `integer` limit is a maximum number of responses to return for a list call. If more items exist, the server will set the `continue` field on the list metadata to a value that can be used with the same initial query to retrieve the next set of results. Setting a limit may return fewer than the requested amount of items (up to zero items) in the event all requested objects are filtered out and clients should only use the presence of the continue field to determine whether more results are available. Servers may choose not to support the limit argument and will return all of the available results. If limit is specified and the continue field is empty, clients may assume that no more results are available. This field is not supported if watch is true.
+
+
+The server guarantees that the objects returned when using continue will be identical to issuing a single list call without a limit - that is, no objects created, modified, or deleted after the first request is issued will be included in any subsequent continued requests. This is sometimes referred to as a consistent snapshot, and ensures that a client that is using limit to receive smaller chunks of a very large result can ensure they see all possible objects. If objects are updated during a chunked list the version of the object that was present at the time the first list result was calculated is returned.
+
+
+- `pretty` (*in query*): `string` If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget).
+
+
+- `resourceVersion` (*in query*): `string` resourceVersion sets a constraint on what resource versions a request may be served from. See [https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions](https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions) for details.
+
+
+Defaults to unset
+
+
+- `resourceVersionMatch` (*in query*): `string` resourceVersionMatch determines how resourceVersion is applied to list calls. It is highly recommended that resourceVersionMatch be set for list calls where resourceVersion is set See [https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions](https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions) for details.
+
+
+Defaults to unset
+
+
+- `sendInitialEvents` (*in query*): `boolean` `sendInitialEvents=true` may be set together with `watch=true`. In that case, the watch stream will begin with synthetic events to produce the current state of objects in the collection. Once all such events have been sent, a synthetic "Bookmark" event  will be sent. The bookmark will report the ResourceVersion (RV) corresponding to the set of objects, and be marked with `"k8s.io/initial-events-end": "true"` annotation. Afterwards, the watch stream will proceed as usual, sending watch events corresponding to changes (subsequent to the RV) to objects watched.
+
+
+When `sendInitialEvents` option is set, we require `resourceVersionMatch` option to also be set. The semantic of the watch request is as following: - `resourceVersionMatch` = NotOlderThan
+is interpreted as "data at least as new as the provided `resourceVersion`"
+and the bookmark event is send when the state is synced
+to a `resourceVersion` at least as fresh as the one provided by the ListOptions.
+If `resourceVersion` is unset, this is interpreted as "consistent read" and the
+bookmark event is send when the state is synced at least to the moment
+when request started being processed.
+
+
+
+- `resourceVersionMatch` set to any other value or unset
+Invalid error is returned.
+
+
+
+Defaults to true if `resourceVersion=""` or `resourceVersion="0"` (for backward compatibility reasons) and to false otherwise.
+
+
+- `timeoutSeconds` (*in query*): `integer` Timeout for the list/watch call. This limits the duration of the call, regardless of any activity or inactivity.
+
+
+- `watch` (*in query*): `boolean` Watch for changes to the described resources and return them as a stream of add, update, and remove notifications. Specify resourceVersion.
+
+
+
+### [#](#_r_12_)`get`
+
+list or watch objects of kind Deployment
+
+#### [#](#_r_12_-response)Response
+
+- `200`[DeploymentList](#_r_12_-io.k8s.api.apps.v1.DeploymentList): OK
+- `401`: Unauthorized
+
+## [#](#_r_12_-io.k8s.api.apps.v1.DeploymentList)DeploymentList
+
+DeploymentList is a list of Deployments.
+
+- `apiVersion`: `string`APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: [https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources](https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources)
+
+
+- `items`: `[][Deployment](/apis/references/Deployment#io.k8s.api.apps.v1.Deployment)`Items is the list of Deployments.
+
+
+- `kind`: `string`Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: [https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds](https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds)
+
+
+- `metadata`: [ListMeta](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/list-meta/)ListMeta describes metadata that synthetic resources must have, including lists and various status objects. A resource may have only one of {ObjectMeta, ListMeta}.
+
+
+
+
+## [#](#_r_14_-kubernetesclusterapisappsv1namespacesnamespacedeploymentsname)/kubernetes/{cluster}/apis/apps/v1/namespaces/{namespace}/deployments/{name}
+
+### [#](#_r_14_-common-parameters)Common Parameters
+
+- `cluster` (*in path*): `string` required The name of the kuberentes cluster to access.
+
+
+- `name` (*in path*): `string` required name of the Deployment
+
+
+- `namespace` (*in path*): `string` required object name and auth scope, such as for teams and projects
+
+
+- `pretty` (*in query*): `string` If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget).
+
+
+
+### [#](#_r_14_)`get`
+
+read the specified Deployment
+
+#### [#](#_r_14_-response)Response
+
+- `200`[Deployment](/apis/references/Deployment#io.k8s.api.apps.v1.Deployment): OK
+- `401`: Unauthorized
+
+### [#](#_r_14_--1)`put`
+
+replace the specified Deployment
+
+#### [#](#_r_14_-parameters)Parameters
+
+- `dryRun` (*in query*): `string` When present, indicates that modifications should not be persisted. An invalid or unrecognized dryRun directive will result in an error response and no further processing of the request. Valid values are: - All: all dry run stages will be processed
+
+
+- `fieldManager` (*in query*): `string` fieldManager is a name associated with the actor or entity that is making these changes. The value must be less than or 128 characters long, and only contain printable characters, as defined by [https://golang.org/pkg/unicode/#IsPrint](https://golang.org/pkg/unicode/#IsPrint).
+
+
+- `fieldValidation` (*in query*): `string` fieldValidation instructs the server on how to handle objects in the request (POST/PUT/PATCH) containing unknown or duplicate fields. Valid values are: - Ignore: This will ignore any unknown fields that are silently dropped from the object, and will ignore all but the last duplicate field that the decoder encounters. This is the default behavior prior to v1.23. - Warn: This will send a warning via the standard warning response header for each unknown field that is dropped from the object, and for each duplicate field that is encountered. The request will still succeed if there are no other errors, and will only persist the last of any duplicate fields. This is the default in v1.23+ - Strict: This will fail the request with a BadRequest error if any unknown fields would be dropped from the object, or if any duplicate fields are present. The error returned from the server will contain all unknown and duplicate fields encountered.
+
+
+
+#### [#](#_r_14_-request-body)Request Body
+
+[Deployment](/apis/references/Deployment#io.k8s.api.apps.v1.Deployment)
+
+#### [#](#_r_14_-response-1)Response
+
+- `200`[Deployment](/apis/references/Deployment#io.k8s.api.apps.v1.Deployment): OK
+- `201`[Deployment](/apis/references/Deployment#io.k8s.api.apps.v1.Deployment): Created
+- `401`: Unauthorized
+
+### [#](#_r_14_--2)`delete`
+
+delete a Deployment
+
+#### [#](#_r_14_-parameters-1)Parameters
+
+- `dryRun` (*in query*): `string` When present, indicates that modifications should not be persisted. An invalid or unrecognized dryRun directive will result in an error response and no further processing of the request. Valid values are: - All: all dry run stages will be processed
+
+
+- `gracePeriodSeconds` (*in query*): `integer` The duration in seconds before the object should be deleted. Value must be non-negative integer. The value zero indicates delete immediately. If this value is nil, the default grace period for the specified type will be used. Defaults to a per object value if not specified. zero means delete immediately.
+
+
+- `ignoreStoreReadErrorWithClusterBreakingPotential` (*in query*): `boolean` if set to true, it will trigger an unsafe deletion of the resource in case the normal deletion flow fails with a corrupt object error. A resource is considered corrupt if it can not be retrieved from the underlying storage successfully because of a) its data can not be transformed e.g. decryption failure, or b) it fails to decode into an object. NOTE: unsafe deletion ignores finalizer constraints, skips precondition checks, and removes the object from the storage. WARNING: This may potentially break the cluster if the workload associated with the resource being unsafe-deleted relies on normal deletion flow. Use only if you REALLY know what you are doing. The default value is false, and the user must opt in to enable it
+
+
+- `orphanDependents` (*in query*): `boolean` Deprecated: please use the PropagationPolicy, this field will be deprecated in 1.7. Should the dependent objects be orphaned. If true/false, the "orphan" finalizer will be added to/removed from the object's finalizers list. Either this field or PropagationPolicy may be set, but not both.
+
+
+- `propagationPolicy` (*in query*): `string` Whether and how garbage collection will be performed. Either this field or OrphanDependents may be set, but not both. The default policy is decided by the existing finalizer set in the metadata.finalizers and the resource-specific default policy. Acceptable values are: 'Orphan' - orphan the dependents; 'Background' - allow the garbage collector to delete the dependents in the background; 'Foreground' - a cascading policy that deletes all dependents in the foreground.
+
+
+
+#### [#](#_r_14_-request-body-1)Request Body
+
+[DeleteOptions](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/delete-options/)
+
+#### [#](#_r_14_-response-2)Response
+
+- `200`[Status](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/status/): OK
+- `202`[Status](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/status/): Accepted
+- `401`: Unauthorized
+
+### [#](#_r_14_--3)`patch`
+
+partially update the specified Deployment
+
+#### [#](#_r_14_-parameters-2)Parameters
+
+- `dryRun` (*in query*): `string` When present, indicates that modifications should not be persisted. An invalid or unrecognized dryRun directive will result in an error response and no further processing of the request. Valid values are: - All: all dry run stages will be processed
+
+
+- `fieldManager` (*in query*): `string` fieldManager is a name associated with the actor or entity that is making these changes. The value must be less than or 128 characters long, and only contain printable characters, as defined by [https://golang.org/pkg/unicode/#IsPrint](https://golang.org/pkg/unicode/#IsPrint). This field is required for apply requests (application/apply-patch) but optional for non-apply patch types (JsonPatch, MergePatch, StrategicMergePatch).
+
+
+- `fieldValidation` (*in query*): `string` fieldValidation instructs the server on how to handle objects in the request (POST/PUT/PATCH) containing unknown or duplicate fields. Valid values are: - Ignore: This will ignore any unknown fields that are silently dropped from the object, and will ignore all but the last duplicate field that the decoder encounters. This is the default behavior prior to v1.23. - Warn: This will send a warning via the standard warning response header for each unknown field that is dropped from the object, and for each duplicate field that is encountered. The request will still succeed if there are no other errors, and will only persist the last of any duplicate fields. This is the default in v1.23+ - Strict: This will fail the request with a BadRequest error if any unknown fields would be dropped from the object, or if any duplicate fields are present. The error returned from the server will contain all unknown and duplicate fields encountered.
+
+
+- `force` (*in query*): `boolean` Force is going to "force" Apply requests. It means user will re-acquire conflicting fields owned by other people. Force flag must be unset for non-apply patch requests.
+
+
+
+#### [#](#_r_14_-request-body-2)Request Body
+
+[Patch](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/patch/)
+
+#### [#](#_r_14_-response-3)Response
+
+- `200`[Deployment](/apis/references/Deployment#io.k8s.api.apps.v1.Deployment): OK
+- `201`[Deployment](/apis/references/Deployment#io.k8s.api.apps.v1.Deployment): Created
+- `401`: Unauthorized
+
 
 
 
@@ -133,10 +1344,16 @@ url: /en/apis/advanced-apis/workload/deployment.md
 url: /en/apis/advanced-apis/workload/index.md
 ---
 
-
 # Workload APIs
 
-<Overview overviewHeaders={[]} />
+## 
+
+### [DaemonSet [apps/v1]](/en/apis/advanced-apis/workload/daemonset.html)
+
+
+### [Deployments [apps/v1]](/en/apis/advanced-apis/workload/deployment.html)
+
+
 
 
 
@@ -144,10 +1361,575 @@ url: /en/apis/advanced-apis/workload/index.md
 url: /en/apis/crds/ArtifactCleanupRun.md
 ---
 
-
 # ArtifactCleanupRun
 
-<K8sCrd name="artifactcleanupruns.artifacts.katanomi.dev" />
+`artifacts.katanomi.dev` group
+
+ArtifactCleanupRun is the Schema for the artifactcleanupruns API
+
+`v1alpha1` version+ Expand Allspec `object`ArtifactCleanupRunSpec defines the desired state of ArtifactCleanupRun
+
+artifactCleanupRef `object`Reference to an existing ArtifactCleanup
+
+apiVersion `string`API version of the referent.
+
+fieldPath `string`If referring to a piece of an object instead of an entire object, this string
+should contain a valid JSON/Go field access statement, such as desiredState.manifest.containers[2].
+For example, if the object reference is to a container within a pod, this would take on a value like:
+"spec.containers{name}" (where "name" refers to the name of the container that triggered
+the event) or if no container name is specified "spec.containers[2]" (container with
+index 2 in this pod). This syntax is chosen only to have some well-defined way of
+referencing a part of an object.
+TODO: this design is not final and this field is subject to change in the future.
+
+kind `string`Kind of the referent.
+More info: [https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds](https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds)
+
+name `string`Name of the referent.
+More info: [https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names)
+
+namespace `string`Namespace of the referent.
+More info: [https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
+
+resourceVersion `string`Specific resourceVersion to which this reference is made, if any.
+More info: [https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency](https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency)
+
+uid `string`UID of the referent.
+More info: [https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids)
+
+artifactCleanupSpec `object`In-line spec for ArtifactCleanup. This options is mutually exclusive with artifactCleanupRef.
+
+address `object`Address stores the integrated service API address
+
+CACerts `string`CACerts is the Certification Authority (CA) certificates in PEM format
+according to [https://www.rfc-editor.org/rfc/rfc7468](https://www.rfc-editor.org/rfc/rfc7468).
+
+name `string`Name is the name of the address.
+
+url `string`historyLimits `object`HistoryLimits limits the number of executed items are preserved
+It only calculates already completed items
+
+count `integer`Sets a hard count for all finished items
+to be cleared from storage
+
+integrationClassName `string`IntegrationClassName sets the name of IntegrationClass that this integration is implemented
+
+integrationRef `object`Reference to specific integration that contains the tool API define.
+
+apiVersion `string`API version of the referent.
+
+fieldPath `string`If referring to a piece of an object instead of an entire object, this string
+should contain a valid JSON/Go field access statement, such as desiredState.manifest.containers[2].
+For example, if the object reference is to a container within a pod, this would take on a value like:
+"spec.containers{name}" (where "name" refers to the name of the container that triggered
+the event) or if no container name is specified "spec.containers[2]" (container with
+index 2 in this pod). This syntax is chosen only to have some well-defined way of
+referencing a part of an object.
+TODO: this design is not final and this field is subject to change in the future.
+
+kind `string`Kind of the referent.
+More info: [https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds](https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds)
+
+name `string`Name of the referent.
+More info: [https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names)
+
+namespace `string`Namespace of the referent.
+More info: [https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
+
+resourceVersion `string`Specific resourceVersion to which this reference is made, if any.
+More info: [https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency](https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency)
+
+uid `string`UID of the referent.
+More info: [https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids)
+
+policies `[]object`Policy A detailed description of the policy, including warehouse, cleanup rules, and retention rules.
+
+cleanupRules `[]object`Rule Describes the parameters of the rule.
+
+duration `string`The interval for saving time type rules.
+
+name `string`Rule names are for display purposes only.
+
+quantity `integer`Quantity value used to hold quantity type rules.
+
+regexp `string`The regular expression used to hold the match type rules.
+
+type `string`Rule type
+
+repository `object`A list of Repository to match. Regular expressions are supported.
+
+name `string`Matches the warehouse rule name, for display only.
+
+regexp `string`Regular expression that matches the repository.
+
+retentionRules `[]object`Rule Describes the parameters of the rule.
+
+duration `string`The interval for saving time type rules.
+
+name `string`Rule names are for display purposes only.
+
+quantity `integer`Quantity value used to hold quantity type rules.
+
+regexp `string`The regular expression used to hold the match type rules.
+
+type `string`Rule type
+
+resource `object`Resources array of predefined resources to be used
+
+annotations `object`Annotations provides a method to annotate specific resources in order to provide some metadata
+
+name `string` requiredName stores the name of the resource object
+
+properties `object`Properties of the resource. This is used to transmit fields and values to the integration class
+
+readOnly `boolean`ReadOnly adds a desired behaviour for consumers of this resource
+
+replicationPolicyRef `object`ReplicationPolicyRef stores a reference to a policy that generated this resource
+used by the ClusterIntegration object when replicating and creating Integration objects
+
+apiVersion `string`API version of the referent.
+
+fieldPath `string`If referring to a piece of an object instead of an entire object, this string
+should contain a valid JSON/Go field access statement, such as desiredState.manifest.containers[2].
+For example, if the object reference is to a container within a pod, this would take on a value like:
+"spec.containers{name}" (where "name" refers to the name of the container that triggered
+the event) or if no container name is specified "spec.containers[2]" (container with
+index 2 in this pod). This syntax is chosen only to have some well-defined way of
+referencing a part of an object.
+TODO: this design is not final and this field is subject to change in the future.
+
+kind `string`Kind of the referent.
+More info: [https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds](https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds)
+
+name `string`Name of the referent.
+More info: [https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names)
+
+namespace `string`Namespace of the referent.
+More info: [https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
+
+resourceVersion `string`Specific resourceVersion to which this reference is made, if any.
+More info: [https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency](https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency)
+
+uid `string`UID of the referent.
+More info: [https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids)
+
+subResources `[]object`annotations `object`Annotations provides a method to annotate specific resources in order to provide some metadata
+
+name `string` requiredName stores the name of the resource object
+
+properties `object`Properties of the resource. This is used to transmit fields and values to the integration class
+
+subtype `string`Subtype of resource associated with the object
+
+type `string` requiredType of resource associated with the object
+
+subtype `string`Subtype of resource associated with the object
+
+syncPolicy `string`SyncPolicy specifies how resources are synced to the system. Defaults to "SyncOnly"
+
+type `string` requiredType of resource associated with the object
+
+triggers `object`all triggers defined for triggering current artifactcleanup
+
+cronTriggers `[]object`ArtifactCleanupCronTrigger defines cronTrigger.
+
+annotations `object`Annotations is an unstructured key value map stored with a resource that may be
+set by external tools to store and retrieve arbitrary metadata. They are not
+queryable and should be preserved when modifying objects.
+More info: [http://kubernetes.io/docs/user-guide/annotations](http://kubernetes.io/docs/user-guide/annotations)
+
+name `string`The name of the timed trigger
+
+spec `object`Trigger the desired property periodically.
+
+broker `string`Broker instance to listen
+
+disabled `boolean`Disabled a switch for crontrigger.
+
+params `[]object`TriggerValueBinding represent values that will bind to template
+
+const `boolean`If true, indicates that value is a constant, not an expression.
+
+name `string`name of template parameter
+
+value `string`value of template parameter
+do we only need type of string
+
+runnableRef `object`reference of runnabledefinition
+
+apiVersion `string`API version of the referent.
+
+fieldPath `string`If referring to a piece of an object instead of an entire object, this string
+should contain a valid JSON/Go field access statement, such as desiredState.manifest.containers[2].
+For example, if the object reference is to a container within a pod, this would take on a value like:
+"spec.containers{name}" (where "name" refers to the name of the container that triggered
+the event) or if no container name is specified "spec.containers[2]" (container with
+index 2 in this pod). This syntax is chosen only to have some well-defined way of
+referencing a part of an object.
+TODO: this design is not final and this field is subject to change in the future.
+
+kind `string`Kind of the referent.
+More info: [https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds](https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds)
+
+name `string`Name of the referent.
+More info: [https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names)
+
+namespace `string`Namespace of the referent.
+More info: [https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
+
+resourceVersion `string`Specific resourceVersion to which this reference is made, if any.
+More info: [https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency](https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency)
+
+uid `string`UID of the referent.
+More info: [https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids)
+
+runnableSpec `object`Inline spec for runnable template.
+
+kube `object`Uses a yaml format to create a template for resource
+
+parameters `[]object`KubeParameter used to generate the resource with jsonpath replacement rules
+
+fieldPaths `[]string`FieldPaths is jsonpath for replacing the parameter value into the resource at render time
+
+name `string`Unique parameter name
+
+required `boolean`Parameter required, Defaults to false
+
+type `string`Parameter value type, one of [string, number, boolean], default is string
+
+template `object`Raw resource definition yaml
+
+schedule `string` requiredSchedule is the cron schedule.
+
+timezone `string`Timezone modifies the actual time relative to the specified timezone. Defaults to UTC.
+More general information about time zones: [https://www.iana.org/time-zones](https://www.iana.org/time-zones)
+List of valid timezone values: [https://en.wikipedia.org/wiki/List_of_tz_database_time_zones](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)
+
+dryRun `boolean``True` means that the simulation runs without performing specific cleanup operations.
+
+status `string`Status Used for cancelling a ArtifactCleanupRun (and maybe more later on)
+
+status `object`ArtifactCleanupRunStatus defines the observed state of ArtifactCleanupRun
+
+annotations `object`Annotations is additional Status fields for the Resource to save some
+additional State as well as convey more information to the user. This is
+roughly akin to Annotations on any k8s resource, just the reconciler conveying
+richer information outwards.
+
+artifactCleanupSpec `object`When spec.artifactCleanupRef is used, the spec will be stored here for future reference
+
+address `object`Address stores the integrated service API address
+
+CACerts `string`CACerts is the Certification Authority (CA) certificates in PEM format
+according to [https://www.rfc-editor.org/rfc/rfc7468](https://www.rfc-editor.org/rfc/rfc7468).
+
+name `string`Name is the name of the address.
+
+url `string`historyLimits `object`HistoryLimits limits the number of executed items are preserved
+It only calculates already completed items
+
+count `integer`Sets a hard count for all finished items
+to be cleared from storage
+
+integrationClassName `string`IntegrationClassName sets the name of IntegrationClass that this integration is implemented
+
+integrationRef `object`Reference to specific integration that contains the tool API define.
+
+apiVersion `string`API version of the referent.
+
+fieldPath `string`If referring to a piece of an object instead of an entire object, this string
+should contain a valid JSON/Go field access statement, such as desiredState.manifest.containers[2].
+For example, if the object reference is to a container within a pod, this would take on a value like:
+"spec.containers{name}" (where "name" refers to the name of the container that triggered
+the event) or if no container name is specified "spec.containers[2]" (container with
+index 2 in this pod). This syntax is chosen only to have some well-defined way of
+referencing a part of an object.
+TODO: this design is not final and this field is subject to change in the future.
+
+kind `string`Kind of the referent.
+More info: [https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds](https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds)
+
+name `string`Name of the referent.
+More info: [https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names)
+
+namespace `string`Namespace of the referent.
+More info: [https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
+
+resourceVersion `string`Specific resourceVersion to which this reference is made, if any.
+More info: [https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency](https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency)
+
+uid `string`UID of the referent.
+More info: [https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids)
+
+policies `[]object`Policy A detailed description of the policy, including warehouse, cleanup rules, and retention rules.
+
+cleanupRules `[]object`Rule Describes the parameters of the rule.
+
+duration `string`The interval for saving time type rules.
+
+name `string`Rule names are for display purposes only.
+
+quantity `integer`Quantity value used to hold quantity type rules.
+
+regexp `string`The regular expression used to hold the match type rules.
+
+type `string`Rule type
+
+repository `object`A list of Repository to match. Regular expressions are supported.
+
+name `string`Matches the warehouse rule name, for display only.
+
+regexp `string`Regular expression that matches the repository.
+
+retentionRules `[]object`Rule Describes the parameters of the rule.
+
+duration `string`The interval for saving time type rules.
+
+name `string`Rule names are for display purposes only.
+
+quantity `integer`Quantity value used to hold quantity type rules.
+
+regexp `string`The regular expression used to hold the match type rules.
+
+type `string`Rule type
+
+resource `object`Resources array of predefined resources to be used
+
+annotations `object`Annotations provides a method to annotate specific resources in order to provide some metadata
+
+name `string` requiredName stores the name of the resource object
+
+properties `object`Properties of the resource. This is used to transmit fields and values to the integration class
+
+readOnly `boolean`ReadOnly adds a desired behaviour for consumers of this resource
+
+replicationPolicyRef `object`ReplicationPolicyRef stores a reference to a policy that generated this resource
+used by the ClusterIntegration object when replicating and creating Integration objects
+
+apiVersion `string`API version of the referent.
+
+fieldPath `string`If referring to a piece of an object instead of an entire object, this string
+should contain a valid JSON/Go field access statement, such as desiredState.manifest.containers[2].
+For example, if the object reference is to a container within a pod, this would take on a value like:
+"spec.containers{name}" (where "name" refers to the name of the container that triggered
+the event) or if no container name is specified "spec.containers[2]" (container with
+index 2 in this pod). This syntax is chosen only to have some well-defined way of
+referencing a part of an object.
+TODO: this design is not final and this field is subject to change in the future.
+
+kind `string`Kind of the referent.
+More info: [https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds](https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds)
+
+name `string`Name of the referent.
+More info: [https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names)
+
+namespace `string`Namespace of the referent.
+More info: [https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
+
+resourceVersion `string`Specific resourceVersion to which this reference is made, if any.
+More info: [https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency](https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency)
+
+uid `string`UID of the referent.
+More info: [https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids)
+
+subResources `[]object`annotations `object`Annotations provides a method to annotate specific resources in order to provide some metadata
+
+name `string` requiredName stores the name of the resource object
+
+properties `object`Properties of the resource. This is used to transmit fields and values to the integration class
+
+subtype `string`Subtype of resource associated with the object
+
+type `string` requiredType of resource associated with the object
+
+subtype `string`Subtype of resource associated with the object
+
+syncPolicy `string`SyncPolicy specifies how resources are synced to the system. Defaults to "SyncOnly"
+
+type `string` requiredType of resource associated with the object
+
+triggers `object`all triggers defined for triggering current artifactcleanup
+
+cronTriggers `[]object`ArtifactCleanupCronTrigger defines cronTrigger.
+
+annotations `object`Annotations is an unstructured key value map stored with a resource that may be
+set by external tools to store and retrieve arbitrary metadata. They are not
+queryable and should be preserved when modifying objects.
+More info: [http://kubernetes.io/docs/user-guide/annotations](http://kubernetes.io/docs/user-guide/annotations)
+
+name `string`The name of the timed trigger
+
+spec `object`Trigger the desired property periodically.
+
+broker `string`Broker instance to listen
+
+disabled `boolean`Disabled a switch for crontrigger.
+
+params `[]object`TriggerValueBinding represent values that will bind to template
+
+const `boolean`If true, indicates that value is a constant, not an expression.
+
+name `string`name of template parameter
+
+value `string`value of template parameter
+do we only need type of string
+
+runnableRef `object`reference of runnabledefinition
+
+apiVersion `string`API version of the referent.
+
+fieldPath `string`If referring to a piece of an object instead of an entire object, this string
+should contain a valid JSON/Go field access statement, such as desiredState.manifest.containers[2].
+For example, if the object reference is to a container within a pod, this would take on a value like:
+"spec.containers{name}" (where "name" refers to the name of the container that triggered
+the event) or if no container name is specified "spec.containers[2]" (container with
+index 2 in this pod). This syntax is chosen only to have some well-defined way of
+referencing a part of an object.
+TODO: this design is not final and this field is subject to change in the future.
+
+kind `string`Kind of the referent.
+More info: [https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds](https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds)
+
+name `string`Name of the referent.
+More info: [https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names)
+
+namespace `string`Namespace of the referent.
+More info: [https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
+
+resourceVersion `string`Specific resourceVersion to which this reference is made, if any.
+More info: [https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency](https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency)
+
+uid `string`UID of the referent.
+More info: [https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids)
+
+runnableSpec `object`Inline spec for runnable template.
+
+kube `object`Uses a yaml format to create a template for resource
+
+parameters `[]object`KubeParameter used to generate the resource with jsonpath replacement rules
+
+fieldPaths `[]string`FieldPaths is jsonpath for replacing the parameter value into the resource at render time
+
+name `string`Unique parameter name
+
+required `boolean`Parameter required, Defaults to false
+
+type `string`Parameter value type, one of [string, number, boolean], default is string
+
+template `object`Raw resource definition yaml
+
+schedule `string` requiredSchedule is the cron schedule.
+
+timezone `string`Timezone modifies the actual time relative to the specified timezone. Defaults to UTC.
+More general information about time zones: [https://www.iana.org/time-zones](https://www.iana.org/time-zones)
+List of valid timezone values: [https://en.wikipedia.org/wiki/List_of_tz_database_time_zones](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)
+
+completionTime `string`CompletionTime is the time when StageRun completed.
+
+conditions `[]object`Condition defines a readiness condition for a Knative resource.
+See: [https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#typical-status-properties](https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#typical-status-properties)
+
+lastTransitionTime `string`LastTransitionTime is the last time the condition transitioned from one status to another.
+We use VolatileTime in place of metav1.Time to exclude this from creating equality.Semantic
+differences (all other things held constant).
+
+message `string`A human readable message indicating details about the transition.
+
+reason `string`The reason for the condition's last transition.
+
+severity `string`Severity with which to treat failures of this type of condition.
+When this is not specified, it defaults to Error.
+
+status `string` requiredStatus of the condition, one of True, False, Unknown.
+
+type `string` requiredType of condition.
+
+observedGeneration `integer`ObservedGeneration is the 'Generation' of the Service that
+was last processed by the controller.
+
+resources `[]object`Resource A detailed description of the cleanup reocrd.
+
+message `string`Description of reason info.
+
+reason `string`Describes the reason for the status, such as Cancelled, InternalServerError, DryRun.
+
+repository `string`A list of repositories to match. Regular expressions are supported.
+
+status `string`Describes the cleanup state. (Unknown, True, False)
+
+tags `[]object`name `string`tag name
+
+pullTime `string`tag push time, if Name is empty, the pushtime of the version
+
+pushTime `string`tag pull time, if Name is empty, the pulltime of the version
+
+version `string`Clean up the list of rules.
+
+startTime `string`StartTime is the time when StageRun actually started.
+
+summary `object`Describe the overall result of the cleanup. Record success, failure, ignore the number of records.
+
+failed `integer`Failed records the total number of cleanup failures.
+
+skiped `integer`Skiped records the total number of cleanup ignores.
+
+succeeded `integer`Succeeded records the total number of successful cleanups.
+
+triggeredBy `object`TriggeredBy stores a list of triggered information.
+
+cloudEvent `object`Cloud Event data for the event that triggered.
+
+data `string`Data event payload
+
+datacontenttype `string`extensions `object`id `string`source `string`specversion `string`subject `string`time `string`type `string`Type of event
+
+ref `object`Reference to another object that might have triggered this object
+
+apiVersion `string`API version of the referent.
+
+fieldPath `string`If referring to a piece of an object instead of an entire object, this string
+should contain a valid JSON/Go field access statement, such as desiredState.manifest.containers[2].
+For example, if the object reference is to a container within a pod, this would take on a value like:
+"spec.containers{name}" (where "name" refers to the name of the container that triggered
+the event) or if no container name is specified "spec.containers[2]" (container with
+index 2 in this pod). This syntax is chosen only to have some well-defined way of
+referencing a part of an object.
+TODO: this design is not final and this field is subject to change in the future.
+
+kind `string`Kind of the referent.
+More info: [https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds](https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds)
+
+name `string`Name of the referent.
+More info: [https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names)
+
+namespace `string`Namespace of the referent.
+More info: [https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
+
+resourceVersion `string`Specific resourceVersion to which this reference is made, if any.
+More info: [https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency](https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency)
+
+uid `string`UID of the referent.
+More info: [https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids)
+
+triggeredTimestamp `string`Date time of creation of triggered event. Will match a resource's metadata.creationTimestamp
+it is added here for convinience only
+
+triggeredType `string`Indicates trigger type, such as Manual Automated.
+
+user `object`Reference to the user that triggered the object. Any Kubernetes `Subject` is accepted.
+
+apiGroup `string`APIGroup holds the API group of the referenced subject.
+Defaults to "" for ServiceAccount subjects.
+Defaults to "rbac.authorization.k8s.io" for User and Group subjects.
+
+kind `string` requiredKind of object being referenced. Values defined by this API group are "User", "Group", and "ServiceAccount".
+If the Authorizer does not recognized the kind value, the Authorizer should report an error.
+
+name `string` requiredName of the object being referenced.
+
+namespace `string`Namespace of the referenced object.  If the object kind is non-namespace, such as "User" or "Group", and this value is not empty
+the Authorizer should report an error.
+
 
 
 
@@ -155,10 +1937,13 @@ url: /en/apis/crds/ArtifactCleanupRun.md
 url: /en/apis/crds/index.md
 ---
 
-
 # CRDs
 
-<Overview />
+## 
+
+### [ArtifactCleanupRun](/en/apis/crds/ArtifactCleanupRun.html)
+
+
 
 
 
@@ -166,12 +1951,40 @@ url: /en/apis/crds/index.md
 url: /en/apis/index.md
 ---
 
-
 # APIs
 
 The `apis` entry is only for demonstration purposes. It is not a real API.
 
-<Overview />
+## Advanced API[#](#advanced-api)
+
+### [Event APIs](/en/apis/advanced-apis/event/index.html)
+
+
+### [Log APIs](/en/apis/advanced-apis/log/index.html)
+
+
+### [CodeQualityTaskSummary](/en/apis/advanced-apis/codeQualityTaskSummary.html)
+
+
+### [Projects](/en/apis/advanced-apis/projects.html)
+
+
+### [Workload APIs](/en/apis/advanced-apis/workload/index.html)
+
+
+## CRDs[#](#crds)
+
+### [ArtifactCleanupRun](/en/apis/crds/ArtifactCleanupRun.html)
+
+
+## Public References[#](#public-references)
+
+### [CodeQuality](/en/apis/references/CodeQuality.html)
+
+
+### [CodeQualityBranch](/en/apis/references/CodeQualityBranch.html)
+
+
 
 
 
@@ -179,10 +1992,25 @@ The `apis` entry is only for demonstration purposes. It is not a real API.
 url: /en/apis/references/CodeQuality.md
 ---
 
-
 # CodeQuality
 
-<OpenAPIRef schema="v1alpha1.CodeQuality" />
+## [#](#v1alpha1.CodeQuality)CodeQuality
+
+- `apiVersion`: `string`APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: [https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources](https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources)
+
+
+- `kind`: `string`Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: [https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds](https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds)
+
+
+- `metadata`: [ObjectMeta](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/object-meta/)ObjectMeta is metadata that all persisted resources must have, which includes all objects users must create.
+
+
+- `spec`: [CodeQualitySpec](#v1alpha1.CodeQualitySpec)
+
+## [#](#v1alpha1.CodeQualitySpec)CodeQualitySpec
+
+- `branches`: `map[string][CodeQualityBranch](/apis/references/CodeQualityBranch#v1alpha1.CodeQualityBranch)`
+
 
 
 
@@ -190,10 +2018,22 @@ url: /en/apis/references/CodeQuality.md
 url: /en/apis/references/CodeQualityBranch.md
 ---
 
-
 # CodeQualityBranch
 
-<OpenAPIRef schema="v1alpha1.CodeQualityBranch" />
+## [#](#v1alpha1.CodeQualityBranch)CodeQualityBranch
+
+- `analysisDate`: `string`
+- `html`: `string`
+- `isMain`: `boolean`
+- `metrics`: `map[string][CodeQualityAnalyzeMetric](#v1alpha1.CodeQualityAnalyzeMetric)`
+- `name`: `string`
+- `qualityGateStatus`: `string`
+
+## [#](#v1alpha1.CodeQualityAnalyzeMetric)CodeQualityAnalyzeMetric
+
+- `level`: `string`
+- `value`: `string`
+
 
 
 
@@ -201,17 +2041,22 @@ url: /en/apis/references/CodeQualityBranch.md
 url: /en/apis/references/index.md
 ---
 
-
 # Public References
 
-<Overview />
+## 
+
+### [CodeQuality](/en/apis/references/CodeQuality.html)
+
+
+### [CodeQualityBranch](/en/apis/references/CodeQualityBranch.html)
+
+
 
 
 
 ---
 url: /en/index.md
 ---
-
 
 # Introduction
 
@@ -233,16 +2078,101 @@ For more details, you can refer to the [“Using MDX” documentation](https://r
 
 ## Get Started
 
-Let's [get started quickly](./start) with Doom!
+Let's [get started quickly](/en/start.md) with Doom!
 
-<Overview />
+## Getting Started[#](#getting-started)
+
+### [Getting Started](/en/start.html)
+
+- [Creating a Project](/en/start.html#create)
+- [CLI Tool](/en/start.html#cli)
+
+## Usage[#](#usage)
+
+### [Configuration](/en/usage/configuration.html)
+
+Configure the `doom` documentation tool- [Configuration File](/en/usage/configuration.html#config-file)
+- [Basic Configuration](/en/usage/configuration.html#basic)
+- [API Documentation Configuration](/en/usage/configuration.html#api)
+- [Permission Documentation Configuration](/en/usage/configuration.html#permission)
+- [Reference Documentation Configuration](/en/usage/configuration.html#reference)
+- [Release Notes Configuration](/en/usage/configuration.html#release-notes)
+- [Sidebar Configuration](/en/usage/configuration.html#sidebar)
+- [Internal Documentation Routes Configuration](/en/usage/configuration.html#internal-routes)
+- [Only Include Documentation Routes Configuration](/en/usage/configuration.html#only-include-routes)
+- [Syntax Highlighting Plugin Configuration](/en/usage/configuration.html#highlight)
+- [](/en/usage/configuration.html#sites)
+- [Translation Configuration](/en/usage/configuration.html#translate)
+- [Editing Documentation in Code Repository](/en/usage/configuration.html#edit-repo)
+- [Documentation Export Configuration](/en/usage/configuration.html#export)
+- [Documentation Lint Configuration](/en/usage/configuration.html#lint)
+- [Algolia Search Configuration](/en/usage/configuration.html#algolia)
+- [Sitemap Configuration](/en/usage/configuration.html#sitemap)
+
+### [Convention](/en/usage/convention.html)
+
+Based on the principle of "convention over configuration", we agree on the organization of documents to automatically generate the left sidebar and related content.- [Directory Structure](/en/usage/convention.html#directory-structure)
+- [Metadata](/en/usage/convention.html#metadata)
+- [Sorting](/en/usage/convention.html#sorting)
+- [Preview](/en/usage/convention.html#preview)
+
+### [Markdown](/en/usage/markdown.html)
+
+- [Callouts](/en/usage/markdown.html#callouts)
+- [Mermaid](/en/usage/markdown.html#mermaid)
+
+### [MDX](/en/usage/mdx.html)
+
+Using MDX enables dynamic content display and content reuse- [rspress Components](/en/usage/mdx.html#rspress-components)
+- [doom Components](/en/usage/mdx.html#doom-components)
+- [Custom Component Reuse](/en/usage/mdx.html#custom-component-reuse)
+
+### [Internationalization](/en/usage/i18n.html)
+
+Using Internationalized Text in Reusable Components- [](/en/usage/i18n.html#i18njson)
+- [](/en/usage/i18n.html#tstsx)
+- [](/en/usage/i18n.html#mdx)
+
+### [API Documentation](/en/usage/api.html)
+
+- [Advanced APIs](/en/usage/api.html#advanced-apis)
+- [CRD](/en/usage/api.html#crd)
+- [Common References](/en/usage/api.html#common-references)
+- [Specifying OpenAPI Path](/en/usage/api.html#specifying-openapi-path)
+
+### [Permission Description Document](/en/usage/permission.html)
+
+- [](/en/usage/permission.html#props)
+- [Example](/en/usage/permission.html#example)
+
+### [Referencing Documents](/en/usage/reference.html)
+
+- [Document Reference Configuration](/en/usage/reference.html#reference)
+
+### [Deployment](/en/usage/deploy.html)
+
+After the documentation project development is completed, we can deploy the project to the ACP platform- [Build and Preview](/en/usage/deploy.html#build-and-preview)
+- [Multi-version Build](/en/usage/deploy.html#multi-version)
+- [Merged Directory Structure](/en/usage/deploy.html#merged-directory-structure)
+- [Dynamic Mount Configuration File](/en/usage/deploy.html#overrides)
+
+## APIs[#](#apis)
+
+### [Advanced API](/en/apis/advanced-apis/index.html)
+
+
+### [CRDs](/en/apis/crds/index.html)
+
+
+### [Public References](/en/apis/references/index.html)
+
+
 
 
 
 ---
 url: /en/start.md
 ---
-
 
 # Getting Started \{#start}
 
@@ -256,7 +2186,26 @@ mkdir my-docs && cd my-docs
 
 Run `npm init -y` to initialize a project. You can install doom using npm, yarn, or pnpm:
 
-<PackageManagerTabs command="install -D @alauda/doom typescript" />
+
+```sh [npm]
+npm install -D @alauda/doom typescript
+```
+
+```sh [yarn]
+yarn add -D @alauda/doom typescript
+```
+
+```sh [pnpm]
+pnpm add -D @alauda/doom typescript
+```
+
+```sh [bun]
+bun add -D @alauda/doom typescript
+```
+
+```sh [deno]
+deno add -D npm:@alauda/doom npm:typescript
+```
 
 Then create files with the following commands:
 
@@ -360,7 +2309,7 @@ Commands:
   help [command]                      display help for command
 ```
 
-For more configuration, please refer to [Configuration](./usage/configuration)
+For more configuration, please refer to [Configuration](/en/usage/configuration.md)
 
 ### Starting the Development Server \{#dev}
 
@@ -449,7 +2398,7 @@ i18n:
 title: DevOps Connectors
 ```
 
-For more configuration, please refer to [Translation Configuration](./usage/configuration#translate)
+For more configuration, please refer to [Translation Configuration](/en/usage/configuration.md#translate)
 
 ### Exporting PDF \{#export}
 
@@ -482,7 +2431,7 @@ The export feature depends on [`playwright`](https://playwright.dev). For CI pip
 PLAYWRIGHT_DOWNLOAD_HOST="https://cdn.npmmirror.com/binaries/playwright"
 ```
 
-Besides exporting a complete PDF for the entire site, `doom` also supports exporting a single PDF file for a specified entry. For more configuration, please refer to [Documentation Export Configuration](./usage/configuration#export)
+Besides exporting a complete PDF for the entire site, `doom` also supports exporting a single PDF file for a specified entry. For more configuration, please refer to [Documentation Export Configuration](/en/usage/configuration.md#export)
 
 ### Documentation Linting \{#lint}
 
@@ -526,14 +2475,13 @@ k8s
 kubernetes
 ```
 
-For more configuration, please refer to [Lint Configuration](./usage/configuration#lint)
+For more configuration, please refer to [Lint Configuration](/en/usage/configuration.md#lint)
 
 
 
 ---
 url: /en/usage/api.md
 ---
-
 
 # API Documentation
 
@@ -554,7 +2502,7 @@ Based on actual business needs, we generally categorize APIs into two types: Adv
 <OpenAPIPath path="/plugins/v1alpha1/template/codeQuality/task/{task-id}/summary" />
 ```
 
-Refer to [CodeQualityTaskSummary](../apis/advanced-apis/codeQualityTaskSummary).
+Refer to [CodeQualityTaskSummary](/en/apis/advanced-apis/codeQualityTaskSummary.md).
 
 ### `props`
 
@@ -570,7 +2518,7 @@ Refer to [CodeQualityTaskSummary](../apis/advanced-apis/codeQualityTaskSummary).
 <K8sCrd name="artifactcleanupruns.artifacts.katanomi.dev" />
 ```
 
-Refer to [ArtifactCleanupRun](../apis/crds/ArtifactCleanupRun).
+Refer to [ArtifactCleanupRun](/en/apis/crds/ArtifactCleanupRun.md).
 
 ### `props`
 
@@ -585,7 +2533,7 @@ Refer to [ArtifactCleanupRun](../apis/crds/ArtifactCleanupRun).
 <OpenAPIRef schema="v1alpha1.CodeQuality" />
 ```
 
-Refer to [CodeQuality](../apis/references/CodeQuality).
+Refer to [CodeQuality](/en/apis/references/CodeQuality.md).
 
 ### `props`
 
@@ -609,10 +2557,9 @@ For the `OpenAPIPath` and `OpenAPIRef` components, the default behavior is to se
 url: /en/usage/configuration.md
 ---
 
+# Configuration \{#configuration}
 
-# Configuration {#configuration}
-
-## Configuration File {#config-file}
+## Configuration File \{#config-file}
 
 In most cases, we only need to use a static `yaml` configuration file, supporting `doom.config.yaml` or `doom.config.yml`. For complex scenarios, such as requiring dynamic configuration or custom `rspress` plugins, `js/ts` configuration files can be used, supporting multiple file formats including `.js/.ts/.mjs/.mts/.cjs/.cts`.
 
@@ -624,7 +2571,7 @@ import { defineConfig } from '@alauda/doom/config'
 export default defineConfig({})
 ```
 
-## Basic Configuration {#basic}
+## Basic Configuration \{#basic}
 
 - `lang`: Default documentation language. To accommodate most projects, we support both Chinese and English documents by default. The default language is `en`. If the current documentation project does not require multilingual support, this can be set to `null` or `undefined`.
 - `title`: Documentation title, displayed on the browser tab.
@@ -632,9 +2579,9 @@ export default defineConfig({})
 - `logoText`: Documentation title, displayed next to the logo at the top left.
 - `icon`: Documentation favicon, defaults to the same as `logo`.
 - `base`: Base path for the documentation, used when deploying to a non-root path, such as `product-docs`. Defaults to `/`.
-- `outDir`: Directory for build outputs, defaults to `dist/{base}/{version}`. If specified, it changes to `dist/{outDir}/{version}`, where `version` is optional. See [Multi-version Build](./deploy#multi-version) for reference.
+- `outDir`: Directory for build outputs, defaults to `dist/{base}/{version}`. If specified, it changes to `dist/{outDir}/{version}`, where `version` is optional. See [Multi-version Build](/en/usage/deploy.md#multi-version) for reference.
 
-## API Documentation Configuration {#api}
+## API Documentation Configuration \{#api}
 
 ```yaml
 api:
@@ -652,9 +2599,9 @@ api:
   pathPrefix: /apis
 ```
 
-Refer to [API Documentation](./api) for writing documentation.
+Refer to [API Documentation](/en/usage/api.md) for writing documentation.
 
-## Permission Documentation Configuration {#permission}
+## Permission Documentation Configuration \{#permission}
 
 ```yaml
 # The following resource file paths are relative to the directory of doom.config.*, support glob matching, json/yaml files
@@ -667,9 +2614,9 @@ permission:
     - docs/shared/roletemplates/*.yaml
 ```
 
-Refer to [Permission Documentation](./permission) for writing documentation.
+Refer to [Permission Documentation](/en/usage/permission.md) for writing documentation.
 
-## Reference Documentation Configuration {#reference}
+## Reference Documentation Configuration \{#reference}
 
 ```yaml
 reference:
@@ -693,9 +2640,9 @@ reference:
 - `replace`: Replace the current document's frontmatter with that of the referenced document.
 - `remove`: Remove the current document's frontmatter.
 
-Refer to [Reference Documentation](./reference#reference) for writing documentation.
+Refer to [Reference Documentation](/en/usage/reference.md#reference) for writing documentation.
 
-## Release Notes Configuration {#release-notes}
+## Release Notes Configuration \{#release-notes}
 
 ```yaml
 releaseNotes:
@@ -714,21 +2661,21 @@ releaseNotes:
 
 Taking the above `template=fixed&project=DevOps` as an example, `fixed` is the template name defined in `queryTemplates`. The remaining `query` parameter `project=DevOps` is passed as [`ejs`](https://github.com/mde/ejs) template parameters to the `fixed` template, which after processing is used to form a jira [`jql`](https://www.atlassian.com/zh/software/jira/guides/jql/overview#what-is-jql) request to `https://jira.alauda.cn/rest/api/2/search?jql=<jql>`. This API requires authentication, and the environment variables `JIRA_USERNAME` and `JIRA_PASSWORD` must be provided to preview the effect.
 
-## Sidebar Configuration {#sidebar}
+## Sidebar Configuration \{#sidebar}
 
 ```yaml
 sidebar:
   collapsed: false # Optional, whether the sidebar is collapsed by default. Defaults to collapsed. When documentation content is small, consider setting to false.
 ```
 
-## Internal Documentation Routes Configuration {#internal-routes}
+## Internal Documentation Routes Configuration \{#internal-routes}
 
 ```yaml
 internalRoutes: # Optional, supports glob matching, relative to the docs directory. When the CLI option `-i, --ignore` is enabled, matched routes/files will be ignored.
   - '*/internal/**'
 ```
 
-## Only Include Documentation Routes Configuration {#only-include-routes}
+## Only Include Documentation Routes Configuration \{#only-include-routes}
 
 ```yaml
 onlyIncludeRoutes: # Optional, supports glob matching, relative to the docs directory. When the CLI option `-i, --ignore` is enabled, only routes/files under this configuration will be enabled. Can be combined with `internalRoutes` to further exclude some routes.
@@ -737,7 +2684,7 @@ internalRoutes:
   - '*/internal/overview.mdx'
 ```
 
-## Syntax Highlighting Plugin Configuration {#highlight}
+## Syntax Highlighting Plugin Configuration \{#highlight}
 
 ```yaml
 shiki:
@@ -750,9 +2697,9 @@ shiki:
 Unconfigured languages will trigger warnings in the command line and fall back to rendering as `plaintext`.
 :::
 
-## `sites.yaml` Configuration {#sites}
+## `sites.yaml` Configuration \{#sites}
 
-The `sites.yaml` configuration file is used to configure subsite information associated with the current documentation site. This information is used by [External Site Components](./mdx#externalsite) and when building single-version documentation.
+The `sites.yaml` configuration file is used to configure subsite information associated with the current documentation site. This information is used by [External Site Components](/en/usage/mdx.md#externalsite) and when building single-version documentation.
 
 ```yaml
 - name: connectors # Globally unique name
@@ -769,7 +2716,7 @@ The `sites.yaml` configuration file is used to configure subsite information ass
   image: devops/connectors-docs # Site build image, used to pull images when building the entire site.
 ```
 
-## Translation Configuration {#translate}
+## Translation Configuration \{#translate}
 
 ```yaml
 translate:
@@ -835,13 +2782,13 @@ The text for translation is provided below, within triple quotes:
 <% } %>
 ```
 
-## Editing Documentation in Code Repository {#edit-repo}
+## Editing Documentation in Code Repository \{#edit-repo}
 
 ```yaml
 editRepoBaseUrl: alauda/doom/tree/main/docs # The https://github.com/ prefix can be omitted. Only effective when the CLI flag `-R, --edit-repo` is enabled.
 ```
 
-## Documentation Export Configuration {#export}
+## Documentation Export Configuration \{#export}
 
 ```yaml
 export:
@@ -849,14 +2796,14 @@ export:
     scope: '*/concepts' # Required, string or array, document scope, supports glob matching, relative to the docs directory
 ```
 
-## Documentation Lint Configuration {#lint}
+## Documentation Lint Configuration \{#lint}
 
 ```yaml
 lint:
   cspellOptions: # Optional, cspell configuration options, refer to https://github.com/streetsidesoftware/cspell/tree/main/packages/cspell-eslint-plugin#options
 ```
 
-## Algolia Search Configuration {#algolia}
+## Algolia Search Configuration \{#algolia}
 
 ```yaml
 algolia: # Optional, Algolia search configuration, only effective when the CLI flag `-a, --algolia` is enabled
@@ -877,7 +2824,7 @@ export * from '@alauda/doom/theme'
 
 :::
 
-## Sitemap Configuration {#sitemap}
+## Sitemap Configuration \{#sitemap}
 
 ```yaml
 siteUrl: https://docs.alauda.cn # Optional, site URL used to generate sitemap, only effective when the CLI flag `-S, --site-url` is enabled
@@ -888,7 +2835,6 @@ siteUrl: https://docs.alauda.cn # Optional, site URL used to generate sitemap, o
 ---
 url: /en/usage/convention.md
 ---
-
 
 # Convention
 
@@ -907,7 +2853,7 @@ The left sidebar is automatically generated based on the file directory structur
 We also agree that:
 
 1. The `public` directory is used to store static resources such as images, videos, etc.
-2. The `public/_remotes` directory is used to store static resources associated with [remote reference documents](./reference). Please do not directly rely on resources from this directory; you may add `*/public/_remotes` to `.gitignore` to prevent these from being committed to the code repository.
+2. The `public/_remotes` directory is used to store static resources associated with [remote reference documents](/en/usage/reference.md). Please do not directly rely on resources from this directory; you may add `*/public/_remotes` to `.gitignore` to prevent these from being committed to the code repository.
 3. The `shared` directory is for storing common components, reusable documents, etc., and will not automatically generate document data.
 
 ## Metadata
@@ -923,7 +2869,7 @@ category: Category
 ---
 ```
 
-In the body of the document, when using `.mdx` files, you can access these metadata through `frontmatter` as described in [MDX](./mdx).
+In the body of the document, when using `.mdx` files, you can access these metadata through `frontmatter` as described in [MDX](/en/usage/mdx.md).
 
 ## Sorting
 
@@ -949,14 +2895,13 @@ Sometimes, we do not need to display special content on the group homepage. In t
 <Overview />
 ```
 
-You can refer to [Usage](./) for the effect.
+You can refer to [Usage](/en/usage.md) for the effect.
 
 
 
 ---
 url: /en/usage/deploy.md
 ---
-
 
 # Deployment
 
@@ -969,7 +2914,7 @@ doom build # Build static assets
 doom serve # Preview the build assets in production mode
 ```
 
-## Multi-version Build {#multi-version}
+## Multi-version Build \{#multi-version}
 
 By default, `doom build` outputs the build artifacts to the `dist` directory. If you need to build multiple versions of the documentation, you can specify the version number with the `-v` parameter, for example:
 
@@ -1020,7 +2965,7 @@ doom build -v unversioned-4.0 # Build documentation without version prefix but s
 </html>
 ```
 
-## Dynamic Mount Configuration File {#overrides}
+## Dynamic Mount Configuration File \{#overrides}
 
 ```yaml title="overrides.yaml"
 # Documentation information, each document can mount to override default configuration
@@ -1042,7 +2987,6 @@ logoText:
 ---
 url: /en/usage/i18n.md
 ---
-
 
 # Internationalization
 
@@ -1092,17 +3036,83 @@ import { useI18n } from '@rspress/core/runtime'
 url: /en/usage/index.md
 ---
 
-
 # Usage
 
-<Overview />
+## 
+
+### [Configuration](/en/usage/configuration.html)
+
+Configure the `doom` documentation tool- [Configuration File](/en/usage/configuration.html#config-file)
+- [Basic Configuration](/en/usage/configuration.html#basic)
+- [API Documentation Configuration](/en/usage/configuration.html#api)
+- [Permission Documentation Configuration](/en/usage/configuration.html#permission)
+- [Reference Documentation Configuration](/en/usage/configuration.html#reference)
+- [Release Notes Configuration](/en/usage/configuration.html#release-notes)
+- [Sidebar Configuration](/en/usage/configuration.html#sidebar)
+- [Internal Documentation Routes Configuration](/en/usage/configuration.html#internal-routes)
+- [Only Include Documentation Routes Configuration](/en/usage/configuration.html#only-include-routes)
+- [Syntax Highlighting Plugin Configuration](/en/usage/configuration.html#highlight)
+- [](/en/usage/configuration.html#sites)
+- [Translation Configuration](/en/usage/configuration.html#translate)
+- [Editing Documentation in Code Repository](/en/usage/configuration.html#edit-repo)
+- [Documentation Export Configuration](/en/usage/configuration.html#export)
+- [Documentation Lint Configuration](/en/usage/configuration.html#lint)
+- [Algolia Search Configuration](/en/usage/configuration.html#algolia)
+- [Sitemap Configuration](/en/usage/configuration.html#sitemap)
+
+### [Convention](/en/usage/convention.html)
+
+Based on the principle of "convention over configuration", we agree on the organization of documents to automatically generate the left sidebar and related content.- [Directory Structure](/en/usage/convention.html#directory-structure)
+- [Metadata](/en/usage/convention.html#metadata)
+- [Sorting](/en/usage/convention.html#sorting)
+- [Preview](/en/usage/convention.html#preview)
+
+### [Markdown](/en/usage/markdown.html)
+
+- [Callouts](/en/usage/markdown.html#callouts)
+- [Mermaid](/en/usage/markdown.html#mermaid)
+
+### [MDX](/en/usage/mdx.html)
+
+Using MDX enables dynamic content display and content reuse- [rspress Components](/en/usage/mdx.html#rspress-components)
+- [doom Components](/en/usage/mdx.html#doom-components)
+- [Custom Component Reuse](/en/usage/mdx.html#custom-component-reuse)
+
+### [Internationalization](/en/usage/i18n.html)
+
+Using Internationalized Text in Reusable Components- [](/en/usage/i18n.html#i18njson)
+- [](/en/usage/i18n.html#tstsx)
+- [](/en/usage/i18n.html#mdx)
+
+### [API Documentation](/en/usage/api.html)
+
+- [Advanced APIs](/en/usage/api.html#advanced-apis)
+- [CRD](/en/usage/api.html#crd)
+- [Common References](/en/usage/api.html#common-references)
+- [Specifying OpenAPI Path](/en/usage/api.html#specifying-openapi-path)
+
+### [Permission Description Document](/en/usage/permission.html)
+
+- [](/en/usage/permission.html#props)
+- [Example](/en/usage/permission.html#example)
+
+### [Referencing Documents](/en/usage/reference.html)
+
+- [Document Reference Configuration](/en/usage/reference.html#reference)
+
+### [Deployment](/en/usage/deploy.html)
+
+After the documentation project development is completed, we can deploy the project to the ACP platform- [Build and Preview](/en/usage/deploy.html#build-and-preview)
+- [Multi-version Build](/en/usage/deploy.html#multi-version)
+- [Merged Directory Structure](/en/usage/deploy.html#merged-directory-structure)
+- [Dynamic Mount Configuration File](/en/usage/deploy.html#overrides)
+
 
 
 
 ---
 url: /en/usage/markdown.md
 ---
-
 
 # Markdown
 
@@ -1194,7 +3204,6 @@ With [Markdown Preview Mermaid](https://github.com/mjbvz/vscode-markdown-mermaid
 url: /en/usage/mdx.md
 ---
 
-
 # MDX
 
 [MDX](https://mdxjs.com/) is an extension syntax of Markdown that allows the use of JSX syntax within Markdown. For usage, refer to [rspress MDX](https://rspress.dev/zh/guide/basic/use-mdx).
@@ -1257,8 +3266,7 @@ Component for referencing external sites
 <ExternalSite name="connectors" />
 ```
 
-<ExternalSite name="connectors" />
-
+NoteBecause DevOps Connectors releases on a different cadence from Alauda Container Platform, the DevOps Connectors documentation is now available as a separate documentation set at .
 ### `ExternalSiteLink`
 
 Component for referencing external site links
@@ -1267,7 +3275,6 @@ Component for referencing external site links
 <ExternalSiteLink name="connectors" href="link.mdx#hash" children="Content" />
 ```
 
-<ExternalSiteLink name="connectors" href="link.mdx#hash" children="Content" />
 
 :::tip
 
@@ -1295,10 +3302,8 @@ Components for referencing external site API overviews
 <ExternalApisOverview name="connectors" />
 ```
 
-<AcpApisOverview />
-
-<ExternalApisOverview name="connectors" />
-
+NoteFor the introduction to the usage methods of ACP APIs, please refer to .
+NoteFor the introduction to the usage methods of DevOps Connectors APIs, please refer to .
 ### Term
 
 Term component, plain text, dynamically mounted and injected
@@ -1310,17 +3315,13 @@ Term component, plain text, dynamically mounted and injected
 <Term name="alaudaCloudLink" />
 ```
 
-<Term name="company" textCase="capitalize" />
 
-<Term name="product" textCase="lower" />
 
-<Term name="productShort" textCase="upper" />
 
-<Term name="alaudaCloudLink" />
 
 #### `props`
 
-- `name`: Built-in term name, refer to [dynamic mount configuration file](./deploy.md#overrides)
+- `name`: Built-in term name, refer to [dynamic mount configuration file](/en/usage/deploy.md#overrides)
 - `textCase`: Text case transformation, optional values are `lower`, `upper`, `capitalize`
 
 ### `TermsTable`
@@ -1331,7 +3332,13 @@ Built-in term list display component
 <TermsTable />
 ```
 
-<TermsTable />
+| Name | Chinese | Chinese Bad Cases | English | English Bad Cases | Description |
+| --- | --- | --- | --- | --- | --- |
+| company | 灵雀云 | - | Alauda | - | 公司品牌 |
+| product | 灵雀云容器平台 | - | Alauda Container Platform | - | 产品品牌 |
+| productShort | ACP | - | ACP | - | 产品品牌简称 |
+| alaudaCloudLink | [Alauda Cloud](https://cloud.alauda.cn) | - | [Alauda Cloud](https://cloud.alauda.io) | - | - |
+
 
 #### `props`
 
@@ -1343,11 +3350,29 @@ Built-in term list display component
 <JsonViewer value={{ key: 'value' }} />
 ```
 
-<JsonViewer value={{ key: 'value' }} />
+
+**yaml**
+
+
+```yaml
+key: value
+
+```
+
+
+**json**
+
+
+```json
+{
+  "key": "value"
+}
+```
+
 
 ## Custom Component Reuse
 
-According to the [convention](./convention), we can extract reusable content into the `shared` directory, then import it where needed, for example:
+According to the [convention](/en/usage/convention.md), we can extract reusable content into the `shared` directory, then import it where needed, for example:
 
 ```mdx
 import CommonContent from './shared/CommonContent.mdx'
@@ -1379,7 +3404,6 @@ Note: Currently, components exported from `.mdx` do not support passing `props`.
 url: /en/usage/permission.md
 ---
 
-
 # Permission Description Document
 
 ```mdx
@@ -1392,14 +3416,25 @@ url: /en/usage/permission.md
 
 ## Example
 
-<K8sPermissionTable functions={['devops-testplans', 'devops-testmodules']} />
+| Function | Action | Platform Administrator | Platform auditors | Project Manager | Namespace Administrator | Developers | Cluster Administrator |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| testplans
+`devops-testplans` | View | ✓ | ✓ | ✓ | ✓ | ✓ | ✕ |
+| Create | ✓ | ✕ | ✓ | ✓ | ✓ | ✕ |
+| Update | ✓ | ✕ | ✓ | ✓ | ✓ | ✕ |
+| Delete | ✓ | ✕ | ✓ | ✓ | ✓ | ✕ |
+| testmodules
+`devops-testmodules` | View | ✓ | ✓ | ✓ | ✓ | ✓ | ✕ |
+| Create | ✓ | ✕ | ✓ | ✓ | ✓ | ✕ |
+| Update | ✓ | ✕ | ✓ | ✓ | ✓ | ✕ |
+| Delete | ✓ | ✕ | ✓ | ✓ | ✓ | ✕ |
+
 
 
 
 ---
 url: /en/usage/reference.md
 ---
-
 
 # Referencing Documents
 
@@ -1419,11 +3454,11 @@ In MDX files:
 {/* reference-end */}
 ```
 
-The `name` above refers to the name of the referenced document. For more information, please refer to [Document Reference Configuration](./configuration#reference). If the referenced document content uses static resources from a remote repository, the related static resources will be automatically stored locally in the `<root>/public/_remotes/<name>` directory.
+The `name` above refers to the name of the referenced document. For more information, please refer to [Document Reference Configuration](/en/usage/configuration.md#reference). If the referenced document content uses static resources from a remote repository, the related static resources will be automatically stored locally in the `<root>/public/_remotes/<name>` directory.
 
 Here is an example using `<!-- reference-start#ref -->`:
 
-## Document Reference Configuration {#reference}
+## Document Reference Configuration \{#reference}
 
 ```yaml
 reference:
@@ -1447,7 +3482,7 @@ reference:
 - `replace`: Replaces the frontmatter of the current document with that of the referenced document.
 - `remove`: Removes the frontmatter of the current document.
 
-For writing documentation, refer to [Document Reference](./reference#reference).
+For writing documentation, refer to [Document Reference](/en/usage/reference.md#reference).
 
 
 

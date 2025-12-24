@@ -10,7 +10,26 @@ mkdir my-docs && cd my-docs
 
 Run `npm init -y` to initialize a project. You can install doom using npm, yarn, or pnpm:
 
-<PackageManagerTabs command="install -D @alauda/doom typescript" />
+
+```sh [npm]
+npm install -D @alauda/doom typescript
+```
+
+```sh [yarn]
+yarn add -D @alauda/doom typescript
+```
+
+```sh [pnpm]
+pnpm add -D @alauda/doom typescript
+```
+
+```sh [bun]
+bun add -D @alauda/doom typescript
+```
+
+```sh [deno]
+deno add -D npm:@alauda/doom npm:typescript
+```
 
 Then create files with the following commands:
 
@@ -172,15 +191,15 @@ Options:
   -h, --help               display help for command
 ```
 
-* The `-g, --glob` parameter is required. You can specify the directories or files to translate, supporting `glob` syntax. Note that the parameter value must be quoted to avoid unexpected behavior caused by command line parsing. Examples:
+- The `-g, --glob` parameter is required. You can specify the directories or files to translate, supporting `glob` syntax. Note that the parameter value must be quoted to avoid unexpected behavior caused by command line parsing. Examples:
   1. `yarn translate -g abc xyz` will translate all documents under `<root>/<source>/abc` and `<root>/<source>/xyz` to `<root>/<target>/abc` and `<root>/<target>/xyz` respectively.
   2. `yarn translate -g '*'` will translate all documents under `<root>/<source>`.
-* The `-C, --copy` parameter is optional. It controls whether to copy local resource files to the target directory when the target file does not exist. The default is `false`, which means changing the resource file reference path to the source path. Examples:
-  * When enabled:
+- The `-C, --copy` parameter is optional. It controls whether to copy local resource files to the target directory when the target file does not exist. The default is `false`, which means changing the resource file reference path to the source path. Examples:
+  - When enabled:
     1. When translating `/<source>/abc.jpg`, it will copy `<root>/public/<source>/abc.jpg` to `<root>/public/<target>/abc.jpg` and modify the reference path in the document to `/<target>/abc.jpg`.
     2. In `<root>/<source>/abc.mdx`, when translating `./assets/xyz.jpg`, it will copy `<root>/<source>/assets/xyz.jpg` to `<root>/<target>/assets/xyz.jpg`, and the image reference path remains unchanged.
     3. In `<root>/<source>/abc.mdx`, when translating `./assets/<source>/xyz.jpg`, it will copy `<root>/<source>/assets/<source>/xyz.jpg` to `<root>/<target>/assets/<target>/xyz.jpg` and modify the reference path in the document to `./assets/<target>/xyz.jpg`.
-  * When not enabled:
+  - When not enabled:
     1. When translating `/<source>/abc.jpg`, if `<root>/public/<target>/abc.jpg` exists, the reference path in the document will be changed to `/<target>/abc.jpg`; otherwise, the image reference path remains unchanged.
     2. In `<root>/<source>/abc.mdx`, when translating `./assets/<source>/xyz.jpg`, if `<root>/<target>/assets/<target>/xyz.jpg` exists, the reference path will be changed to `./assets/<target>/xyz.jpg`; otherwise, it will be changed to `../<source>/assets/<target>/xyz.jpg`.
 
@@ -259,7 +278,7 @@ Options:
 
 `doom lint` is based on [`ESLint`](https://eslint.org/) and [`cspell`](https://cspell.org/). For a better experience in your editor, you can install the corresponding plugins [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) / [CSpell](https://marketplace.visualstudio.com/items?itemName=streetsidesoftware.code-spell-checker), then create the corresponding configuration files:
 
-* `eslint.config.mjs`:
+- `eslint.config.mjs`:
 
   ```js
   import doom from '@alauda/doom/eslint'
@@ -267,7 +286,7 @@ Options:
   export default doom(new URL('docs', import.meta.url))
   ```
 
-* `cspell.config.mjs`:
+- `cspell.config.mjs`:
 
   ```js
   export { default } from '@alauda/doom/cspell'

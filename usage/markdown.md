@@ -50,9 +50,9 @@ Memory overhead per virtual machine ≈ (1.002 × requested memory) \
 2. Number of virtual CPUs requested by the virtual machine.
 3. Number of virtual graphics cards requested by the virtual machine.
 4. Additional memory overhead:
-   * If your environment includes a Single Root I/O Virtualization (SR-IOV) network device or a Graphics Processing Unit (GPU), allocate 1 GiB additional memory overhead for each device.
-   * If Secure Encrypted Virtualization (SEV) is enabled, add 256 MiB.
-   * If Trusted Platform Module (TPM) is enabled, add 53 MiB.
+   - If your environment includes a Single Root I/O Virtualization (SR-IOV) network device or a Graphics Processing Unit (GPU), allocate 1 GiB additional memory overhead for each device.
+   - If Secure Encrypted Virtualization (SEV) is enabled, add 256 MiB.
+   - If Trusted Platform Module (TPM) is enabled, add 53 MiB.
 
 :::
 

@@ -9,7 +9,7 @@ doom build # Build static assets
 doom serve # Preview the build assets in production mode
 ```
 
-## Multi-version Build {#multi-version}
+## Multi-version Build \{#multi-version}
 
 By default, `doom build` outputs the build artifacts to the `dist` directory. If you need to build multiple versions of the documentation, you can specify the version number with the `-v` parameter, for example:
 
@@ -60,7 +60,7 @@ doom build -v unversioned-4.0 # Build documentation without version prefix but s
 </html>
 ```
 
-## Dynamic Mount Configuration File {#overrides}
+## Dynamic Mount Configuration File \{#overrides}
 
 ```yaml title="overrides.yaml"
 # Documentation information, each document can mount to override default configuration

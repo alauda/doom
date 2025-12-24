@@ -10,7 +10,26 @@ mkdir my-docs && cd my-docs
 
 执行 `npm init -y` 来初始化一个项目。你可以使用 npm、yarn 或 pnpm 安装 doom:
 
-<PackageManagerTabs command="install -D @alauda/doom typescript" />
+
+```sh [npm]
+npm install -D @alauda/doom typescript
+```
+
+```sh [yarn]
+yarn add -D @alauda/doom typescript
+```
+
+```sh [pnpm]
+pnpm add -D @alauda/doom typescript
+```
+
+```sh [bun]
+bun add -D @alauda/doom typescript
+```
+
+```sh [deno]
+deno add -D npm:@alauda/doom npm:typescript
+```
 
 然后通过如下命令创建文件:
 
@@ -172,16 +191,16 @@ Options:
   -h, --help               display help for command
 ```
 
-* `-g, --glob` 参数必填，可以指定需要翻译的文件目录或路径，支持 `glob` 语法，注意参数值必须带引号否则会被命令行解析造成非预期行为。示例：
+- `-g, --glob` 参数必填，可以指定需要翻译的文件目录或路径，支持 `glob` 语法，注意参数值必须带引号否则会被命令行解析造成非预期行为。示例：
   1. `yarn translate -g abc xyz`，将把 `<root>/<source>/abc`, `<root>/<source>/xyz`
      目录下的所有文档翻译到 `<root>/<target>/abc`, `<root>/<target>/xyz` 目录下
   2. `yarn translate -g '*'` 将翻译 `<root>/<source>` 下的所有文档文件
-* `-C, --copy` 参数可选，是否在目标文件不存在时复制本地路径的资源文件到目标目录，默认为 `false`，即改变资源文件的引用路径为引用源路径。示例：
-  * 当启动此参数
+- `-C, --copy` 参数可选，是否在目标文件不存在时复制本地路径的资源文件到目标目录，默认为 `false`，即改变资源文件的引用路径为引用源路径。示例：
+  - 当启动此参数
     1. `/<source>/abc.jpg` 翻译时将复制 `<root>/public/<source>/abc.jpg` 到 `<root>/public/<target>/abc.jpg`，并修改文档中的引用路径为 `/<target>/abc.jpg`
     2. `<root>/<source>/abc.mdx` 文档中的 `./assets/xyz.jpg` 翻译时将复制 `<root>/<source>/assets/xyz.jpg` 到 `<root>/<target>/assets/xyz.jpg`，图片引用路径保持不变
     3. `<root>/<source>/abc.mdx` 文档中的 `./assets/<source>/xyz.jpg` 翻译时将复制 `<root>/<source>/assets/<source>/xyz.jpg` 到 `<root>/<target>/assets/<target>/xyz.jpg`，并修改文档中的引用路径为 `./assets/<target>/xyz.jpg`
-  * 当没有启用此参数：
+  - 当没有启用此参数：
     1. `/<source>/abc.jpg` 翻译时如果 `<root>/public/<target>/abc.jpg` 已存在，将修改文档中的引用路径为 `/<target>/abc.jpg`，否则保持图片引用路径保持不变
     2. `<root>/<source>/abc.mdx` 文档中的 `./assets/<source>/xyz.jpg` 翻译时，如果 `<root>/<target>/assets/<target>/xyz.jpg` 已存在，将修改文档中的引用路径为 `./assets/<target>/xyz.jpg`，否则将修改为 `../<source>/assets/<target>/xyz.jpg`
 
@@ -261,7 +280,7 @@ Options:
 
 `doom lint` 基于 [`ESLint`](https://eslint.org/) 和 [`cspell`](https://cspell.org/)，如果希望在编辑器中拥有更好的体验，可以安装相应的插件 [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) / [CSpell](https://marketplace.visualstudio.com/items?itemName=streetsidesoftware.code-spell-checker)，然后创建相应的配置文件:
 
-* `eslint.config.mjs`:
+- `eslint.config.mjs`:
 
   ```js
   import doom from '@alauda/doom/eslint'
@@ -269,7 +288,7 @@ Options:
   export default doom(new URL('docs', import.meta.url))
   ```
 
-* `cspell.config.mjs`:
+- `cspell.config.mjs`:
 
   ```js
   export { default } from '@alauda/doom/cspell'

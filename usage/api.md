@@ -21,9 +21,9 @@
 
 ### `props`
 
-* `path`: OpenAPI schema `paths` 下的路径
-* `pathPrefix`: 可以用于覆盖全局配置中的 `api.pathPrefix`
-* `openapiPath`: 参考[指定 openapi 路径](#指定-openapi-路径)
+- `path`: OpenAPI schema `paths` 下的路径
+- `pathPrefix`: 可以用于覆盖全局配置中的 `api.pathPrefix`
+- `openapiPath`: 参考[指定 openapi 路径](#指定-openapi-路径)
 
 ## CRD
 
@@ -37,8 +37,8 @@
 
 ### `props`
 
-* `name`: CRD `metadata.name`
-* `crdPath`: 类似[指定 openapi 路径](#指定-openapi-路径)，用于指定特定的 CRD 文件
+- `name`: CRD `metadata.name`
+- `crdPath`: 类似[指定 openapi 路径](#指定-openapi-路径)，用于指定特定的 CRD 文件
 
 ## 公共引用
 
@@ -52,8 +52,8 @@
 
 ### `props`
 
-* `schema`: OpenAPI schema `definitions`(v2) or `component/schemas`(v3) 下的名称
-* `openapiPath`: 参考[指定 openapi 路径](#指定-openapi-路径)
+- `schema`: OpenAPI schema `definitions`(v2) or `component/schemas`(v3) 下的名称
+- `openapiPath`: 参考[指定 openapi 路径](#指定-openapi-路径)
 
 ## 指定 openapi 路径
 

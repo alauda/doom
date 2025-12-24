@@ -1,6 +1,6 @@
-# Configuration {#configuration}
+# Configuration \{#configuration}
 
-## Configuration File {#config-file}
+## Configuration File \{#config-file}
 
 In most cases, we only need to use a static `yaml` configuration file, supporting `doom.config.yaml` or `doom.config.yml`. For complex scenarios, such as requiring dynamic configuration or custom `rspress` plugins, `js/ts` configuration files can be used, supporting multiple file formats including `.js/.ts/.mjs/.mts/.cjs/.cts`.
 
@@ -12,17 +12,17 @@ import { defineConfig } from '@alauda/doom/config'
 export default defineConfig({})
 ```
 
-## Basic Configuration {#basic}
+## Basic Configuration \{#basic}
 
-* `lang`: Default documentation language. To accommodate most projects, we support both Chinese and English documents by default. The default language is `en`. If the current documentation project does not require multilingual support, this can be set to `null` or `undefined`.
-* `title`: Documentation title, displayed on the browser tab.
-* `logo`: Logo at the top left of the documentation, supports image URLs or file paths. Absolute paths refer to files under the `public` directory, relative paths refer to files relative to the current tool directory. By default, the built-in Alauda logo from the `doom` package is used.
-* `logoText`: Documentation title, displayed next to the logo at the top left.
-* `icon`: Documentation favicon, defaults to the same as `logo`.
-* `base`: Base path for the documentation, used when deploying to a non-root path, such as `product-docs`. Defaults to `/`.
-* `outDir`: Directory for build outputs, defaults to `dist/{base}/{version}`. If specified, it changes to `dist/{outDir}/{version}`, where `version` is optional. See [Multi-version Build](/en/usage/deploy.md#multi-version) for reference.
+- `lang`: Default documentation language. To accommodate most projects, we support both Chinese and English documents by default. The default language is `en`. If the current documentation project does not require multilingual support, this can be set to `null` or `undefined`.
+- `title`: Documentation title, displayed on the browser tab.
+- `logo`: Logo at the top left of the documentation, supports image URLs or file paths. Absolute paths refer to files under the `public` directory, relative paths refer to files relative to the current tool directory. By default, the built-in Alauda logo from the `doom` package is used.
+- `logoText`: Documentation title, displayed next to the logo at the top left.
+- `icon`: Documentation favicon, defaults to the same as `logo`.
+- `base`: Base path for the documentation, used when deploying to a non-root path, such as `product-docs`. Defaults to `/`.
+- `outDir`: Directory for build outputs, defaults to `dist/{base}/{version}`. If specified, it changes to `dist/{outDir}/{version}`, where `version` is optional. See [Multi-version Build](/en/usage/deploy.md#multi-version) for reference.
 
-## API Documentation Configuration {#api}
+## API Documentation Configuration \{#api}
 
 ```yaml
 api:
@@ -42,7 +42,7 @@ api:
 
 Refer to [API Documentation](/en/usage/api.md) for writing documentation.
 
-## Permission Documentation Configuration {#permission}
+## Permission Documentation Configuration \{#permission}
 
 ```yaml
 # The following resource file paths are relative to the directory of doom.config.*, support glob matching, json/yaml files
@@ -57,7 +57,7 @@ permission:
 
 Refer to [Permission Documentation](/en/usage/permission.md) for writing documentation.
 
-## Reference Documentation Configuration {#reference}
+## Reference Documentation Configuration \{#reference}
 
 ```yaml
 reference:
@@ -76,14 +76,14 @@ reference:
 
 ### `frontmatterMode`
 
-* `ignore`: Ignore the frontmatter of the referenced document, keep using the current document's frontmatter.
-* `merge`: Merge the frontmatter of the referenced document. If keys conflict, the referenced document's values override the current document's.
-* `replace`: Replace the current document's frontmatter with that of the referenced document.
-* `remove`: Remove the current document's frontmatter.
+- `ignore`: Ignore the frontmatter of the referenced document, keep using the current document's frontmatter.
+- `merge`: Merge the frontmatter of the referenced document. If keys conflict, the referenced document's values override the current document's.
+- `replace`: Replace the current document's frontmatter with that of the referenced document.
+- `remove`: Remove the current document's frontmatter.
 
 Refer to [Reference Documentation](/en/usage/reference.md#reference) for writing documentation.
 
-## Release Notes Configuration {#release-notes}
+## Release Notes Configuration \{#release-notes}
 
 ```yaml
 releaseNotes:
@@ -102,21 +102,21 @@ releaseNotes:
 
 Taking the above `template=fixed&project=DevOps` as an example, `fixed` is the template name defined in `queryTemplates`. The remaining `query` parameter `project=DevOps` is passed as [`ejs`](https://github.com/mde/ejs) template parameters to the `fixed` template, which after processing is used to form a jira [`jql`](https://www.atlassian.com/zh/software/jira/guides/jql/overview#what-is-jql) request to `https://jira.alauda.cn/rest/api/2/search?jql=<jql>`. This API requires authentication, and the environment variables `JIRA_USERNAME` and `JIRA_PASSWORD` must be provided to preview the effect.
 
-## Sidebar Configuration {#sidebar}
+## Sidebar Configuration \{#sidebar}
 
 ```yaml
 sidebar:
   collapsed: false # Optional, whether the sidebar is collapsed by default. Defaults to collapsed. When documentation content is small, consider setting to false.
 ```
 
-## Internal Documentation Routes Configuration {#internal-routes}
+## Internal Documentation Routes Configuration \{#internal-routes}
 
 ```yaml
 internalRoutes: # Optional, supports glob matching, relative to the docs directory. When the CLI option `-i, --ignore` is enabled, matched routes/files will be ignored.
   - '*/internal/**'
 ```
 
-## Only Include Documentation Routes Configuration {#only-include-routes}
+## Only Include Documentation Routes Configuration \{#only-include-routes}
 
 ```yaml
 onlyIncludeRoutes: # Optional, supports glob matching, relative to the docs directory. When the CLI option `-i, --ignore` is enabled, only routes/files under this configuration will be enabled. Can be combined with `internalRoutes` to further exclude some routes.
@@ -125,7 +125,7 @@ internalRoutes:
   - '*/internal/overview.mdx'
 ```
 
-## Syntax Highlighting Plugin Configuration {#highlight}
+## Syntax Highlighting Plugin Configuration \{#highlight}
 
 ```yaml
 shiki:
@@ -138,7 +138,7 @@ shiki:
 Unconfigured languages will trigger warnings in the command line and fall back to rendering as `plaintext`.
 :::
 
-## `sites.yaml` Configuration {#sites}
+## `sites.yaml` Configuration \{#sites}
 
 The `sites.yaml` configuration file is used to configure subsite information associated with the current documentation site. This information is used by [External Site Components](/en/usage/mdx.md#externalsite) and when building single-version documentation.
 
@@ -157,7 +157,7 @@ The `sites.yaml` configuration file is used to configure subsite information ass
   image: devops/connectors-docs # Site build image, used to pull images when building the entire site.
 ```
 
-## Translation Configuration {#translate}
+## Translation Configuration \{#translate}
 
 ```yaml
 translate:
@@ -223,13 +223,13 @@ The text for translation is provided below, within triple quotes:
 <% } %>
 ```
 
-## Editing Documentation in Code Repository {#edit-repo}
+## Editing Documentation in Code Repository \{#edit-repo}
 
 ```yaml
 editRepoBaseUrl: alauda/doom/tree/main/docs # The https://github.com/ prefix can be omitted. Only effective when the CLI flag `-R, --edit-repo` is enabled.
 ```
 
-## Documentation Export Configuration {#export}
+## Documentation Export Configuration \{#export}
 
 ```yaml
 export:
@@ -237,14 +237,14 @@ export:
     scope: '*/concepts' # Required, string or array, document scope, supports glob matching, relative to the docs directory
 ```
 
-## Documentation Lint Configuration {#lint}
+## Documentation Lint Configuration \{#lint}
 
 ```yaml
 lint:
   cspellOptions: # Optional, cspell configuration options, refer to https://github.com/streetsidesoftware/cspell/tree/main/packages/cspell-eslint-plugin#options
 ```
 
-## Algolia Search Configuration {#algolia}
+## Algolia Search Configuration \{#algolia}
 
 ```yaml
 algolia: # Optional, Algolia search configuration, only effective when the CLI flag `-a, --algolia` is enabled
@@ -265,7 +265,7 @@ export * from '@alauda/doom/theme'
 
 :::
 
-## Sitemap Configuration {#sitemap}
+## Sitemap Configuration \{#sitemap}
 
 ```yaml
 siteUrl: https://docs.alauda.cn # Optional, site URL used to generate sitemap, only effective when the CLI flag `-S, --site-url` is enabled

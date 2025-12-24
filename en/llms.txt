@@ -1,6 +1,6 @@
 # Doom
 
-## Other
+## Others
 
 - [CodeQualityTaskSummary](/en/apis/advanced-apis/codeQualityTaskSummary.md)
 - [Event APIs](/en/apis/advanced-apis/event/index.md)
@@ -10,8 +10,8 @@
 - [Log APIs](/en/apis/advanced-apis/log/index.md)
 - [Search](/en/apis/advanced-apis/log/search.md)
 - [Projects](/en/apis/advanced-apis/projects.md)
-- [DaemonSet [apps/v1]](/en/apis/advanced-apis/workload/daemonset.md)
-- [Deployments [apps/v1]](/en/apis/advanced-apis/workload/deployment.md)
+- [DaemonSet \[apps/v1]](/en/apis/advanced-apis/workload/daemonset.md)
+- [Deployments \[apps/v1]](/en/apis/advanced-apis/workload/deployment.md)
 - [Workload APIs](/en/apis/advanced-apis/workload/index.md)
 - [ArtifactCleanupRun](/en/apis/crds/ArtifactCleanupRun.md)
 - [CRDs](/en/apis/crds/index.md)
@@ -30,4 +30,4 @@
 - [MDX](/en/usage/mdx.md): Using MDX enables dynamic content display and content reuse
 - [Permission Description Document](/en/usage/permission.md)
 - [Referencing Documents](/en/usage/reference.md)
-- [](/en/login.md)
+- [index](/en/login.md)

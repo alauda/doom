@@ -20,7 +20,7 @@ The `name` above refers to the name of the referenced document. For more informa
 
 Here is an example using `<!-- reference-start#ref -->`:
 
-## Document Reference Configuration {#reference}
+## Document Reference Configuration \{#reference}
 
 ```yaml
 reference:
@@ -39,9 +39,9 @@ reference:
 
 ### `frontmatterMode`
 
-* `ignore`: Ignores the frontmatter of the referenced document and retains the frontmatter of the current document.
-* `merge`: Merges the frontmatter of the referenced document. If there are the same keys, the values from the referenced document will overwrite those in the current document.
-* `replace`: Replaces the frontmatter of the current document with that of the referenced document.
-* `remove`: Removes the frontmatter of the current document.
+- `ignore`: Ignores the frontmatter of the referenced document and retains the frontmatter of the current document.
+- `merge`: Merges the frontmatter of the referenced document. If there are the same keys, the values from the referenced document will overwrite those in the current document.
+- `replace`: Replaces the frontmatter of the current document with that of the referenced document.
+- `remove`: Removes the frontmatter of the current document.
 
 For writing documentation, refer to [Document Reference](/en/usage/reference.md#reference).

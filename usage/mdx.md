@@ -6,13 +6,13 @@
 
 `rspress` 主题提供的[内置组件](https://rspress.dev/zh/guide/default-theme/components)大部分已调整为全局组件，可以在 `.mdx` 文件中无需导入直接使用，包括：
 
-* `Badge`
-* `Card`
-* `LinkCard`
-* `PackageManagerTabs`
-* `Steps`
-* `Tab/Tabs`
-* `Toc`
+- `Badge`
+- `Card`
+- `LinkCard`
+- `PackageManagerTabs`
+- `Steps`
+- `Tab/Tabs`
+- `Toc`
 
 其他不常用的组件可以通过 `rspress/theme` 导入使用，例如：
 
@@ -43,7 +43,7 @@ import { SourceCode } from '@rspress/core/theme'
   </Directive>
 ```
 
-* 多语言文档(`doc/en`)的目录结构需要与 `doc/zh` 目录下的文档完全一致，保证多语言文档的链接除了语言标识外完全相同。
+- 多语言文档(`doc/en`)的目录结构需要与 `doc/zh` 目录下的文档完全一致，保证多语言文档的链接除了语言标识外完全相同。
 
   <Directive type="danger" title="注意">
     如果是使用自动化翻译工具进行翻译，则无需关心该问题，自动化翻译工具会自动根据
@@ -58,8 +58,7 @@ import { SourceCode } from '@rspress/core/theme'
 <ExternalSite name="connectors" />
 ```
 
-<ExternalSite name="connectors" />
-
+Note因为 DevOps 连接器的发版周期与灵雀云容器平台不同，所以 DevOps 连接器的文档现在作为独立的文档站点托管在 。
 ### `ExternalSiteLink`
 
 引用外部站点链接组件
@@ -68,7 +67,6 @@ import { SourceCode } from '@rspress/core/theme'
 <ExternalSiteLink name="connectors" href="link.mdx#hash" children="Content" />
 ```
 
-<ExternalSiteLink name="connectors" href="link.mdx#hash" children="Content" />
 
 :::tip
 
@@ -96,10 +94,8 @@ import { SourceCode } from '@rspress/core/theme'
 <ExternalApisOverview name="connectors" />
 ```
 
-<AcpApisOverview />
-
-<ExternalApisOverview name="connectors" />
-
+Note关于 ACP  APIs 的使用方法介绍请参考 。
+Note关于 DevOps 连接器 APIs 的使用方法介绍请参考 。
 ### Term
 
 术语组件，纯文本，动态挂载注入
@@ -111,18 +107,14 @@ import { SourceCode } from '@rspress/core/theme'
 <Term name="alaudaCloudLink" />
 ```
 
-<Term name="company" textCase="capitalize" />
 
-<Term name="product" textCase="lower" />
 
-<Term name="productShort" textCase="upper" />
 
-<Term name="alaudaCloudLink" />
 
 #### `props`
 
-* `name`: 内置术语名称，参考[动态挂载配置文件](/usage/deploy.md#overrides)
-* `textCase`: 文本大小写转换，可选值为`lower`, `upper`, `capitalize`
+- `name`: 内置术语名称，参考[动态挂载配置文件](/usage/deploy.md#overrides)
+- `textCase`: 文本大小写转换，可选值为`lower`, `upper`, `capitalize`
 
 ### `TermsTable`
 
@@ -132,11 +124,17 @@ import { SourceCode } from '@rspress/core/theme'
 <TermsTable />
 ```
 
-<TermsTable />
+| 名称 | 中文 | 中文反例 | 英文 | 英文反例 | 描述 |
+| --- | --- | --- | --- | --- | --- |
+| company | 灵雀云 | - | Alauda | - | 公司品牌 |
+| product | 灵雀云容器平台 | - | Alauda Container Platform | - | 产品品牌 |
+| productShort | ACP | - | ACP | - | 产品品牌简称 |
+| alaudaCloudLink | [Alauda Cloud](https://cloud.alauda.cn) | - | [Alauda Cloud](https://cloud.alauda.io) | - | - |
+
 
 #### `props`
 
-* `terms`: `NormalizedTermItem[]`，可选，自定义术语列表，方便内部文档渲染自定义术语时复用
+- `terms`: `NormalizedTermItem[]`，可选，自定义术语列表，方便内部文档渲染自定义术语时复用
 
 ### `JsonViewer`
 
@@ -144,7 +142,25 @@ import { SourceCode } from '@rspress/core/theme'
 <JsonViewer value={{ key: 'value' }} />
 ```
 
-<JsonViewer value={{ key: 'value' }} />
+
+**yaml**
+
+
+```yaml
+key: value
+
+```
+
+
+**json**
+
+
+```json
+{
+  "key": "value"
+}
+```
+
 
 ## 自定义组件复用
 

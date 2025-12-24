@@ -22,7 +22,7 @@
 
 <!-- reference-start#ref -->
 
-## 引用文档配置 {#reference}
+## 引用文档配置 \{#reference}
 
 ```yaml
 reference:
@@ -41,10 +41,10 @@ reference:
 
 ### `frontmatterMode`
 
-* `ignore`：忽略引用文档的 frontmatter，保留使用当前文档的 frontmatter
-* `merge`：合并引用文档的 frontmatter，如果有相同的 key，引用文档的值会覆盖当前文档的值
-* `replace`：使用引用文档的 frontmatter 替换当前文档的 frontmatter
-* `remove`：移除当前文档的 frontmatter
+- `ignore`：忽略引用文档的 frontmatter，保留使用当前文档的 frontmatter
+- `merge`：合并引用文档的 frontmatter，如果有相同的 key，引用文档的值会覆盖当前文档的值
+- `replace`：使用引用文档的 frontmatter 替换当前文档的 frontmatter
+- `remove`：移除当前文档的 frontmatter
 
 文档编写参考[引用文档](/usage/reference.md#reference)
 

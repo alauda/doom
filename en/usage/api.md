@@ -21,9 +21,9 @@ Refer to [CodeQualityTaskSummary](/en/apis/advanced-apis/codeQualityTaskSummary.
 
 ### `props`
 
-* `path`: The path under OpenAPI schema `paths`
-* `pathPrefix`: Can be used to override the `api.pathPrefix` in global configuration
-* `openapiPath`: Refer to [Specifying OpenAPI Path](#specifying-openapi-path)
+- `path`: The path under OpenAPI schema `paths`
+- `pathPrefix`: Can be used to override the `api.pathPrefix` in global configuration
+- `openapiPath`: Refer to [Specifying OpenAPI Path](#specifying-openapi-path)
 
 ## CRD
 
@@ -37,8 +37,8 @@ Refer to [ArtifactCleanupRun](/en/apis/crds/ArtifactCleanupRun.md).
 
 ### `props`
 
-* `name`: CRD `metadata.name`
-* `crdPath`: Similar to [Specifying OpenAPI Path](#specifying-openapi-path), used to specify a particular CRD file
+- `name`: CRD `metadata.name`
+- `crdPath`: Similar to [Specifying OpenAPI Path](#specifying-openapi-path), used to specify a particular CRD file
 
 ## Common References
 
@@ -52,8 +52,8 @@ Refer to [CodeQuality](/en/apis/references/CodeQuality.md).
 
 ### `props`
 
-* `schema`: The name under OpenAPI schema `definitions`(v2) or `components/schemas`(v3)
-* `openapiPath`: Refer to [Specifying OpenAPI Path](#specifying-openapi-path)
+- `schema`: The name under OpenAPI schema `definitions`(v2) or `components/schemas`(v3)
+- `openapiPath`: Refer to [Specifying OpenAPI Path](#specifying-openapi-path)
 
 ## Specifying OpenAPI Path
 

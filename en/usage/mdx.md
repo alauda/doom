@@ -6,13 +6,13 @@
 
 Most of the [built-in components](https://rspress.dev/zh/guide/default-theme/components) provided by the `rspress` theme have been adjusted to global components, which can be used directly in `.mdx` files without import, including:
 
-* `Badge`
-* `Card`
-* `LinkCard`
-* `PackageManagerTabs`
-* `Steps`
-* `Tab/Tabs`
-* `Toc`
+- `Badge`
+- `Card`
+- `LinkCard`
+- `PackageManagerTabs`
+- `Steps`
+- `Tab/Tabs`
+- `Toc`
 
 Other less commonly used components can be imported from `rspress/theme`, for example:
 
@@ -44,7 +44,7 @@ Sometimes, due to nested indentation, the [custom container](https://rspress.dev
   </Directive>
 ```
 
-* The directory structure of multilingual documents (`doc/en`) needs to be exactly the same as the documents under the `doc/zh` directory to ensure that the links in multilingual documents are identical except for the language identifier.
+- The directory structure of multilingual documents (`doc/en`) needs to be exactly the same as the documents under the `doc/zh` directory to ensure that the links in multilingual documents are identical except for the language identifier.
 
   <Directive type="danger" title="Note">
     If you are using automated translation tools, you do not need to worry about
@@ -60,8 +60,7 @@ Component for referencing external sites
 <ExternalSite name="connectors" />
 ```
 
-<ExternalSite name="connectors" />
-
+NoteBecause DevOps Connectors releases on a different cadence from Alauda Container Platform, the DevOps Connectors documentation is now available as a separate documentation set at .
 ### `ExternalSiteLink`
 
 Component for referencing external site links
@@ -70,7 +69,6 @@ Component for referencing external site links
 <ExternalSiteLink name="connectors" href="link.mdx#hash" children="Content" />
 ```
 
-<ExternalSiteLink name="connectors" href="link.mdx#hash" children="Content" />
 
 :::tip
 
@@ -98,10 +96,8 @@ Components for referencing external site API overviews
 <ExternalApisOverview name="connectors" />
 ```
 
-<AcpApisOverview />
-
-<ExternalApisOverview name="connectors" />
-
+NoteFor the introduction to the usage methods of ACP APIs, please refer to .
+NoteFor the introduction to the usage methods of DevOps Connectors APIs, please refer to .
 ### Term
 
 Term component, plain text, dynamically mounted and injected
@@ -113,18 +109,14 @@ Term component, plain text, dynamically mounted and injected
 <Term name="alaudaCloudLink" />
 ```
 
-<Term name="company" textCase="capitalize" />
 
-<Term name="product" textCase="lower" />
 
-<Term name="productShort" textCase="upper" />
 
-<Term name="alaudaCloudLink" />
 
 #### `props`
 
-* `name`: Built-in term name, refer to [dynamic mount configuration file](/en/usage/deploy.md#overrides)
-* `textCase`: Text case transformation, optional values are `lower`, `upper`, `capitalize`
+- `name`: Built-in term name, refer to [dynamic mount configuration file](/en/usage/deploy.md#overrides)
+- `textCase`: Text case transformation, optional values are `lower`, `upper`, `capitalize`
 
 ### `TermsTable`
 
@@ -134,11 +126,17 @@ Built-in term list display component
 <TermsTable />
 ```
 
-<TermsTable />
+| Name | Chinese | Chinese Bad Cases | English | English Bad Cases | Description |
+| --- | --- | --- | --- | --- | --- |
+| company | 灵雀云 | - | Alauda | - | 公司品牌 |
+| product | 灵雀云容器平台 | - | Alauda Container Platform | - | 产品品牌 |
+| productShort | ACP | - | ACP | - | 产品品牌简称 |
+| alaudaCloudLink | [Alauda Cloud](https://cloud.alauda.cn) | - | [Alauda Cloud](https://cloud.alauda.io) | - | - |
+
 
 #### `props`
 
-* `terms`: `NormalizedTermItem[]`, optional, custom term list for convenient reuse when rendering custom terms in internal documentation
+- `terms`: `NormalizedTermItem[]`, optional, custom term list for convenient reuse when rendering custom terms in internal documentation
 
 ### `JsonViewer`
 
@@ -146,7 +144,25 @@ Built-in term list display component
 <JsonViewer value={{ key: 'value' }} />
 ```
 
-<JsonViewer value={{ key: 'value' }} />
+
+**yaml**
+
+
+```yaml
+key: value
+
+```
+
+
+**json**
+
+
+```json
+{
+  "key": "value"
+}
+```
+
 
 ## Custom Component Reuse
 
