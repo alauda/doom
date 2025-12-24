@@ -96,7 +96,6 @@ url: /apis/advanced-apis/event/index.md
 
 
 
-
 ---
 url: /apis/advanced-apis/event/search.md
 ---
@@ -248,32 +247,25 @@ url: /apis/advanced-apis/index.md
 
 ### [Search](/apis/advanced-apis/event/search.html)
 
-
 ## Log APIs[#](#log-apis)
 
 ### [Aggregation](/apis/advanced-apis/log/aggregation.html)
 
-
 ### [Search](/apis/advanced-apis/log/search.html)
-
 
 ## CodeQualityTaskSummary[#](#codequalitytasksummary)
 
 ### [CodeQualityTaskSummary](/apis/advanced-apis/codeQualityTaskSummary.html)
 
-
 ## Projects[#](#projects)
 
 ### [Projects](/apis/advanced-apis/projects.html)
-
 
 ## Workload APIs[#](#workload-apis)
 
 ### [DaemonSet [apps/v1]](/apis/advanced-apis/workload/daemonset.html)
 
-
 ### [Deployments [apps/v1]](/apis/advanced-apis/workload/deployment.html)
-
 
 
 
@@ -497,9 +489,7 @@ url: /apis/advanced-apis/log/index.md
 
 ### [Aggregation](/apis/advanced-apis/log/aggregation.html)
 
-
 ### [Search](/apis/advanced-apis/log/search.html)
-
 
 
 
@@ -1464,9 +1454,7 @@ url: /apis/advanced-apis/workload/index.md
 
 ### [DaemonSet [apps/v1]](/apis/advanced-apis/workload/daemonset.html)
 
-
 ### [Deployments [apps/v1]](/apis/advanced-apis/workload/deployment.html)
-
 
 
 
@@ -2060,7 +2048,6 @@ url: /apis/crds/index.md
 
 
 
-
 ---
 url: /apis/index.md
 ---
@@ -2073,37 +2060,27 @@ The `apis` entry is only for demonstration purposes. It is not a real API.
 
 ### [Event APIs](/apis/advanced-apis/event/index.html)
 
-
 ### [Log APIs](/apis/advanced-apis/log/index.html)
-
 
 ### [CodeQualityTaskSummary](/apis/advanced-apis/codeQualityTaskSummary.html)
 
-
 ### [Projects](/apis/advanced-apis/projects.html)
 
-
 ### [Workload APIs](/apis/advanced-apis/workload/index.html)
-
 
 ## CRDs[#](#crds)
 
 ### [ArtifactCleanupRun](/apis/crds/ArtifactCleanupRun.html)
 
-
 ## 公共引用[#](#公共引用)
 
 ### [CodeQuality](/apis/references/CodeQuality.html)
 
-
 ### [CodeQualityBranch](/apis/references/CodeQualityBranch.html)
-
 
 ### [DaemonSet](/apis/references/DaemonSet.html)
 
-
 ### [Deployment](/apis/references/Deployment.html)
-
 
 
 
@@ -7357,15 +7334,11 @@ url: /apis/references/index.md
 
 ### [CodeQuality](/apis/references/CodeQuality.html)
 
-
 ### [CodeQualityBranch](/apis/references/CodeQualityBranch.html)
-
 
 ### [DaemonSet](/apis/references/DaemonSet.html)
 
-
 ### [Deployment](/apis/references/Deployment.html)
-
 
 
 
@@ -7476,12 +7449,9 @@ MDX 是一种功能强大的内容开发方式。你不仅仅可以像往常一�
 
 ### [高级 API](/apis/advanced-apis/index.html)
 
-
 ### [CRDs](/apis/crds/index.html)
 
-
 ### [公共引用](/apis/references/index.html)
-
 
 
 

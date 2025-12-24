@@ -96,7 +96,6 @@ url: /en/apis/advanced-apis/event/index.md
 
 
 
-
 ---
 url: /en/apis/advanced-apis/event/search.md
 ---
@@ -248,32 +247,25 @@ url: /en/apis/advanced-apis/index.md
 
 ### [Search](/en/apis/advanced-apis/event/search.html)
 
-
 ## Log APIs[#](#log-apis)
 
 ### [Aggregation](/en/apis/advanced-apis/log/aggregation.html)
 
-
 ### [Search](/en/apis/advanced-apis/log/search.html)
-
 
 ## CodeQualityTaskSummary[#](#codequalitytasksummary)
 
 ### [CodeQualityTaskSummary](/en/apis/advanced-apis/codeQualityTaskSummary.html)
 
-
 ## Projects[#](#projects)
 
 ### [Projects](/en/apis/advanced-apis/projects.html)
-
 
 ## Workload APIs[#](#workload-apis)
 
 ### [DaemonSet [apps/v1]](/en/apis/advanced-apis/workload/daemonset.html)
 
-
 ### [Deployments [apps/v1]](/en/apis/advanced-apis/workload/deployment.html)
-
 
 
 
@@ -497,9 +489,7 @@ url: /en/apis/advanced-apis/log/index.md
 
 ### [Aggregation](/en/apis/advanced-apis/log/aggregation.html)
 
-
 ### [Search](/en/apis/advanced-apis/log/search.html)
-
 
 
 
@@ -1350,9 +1340,7 @@ url: /en/apis/advanced-apis/workload/index.md
 
 ### [DaemonSet [apps/v1]](/en/apis/advanced-apis/workload/daemonset.html)
 
-
 ### [Deployments [apps/v1]](/en/apis/advanced-apis/workload/deployment.html)
-
 
 
 
@@ -1946,7 +1934,6 @@ url: /en/apis/crds/index.md
 
 
 
-
 ---
 url: /en/apis/index.md
 ---
@@ -1959,31 +1946,23 @@ The `apis` entry is only for demonstration purposes. It is not a real API.
 
 ### [Event APIs](/en/apis/advanced-apis/event/index.html)
 
-
 ### [Log APIs](/en/apis/advanced-apis/log/index.html)
-
 
 ### [CodeQualityTaskSummary](/en/apis/advanced-apis/codeQualityTaskSummary.html)
 
-
 ### [Projects](/en/apis/advanced-apis/projects.html)
 
-
 ### [Workload APIs](/en/apis/advanced-apis/workload/index.html)
-
 
 ## CRDs[#](#crds)
 
 ### [ArtifactCleanupRun](/en/apis/crds/ArtifactCleanupRun.html)
 
-
 ## Public References[#](#public-references)
 
 ### [CodeQuality](/en/apis/references/CodeQuality.html)
 
-
 ### [CodeQualityBranch](/en/apis/references/CodeQualityBranch.html)
-
 
 
 
@@ -2047,9 +2026,7 @@ url: /en/apis/references/index.md
 
 ### [CodeQuality](/en/apis/references/CodeQuality.html)
 
-
 ### [CodeQualityBranch](/en/apis/references/CodeQualityBranch.html)
-
 
 
 
@@ -2160,12 +2137,9 @@ After the documentation project development is completed, we can deploy the proj
 
 ### [Advanced API](/en/apis/advanced-apis/index.html)
 
-
 ### [CRDs](/en/apis/crds/index.html)
 
-
 ### [Public References](/en/apis/references/index.html)
-
 
 
 

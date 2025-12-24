@@ -100,10 +100,7 @@ After the documentation project development is completed, we can deploy the proj
 
 ### [Advanced API](/en/apis/advanced-apis/index.html)
 
-
 ### [CRDs](/en/apis/crds/index.html)
 
-
 ### [Public References](/en/apis/references/index.html)
-
 
