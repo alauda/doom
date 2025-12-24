@@ -225,7 +225,7 @@ export const autoSidebar = async (
     const exclude = (route.exclude ??= [])
     exclude.push(...excludeRoutes)
     // only exclude apis routes for sidebar but not site data to avoid dead links
-    if (export_) {
+    if (export_ && !onlyIncludeRoutes.some((route) => APIS_ROUTES.has(route))) {
       excludeRoutes.push(...APIS_ROUTES)
     }
   }
