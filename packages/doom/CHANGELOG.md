@@ -1,5 +1,17 @@
 # @alauda/doom
 
+## 1.17.5
+
+### Patch Changes
+
+- [#232](https://github.com/alauda/doom/pull/232) [`8cc9fff`](https://github.com/alauda/doom/commit/8cc9fff23e6654051136f7e064dba485b2fe53d4) Thanks [@JounQin](https://github.com/JounQin)! - feat: use `masonry-layout` for overview
+
+- [#233](https://github.com/alauda/doom/pull/233) [`e97c101`](https://github.com/alauda/doom/commit/e97c1019565883a234b076980b3258ed092f0383) Thanks [@JounQin](https://github.com/JounQin)! - chore: bump rspress to v2.0.0-rc.4
+
+- [#229](https://github.com/alauda/doom/pull/229) [`60d53ec`](https://github.com/alauda/doom/commit/60d53eca3b517098c609fb37e6b79699b49e397a) Thanks [@JounQin](https://github.com/JounQin)! - fix: overview page style
+
+- [#231](https://github.com/alauda/doom/pull/231) [`3c3badb`](https://github.com/alauda/doom/commit/3c3badb6eb10167f596c60ff8061d6066ad6804a) Thanks [@JounQin](https://github.com/JounQin)! - fix: use hack way to reuse builtin nav
+
 ## 1.17.4
 
 ### Patch Changes
