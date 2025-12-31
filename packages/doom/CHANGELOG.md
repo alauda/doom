@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.17.6
+
+### Patch Changes
+
+- [#234](https://github.com/alauda/doom/pull/234) [`0be4926`](https://github.com/alauda/doom/commit/0be4926d80de74e58112785e07f1a435aa6d9693) Thanks [@JounQin](https://github.com/JounQin)! - fix: window reference on server
+
 ## 1.17.5
 
 ### Patch Changes
