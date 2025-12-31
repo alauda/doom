@@ -14,6 +14,7 @@ import { Fragment, useCallback, useMemo } from 'react'
 
 import classes from '../../../styles/overview.module.scss'
 
+import { Masonry } from './Masonry.js'
 import {
   findItemByRoutePath,
   isSidebarDivider,
@@ -47,6 +48,11 @@ const getChildLink = (
     return getChildLink(traverseItem.items[0])
   }
   return ''
+}
+
+const masonryOptions = {
+  itemSelector: `.${classes.overviewGroup}`,
+  gutter: 16,
 }
 
 // The sidebar data include two types: sidebar item and sidebar group.
@@ -224,7 +230,7 @@ export function Overview(props: {
             <FallbackHeading level={2} title={group.name} />
           )}
 
-          <div className={classes.overviewGroups}>
+          <Masonry className={classes.overviewGroups} options={masonryOptions}>
             {group.items.map((item) => (
               <div className={classes.overviewGroup} key={item.link}>
                 <h3>
@@ -254,7 +260,7 @@ export function Overview(props: {
                 )}
               </div>
             ))}
-          </div>
+          </Masonry>
         </Fragment>
       ))}
     </div>
