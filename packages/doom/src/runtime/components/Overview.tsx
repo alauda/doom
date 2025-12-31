@@ -50,6 +50,11 @@ const getChildLink = (
   return ''
 }
 
+const masonryOptions = {
+  itemSelector: `.${classes.overviewGroup}`,
+  gutter: 16,
+}
+
 // The sidebar data include two types: sidebar item and sidebar group.
 // In overpage page, we select all the related sidebar groups and show the groups in the page.
 // In the meantime, some sidebar items also should be shown in the page, we collect them in the group named 'Others' and show them in the page.
@@ -211,14 +216,6 @@ export function Overview(props: {
   }, [getGroup, overviewSidebarGroups])
 
   const groups = customGroups ?? defaultGroups
-
-  const masonryOptions = useMemo(
-    () => ({
-      itemSelector: `.${classes.overviewGroup}`,
-      gutter: 16,
-    }),
-    [],
-  )
 
   return (
     <div className="overview-index doom-overview-index">

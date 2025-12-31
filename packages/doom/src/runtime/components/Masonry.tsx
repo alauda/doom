@@ -1,4 +1,4 @@
-import MasonryLayout from 'masonry-layout'
+import type MasonryLayout from 'masonry-layout'
 import { useLayoutEffect, useRef, type HTMLAttributes } from 'react'
 
 export interface MasonryProps extends HTMLAttributes<HTMLDivElement> {
@@ -13,7 +13,11 @@ export const Masonry = ({ options, ...props }: MasonryProps) => {
       return
     }
 
-    const masonry = new MasonryLayout(ref.current, options)
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const masonry = new (require('masonry-layout') as typeof MasonryLayout)(
+      ref.current,
+      options,
+    )
 
     return () => {
       masonry.destroy?.()
