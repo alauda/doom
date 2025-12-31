@@ -51,7 +51,7 @@ const getChildLink = (
 }
 
 const masonryOptions = {
-  itemSelector: `.${classes.overviewGroup}`,
+  itemSelector: `.masonry-item`,
   gutter: 16,
 }
 
@@ -232,7 +232,10 @@ export function Overview(props: {
 
           <Masonry className={classes.overviewGroups} options={masonryOptions}>
             {group.items.map((item) => (
-              <div className={classes.overviewGroup} key={item.link}>
+              <div
+                className={`${classes.overviewGroup} masonry-item`}
+                key={item.link}
+              >
                 <h3>
                   <Link href={item.link} {...renderInlineMarkdown(item.text)} />
                 </h3>
