@@ -14,6 +14,7 @@ import { Fragment, useCallback, useMemo } from 'react'
 
 import classes from '../../../styles/overview.module.scss'
 
+import { Masonry } from './Masonry.js'
 import {
   findItemByRoutePath,
   isSidebarDivider,
@@ -211,6 +212,14 @@ export function Overview(props: {
 
   const groups = customGroups ?? defaultGroups
 
+  const masonryOptions = useMemo(
+    () => ({
+      itemSelector: `.${classes.overviewGroup}`,
+      gutter: 16,
+    }),
+    [],
+  )
+
   return (
     <div className="overview-index doom-overview-index">
       {content}
@@ -224,7 +233,7 @@ export function Overview(props: {
             <FallbackHeading level={2} title={group.name} />
           )}
 
-          <div className={classes.overviewGroups}>
+          <Masonry className={classes.overviewGroups} options={masonryOptions}>
             {group.items.map((item) => (
               <div className={classes.overviewGroup} key={item.link}>
                 <h3>
@@ -254,7 +263,7 @@ export function Overview(props: {
                 )}
               </div>
             ))}
-          </div>
+          </Masonry>
         </Fragment>
       ))}
     </div>

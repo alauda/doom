@@ -103,6 +103,7 @@ __metadata:
     globals: "npm:^16.5.0"
     html-tag-names: "npm:^2.1.0"
     jsencrypt: "npm:^3.5.4"
+    masonry-layout: "npm:^4.2.2"
     mdast-util-mdx: "npm:^3.0.0"
     mdast-util-mdx-jsx: "npm:^3.2.0"
     mdast-util-phrasing: "npm:^4.1.0"
@@ -4022,6 +4023,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/jquery@npm:*":
+  version: 3.5.33
+  resolution: "@types/jquery@npm:3.5.33"
+  dependencies:
+    "@types/sizzle": "npm:*"
+  checksum: 10c0/d96c42762b7370ddf3b81cdad436a79d275e0ff09e2f4d7fbf2bbd8f97acef4110a11f1c3cb683195a1eba4fd9959e59d73f84d56ce2c010907a2bea696eb057
+  languageName: node
+  linkType: hard
+
 "@types/json-schema@npm:^7.0.12, @types/json-schema@npm:^7.0.15":
   version: 7.0.15
   resolution: "@types/json-schema@npm:7.0.15"
@@ -4042,6 +4052,15 @@ __metadata:
   version: 4.17.21
   resolution: "@types/lodash@npm:4.17.21"
   checksum: 10c0/73cb006e047d8871e9d63f3a165543bf16c44a5b6fe3f9f6299e37cb8d67a7b1d55ac730959a81f9def510fd07232ff7e30e05413e5d5a12793baad84ebe36c3
+  languageName: node
+  linkType: hard
+
+"@types/masonry-layout@npm:^4.2.8":
+  version: 4.2.8
+  resolution: "@types/masonry-layout@npm:4.2.8"
+  dependencies:
+    "@types/jquery": "npm:*"
+  checksum: 10c0/ca82bc34289ac88978ee6b7847c017370adef09eb44d2d43f0993e215bef7bf926d21ad2dab14cc451a8ac9e002ada9612443ce21a04d53b34ffc3ba6f2b165e
   languageName: node
   linkType: hard
 
@@ -4147,6 +4166,13 @@ __metadata:
   version: 7.7.1
   resolution: "@types/semver@npm:7.7.1"
   checksum: 10c0/c938aef3bf79a73f0f3f6037c16e2e759ff40c54122ddf0b2583703393d8d3127130823facb880e694caa324eb6845628186aac1997ee8b31dc2d18fafe26268
+  languageName: node
+  linkType: hard
+
+"@types/sizzle@npm:*":
+  version: 2.3.10
+  resolution: "@types/sizzle@npm:2.3.10"
+  checksum: 10c0/d43ec1cd0b5e1f66b1abeaf359608853629cd3d6b8dc8b3b40b85a5ee2ce149a4485ccd7eee5c58b5a2814d384f5a951f1dab5d49041ad83457270cb2bc66fe7
   languageName: node
   linkType: hard
 
@@ -4688,6 +4714,7 @@ __metadata:
     "@swc/core": "npm:^1.15.7"
     "@types/cli-progress": "npm:^3.11.6"
     "@types/ejs": "npm:^3.1.5"
+    "@types/masonry-layout": "npm:^4.2.8"
     "@types/mdast": "npm:^4.0.4"
     "@types/node": "npm:^24.10.4"
     "@types/picomatch": "npm:^4.0.2"
@@ -6100,6 +6127,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"desandro-matches-selector@npm:^2.0.0":
+  version: 2.0.2
+  resolution: "desandro-matches-selector@npm:2.0.2"
+  checksum: 10c0/f4b1f42e6ccd6c97e93e3f99a64461eef2722075b03d8a9e349e31766436f8b385d1fd50802b024dae951dc69399f13de20a139c1187000fd5e2fcf11cb5eb00
+  languageName: node
+  linkType: hard
+
 "detect-indent@npm:^6.0.0":
   version: 6.1.0
   resolution: "detect-indent@npm:6.1.0"
@@ -6870,6 +6904,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"ev-emitter@npm:^1.0.0":
+  version: 1.1.1
+  resolution: "ev-emitter@npm:1.1.1"
+  checksum: 10c0/332dcb444de2b1d81035fb22a10dd33926311baa7ea6fc24f1de7b60c6eff5b7e133611000fce740471f0c8f95259d3914d49b4201af2d85a51f0aeb8cb1ceda
+  languageName: node
+  linkType: hard
+
 "eventsource-parser@npm:^3.0.6":
   version: 3.0.6
   resolution: "eventsource-parser@npm:3.0.6"
@@ -7041,6 +7082,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"fizzy-ui-utils@npm:^2.0.0":
+  version: 2.0.7
+  resolution: "fizzy-ui-utils@npm:2.0.7"
+  dependencies:
+    desandro-matches-selector: "npm:^2.0.0"
+  checksum: 10c0/4c36d45db4e2e0cf1507aa9633af6710a12bdc047146fa89505e10aedc5bfb16cbfb0da686d5dfd89a37e1da4bce86bbee365e22be88705ab4ffccd530b4902a
+  languageName: node
+  linkType: hard
+
 "flat-cache@npm:^4.0.0":
   version: 4.0.1
   resolution: "flat-cache@npm:4.0.1"
@@ -7177,6 +7227,13 @@ __metadata:
   version: 1.4.0
   resolution: "get-east-asian-width@npm:1.4.0"
   checksum: 10c0/4e481d418e5a32061c36fbb90d1b225a254cc5b2df5f0b25da215dcd335a3c111f0c2023ffda43140727a9cafb62dac41d022da82c08f31083ee89f714ee3b83
+  languageName: node
+  linkType: hard
+
+"get-size@npm:^2.0.2":
+  version: 2.0.3
+  resolution: "get-size@npm:2.0.3"
+  checksum: 10c0/c9703caa61b4d38385eab34aa5068f3a25ab40f6d9cda6dac3f0dc4dcd8da38f7b0283035e71c9f52a47b670b9315372cae46f58d66ad709a4939e57c1fdc6cc
   languageName: node
   linkType: hard
 
@@ -8432,6 +8489,16 @@ __metadata:
   bin:
     marked: bin/marked.js
   checksum: 10c0/fc6051142172454f2023f3d6b31cca92879ec8e1b96457086a54c70354c74b00e1b6543a76a1fad6d399366f52b90a848f6ffb8e1d65a5baff87f3ba9b8f1847
+  languageName: node
+  linkType: hard
+
+"masonry-layout@npm:^4.2.2":
+  version: 4.2.2
+  resolution: "masonry-layout@npm:4.2.2"
+  dependencies:
+    get-size: "npm:^2.0.2"
+    outlayer: "npm:^2.1.0"
+  checksum: 10c0/991044cf7c22acbbb1135690314d68f9f237ef17315494c9dd25ed00fa0c526a8eb27d6bcf99a141a9d049bd62c5c251f66f9c8a4c201ca9c0944d8e44c0f09f
   languageName: node
   linkType: hard
 
@@ -9849,6 +9916,17 @@ __metadata:
   version: 0.5.0
   resolution: "outdent@npm:0.5.0"
   checksum: 10c0/e216a4498889ba1babae06af84cdc4091f7cac86da49d22d0163b3be202a5f52efcd2bcd3dfca60a361eb3a27b4299f185c5655061b6b402552d7fcd1d040cff
+  languageName: node
+  linkType: hard
+
+"outlayer@npm:^2.1.0":
+  version: 2.1.1
+  resolution: "outlayer@npm:2.1.1"
+  dependencies:
+    ev-emitter: "npm:^1.0.0"
+    fizzy-ui-utils: "npm:^2.0.0"
+    get-size: "npm:^2.0.2"
+  checksum: 10c0/863f5568e16833d11d048a760ddd92395a9e1e49b51b669d863ff4ffda4cf8f6d91ebb2c4c20e26ca30175cb295f8f436075772a56c7e17ae40d3f095d449a53
   languageName: node
   linkType: hard
 

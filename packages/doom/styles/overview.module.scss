@@ -108,14 +108,18 @@
   }
 }
 
+.overview-group {
+  width: 100%;
+}
+
 @media (min-width: 768px) {
-  .overview-groups {
-    columns: 2;
+  .overview-group {
+    width: calc((100% - 16px) / 2);
   }
 }
 
 @media (min-width: 1024px) {
-  .overview-groups {
-    columns: 3;
+  .overview-group {
+    width: calc((100% - 32px) / 3);
   }
 }
