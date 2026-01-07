@@ -174,4 +174,25 @@ td {
   }
 }
 
+.rp-doc {
+  dl {
+    margin: 1rem 0;
+
+    dt {
+      font-weight: 600;
+      margin: 0.5rem 0;
+    }
+
+    dd {
+      display: flex;
+      gap: 0.5rem;
+      margin: 0.5rem 0 0.5rem 1rem;
+
+      > p {
+        margin: 0.5rem 0;
+      }
+    }
+  }
+}
+
 @import 'intelligence.scss';

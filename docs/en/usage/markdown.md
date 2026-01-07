@@ -1,20 +1,20 @@
 ---
 weight: 3
-sourceSHA: 58f870e263d25aa93bd9873aa16a3a850e52a4c5e8015a48b99b12b3837b39ac
+sourceSHA: a3796a058149c98745d54674d77942000f4e7b1a637ea5fd5449fbf2cf117a2b
 ---
 
 # Markdown
 
-In addition to the standard [gfm](https://github.github.com/gfm) syntax, Doom has built-in some extra Markdown extension features.
+In addition to the standard [gfm](https://github.github.com/gfm) syntax, Doom includes some additional Markdown extension features.
 
 ## Callouts
 
-Source code annotation components
+Source code annotation component
 
 ::: note
 
 1. Please use inline code comments according to the actual language, such as `;`, `%`, `#`, `//`, `/** */`, `--`, and `<!-- -->`, etc.
-2. If you want to treat them as code comments, please escape them with `[\!code callout]`.
+2. If you want to treat them as code comments, use `[\!code callout]` for escaping.
 3. Sometimes, `:::callouts` may display abnormally due to nested indentation; you can use `<div class="doom-callouts">` or the `<Callouts>` component instead.
 
 :::
@@ -85,4 +85,4 @@ graph TD;
     C-->D;
 ```
 
-With [Markdown Preview Mermaid](https://github.com/mjbvz/vscode-markdown-mermaid), you can preview in real time in VSCode.
+With [Markdown Preview Mermaid](https://github.com/mjbvz/vscode-markdown-mermaid), you can preview in real-time in VSCode.

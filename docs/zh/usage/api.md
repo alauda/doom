@@ -4,24 +4,55 @@ weight: 5
 
 # API 文档
 
-根据实际业务，我们一般会将 API 分为高级 API 和 CRD (Custom Resource Definition) 两种，因此在目录结构上一般分为：
+根据实际业务，我们一般会将 API 分为标准 K8S API, 高级 API 和 CRD (Custom Resource Definition) 三种，因此在目录结构上一般分为：
 
 ```sh
 ├── apis
-│   ├── advanced-apis # 高级 API
+│   ├── advanced_apis # 高级 API
 │   ├── crds # CRDs
+│   ├── kubernetes_apis # K8S API
 │   └── references # 公共引用
 ```
 
+## K8S API
+
+```mdx title="kubernetes_apis/workload/daemonset.mdx"
+# DaemonSet [apps/v1]
+
+<K8sAPI
+  name="io.k8s.api.apps.v1.DaemonSet"
+  pathPrefix="/kubernetes/{cluster}"
+/>
+```
+
+参考 [DaemonSet](../apis/kubernetes_apis/workload/daemonset)。
+
+```mdx title="crds/ArtifactCleanupRun.mdx"
+# ArtifactCleanupRun
+
+<K8sAPI name="artifactcleanupruns.artifacts.katanomi.dev" />
+```
+
+参考 [ArtifactCleanupRun](../apis/crds/ArtifactCleanupRun)。
+
+### `props`
+
+- `name`: OpenAPI schema `definitions`/`components` 下的引用名称或CRD `metadata.name`
+- `pathPrefix`: 可以用于覆盖全局配置中的 `api.pathPrefix`
+- `filepath`: 类似[指定 openapi 路径](#指定-openapi-路径)，用于指定特定的 openapi 或 CRD 文件
+- `apiGroup`: 可选，指定 API 组，openapi 会尝试读取引用的 `x-kubernetes-group-version-kind`，下同
+- `apiVersion`: 可选，指定 API 版本，CRD 会默认使用 `spec.versions` 中第一个版本
+- `apiKind`: 可选，指定 API 资源类型
+
 ## 高级 API
 
-```mdx title="advanced-apis/codeQualityTaskSummary.mdx"
+```mdx title="advanced_apis/codeQualityTaskSummary.mdx"
 # CodeQualityTaskSummary
 
 <OpenAPIPath path="/plugins/v1alpha1/template/codeQuality/task/{task-id}/summary" />
 ```
 
-参考 [CodeQualityTaskSummary](../apis/advanced-apis/codeQualityTaskSummary)。
+参考 [CodeQualityTaskSummary](../apis/advanced_apis/codeQualityTaskSummary)。
 
 ### `props`
 
@@ -29,15 +60,19 @@ weight: 5
 - `pathPrefix`: 可以用于覆盖全局配置中的 `api.pathPrefix`
 - `openapiPath`: 参考[指定 openapi 路径](#指定-openapi-路径)
 
-## CRD
+## CRD (deprecated)
 
-```mdx title="crds/ArtifactCleanupRun.mdx"
-# ArtifactCleanupRun
+:::warning
+请使用 `K8sAPI` 组件替代 `K8sCrd` 组件，`K8sCrd` 组件将在未来版本中移除。
+:::
+
+```mdx title="crds/ArtifactCleanupRun-K8sCrd.mdx"
+# ArtifactCleanupRun - K8sCrd
 
 <K8sCrd name="artifactcleanupruns.artifacts.katanomi.dev" />
 ```
 
-参考 [ArtifactCleanupRun](../apis/crds/ArtifactCleanupRun)。
+参考 [ArtifactCleanupRun-K8sCrd](../apis/crds/ArtifactCleanupRun-K8sCrd)。
 
 ### `props`
 
