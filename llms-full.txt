@@ -1,75 +1,61 @@
 ---
-url: /apis/advanced-apis/codeQualityTaskSummary.md
+url: /apis/advanced_apis/codeQualityTaskSummary.md
 ---
 
 
 
 
 ---
-url: /apis/advanced-apis/event/index.md
+url: /apis/advanced_apis/event/index.md
 ---
 
 
 
 
 ---
-url: /apis/advanced-apis/event/search.md
+url: /apis/advanced_apis/event/search.md
 ---
 
 
 
 
 ---
-url: /apis/advanced-apis/index.md
+url: /apis/advanced_apis/index.md
 ---
 
 
 
 
 ---
-url: /apis/advanced-apis/log/aggregation.md
+url: /apis/advanced_apis/log/aggregation.md
 ---
 
 
 
 
 ---
-url: /apis/advanced-apis/log/index.md
+url: /apis/advanced_apis/log/index.md
 ---
 
 
 
 
 ---
-url: /apis/advanced-apis/log/search.md
+url: /apis/advanced_apis/log/search.md
 ---
 
 
 
 
 ---
-url: /apis/advanced-apis/projects.md
+url: /apis/advanced_apis/projects.md
 ---
 
 
 
 
 ---
-url: /apis/advanced-apis/workload/daemonset.md
----
-
-
-
-
----
-url: /apis/advanced-apis/workload/deployment.md
----
-
-
-
-
----
-url: /apis/advanced-apis/workload/index.md
+url: /apis/crds/ArtifactCleanupRun-K8sCrd.md
 ---
 
 
@@ -91,6 +77,34 @@ url: /apis/crds/index.md
 
 ---
 url: /apis/index.md
+---
+
+
+
+
+---
+url: /apis/kubernetes_apis/index.md
+---
+
+
+
+
+---
+url: /apis/kubernetes_apis/workload/daemonset.md
+---
+
+
+
+
+---
+url: /apis/kubernetes_apis/workload/deployment.md
+---
+
+
+
+
+---
+url: /apis/kubernetes_apis/workload/index.md
 ---
 
 
@@ -119,6 +133,20 @@ url: /apis/references/DaemonSet.md
 
 ---
 url: /apis/references/Deployment.md
+---
+
+
+
+
+---
+url: /apis/references/ObjectMeta.md
+---
+
+
+
+
+---
+url: /apis/references/Status.md
 ---
 
 
