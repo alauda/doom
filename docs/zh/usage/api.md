@@ -37,7 +37,7 @@ weight: 5
 
 ### `props`
 
-- `name`: OpenAPI schema `definitions`/`components` 下的引用名称或CRD `metadata.name`
+- `name`: OpenAPI schema `definitions`(v2) or `components/schemas`(v3) 下的引用名称或CRD `metadata.name`
 - `pathPrefix`: 可以用于覆盖全局配置中的 `api.pathPrefix`
 - `filepath`: 类似[指定 openapi 路径](#指定-openapi-路径)，用于指定特定的 openapi 或 CRD 文件
 - `apiGroup`: 可选，指定 API 组，openapi 会尝试读取引用的 `x-kubernetes-group-version-kind`，下同
@@ -91,7 +91,7 @@ weight: 5
 
 ### `props`
 
-- `schema`: OpenAPI schema `definitions`(v2) or `component/schemas`(v3) 下的名称
+- `schema`: OpenAPI schema `definitions`(v2) or `components/schemas`(v3) 下的引用名称
 - `openapiPath`: 参考[指定 openapi 路径](#指定-openapi-路径)
 
 ## 指定 openapi 路径

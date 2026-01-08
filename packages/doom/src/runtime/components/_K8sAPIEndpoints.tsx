@@ -534,7 +534,7 @@ export const K8sAPIEndpoints = ({
         </X.li>
         {hasStatus && (
           <X.li>
-            <code>{`${apiPath}/{name}/{status}`}</code>
+            <code>{`${apiPath}/{name}/status`}</code>
             <X.ul>
               <X.li>
                 <code>GET</code>: read status of the specified {kind}

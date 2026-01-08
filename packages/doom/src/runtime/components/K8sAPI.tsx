@@ -5,7 +5,7 @@ import { useMemo } from 'react'
 
 import { resolveRef } from '../utils.js'
 
-import { K8sAPIEndpoints, type K8sAPIDefinition } from './_K8sAPIEndpoints.tsx'
+import { K8sAPIEndpoints, type K8sAPIDefinition } from './_K8sAPIEndpoints.js'
 import { K8sAPISchema } from './_K8sAPISchema.js'
 
 export interface K8sAPIProps {
@@ -70,7 +70,7 @@ export const K8sAPI = ({
     return versionDef.schema.openAPIV3Schema as OpenAPIV3_1.SchemaObject
   }, [apiVersion, crd, name, openapi])
 
-  const k8aApiDef = useMemo(() => {
+  const k8sApiDef = useMemo(() => {
     if (!schema) {
       return
     }
@@ -103,9 +103,9 @@ export const K8sAPI = ({
       <K8sAPISchema schema={schema} fullSchema={openapi} />
       <K8sAPIEndpoints
         hasStatus={!!schema.properties?.status}
-        group={apiGroup ?? k8aApiDef?.group}
-        version={apiVersion ?? k8aApiDef?.version ?? ''}
-        kind={apiKind ?? k8aApiDef?.kind ?? ''}
+        group={apiGroup ?? k8sApiDef?.group}
+        version={apiVersion ?? k8sApiDef?.version ?? ''}
+        kind={apiKind ?? k8sApiDef?.kind ?? ''}
         pathPrefix={pathPrefix}
       />
     </>

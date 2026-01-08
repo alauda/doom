@@ -1,6 +1,6 @@
 ---
 weight: 5
-sourceSHA: 3175e920158d51b2fce2b478de90453ae84e85cefac1c6adb1ad64c00496a2a1
+sourceSHA: 3f4d8ee24f6da9663ef94e9f3a37fd4fc25c0ebc4b079a7c506f185749abca3e
 ---
 
 # API Documentation
@@ -38,12 +38,12 @@ Refer to [ArtifactCleanupRun](../apis/crds/ArtifactCleanupRun).
 
 ### `props`
 
-- `name`: Reference name under OpenAPI schema `definitions`/`components` or CRD `metadata.name`
+- `name`: Reference name under OpenAPI schema `definitions` (v2) or `components/schemas` (v3), or CRD `metadata.name`
 - `pathPrefix`: Can override the global configuration `api.pathPrefix`
 - `filepath`: Similar to [specifying openapi path](#specifying-openapi-path), used to specify a particular openapi or CRD file
-- `apiGroup`: Optional, specifies the API group; openapi will try to read the referenced `x-kubernetes-group-version-kind`, same below
-- `apiVersion`: Optional, specifies the API version; CRD defaults to the first version in `spec.versions`
-- `apiKind`: Optional, specifies the API resource kind
+- `apiGroup`: Optional, specify the API group; openapi will try to read the referenced `x-kubernetes-group-version-kind`, same below
+- `apiVersion`: Optional, specify the API version; CRD defaults to the first version in `spec.versions`
+- `apiKind`: Optional, specify the API resource kind
 
 ## Advanced API
 
@@ -92,7 +92,7 @@ Refer to [CodeQuality](../apis/references/CodeQuality).
 
 ### `props`
 
-- `schema`: Name under OpenAPI schema `definitions` (v2) or `component/schemas` (v3)
+- `schema`: Reference name under OpenAPI schema `definitions` (v2) or `components/schemas` (v3)
 - `openapiPath`: See [specifying openapi path](#specifying-openapi-path)
 
 ## Specifying openapi Path

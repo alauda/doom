@@ -204,7 +204,6 @@ export const K8sAPISchemaItem = ({
   )
 }
 
-export const K8sAPISchema = ({ schema, fullSchema }: K8sAPISchemaProps) => {
-  console.log(schema)
-  return <K8sAPISchemaItem schema={schema} fullSchema={fullSchema} />
-}
+export const K8sAPISchema = ({ schema, fullSchema }: K8sAPISchemaProps) => (
+  <K8sAPISchemaItem schema={schema} fullSchema={fullSchema} />
+)
