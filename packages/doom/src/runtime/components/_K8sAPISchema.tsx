@@ -35,9 +35,10 @@ const getSchemaValue = <
     if (value) {
       return value
     }
-    if (allOf.oneOf?.length) {
-      return allOf.oneOf.map((it) => (it as T)[key]) as T[K]
-    }
+  }
+
+  if (key === 'type' && schema.oneOf?.length) {
+    return schema.oneOf.map((it) => (it as T)[key]) as T[K]
   }
 }
 
