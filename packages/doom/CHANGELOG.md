@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.18.0
+
+### Minor Changes
+
+- [#236](https://github.com/alauda/doom/pull/236) [`92e7aaf`](https://github.com/alauda/doom/commit/92e7aaf649defc118ab1d422bc4766bb3887f203) Thanks [@JounQin](https://github.com/JounQin)! - feat: new K8sAPI component
+
 ## 1.17.6
 
 ### Patch Changes
