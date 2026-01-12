@@ -1,4 +1,4 @@
-import { useSearchParams } from '@rspress/core/dist/runtime.js'
+import { useSearchParams } from '@rspress/core/runtime'
 import { useState, useEffect, useCallback } from 'react'
 
 import { FALSY_VALUES } from '../../shared/index.js'
@@ -19,7 +19,6 @@ const getPrintMediaQuery = () => {
 }
 
 export function useIsPrintMedia() {
-  // eslint-disable-next-line @eslint-react/naming-convention/use-state
   const [printMediaQuery] = useState(getPrintMediaQuery)
 
   const [isPrint, setIsPrint] = useState(!!printMediaQuery?.matches)
