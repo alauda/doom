@@ -1,4 +1,4 @@
-import { useI18n, usePageData } from '@rspress/runtime'
+import { useI18n, usePageData } from '@rspress/core/runtime'
 
 export function useEditLink() {
   const { siteData, page } = usePageData()
