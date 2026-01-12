@@ -38,6 +38,7 @@ weight: 5
 ### `props`
 
 - `name`: OpenAPI schema `definitions`(v2) or `components/schemas`(v3) 下的引用名称或CRD `metadata.name`
+- `namespaced`: 指示资源是否为命名空间级别，默认为 `true`，即 API Endpoints 是否包含命名空间路径参数 `namespaces/{namespace}`
 - `pathPrefix`: 可以用于覆盖全局配置中的 `api.pathPrefix`
 - `filepath`: 类似[指定 openapi 路径](#指定-openapi-路径)，用于指定特定的 openapi 或 CRD 文件
 - `apiGroup`: 可选，指定 API 组，openapi 会尝试读取引用的 `x-kubernetes-group-version-kind`，下同

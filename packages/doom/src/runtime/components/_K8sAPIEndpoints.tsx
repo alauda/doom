@@ -11,6 +11,7 @@ export interface K8sAPIDefinition {
 }
 
 export interface K8sAPIEndpointsProps extends K8sAPIDefinition {
+  namespaced?: boolean
   hasStatus?: boolean
   pathPrefix?: string
 }
@@ -489,12 +490,13 @@ export const K8sAPIEndpoints = ({
   version,
   kind,
   pathPrefix: pathPrefix_,
+  namespaced = true,
 }: K8sAPIEndpointsProps) => {
   const pathPrefix = pathPrefix_ ?? (virtual.pathPrefix || '')
 
   const apiPath = `${
     pathPrefix
-  }/${group ? `apis/${group}` : 'api'}/${version}/namespaces/{namespace}/${plural(kind).toLocaleLowerCase()}`
+  }/${group ? `apis/${group}` : 'api'}/${version}/${namespaced ? `namespaces/{namespace}/` : ''}${plural(kind).toLocaleLowerCase()}`
 
   return (
     <>

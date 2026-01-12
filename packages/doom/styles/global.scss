@@ -130,9 +130,42 @@ td {
   --rp-code-block-bg: #{color.adjust($color: #242424, $lightness: 5%)};
 }
 
-.rspress {
+.rp {
   &-sidebar-item {
     word-break: break-word;
+  }
+
+  &-doc {
+    dl {
+      margin: 1rem 0;
+
+      dt {
+        font-weight: 600;
+        margin: 0.5rem 0;
+      }
+
+      dd {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin: 0.5rem 0 0.5rem 1rem;
+
+        > p {
+          margin: 0.5rem 0;
+        }
+      }
+    }
+  }
+
+  &-list-decimal:not(:has(p)) {
+    list-style: none;
+    counter-reset: section;
+    padding-left: 20px;
+
+    > li:before {
+      counter-increment: section;
+      content: counters(section, '.') '. ';
+    }
   }
 }
 
@@ -161,39 +194,6 @@ td {
 
 @media print {
   @include print;
-}
-
-.rp-list-decimal:not(:has(p)) {
-  list-style: none;
-  counter-reset: section;
-  padding-left: 20px;
-
-  > li:before {
-    counter-increment: section;
-    content: counters(section, '.') '. ';
-  }
-}
-
-.rp-doc {
-  dl {
-    margin: 1rem 0;
-
-    dt {
-      font-weight: 600;
-      margin: 0.5rem 0;
-    }
-
-    dd {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin: 0.5rem 0 0.5rem 1rem;
-
-      > p {
-        margin: 0.5rem 0;
-      }
-    }
-  }
 }
 
 @import 'intelligence.scss';
