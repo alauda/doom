@@ -2,6 +2,7 @@ import { FallbackHeading } from '@rspress/core/theme'
 import virtual from 'doom-@api-virtual'
 import { plural } from 'pluralize'
 
+import { APIReferenceLink } from './_APIReferenceLink.js'
 import { X } from './_X.js'
 
 export interface K8sAPIDefinition {
@@ -142,7 +143,7 @@ const K8sAPIListEndpoint = ({ kind }: K8sAPIEndpointProps) => (
           <td>200 - OK</td>
           <td>
             <code>
-              <X.a href="#status">Status</X.a>
+              <APIReferenceLink name="Status" />
             </code>{' '}
             schema
           </td>
@@ -256,7 +257,7 @@ const K8sAPIItemEndpoint = ({ kind }: K8sAPIEndpointProps) => (
           <td>200 - OK</td>
           <td>
             <code>
-              <X.a href="#status">Status</X.a>
+              <APIReferenceLink name="Status" />
             </code>{' '}
             schema
           </td>
@@ -265,7 +266,7 @@ const K8sAPIItemEndpoint = ({ kind }: K8sAPIEndpointProps) => (
           <td>202 - Accepted</td>
           <td>
             <code>
-              <X.a href="#status">Status</X.a>
+              <APIReferenceLink name="Status" />
             </code>{' '}
             schema
           </td>

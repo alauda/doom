@@ -124,8 +124,7 @@ export const OpenAPIResponses = ({
         }
         return (
           <X.li key={code}>
-            <code>{code}</code>
-            {typeNode}: {responseObj.description}
+            <code>{code}</code> {typeNode}: {responseObj.description}
             {extraNode}
           </X.li>
         )
@@ -260,8 +259,7 @@ export const OpenAPIPath = ({
         return (
           <Fragment key={method}>
             <HeadingTitle slugger={slugger} level={3}>
-              <code>{method}</code>
-              {summary}
+              <code>{method}</code> {summary}
             </HeadingTitle>
             <Markdown>{description}</Markdown>
             {parameters && (

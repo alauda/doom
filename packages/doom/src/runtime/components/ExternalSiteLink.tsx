@@ -1,4 +1,4 @@
-import { NoSSR, useLang, useSite } from '@rspress/core/runtime'
+import { useLang, useSite } from '@rspress/core/runtime'
 import {
   addTrailingSlash,
   isExternalUrl,
@@ -82,9 +82,7 @@ const ExternalSiteLink_ = ({
 }
 
 export const ExternalSiteLink = (props: ExternalSiteLinkProps) => (
-  <NoSSR>
-    <ExternalSiteLink_ {...props} />
-  </NoSSR>
+  <ExternalSiteLink_ {...props} />
 )
 
 export default ExternalSiteLink

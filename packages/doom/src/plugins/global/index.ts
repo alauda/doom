@@ -17,7 +17,7 @@ export interface GlobalPluginOptions {
 }
 
 export interface GlobalVirtual extends GlobalPluginOptions {
-  userBase?: string
+  userBase: string
   prefix?: string
   sites?: DoomSite[]
   export?: ExportItem[]
