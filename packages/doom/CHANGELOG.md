@@ -1,5 +1,13 @@
 # @alauda/doom
 
+## 1.18.1
+
+### Patch Changes
+
+- [#238](https://github.com/alauda/doom/pull/238) [`18b83b1`](https://github.com/alauda/doom/commit/18b83b162abab341ee1a8758c01067e6a9ec9c46) Thanks [@JounQin](https://github.com/JounQin)! - fix: known issues
+
+- [#240](https://github.com/alauda/doom/pull/240) [`702ccd2`](https://github.com/alauda/doom/commit/702ccd257252f07915017876767ea4f31de9df1b) Thanks [@JounQin](https://github.com/JounQin)! - chore: bump rspress to v2.0.0-rc.5
+
 ## 1.18.0
 
 ### Minor Changes
