@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.18.2
+
+### Patch Changes
+
+- [#241](https://github.com/alauda/doom/pull/241) [`ca885d9`](https://github.com/alauda/doom/commit/ca885d9d945f7ec7f5108f4704780106a9c9d25c) Thanks [@JounQin](https://github.com/JounQin)! - fix: api reference links
+
 ## 1.18.1
 
 ### Patch Changes
