@@ -1,11 +1,11 @@
 ---
 weight: 5
-sourceSHA: 3f4d8ee24f6da9663ef94e9f3a37fd4fc25c0ebc4b079a7c506f185749abca3e
+sourceSHA: b0471f628da85bd24e8d238a8ee4c9a76b2757126da0e5c00dfd4105d717bb57
 ---
 
 # API Documentation
 
-Based on actual business needs, we generally categorize APIs into three types: standard K8S API, advanced API, and CRD (Custom Resource Definition). Therefore, the directory structure is usually divided as follows:
+According to actual business needs, we generally divide APIs into three types: standard K8S API, advanced API, and CRD (Custom Resource Definition). Therefore, the directory structure is usually organized as follows:
 
 ```sh
 ├── apis
@@ -39,11 +39,12 @@ Refer to [ArtifactCleanupRun](../apis/crds/ArtifactCleanupRun).
 ### `props`
 
 - `name`: Reference name under OpenAPI schema `definitions` (v2) or `components/schemas` (v3), or CRD `metadata.name`
-- `pathPrefix`: Can override the global configuration `api.pathPrefix`
+- `namespaced`: Indicates whether the resource is namespace-scoped; defaults to `true`, meaning the API Endpoints include the namespace path parameter `namespaces/{namespace}`
+- `pathPrefix`: Can be used to override the global configuration `api.pathPrefix`
 - `filepath`: Similar to [specifying openapi path](#specifying-openapi-path), used to specify a particular openapi or CRD file
-- `apiGroup`: Optional, specify the API group; openapi will try to read the referenced `x-kubernetes-group-version-kind`, same below
-- `apiVersion`: Optional, specify the API version; CRD defaults to the first version in `spec.versions`
-- `apiKind`: Optional, specify the API resource kind
+- `apiGroup`: Optional, specifies the API group; openapi will try to read the referenced `x-kubernetes-group-version-kind`, same below
+- `apiVersion`: Optional, specifies the API version; CRD will default to the first version in `spec.versions`
+- `apiKind`: Optional, specifies the API resource kind
 
 ## Advanced API
 
@@ -58,7 +59,7 @@ Refer to [CodeQualityTaskSummary](../apis/advanced_apis/codeQualityTaskSummary).
 ### `props`
 
 - `path`: Path under OpenAPI schema `paths`
-- `pathPrefix`: Can override the global configuration `api.pathPrefix`
+- `pathPrefix`: Can be used to override the global configuration `api.pathPrefix`
 - `openapiPath`: See [specifying openapi path](#specifying-openapi-path)
 
 ## CRD (deprecated)
@@ -97,7 +98,7 @@ Refer to [CodeQuality](../apis/references/CodeQuality).
 
 ## Specifying openapi Path
 
-For the `OpenAPIPath` and `OpenAPIRef` components, by default, all openapi definition files are searched until a match is found. If you need to specify a particular openapi file, you can use the `openapiPath` property:
+For the `OpenAPIPath` and `OpenAPIRef` components, by default, all openapi definition files are searched until a match is found. If you need to specify a particular openapi file, you can use the `openapiPath` attribute:
 
 ```mdx
 <OpenAPIPath

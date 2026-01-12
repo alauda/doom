@@ -10,6 +10,7 @@ import { K8sAPISchema } from './_K8sAPISchema.js'
 
 export interface K8sAPIProps {
   name: string
+  namespaced?: boolean
   pathPrefix?: string
   filepath?: string
   apiGroup?: string
@@ -19,6 +20,7 @@ export interface K8sAPIProps {
 
 export const K8sAPI = ({
   name,
+  namespaced,
   pathPrefix,
   filepath,
   apiGroup,
@@ -107,6 +109,7 @@ export const K8sAPI = ({
         version={apiVersion ?? k8sApiDef?.version ?? ''}
         kind={apiKind ?? k8sApiDef?.kind ?? ''}
         pathPrefix={pathPrefix}
+        namespaced={namespaced}
       />
     </>
   ) : null
