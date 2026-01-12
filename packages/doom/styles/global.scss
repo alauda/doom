@@ -155,6 +155,10 @@ td {
         }
       }
     }
+
+    code .rp-link[target='_blank'] {
+      white-space: nowrap;
+    }
   }
 
   &-list-decimal:not(:has(p)) {

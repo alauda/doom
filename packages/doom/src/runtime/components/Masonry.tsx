@@ -1,32 +1,44 @@
+import { NoSSR } from '@rspress/core/runtime'
 import type { Options } from 'masonry-layout'
-import { useLayoutEffect, useRef, type HTMLAttributes } from 'react'
+import {
+  lazy,
+  Suspense,
+  useLayoutEffect,
+  useRef,
+  type HTMLAttributes,
+} from 'react'
 
 export interface MasonryProps extends HTMLAttributes<HTMLDivElement> {
   options?: Options
 }
 
-let MasonryLayout: typeof import('masonry-layout')
+const LazyMasonry = lazy(() =>
+  import('masonry-layout').then(({ default: MasonryLayout }) => {
+    const Masonry = ({ options, ...props }: MasonryProps) => {
+      const ref = useRef<HTMLDivElement>(null)
+      useLayoutEffect(() => {
+        if (!ref.current) {
+          return
+        }
 
-if (typeof window !== 'undefined') {
-  MasonryLayout = (await import('masonry-layout')).default
-}
+        const masonry = new MasonryLayout(ref.current, options)
 
-export const Masonry = ({ options, ...props }: MasonryProps) => {
-  const ref = useRef<HTMLDivElement>(null)
-
-  useLayoutEffect(() => {
-    if (!ref.current) {
-      return
+        return () => {
+          masonry.destroy?.()
+        }
+      }, [options])
+      return <div ref={ref} {...props} />
     }
+    return { default: Masonry }
+  }),
+)
 
-    const masonry = new MasonryLayout!(ref.current, options)
-
-    return () => {
-      masonry.destroy?.()
-    }
-  }, [options])
-
-  return <div ref={ref} {...props} />
-}
+export const Masonry = ({ options, ...props }: MasonryProps) => (
+  <NoSSR>
+    <Suspense>
+      <LazyMasonry options={options} {...props} />
+    </Suspense>
+  </NoSSR>
+)
 
 export default Masonry

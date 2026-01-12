@@ -5,6 +5,7 @@ import { Fragment, useMemo } from 'react'
 import { resolveRef } from '../utils.js'
 
 import { Markdown } from './Markdown.js'
+import { APIReferenceLink } from './_APIReferenceLink.js'
 import { X } from './_X.js'
 
 export interface K8sAPISchemaProps {
@@ -158,9 +159,7 @@ export const K8sAPISchemaItem = ({
                     <td>
                       {isMetadata ? (
                         <code>
-                          <X.a href="/apis/references/ObjectMeta.html">
-                            ObjectMeta
-                          </X.a>
+                          <APIReferenceLink name="ObjectMeta" />
                         </code>
                       ) : (
                         typeCode(getSchemaValue(value))
