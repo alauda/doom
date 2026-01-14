@@ -16,6 +16,7 @@ import doomLint, {
   noDeepHeading,
   noDeepList,
   noParagraphIndent,
+  site,
   tableSize,
   unitCase,
 } from './remark-lint/index.ts'
@@ -36,6 +37,7 @@ export default {
     noDeepHeading,
     noDeepList,
     noParagraphIndent,
+    site,
     tableSize,
     unitCase,
   ],
