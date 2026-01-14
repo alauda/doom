@@ -1,4 +1,4 @@
-import { useLang } from '@rspress/core/runtime'
+import { isProduction, useLang } from '@rspress/core/runtime'
 import virtual from 'doom-@global-virtual'
 import { type FC, useMemo } from 'react'
 
@@ -107,12 +107,11 @@ export const ExternalSiteBase = ({ name, template }: ExternalSiteBaseProps) => {
   )
 
   if (!site) {
-    return (
-      <Directive type="danger">
-        No site with name `{name}` found, please ensure it's already defined at
-        `sites.yaml`
-      </Directive>
-    )
+    const message = `No site with name \`${name}\` found, please ensure it's already defined at \`sites.yaml\``
+    if (isProduction()) {
+      throw new Error(message)
+    }
+    return <Directive type="danger">{message}</Directive>
   }
 
   const Notes = template === 'apisOverview' ? ApisOverviewNotes : SiteNotes

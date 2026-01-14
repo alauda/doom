@@ -1,4 +1,4 @@
-import { useLang, useSite } from '@rspress/core/runtime'
+import { isProduction, useLang, useSite } from '@rspress/core/runtime'
 import {
   addTrailingSlash,
   isExternalUrl,
@@ -38,12 +38,11 @@ const ExternalSiteLink_ = ({
   const lang = useLang()
 
   if (!site) {
-    return (
-      <Directive type="danger">
-        No site with name `{name}` found, please ensure it's already defined at
-        `sites.yaml`
-      </Directive>
-    )
+    const message = `No site with name \`${name}\` found, please ensure it's already defined at \`sites.yaml\``
+    if (isProduction()) {
+      throw new Error(message)
+    }
+    return <Directive type="danger">{message}</Directive>
   }
 
   if (isExternalUrl(href)) {
