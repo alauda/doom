@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.18.3
+
+### Patch Changes
+
+- [#243](https://github.com/alauda/doom/pull/243) [`bf7126a`](https://github.com/alauda/doom/commit/bf7126a3d461060ecefe47a1d68baf7c251612d6) Thanks [@JounQin](https://github.com/JounQin)! - feat: support linting site name usage
+
 ## 1.18.2
 
 ### Patch Changes
