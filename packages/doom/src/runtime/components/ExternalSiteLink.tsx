@@ -1,4 +1,4 @@
-import { isProduction, useLang, useSite } from '@rspress/core/runtime'
+import { useLang, useSite } from '@rspress/core/runtime'
 import {
   addTrailingSlash,
   isExternalUrl,
@@ -13,8 +13,6 @@ import { type AnchorHTMLAttributes, type ReactNode, useMemo } from 'react'
 
 import { isUnversioned } from '../../shared/helpers.js'
 import { useIsPrint } from '../hooks/index.js'
-
-import { Directive } from './Directive.js'
 
 export interface ExternalSiteLinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
   name: string
@@ -38,15 +36,13 @@ const ExternalSiteLink_ = ({
   const lang = useLang()
 
   if (!site) {
-    const message = `No site with name \`${name}\` found, please ensure it's already defined at \`sites.yaml\``
-    if (isProduction()) {
-      throw new Error(message)
-    }
-    return <Directive type="danger">{message}</Directive>
+    throw new Error(
+      `No site with name \`${name}\` found, please ensure it's already defined at \`sites.yaml\``,
+    )
   }
 
   if (isExternalUrl(href)) {
-    return <Directive type="danger">Invalid href `{href}` found</Directive>
+    throw new Error(`Invalid href \`${href}\` found`)
   }
 
   let { url, hash } = parseUrl(href)
