@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.19.0
+
+### Minor Changes
+
+- [#246](https://github.com/alauda/doom/pull/246) [`dc4507a`](https://github.com/alauda/doom/commit/dc4507ac2619aab2afaf8975f1115f5699419c49) Thanks [@JounQin](https://github.com/JounQin)! - feat: auto expandable code blocks
+
 ## 1.18.3
 
 ### Patch Changes
