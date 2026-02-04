@@ -40,7 +40,7 @@ const AuthCheck = () => {
     )
   })
 
-  const abortController = useRef<AbortController>(null)
+  const abortControllerRef = useRef<AbortController>(null)
 
   const authCheck = useMemoizedFn(async () => {
     if (!siteData.base.startsWith('/russian/')) {
@@ -52,11 +52,11 @@ const AuthCheck = () => {
       return
     }
 
-    abortController.current?.abort()
+    abortControllerRef.current?.abort()
 
-    abortController.current = new AbortController()
+    abortControllerRef.current = new AbortController()
 
-    const signal = abortController.current.signal
+    const signal = abortControllerRef.current.signal
 
     try {
       await xfetch('https://cloud.alauda.io/api/v1/tenant/info', {

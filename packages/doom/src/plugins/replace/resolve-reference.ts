@@ -3,7 +3,7 @@ import path from 'node:path'
 
 import { logger } from '@rspress/core'
 import { isProduction } from '@rspress/shared'
-import { render } from 'ejs'
+import ejs from 'ejs'
 import type { RootContent } from 'mdast'
 import { red } from 'yoctocolors'
 
@@ -74,7 +74,7 @@ const resolveReference_ = async (
     switch (processor.type) {
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       case 'ejsTemplate': {
-        content = await render(
+        content = await ejs.render(
           content,
           { data: processor.data },
           { async: true },

@@ -4,7 +4,7 @@ import path from 'node:path'
 import * as prompts from '@inquirer/prompts'
 import { logger } from '@rsbuild/core'
 import { Command } from 'commander'
-import { render } from 'ejs'
+import ejs from 'ejs'
 import { glob } from 'tinyglobby'
 import { cyan, magenta } from 'yoctocolors'
 
@@ -146,7 +146,7 @@ const handleTemplateFile = async ({
     switch (processor.type) {
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       case 'ejsTemplate': {
-        content = render(content, { data: processor.data, parameters })
+        content = ejs.render(content, { data: processor.data, parameters })
         break
       }
       default: {
@@ -217,9 +217,12 @@ export const newCommand = new Command('new')
     logger.start('Generating scaffolding...')
 
     for (const layout of scaffolding.layout || []) {
-      const source = path.resolve(base!, render(layout.source, { parameters }))
-      const target = path.resolve(render(layout.target, { parameters }))
-      const when = layout.when && render(layout.when, { parameters })
+      const source = path.resolve(
+        base!,
+        ejs.render(layout.source, { parameters }),
+      )
+      const target = path.resolve(ejs.render(layout.target, { parameters }))
+      const when = layout.when && ejs.render(layout.when, { parameters })
 
       if (when != null && JS_STR_FALSY_VALUES.has(when)) {
         continue
@@ -250,7 +253,7 @@ export const newCommand = new Command('new')
           )
           for (const matcher of layout.matchers || []) {
             const matched = await glob(
-              matcher.match.map((m) => render(m, { parameters })),
+              matcher.match.map((m) => ejs.render(m, { parameters })),
               { cwd: source },
             )
 

@@ -1,6 +1,6 @@
 import { logger } from '@rspress/core'
 import { isProduction } from '@rspress/shared'
-import { render } from 'ejs'
+import ejs from 'ejs'
 import type {
   List,
   ListItem,
@@ -122,7 +122,7 @@ const resolveRelease_ = async (
     data[key] = value
   }
 
-  const jql = await render(template, data, { async: true })
+  const jql = await ejs.render(template, data, { async: true })
 
   logger.info(
     `Fetching release notes for query \`${cyan(releaseQuery)}\`, JQL: \`${cyan(jql)}\``,

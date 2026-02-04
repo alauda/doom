@@ -1,8 +1,9 @@
-import { useI18n, usePageData } from '@rspress/core/runtime'
+import { useI18n, usePage, useSite } from '@rspress/core/runtime'
 
 export function useEditLink() {
-  const { siteData, page } = usePageData()
-  const editLink = siteData.themeConfig.editLink
+  const { site } = useSite()
+  const { page } = usePage()
+  const editLink = site.themeConfig.editLink
 
   const t = useI18n()
   const text = t('editLinkText')
@@ -19,7 +20,7 @@ export function useEditLink() {
 
   const lastSegment = docRepoBaseUrl.split('/').at(-2)
 
-  const fixedLang = siteData.themeConfig.locales.some(
+  const fixedLang = site.themeConfig.locales.some(
     ({ lang }) => lang === lastSegment,
   )
 
