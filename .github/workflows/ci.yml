@@ -40,3 +40,4 @@ jobs:
           yarn run-p docs lint typecov
         env:
           PARSER_NO_WATCH: true
+          RAW_TERMS_URL: ${{ vars.RAW_TERMS_URL }}
