@@ -1,4 +1,4 @@
-import { usePageData } from '@rspress/core/runtime'
+import { usePage, useSite } from '@rspress/core/runtime'
 import { useEffect } from 'react'
 
 import { useSiteOverrides } from '@alauda/doom/runtime'
@@ -34,7 +34,8 @@ const concatTitle = (title: string, suffix?: string) => {
 }
 
 export const SiteOverrides = () => {
-  const { siteData, page } = usePageData()
+  const { page } = usePage()
+  const { site } = useSite()
   const {
     pageType,
     // Inject by remark-plugin-toc
@@ -50,8 +51,8 @@ export const SiteOverrides = () => {
       return
     }
 
-    siteData.originalTitle ??= siteData.title
-    siteData.title = title
+    site.originalTitle ??= site.title
+    site.title = title
 
     let newTitle = (frontmatter.title as string) || articleTitle
 
@@ -81,7 +82,7 @@ export const SiteOverrides = () => {
     frontmatter.title,
     frontmatter.titleSuffix,
     pageType,
-    siteData,
+    site,
     title,
   ])
 

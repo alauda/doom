@@ -7,7 +7,7 @@ import { isDeepStrictEqual } from 'node:util'
 import { logger } from '@rspress/core'
 import { removeLeadingSlash } from '@rspress/shared'
 import { Command } from 'commander'
-import { render } from 'ejs'
+import ejs from 'ejs'
 import matter from 'gray-matter'
 import { AzureOpenAI, RateLimitError } from 'openai'
 import { pRateLimit } from 'p-ratelimit'
@@ -342,7 +342,7 @@ export const translate = async ({
   const { content: contentWithPlaceholders, anchors } =
     replaceAnchorsWithPlaceholders(sourceContent)
 
-  const finalSystemPrompt = await render(
+  const finalSystemPrompt = await ejs.render(
     systemPrompt?.trim() || DEFAULT_SYSTEM_PROMPT,
     {
       sourceLang,

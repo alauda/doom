@@ -3,7 +3,12 @@ import type {
   SidebarItem,
   SidebarSectionHeader,
 } from '@rspress/core'
-import { isEqualPath, usePageData, useSidebar } from '@rspress/core/runtime'
+import {
+  isEqualPath,
+  usePage,
+  usePages,
+  useSidebar,
+} from '@rspress/core/runtime'
 import {
   FallbackHeading,
   Link,
@@ -65,10 +70,10 @@ export function Overview(props: {
   defaultGroupTitle?: string
   overviewHeaders?: number[]
 }) {
+  const { pages } = usePages()
   const {
-    siteData,
     page: { routePath, frontmatter, title },
-  } = usePageData()
+  } = usePage()
   const { content, groups: customGroups, defaultGroupTitle = 'Others' } = props
 
   const subFilter = useCallback(
@@ -77,8 +82,6 @@ export function Overview(props: {
       !isEqualPath(link, routePath),
     [routePath],
   )
-
-  const { pages } = siteData
 
   const overviewModules = useMemo(
     () => pages.filter((page) => subFilter(page.routePath)),

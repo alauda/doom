@@ -267,6 +267,7 @@ const getCommonConfig = async ({
     themeConfig: {
       enableScrollToTop: true,
       localeRedirect: redirect,
+      llmsUI: false,
       ...(editRepoEnabled &&
         editRepoBaseUrl && {
           editLink: { docRepoBaseUrl: editRepoBaseUrl },

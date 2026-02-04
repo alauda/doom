@@ -1,6 +1,7 @@
 import {
-  type FormEvent,
   type FormHTMLAttributes,
+  type SubmitEvent,
+  useMemo,
   useRef,
   useState,
 } from 'react'
@@ -44,67 +45,72 @@ export const LoginForm = ({
 
   const [timestamp, setTimestamp] = useState<number>()
 
-  const handleSubmit = useMemoizedFn(async (ev: FormEvent<HTMLFormElement>) => {
-    ev.preventDefault()
-    ev.stopPropagation()
+  const origin = useMemo(getCloudOrigin, [])
 
-    onSubmit?.(ev)
+  const handleSubmit = useMemoizedFn(
+    async (ev: SubmitEvent<HTMLFormElement>) => {
+      ev.preventDefault()
+      ev.stopPropagation()
 
-    const formData = new FormData(ev.currentTarget)
+      onSubmit?.(ev)
 
-    setLoading(true)
+      const formData = new FormData(ev.currentTarget)
 
-    const origin = getCloudOrigin()
+      setLoading(true)
 
-    if (pwdPubkeyRef.current == null) {
-      try {
-        pwdPubkeyRef.current = await xfetch<PasswordPubKey>(
-          `${origin}/api/v1/pubkey`,
-        )
-      } catch (err) {
-        setError(err as LoginError)
-        setLoading(false)
-        return
+      if (pwdPubkeyRef.current == null) {
+        try {
+          pwdPubkeyRef.current = await xfetch<PasswordPubKey>(
+            `${origin}/api/v1/pubkey`,
+          )
+        } catch (err) {
+          setError(err as LoginError)
+          setLoading(false)
+          return
+        }
       }
-    }
 
-    formData.set(
-      'password',
-      cryptoPassword(pwdPubkeyRef.current, formData.get('password') as string),
-    )
-
-    if (captchaId) {
-      formData.set('captchaId', captchaId)
-    }
-
-    try {
-      const { accessToken } = await xfetch<LoginResponse>(
-        `${origin}/api/v1/login`,
-        {
-          method: ApiMethod.POST,
-          body: formData,
-        },
+      formData.set(
+        'password',
+        cryptoPassword(
+          pwdPubkeyRef.current,
+          formData.get('password') as string,
+        ),
       )
 
-      setAuthBasic(accessToken)
-
-      onLoggedIn?.()
-    } catch (err) {
-      if (!isLoginError(err)) {
-        throw err
+      if (captchaId) {
+        formData.set('captchaId', captchaId)
       }
 
-      if (err.data?.reason === 'PubkeyExpireError') {
-        pwdPubkeyRef.current = null
-        await handleSubmit(ev)
-        return
-      }
+      try {
+        const { accessToken } = await xfetch<LoginResponse>(
+          `${origin}/api/v1/login`,
+          {
+            method: ApiMethod.POST,
+            body: formData,
+          },
+        )
 
-      setError(err)
-    } finally {
-      setLoading(false)
-    }
-  })
+        setAuthBasic(accessToken)
+
+        onLoggedIn?.()
+      } catch (err) {
+        if (!isLoginError(err)) {
+          throw err
+        }
+
+        if (err.data?.reason === 'PubkeyExpireError') {
+          pwdPubkeyRef.current = null
+          await handleSubmit(ev)
+          return
+        }
+
+        setError(err)
+      } finally {
+        setLoading(false)
+      }
+    },
+  )
 
   return (
     <form onSubmit={handleSubmit} {...props}>
