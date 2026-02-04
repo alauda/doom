@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.19.1
+
+### Patch Changes
+
+- [#249](https://github.com/alauda/doom/pull/249) [`7d6ecec`](https://github.com/alauda/doom/commit/7d6ecec877794a6a79e25dda64224ba183cb1583) Thanks [@JounQin](https://github.com/JounQin)! - chore: bump rspress to v2.0.2 with other dependencies
+
 ## 1.19.0
 
 ### Minor Changes
