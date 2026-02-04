@@ -13,10 +13,16 @@
 - [ArtifactCleanupRun - K8sCrd](/en/apis/crds/ArtifactCleanupRun-K8sCrd.md)
 - [ArtifactCleanupRun](/en/apis/crds/ArtifactCleanupRun.md)
 - [CRDs](/en/apis/crds/index.md)
-- [APIs](/en/apis/index.md)
+- [APIs](/en/apis/index.md): The apis entry is only for demonstration purposes. It is not a real API.
 - [Kubernetes APIs](/en/apis/kubernetes_apis/index.md)
-- [DaemonSet [apps/v1]](/en/apis/kubernetes_apis/workload/daemonset.md)
-- [Deployments [apps/v1]](/en/apis/kubernetes_apis/workload/deployment.md)
+- [DaemonSet [apps/v1]](/en/apis/kubernetes_apis/workload/daemonset.md): <K8sAPI
+name="io.k8s.api.apps.v1.DaemonSet"
+pathPrefix="/kubernetes/{cluster}"
+/>
+- [Deployments [apps/v1]](/en/apis/kubernetes_apis/workload/deployment.md): <K8sAPI
+name="io.k8s.api.apps.v1.Deployment"
+pathPrefix="/kubernetes/{cluster}"
+/>
 - [Workload APIs](/en/apis/kubernetes_apis/workload/index.md)
 - [CodeQuality](/en/apis/references/CodeQuality.md)
 - [CodeQualityBranch](/en/apis/references/CodeQualityBranch.md)
@@ -26,14 +32,14 @@
 - [Status](/en/apis/references/Status.md)
 - [Common References](/en/apis/references/index.md)
 - [Getting Started](/en/start.md)
-- [API Documentation](/en/usage/api.md)
+- [API Documentation](/en/usage/api.md): According to actual business needs, we generally divide APIs into three types: standard K8S API, advanced API, and CRD (Custom Resource Definition). Therefore, the directory structure is usually organized as follows:
 - [Configuration](/en/usage/configuration.md): Configure the `doom` documentation tool
 - [Convention](/en/usage/convention.md): Based on the principle of "convention over configuration", we agree on the organization of documents to automatically generate the left sidebar and related content.
 - [Deployment](/en/usage/deploy.md): After the documentation project development is completed, we can deploy the project to the ACP platform
 - [Internationalization](/en/usage/i18n.md): Using Internationalized Text in Reusable Components
 - [Usage](/en/usage/index.md)
-- [Markdown](/en/usage/markdown.md)
+- [Markdown](/en/usage/markdown.md): In addition to the standard gfm syntax, Doom includes some additional Markdown extension features.
 - [MDX](/en/usage/mdx.md): Using MDX enables dynamic content display and content reuse
 - [Permission Description Document](/en/usage/permission.md)
-- [Referencing Documents](/en/usage/reference.md)
-- [index](/en/login.md)
+- [Referencing Documents](/en/usage/reference.md): In Markdown files: In MDX files: The name above refers to the name of the referenced document. For more information, please refer to Document Reference Configuration. If the referenced document content uses static resources from a remote repository, the related static resources will be automatically stored locally in the <root>/public/_remotes/<name> directory. Here is an example using <!-- reference-start#ref -->:
+- [](/en/login.md)

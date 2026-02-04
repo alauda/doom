@@ -13,10 +13,16 @@
 - [ArtifactCleanupRun - K8sCrd](/apis/crds/ArtifactCleanupRun-K8sCrd.md)
 - [ArtifactCleanupRun](/apis/crds/ArtifactCleanupRun.md)
 - [CRDs](/apis/crds/index.md)
-- [APIs](/apis/index.md)
+- [APIs](/apis/index.md): The apis entry is only for demonstration purposes. It is not a real API.
 - [Kubernetes APIs](/apis/kubernetes_apis/index.md)
-- [DaemonSet [apps/v1]](/apis/kubernetes_apis/workload/daemonset.md)
-- [Deployments [apps/v1]](/apis/kubernetes_apis/workload/deployment.md)
+- [DaemonSet [apps/v1]](/apis/kubernetes_apis/workload/daemonset.md): <K8sAPI
+name="io.k8s.api.apps.v1.DaemonSet"
+pathPrefix="/kubernetes/{cluster}"
+/>
+- [Deployments [apps/v1]](/apis/kubernetes_apis/workload/deployment.md): <K8sAPI
+name="io.k8s.api.apps.v1.Deployment"
+pathPrefix="/kubernetes/{cluster}"
+/>
 - [Workload APIs](/apis/kubernetes_apis/workload/index.md)
 - [CodeQuality](/apis/references/CodeQuality.md)
 - [CodeQualityBranch](/apis/references/CodeQualityBranch.md)
@@ -26,14 +32,14 @@
 - [Status](/apis/references/Status.md)
 - [Common References](/apis/references/index.md)
 - [开始](/start.md)
-- [API 文档](/usage/api.md)
+- [API 文档](/usage/api.md): 根据实际业务，我们一般会将 API 分为标准 K8S API, 高级 API 和 CRD (Custom Resource Definition) 三种，因此在目录结构上一般分为：
 - [配置](/usage/configuration.md): 配置 `doom` 文档工具
 - [约定](/usage/convention.md): 基于“约定大于配置”的理念，我们约定文档的组织方式以自动生成左侧边栏等相关内容
 - [部署](/usage/deploy.md): 文档项目开发完成后我们可以将项目部署到 ACP 平台
 - [国际化](/usage/i18n.md): 在可复用组件中使用国际化文本
 - [使用](/usage/index.md)
-- [Markdown](/usage/markdown.md)
+- [Markdown](/usage/markdown.md): 除了标准的 gfm 语法外，Doom 内置了一些额外的 Markdown 扩展功能。
 - [MDX](/usage/mdx.md): 使用 MDX 可以实现动态内容的展示和内容复用
 - [权限说明文档](/usage/permission.md)
-- [引用文档](/usage/reference.md)
-- [index](/login.md)
+- [引用文档](/usage/reference.md): 在 Markdown 文件中： 在 MDX 文件中： 上述 name 为引用文档的名称，参考引用文档配置，如果引用的文档内容使用了远程仓库图片静态资源，相关静态资源将自动存储在本地 <root>/public/_remotes/<name> 目录下。 以下为使用 <!-- reference-start#ref --> 的实例：
+- [](/login.md)
