@@ -155,7 +155,7 @@ export const exportCommand = new Command('export')
                 pageIndex += page.count
               }
 
-              const genereateOutlinesFromSidebar = (
+              const generateOutlinesFromSidebar = (
                 sidebarItems: DoomSidebar[],
               ) => {
                 const result: PDFOutlineInfo[] = []
@@ -164,7 +164,7 @@ export const exportCommand = new Command('export')
                   let children: PDFOutlineInfo[] | undefined
 
                   if ('items' in item) {
-                    children = genereateOutlinesFromSidebar(item.items)
+                    children = generateOutlinesFromSidebar(item.items)
                   }
 
                   if ('link' in item && item.link) {
@@ -182,7 +182,7 @@ export const exportCommand = new Command('export')
                 return result
               }
 
-              return genereateOutlinesFromSidebar(sidebarItems)
+              return generateOutlinesFromSidebar(sidebarItems)
             }
           : undefined,
         ...commonOptions,
