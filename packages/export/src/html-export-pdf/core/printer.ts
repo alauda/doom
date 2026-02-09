@@ -278,7 +278,7 @@ export class Printer extends EventEmitter {
       }
 
       return {
-        data: await pdfDoc.save(),
+        doc: pdfDoc,
         outlineNodes,
       }
     } catch (error) {

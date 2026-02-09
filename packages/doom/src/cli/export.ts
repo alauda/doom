@@ -6,6 +6,7 @@ import {
   type GeneratePdfOptions,
   type Page,
   type PDFOutline,
+  type PDFOutlineInfo,
 } from '@alauda/doom-export'
 import { logger, serve } from '@rspress/core'
 import { removeLeadingSlash } from '@rspress/shared'
@@ -51,7 +52,7 @@ export const exportCommand = new Command('export')
     'Export the documentation as PDF, `apis/**` and `*/apis/**` routes will be ignored automatically',
   )
   .argument('[root]', 'Root directory of the documentation')
-  .option('-H, --host [host]', 'Serve host name')
+  .option('-H, --host [host]', 'Serve host name', 'localhost')
   .option('-P, --port [port]', 'Serve port number', '4173')
   .action(async function (root?: string) {
     setNodeEnv('production')
@@ -91,7 +92,7 @@ export const exportCommand = new Command('export')
     const commonOptions: Omit<GeneratePdfOptions, 'pages' | 'outFile'> = {
       tempDir,
       port: port!,
-      host: host || 'localhost',
+      host: host!,
       outDir,
       pdfOptions: {
         margin: {
@@ -127,13 +128,63 @@ export const exportCommand = new Command('export')
     const exportPdf = async (
       sidebarItems: DoomSidebar[],
       lang = config.lang!,
-      options?: Partial<GeneratePdfOptions>,
+      options?: Partial<GeneratePdfOptions> & { overrideOutlines?: boolean },
     ) => {
       const pages = collectPages(sidebarItems, config.base!)
-      const pdfOptions = {
+      const pdfOptions: GeneratePdfOptions = {
         pages,
         outFile: getPdfName(lang, config.userBase, config.title),
         cleanupTempDir: false,
+        customOutlines: options?.overrideOutlines
+          ? (pages) => {
+              const pageMap = new Map<
+                string,
+                {
+                  title: string
+                  pageIndex: number
+                }
+              >()
+
+              let pageIndex = 0
+
+              for (const page of pages) {
+                pageMap.set(page.url.split('?')[0], {
+                  title: page.title,
+                  pageIndex,
+                })
+                pageIndex += page.count
+              }
+
+              const generateOutlinesFromSidebar = (
+                sidebarItems: DoomSidebar[],
+              ) => {
+                const result: PDFOutlineInfo[] = []
+
+                for (const item of sidebarItems) {
+                  let children: PDFOutlineInfo[] | undefined
+
+                  if ('items' in item) {
+                    children = generateOutlinesFromSidebar(item.items)
+                  }
+
+                  if ('link' in item && item.link) {
+                    const page = pageMap.get(`${item.link}.html`)
+                    if (page != null) {
+                      result.push({
+                        title: page.title || item.text,
+                        to: page.pageIndex,
+                        children,
+                      })
+                    }
+                  }
+                }
+
+                return result
+              }
+
+              return generateOutlinesFromSidebar(sidebarItems)
+            }
+          : undefined,
         ...commonOptions,
         ...options,
       }
@@ -193,12 +244,16 @@ export const exportCommand = new Command('export')
         const sidebarItems = sidebar![
           config.lang === lang ? '/' : `/${lang}`
         ] as DoomSidebar[]
-        const { allOutlines } = await exportPdf(sidebarItems, lang)
+        const { allOutlines } = await exportPdf(sidebarItems, lang, {
+          overrideOutlines: true,
+        })
         await exportEntries(sidebarItems, allOutlines, lang)
       }
     } else {
       const sidebarItems = themeConfig.sidebar!['/'] as DoomSidebar[]
-      const { allOutlines } = await exportPdf(sidebarItems)
+      const { allOutlines } = await exportPdf(sidebarItems, undefined, {
+        overrideOutlines: true,
+      })
       await exportEntries(sidebarItems, allOutlines)
     }
 

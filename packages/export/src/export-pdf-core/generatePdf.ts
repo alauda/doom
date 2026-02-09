@@ -18,6 +18,7 @@ import {
   mergePDF,
   type NormalizePage,
   type PDFOutline,
+  type PDFOutlineInfo,
 } from './utils/index.ts'
 
 export interface GeneratePdfOptions {
@@ -34,6 +35,7 @@ export interface GeneratePdfOptions {
   pdfOutlines?: boolean
   urlOrigin?: string
   printerOptions?: PrinterOptions
+  customOutlines?: (pages: NormalizePage[]) => PDFOutlineInfo[]
 }
 
 /**
@@ -53,6 +55,7 @@ export async function generatePdf({
   pdfOutlines = true,
   launchOptions,
   printerOptions,
+  customOutlines,
 }: GeneratePdfOptions) {
   await fs.mkdir(tempDir, { recursive: true })
 
@@ -78,6 +81,7 @@ export async function generatePdf({
         ? `${userURLOrigin}${page.path}`
         : `http://${localURLOrigin}${page.path}`,
       pagePath: path.resolve(tempDir, `${page.key}.pdf`),
+      count: 0,
     }
   })
 
@@ -122,8 +126,10 @@ export async function generatePdf({
       })
     }
 
-    for (const { location, pagePath, title } of normalizePages) {
-      const { data, outlineNodes } = await printer.pdf(
+    for (const page_ of normalizePages) {
+      const { location, pagePath, title } = page_
+
+      const { doc, outlineNodes } = await printer.pdf(
         location,
         {
           format: 'A4',
@@ -134,11 +140,15 @@ export async function generatePdf({
 
       if (pdfOutlines) {
         allOutlines.push([getUrlLink(location).link, outlineNodes])
+        page_.count = doc.getPageCount()
       }
 
-      await writeFileSafe(pagePath, data)
+      await writeFileSafe(pagePath, await doc.save())
 
-      singleBar.increment(1, { headTitle: title || (await page.title()) })
+      singleBar.increment(1, {
+        headTitle: (page_.title =
+          outlineNodes[0]?.title || title || (await page.title())),
+      })
     }
 
     singleBar.stop()
@@ -151,6 +161,7 @@ export async function generatePdf({
     outFile,
     outDir,
     allOutlines,
+    customOutlines,
   )
 
   const message = `Exported to ${yellow(exportedPath)}\n`
