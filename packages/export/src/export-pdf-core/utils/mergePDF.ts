@@ -17,12 +17,14 @@ import { mergePDFs } from '../../merge-pdfs/index.js'
 
 import { convertPathToPosix } from './convertPathToPosix.ts'
 import { getUrlLink } from './getUrlLink.ts'
+import { setOutlines, type PDFOutlineInfo } from './setOutlines.ts'
 
 export interface NormalizePage {
   location: string
   pagePath: string
   url: string
-  title?: string
+  title: string
+  count: number
 }
 
 export type PDFOutline = [path: string, outlineNodes: OutlineNode[]]
@@ -67,16 +69,14 @@ const extractOutlines = (doc: PDFDocument, dictObj: PDFObject) => {
 /**
  * Based on @see https://github.com/Hopding/pdf-lib/issues/867#issuecomment-827570106
  */
-export const replaceLinksWithOutline = async (
-  pdfData: Buffer | Uint8Array,
+export const replaceLinksWithOutline = (
+  pdfDoc: PDFDocument,
   pdfOutlines: PDFOutline[],
 ) => {
-  const pdfDoc = await PDFDocument.load(pdfData)
-
   const outlinesObj = pdfDoc.catalog.get(asPDFName('Outlines'))
 
   if (!outlinesObj) {
-    return pdfData
+    return
   }
 
   const outlineMap = new WeakMap<OutlineNode, Outline>()
@@ -158,7 +158,6 @@ export const replaceLinksWithOutline = async (
       }
     }
   }
-  return pdfDoc.save()
 }
 
 /**
@@ -173,6 +172,7 @@ export async function mergePDF(
   outFile: string,
   outDir: string,
   pdfOutlines: PDFOutline[],
+  customOutlines?: (pages: NormalizePage[]) => PDFOutlineInfo[],
 ) {
   const saveDirPath = path.resolve(outDir)
 
@@ -197,7 +197,16 @@ export async function mergePDF(
           return convertPathToPosix(relativePagePath)
         }),
       )
-      pdfData = await replaceLinksWithOutline(pdfData, pdfOutlines)
+
+      const pdfDoc = await PDFDocument.load(pdfData)
+
+      replaceLinksWithOutline(pdfDoc, pdfOutlines)
+
+      if (typeof customOutlines === 'function') {
+        setOutlines(pdfDoc, customOutlines(pages))
+      }
+
+      pdfData = await pdfDoc.save()
     } else {
       const merger = new PDFMerger()
       for (const { pagePath } of pages) {
