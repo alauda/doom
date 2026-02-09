@@ -1,5 +1,11 @@
 # @alauda/doom-export
 
+## 0.4.0
+
+### Minor Changes
+
+- [#251](https://github.com/alauda/doom/pull/251) [`0e868d5`](https://github.com/alauda/doom/commit/0e868d584edf5c0a4d6f6cc5574e0fe0e80885e4) Thanks [@JounQin](https://github.com/JounQin)! - feat: override bookmarks according to sidebar config
+
 ## 0.3.1
 
 ### Patch Changes
