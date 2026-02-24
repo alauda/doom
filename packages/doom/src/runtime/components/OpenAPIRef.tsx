@@ -204,12 +204,12 @@ export const OpenAPIRef = ({
 
   let uid = useUid()
 
-  const innerUid = useId()
+  const innerId = useId()
 
   if (isCommonRef) {
     uid = '' // common references do not need a unique ID
   } else if (!uid) {
-    uid = innerUid
+    uid = innerId
   }
 
   // eslint-disable-next-line react-hooks/preserve-manual-memoization
