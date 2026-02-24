@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.20.3
+
+### Patch Changes
+
+- [#260](https://github.com/alauda/doom/pull/260) [`9e8c0f7`](https://github.com/alauda/doom/commit/9e8c0f70af88fc10c65eac90ce2db87eb1a792c7) Thanks [@JounQin](https://github.com/JounQin)! - fix: downgrade rspress for rsbuild regression temporarily
+
 ## 1.20.2
 
 ### Patch Changes
