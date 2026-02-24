@@ -11,6 +11,7 @@ import {
 import { logger, serve } from '@rspress/core'
 import { removeLeadingSlash } from '@rspress/shared'
 import { Command } from 'commander'
+import { groupBy } from 'es-toolkit'
 import { cyan, yellow } from 'yoctocolors'
 
 import {
@@ -128,14 +129,32 @@ export const exportCommand = new Command('export')
     const exportPdf = async (
       sidebarItems: DoomSidebar[],
       lang = config.lang!,
-      options?: Partial<GeneratePdfOptions> & { overrideOutlines?: boolean },
+      {
+        includeApisPages,
+        overrideOutlines,
+        ...options
+      }: Partial<GeneratePdfOptions> & {
+        includeApisPages?: boolean
+        overrideOutlines?: boolean
+      } = {},
     ) => {
-      const pages = collectPages(sidebarItems, config.base!)
+      let pages = collectPages(sidebarItems, config.base!)
+      if (!includeApisPages) {
+        pages = pages.filter((page) =>
+          themeConfig.locales?.length
+            ? !themeConfig.locales.some((l) =>
+                page.key.startsWith(
+                  l.lang === config.lang ? 'apis/' : `${l.lang}/apis/`,
+                ),
+              )
+            : !page.key.startsWith('apis/'),
+        )
+      }
       const pdfOptions: GeneratePdfOptions = {
         pages,
         outFile: getPdfName(lang, config.userBase, config.title),
         cleanupTempDir: false,
-        customOutlines: options?.overrideOutlines
+        customOutlines: overrideOutlines
           ? (pages) => {
               const pageMap = new Map<
                 string,
@@ -189,7 +208,7 @@ export const exportCommand = new Command('export')
         ...options,
       }
       logger.start(
-        `Exporting ${options ? 'custom' : 'all'} ${lang} language documents with ${pages.length} pages into ${yellow(pdfOptions.outFile)}...`,
+        `Exporting ${lang} language documents with ${pages.length} pages into ${yellow(pdfOptions.outFile)}...`,
       )
       return generatePdf(pdfOptions)
     }
@@ -218,12 +237,21 @@ export const exportCommand = new Command('export')
 
     const exportItems = config.export || []
 
+    // eslint-disable-next-line @typescript-eslint/no-useless-default-assignment
+    const { apis = [], nonApis = [] } = groupBy(exportItems, (item) =>
+      (item.scope as string[]).some(
+        (s) => s.startsWith('apis/') || s.startsWith('*/apis/'),
+      )
+        ? 'apis'
+        : 'nonApis',
+    )
+
     const exportEntries = async (
       sidebarItems: DoomSidebar[],
       allOutlines: PDFOutline[],
       lang = config.lang!,
     ) => {
-      for (const item of exportItems) {
+      for (const item of nonApis) {
         const found = findScopeFactory(item.flattenScope!)(sidebarItems)
         if (!found?.size) {
           logger.warn(
@@ -234,6 +262,20 @@ export const exportCommand = new Command('export')
         const foundSidebarItems = [...found]
         await exportPdf(foundSidebarItems, lang, {
           allOutlines,
+          outFile: `${item.name || (foundSidebarItems.find((it) => it.link?.endsWith('/index')) ?? foundSidebarItems[0]).text}-${lang}.pdf`,
+        })
+      }
+      for (const item of apis) {
+        const found = findScopeFactory(item.flattenScope!)(sidebarItems)
+        if (!found?.size) {
+          logger.warn(
+            `Cannot find matched scope \`${cyan((item.scope as string[]).join(', '))}\` for lang ${lang}, skip exporting`,
+          )
+          continue
+        }
+        const foundSidebarItems = [...found]
+        await exportPdf(foundSidebarItems, lang, {
+          includeApisPages: true,
           outFile: `${item.name || (foundSidebarItems.find((it) => it.link?.endsWith('/index')) ?? foundSidebarItems[0]).text}-${lang}.pdf`,
         })
       }

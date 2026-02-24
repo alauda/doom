@@ -3,8 +3,6 @@ import path from 'node:path'
 import { type RspressPlugin, type UserConfig } from '@rspress/core'
 import { addTrailingSlash } from '@rspress/shared'
 
-import { APIS_ROUTES } from '../../shared/index.ts'
-
 import { combineWalkResult } from './utils.ts'
 import { walk } from './walk.ts'
 
@@ -224,15 +222,6 @@ export const autoSidebar = async (
   if (export_ || excludeRoutes.length) {
     const exclude = (route.exclude ??= [])
     exclude.push(...excludeRoutes)
-    // only exclude apis routes for sidebar but not site data to avoid dead links
-    if (
-      export_ &&
-      !onlyIncludeRoutes.some(
-        (route) => route.startsWith('apis/') || route.startsWith('*/apis/'),
-      )
-    ) {
-      excludeRoutes.push(...APIS_ROUTES)
-    }
   }
   config.themeConfig ??= {}
   config.themeConfig.locales ??= config.locales || []
