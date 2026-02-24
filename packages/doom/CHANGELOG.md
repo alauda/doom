@@ -1,5 +1,13 @@
 # @alauda/doom
 
+## 1.20.1
+
+### Patch Changes
+
+- [#256](https://github.com/alauda/doom/pull/256) [`1c29eb4`](https://github.com/alauda/doom/commit/1c29eb42d8af8e9a08acc010594d7c837d7128e0) Thanks [@JounQin](https://github.com/JounQin)! - fix: known callouts style issue
+
+- [#254](https://github.com/alauda/doom/pull/254) [`ec5cc23`](https://github.com/alauda/doom/commit/ec5cc23e7f0be7a2a330fc0cf6afd6531bb8608f) Thanks [@JounQin](https://github.com/JounQin)! - feat: support exporting API docs in groups
+
 ## 1.20.0
 
 ### Minor Changes
