@@ -62,7 +62,7 @@
     "commander": "^14.0.3",
     "ejs": "^4.0.1",
     "es-toolkit": "^1.44.0",
-    "eslint": "^10.0.2",
+    "eslint": "^9.39.3",
     "eslint-plugin-mdx": "^3.6.2",
     "globals": "^17.3.0",
     "html-tag-names": "^2.1.0",
