@@ -184,7 +184,7 @@ export const OpenAPIPath = ({
 
   const pathPrefix = pathPrefix_ ?? (virtual.pathPrefix || '')
 
-  const uid = useId()
+  const id = useId()
 
   const slugger = useMemo(() => new BananaSlug(), [])
 
@@ -212,7 +212,7 @@ export const OpenAPIPath = ({
   }
 
   return (
-    <UidProvider value={uid}>
+    <UidProvider value={id}>
       <HeadingTitle slugger={slugger} level={2}>
         {pathPrefix}
         {path}

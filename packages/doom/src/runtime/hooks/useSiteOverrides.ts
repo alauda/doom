@@ -95,7 +95,7 @@ const fetchSiteOverrides = async (
     }))
     .catch(() => ({ terms: namedTerms }))
     .then(({ terms, ...siteOverrides }) => {
-      const normalizedSiteOverrides = normalizeOverrides(siteOverrides)
+      normalizedSiteOverrides = normalizeOverrides(siteOverrides)
       const normalizedTerms = normalizeOverrides(terms)
       return {
         en: { ...normalizedSiteOverrides.en, terms: normalizedTerms.en },
