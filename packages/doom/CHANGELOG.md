@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.20.2
+
+### Patch Changes
+
+- [#257](https://github.com/alauda/doom/pull/257) [`77a3d81`](https://github.com/alauda/doom/commit/77a3d8151ef5e97ac8180d41e4d48455f7cb5900) Thanks [@JounQin](https://github.com/JounQin)! - fix: stick on eslint 9 temporarily
+
 ## 1.20.1
 
 ### Patch Changes
