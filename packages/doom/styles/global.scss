@@ -94,14 +94,21 @@ td {
   }
 }
 
-.doom-tabs {
-  div.language-mdx {
-    margin: 24px 0;
-  }
-
-  .language-mdx {
+.rp-tabs {
+  .rp-codeblock {
     // https://github.com/web-infra-dev/rspress/blob/bbe6476c8394f9c95a98fd791f0614481f89d878/packages/theme-default/src/styles/code.css#L6
     --rp-code-block-bg: #{color.adjust($color: #f6f8fa, $lightness: -5%)};
+  }
+
+  &__content {
+    &__item {
+      padding: 0 1rem;
+    }
+
+    > :first-child,
+    > :last-child {
+      margin: 1rem 0;
+    }
   }
 }
 
@@ -178,12 +185,17 @@ td {
     &-nav,
     &-doc-layout__menu,
     &-doc-footer,
+    &-doc-layout__outline,
     &-doc-layout__sidebar {
       display: none;
     }
 
-    &-doc-layout__doc-container {
-      padding: 0;
+    &-doc-layout__doc {
+      max-width: unset;
+
+      &-container {
+        padding: 0;
+      }
     }
 
     &-toc-item--active .rp-toc-item__text {

@@ -2,6 +2,8 @@ import { IconDown, SvgWrapper } from '@rspress/core/theme'
 import { clsx } from 'clsx'
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
 
+import { useIsPrint } from '../runtime/index.js'
+
 import classes from '@alauda/doom/styles/auto-expandable.module.scss'
 
 export const AutoExpandable = ({
@@ -13,19 +15,21 @@ export const AutoExpandable = ({
 }) => {
   const ref = useRef<HTMLDivElement>(null)
 
+  const isPrint = useIsPrint()
+
   const [expandable, setExpandable] = useState(false)
 
   const [expanded, setExpanded] = useState(false)
 
   useEffect(() => {
-    if (!ref.current) {
+    if (!ref.current || isPrint) {
       return
     }
     if (ref.current.scrollHeight > threshold) {
       // eslint-disable-next-line react-hooks/set-state-in-effect, @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
       setExpandable(true)
     }
-  }, [threshold])
+  }, [threshold, isPrint])
 
   const onExpandChange = useCallback(() => {
     setExpanded((expanded) => !expanded)
