@@ -1,10 +1,12 @@
 {
   "prod_intro": {
     "en": "Product Introduction",
-    "zh": "产品介绍"
+    "zh": "产品介绍",
+    "ru": "Введение в продукт"
   },
   "nested": {
     "en": "Nested",
-    "zh": "嵌套"
+    "zh": "嵌套",
+    "ru": "Вложенный"
   }
 }

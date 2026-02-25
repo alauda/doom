@@ -2,6 +2,7 @@
   &:has(.expandable :global .rp-codeblock) {
     border: var(--rp-code-block-border);
     border-radius: var(--rp-radius);
+    overflow: hidden;
   }
 
   .expandable {
