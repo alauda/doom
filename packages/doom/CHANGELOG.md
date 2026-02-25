@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.20.4
+
+### Patch Changes
+
+- [#262](https://github.com/alauda/doom/pull/262) [`b134ee1`](https://github.com/alauda/doom/commit/b134ee1b19c944bdeeaf874e19101c6c97319f6e) Thanks [@JounQin](https://github.com/JounQin)! - fix: container style issue
+
 ## 1.20.3
 
 ### Patch Changes
