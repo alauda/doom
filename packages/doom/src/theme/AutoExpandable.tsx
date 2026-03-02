@@ -2,7 +2,7 @@ import { IconDown, SvgWrapper } from '@rspress/core/theme'
 import { clsx } from 'clsx'
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
 
-import { useIsPrint } from '../runtime/index.js'
+import { useIsPrint, useTranslation } from '../runtime/index.js'
 
 import classes from '@alauda/doom/styles/auto-expandable.module.scss'
 
@@ -13,6 +13,8 @@ export const AutoExpandable = ({
   threshold?: number
   children: ReactNode
 }) => {
+  const t = useTranslation()
+
   const ref = useRef<HTMLDivElement>(null)
 
   const isPrint = useIsPrint()
@@ -22,12 +24,32 @@ export const AutoExpandable = ({
   const [expanded, setExpanded] = useState(false)
 
   useEffect(() => {
-    if (!ref.current || isPrint) {
+    const containerEl = ref.current
+
+    if (!containerEl || isPrint) {
       return
     }
-    if (ref.current.scrollHeight > threshold) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect, @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
-      setExpandable(true)
+
+    let observer: MutationObserver | undefined
+
+    const calculate = () => {
+      if (containerEl.scrollHeight > threshold) {
+        // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
+        setExpandable(true)
+      }
+      observer?.disconnect()
+    }
+
+    calculate()
+
+    const tabItem = containerEl.closest('.rp-tabs__content__item--hidden')
+
+    if (tabItem) {
+      observer = new MutationObserver(calculate)
+      observer.observe(tabItem, { attributeFilter: ['class'] })
+      return () => {
+        observer?.disconnect()
+      }
     }
   }, [threshold, isPrint])
 
@@ -36,9 +58,10 @@ export const AutoExpandable = ({
   }, [])
 
   return (
-    <div ref={ref} className={classes.container}>
+    <div ref={ref} className={`${classes.container} auto-expandable`}>
       <div
         className={clsx({
+          expandable,
           [classes.expandable]: expandable,
           [classes.expanded]: expanded,
         })}
@@ -53,7 +76,7 @@ export const AutoExpandable = ({
             onClick={onExpandChange}
             aria-expanded={expanded}
           >
-            Show {expanded ? 'less' : 'more'}
+            {t(`show_${expanded ? 'less' : 'more'}`)}
             <SvgWrapper
               className={clsx(classes.arrow, {
                 [classes.expanded]: expanded,

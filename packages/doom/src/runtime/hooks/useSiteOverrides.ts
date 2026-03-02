@@ -95,13 +95,13 @@ const fetchSiteOverrides = async (
     }))
     .catch(() => ({ terms: namedTerms }))
     .then(({ terms, ...siteOverrides }) => {
-      normalizedSiteOverrides = normalizeOverrides(siteOverrides)
+      const overrides = normalizeOverrides(siteOverrides)
       const normalizedTerms = normalizeOverrides(terms)
-      return {
-        en: { ...normalizedSiteOverrides.en, terms: normalizedTerms.en },
-        zh: { ...normalizedSiteOverrides.zh, terms: normalizedTerms.zh },
-        ru: { ...normalizedSiteOverrides.ru, terms: normalizedTerms.ru },
-      }
+      return (normalizedSiteOverrides = {
+        en: { ...overrides.en, terms: normalizedTerms.en },
+        zh: { ...overrides.zh, terms: normalizedTerms.zh },
+        ru: { ...overrides.ru, terms: normalizedTerms.ru },
+      })
     }))
 }
 

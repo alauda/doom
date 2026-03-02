@@ -1,4 +1,6 @@
 .container {
+  margin: 1rem 0;
+
   &:has(.expandable :global .rp-codeblock) {
     border: var(--rp-code-block-border);
     border-radius: var(--rp-radius);
