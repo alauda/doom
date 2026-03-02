@@ -58,6 +58,8 @@ const en = {
   view_more_related_docs: 'View more related docs',
   view_less_related_docs: 'View less related docs',
   new_chat: 'New Chat',
+  show_more: 'Show more',
+  show_less: 'Show less',
 }
 
 export type Translation = typeof en
@@ -117,6 +119,8 @@ const zh: Translation = {
   view_more_related_docs: '查看更多相关文档',
   view_less_related_docs: '查看更少相关文档',
   new_chat: '新会话',
+  show_more: '显示更多',
+  show_less: '显示更少',
 }
 
 const ru: Translation = {
@@ -179,6 +183,8 @@ const ru: Translation = {
   view_more_related_docs: 'Посмотреть больше связанных документов',
   view_less_related_docs: 'Посмотреть меньше связанных документов',
   new_chat: 'Новый чат',
+  show_more: 'Показать больше',
+  show_less: 'Показать меньше',
 }
 
 export const TRANSLATIONS = { en, zh, ru }

@@ -65,3 +65,146 @@ The following specifications must be followed during the internationalization tr
 <AcpApisOverview />
 
 <Term name="product" textCase="capitalize" />
+
+<Tabs>
+  <Tab label="CentOS / RedHat">
+  **Check:**
+  ```bash
+  for x in \
+      docker docker-client docker-common docker-latest \
+      podman-docker podman \
+      runc \
+      containernetworking-plugins \
+      apptainer \
+      kubernetes kubernetes-master kubernetes-node kubernetes-client \
+      ; do
+      rpm -qa | grep -F "$x"
+  done
+  ```
+
+**Uninstall:**
+
+```bash
+for x in \
+    docker docker-client docker-common docker-latest \
+    podman-docker podman \
+    runc \
+    containernetworking-plugins \
+    apptainer \
+    kubernetes kubernetes-master kubernetes-node kubernetes-client \
+    ; do
+    yum remove "$x"
+done
+```
+
+  </Tab>
+
+  <Tab label="Ubuntu">
+  **Check:**
+  ```bash
+  for x in \
+      docker.io \
+      podman-docker \
+      containerd \
+      rootlesskit \
+      rkt \
+      containernetworking-plugins \
+      kubernetes \
+      ; do
+      dpkg-query -l | grep -F "$x"
+  done
+
+for x in \
+ kubernetes-worker \
+ kubectl kube-proxy kube-scheduler kube-controller-manager kube-apiserver \
+ k8s microk8s \
+ kubeadm kubelet \
+ ; do
+snap list | grep -F "$x"
+done
+
+````
+
+**Uninstall:**
+```bash
+for x in \
+    docker.io \
+    podman-docker \
+    containerd \
+    rootlesskit \
+    rkt \
+    containernetworking-plugins \
+    kubernetes \
+    ; do
+    apt-get purge "$x"
+done
+
+for x in \
+    kubernetes-worker \
+    kubectl kube-proxy kube-scheduler kube-controller-manager kube-apiserver \
+    k8s microk8s \
+    kubeadm kubelet \
+    ; do
+    snap remove --purge "$x"
+done
+````
+
+  </Tab>
+
+  <Tab label="Kylin">
+  **Check:**
+  ```bash
+  for x in \
+      docker docker-client docker-common \
+      docker-engine docker-proxy docker-runc \
+      podman-docker podman \
+      containernetworking-plugins \
+      apptainer \
+      containerd \
+      kubernetes kubernetes-master kubernetes-node kubernetes-client kubernetes-kubeadm \
+      ; do
+      rpm -qa | grep -F "$x"
+  done
+  ```
+
+**Uninstall:**
+
+```bash
+for x in \
+    docker docker-client docker-common \
+    docker-engine docker-proxy docker-runc \
+    podman-docker podman \
+    containernetworking-plugins \
+    apptainer \
+    containerd \
+    kubernetes kubernetes-master kubernetes-node kubernetes-client kubernetes-kubeadm \
+    ; do
+    yum remove "$x"
+done
+```
+
+  </Tab>
+</Tabs>
+
+:::info
+
+```yaml
+apiVersion: v1
+data:
+  authUser: <base64-encoded-auth-user>
+  authKey: <base64-encoded-auth-key>
+  endpoint: <base64-encoded-endpoint>
+kind: Secret
+metadata:
+  name: <auth-secret-name>
+  namespace: cpaas-system
+type: Opaque
+```
+
+:::
+
+| Parameter      | Description                                                                                                                                                                                                                    |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| .data.authUser | DCS platform API user login name (base64-encoded)                                                                                                                                                                              |
+| .data.authKey  | DCS platform API user login password (base64-encoded)                                                                                                                                                                          |
+| .data.endpoint | DCS platform API address with http or https protocol (base64-encoded). **Note**: The default API port for DCS platform is 7443 (not the common 8443). If your environment uses a custom port, confirm with your administrator. |

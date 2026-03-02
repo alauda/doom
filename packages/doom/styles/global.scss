@@ -94,24 +94,6 @@ td {
   }
 }
 
-.rp-tabs {
-  .rp-codeblock {
-    // https://github.com/web-infra-dev/rspress/blob/bbe6476c8394f9c95a98fd791f0614481f89d878/packages/theme-default/src/styles/code.css#L6
-    --rp-code-block-bg: #{color.adjust($color: #f6f8fa, $lightness: -5%)};
-  }
-
-  &__content {
-    &__item {
-      padding: 0 1rem;
-    }
-
-    > :first-child,
-    > :last-child {
-      margin: 1rem 0;
-    }
-  }
-}
-
 .doom-auto-toc {
   @media (min-width: 1280px) {
     display: none;
@@ -132,12 +114,25 @@ td {
   }
 }
 
-.dark .doom-tabs .language-mdx {
-  // https://github.com/web-infra-dev/rspress/blob/bbe6476c8394f9c95a98fd791f0614481f89d878/packages/theme-default/src/styles/code.css#L17
-  --rp-code-block-bg: #{color.adjust($color: #242424, $lightness: 5%)};
+.auto-expandable:has(> div > .rp-codeblock) {
+  background-color: var(--rp-code-block-bg);
+}
+
+.dark .rp-tabs .auto-expandable:has(> div > .rp-codeblock) {
+  // https://github.com/web-infra-dev/rspress/blob/66fe9f837f4cecab859b57f6f10efc6d4d413f1b/packages/core/src/theme/styles/vars/base-vars.css#L26
+  --rp-code-block-bg: #{color.adjust($color: #121212, $lightness: 5%)};
+}
+
+.rp-tabs .auto-expandable:has(> div > .rp-codeblock) {
+  // https://github.com/web-infra-dev/rspress/blob/66fe9f837f4cecab859b57f6f10efc6d4d413f1b/packages/core/src/theme/styles/vars/base-vars.css#L3
+  --rp-code-block-bg: #{color.adjust($color: #fff, $lightness: -5%)};
 }
 
 .rp {
+  &-hover-group__item--active a[target='_blank']:after {
+    display: none;
+  }
+
   &-sidebar-item {
     word-break: break-word;
   }
@@ -177,6 +172,23 @@ td {
       counter-increment: section;
       content: counters(section, '.') '. ';
     }
+  }
+
+  &-tabs {
+    &__content {
+      &__item {
+        padding: 0 1rem;
+
+        > :first-child,
+        > :last-child {
+          margin: 1rem 0;
+        }
+      }
+    }
+  }
+
+  &-table-scroll-container:has(> table) {
+    margin: 1rem 0;
   }
 }
 

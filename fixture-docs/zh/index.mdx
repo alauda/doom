@@ -38,3 +38,123 @@ import { useI18n } from '@rspress/core/runtime'
 <AcpApisOverview />
 
 <Term name="product" textCase="capitalize" />
+
+<Tabs>
+  <Tab label="CentOS / RedHat">
+  **Check:**
+  ```bash
+  for x in \
+      docker docker-client docker-common docker-latest \
+      podman-docker podman \
+      runc \
+      containernetworking-plugins \
+      apptainer \
+      kubernetes kubernetes-master kubernetes-node kubernetes-client \
+      ; do
+      rpm -qa | grep -F "$x"
+  done
+  ```
+
+**Uninstall:**
+
+```bash
+for x in \
+    docker docker-client docker-common docker-latest \
+    podman-docker podman \
+    runc \
+    containernetworking-plugins \
+    apptainer \
+    kubernetes kubernetes-master kubernetes-node kubernetes-client \
+    ; do
+    yum remove "$x"
+done
+```
+
+  </Tab>
+
+  <Tab label="Ubuntu">
+  **Check:**
+  ```bash
+  for x in \
+      docker.io \
+      podman-docker \
+      containerd \
+      rootlesskit \
+      rkt \
+      containernetworking-plugins \
+      kubernetes \
+      ; do
+      dpkg-query -l | grep -F "$x"
+  done
+
+for x in \
+ kubernetes-worker \
+ kubectl kube-proxy kube-scheduler kube-controller-manager kube-apiserver \
+ k8s microk8s \
+ kubeadm kubelet \
+ ; do
+snap list | grep -F "$x"
+done
+
+````
+
+**Uninstall:**
+```bash
+for x in \
+    docker.io \
+    podman-docker \
+    containerd \
+    rootlesskit \
+    rkt \
+    containernetworking-plugins \
+    kubernetes \
+    ; do
+    apt-get purge "$x"
+done
+
+for x in \
+    kubernetes-worker \
+    kubectl kube-proxy kube-scheduler kube-controller-manager kube-apiserver \
+    k8s microk8s \
+    kubeadm kubelet \
+    ; do
+    snap remove --purge "$x"
+done
+````
+
+  </Tab>
+
+  <Tab label="Kylin">
+  **Check:**
+  ```bash
+  for x in \
+      docker docker-client docker-common \
+      docker-engine docker-proxy docker-runc \
+      podman-docker podman \
+      containernetworking-plugins \
+      apptainer \
+      containerd \
+      kubernetes kubernetes-master kubernetes-node kubernetes-client kubernetes-kubeadm \
+      ; do
+      rpm -qa | grep -F "$x"
+  done
+  ```
+
+**Uninstall:**
+
+```bash
+for x in \
+    docker docker-client docker-common \
+    docker-engine docker-proxy docker-runc \
+    podman-docker podman \
+    containernetworking-plugins \
+    apptainer \
+    containerd \
+    kubernetes kubernetes-master kubernetes-node kubernetes-client kubernetes-kubeadm \
+    ; do
+    yum remove "$x"
+done
+```
+
+  </Tab>
+</Tabs>
