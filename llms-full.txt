@@ -17527,10 +17527,10 @@ Note关于 DevOps 连接器 APIs 的使用方法介绍请参考 [DevOps 连接�
 <Term name="alaudaCloudLink" />
 ```
 
-
-
-
-
+灵雀云
+灵雀云容器平台
+ACP
+[Alauda Cloud](https://cloud.alauda.cn)
 #### `props`
 
 - `name`: 内置术语名称，参考[动态挂载配置文件](/usage/deploy.md#overrides)
