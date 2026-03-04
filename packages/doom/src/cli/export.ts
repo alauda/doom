@@ -187,7 +187,9 @@ export const exportCommand = new Command('export')
                   }
 
                   if ('link' in item && item.link) {
-                    const page = pageMap.get(`${item.link}.html`)
+                    const page = pageMap.get(
+                      `${config.base}${removeLeadingSlash(item.link)}.html`,
+                    )
                     if (page != null) {
                       result.push({
                         title: page.title || item.text,
