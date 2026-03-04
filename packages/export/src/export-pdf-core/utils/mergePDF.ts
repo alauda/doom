@@ -203,7 +203,10 @@ export async function mergePDF(
       replaceLinksWithOutline(pdfDoc, pdfOutlines)
 
       if (typeof customOutlines === 'function') {
-        setOutlines(pdfDoc, customOutlines(pages))
+        const newOutlines = customOutlines(pages)
+        if (newOutlines.length > 0) {
+          setOutlines(pdfDoc, newOutlines)
+        }
       }
 
       pdfData = await pdfDoc.save()
