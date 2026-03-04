@@ -1,5 +1,11 @@
 # @alauda/doom-export
 
+## 0.4.1
+
+### Patch Changes
+
+- [#269](https://github.com/alauda/doom/pull/269) [`a83d00a`](https://github.com/alauda/doom/commit/a83d00ae6a35f4fbd21ff6e65c51fedd0fb66085) Thanks [@JounQin](https://github.com/JounQin)! - fix: pdf missing outlines
+
 ## 0.4.0
 
 ### Minor Changes

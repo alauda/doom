@@ -1,5 +1,18 @@
 # @alauda/doom
 
+## 1.20.5
+
+### Patch Changes
+
+- [#267](https://github.com/alauda/doom/pull/267) [`67d4d9a`](https://github.com/alauda/doom/commit/67d4d9aa940a743bc6c1ab03fcf0f9065a659d89) Thanks [@JounQin](https://github.com/JounQin)! - fix: known UI issues
+
+- [`b43548a`](https://github.com/alauda/doom/commit/b43548a17b5167fb1db6475e20200f2de94667df) Thanks [@renovate[bot]](https://github.com/renovate%5Bbot%5D)! - fix(deps): update all dependencies, rspress/shiki, etc.
+
+- [#269](https://github.com/alauda/doom/pull/269) [`a83d00a`](https://github.com/alauda/doom/commit/a83d00ae6a35f4fbd21ff6e65c51fedd0fb66085) Thanks [@JounQin](https://github.com/JounQin)! - fix: pdf missing outlines
+
+- Updated dependencies [[`a83d00a`](https://github.com/alauda/doom/commit/a83d00ae6a35f4fbd21ff6e65c51fedd0fb66085)]:
+  - @alauda/doom-export@0.4.1
+
 ## 1.20.4
 
 ### Patch Changes
