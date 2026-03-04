@@ -15,14 +15,8 @@
 - [CRDs](/en/apis/crds/index.md)
 - [APIs](/en/apis/index.md): The apis entry is only for demonstration purposes. It is not a real API.
 - [Kubernetes APIs](/en/apis/kubernetes_apis/index.md)
-- [DaemonSet [apps/v1]](/en/apis/kubernetes_apis/workload/daemonset.md): <K8sAPI
-name="io.k8s.api.apps.v1.DaemonSet"
-pathPrefix="/kubernetes/{cluster}"
-/>
-- [Deployments [apps/v1]](/en/apis/kubernetes_apis/workload/deployment.md): <K8sAPI
-name="io.k8s.api.apps.v1.Deployment"
-pathPrefix="/kubernetes/{cluster}"
-/>
+- [DaemonSet [apps/v1]](/en/apis/kubernetes_apis/workload/daemonset.md): <K8sAPI name="io.k8s.api.apps.v1.DaemonSet" pathPrefix="/kubernetes/{cluster}" />
+- [Deployments [apps/v1]](/en/apis/kubernetes_apis/workload/deployment.md): <K8sAPI name="io.k8s.api.apps.v1.Deployment" pathPrefix="/kubernetes/{cluster}" />
 - [Workload APIs](/en/apis/kubernetes_apis/workload/index.md)
 - [CodeQuality](/en/apis/references/CodeQuality.md)
 - [CodeQualityBranch](/en/apis/references/CodeQualityBranch.md)
