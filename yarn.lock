@@ -78,7 +78,6 @@ __metadata:
     remark-mdx: "npm:^3.1.1"
     remark-message-control: "npm:^8.0.0"
     remark-stringify: "npm:^11.0.0"
-    shiki: "npm:^4.0.1"
     simple-git: "npm:^3.32.3"
     string-width: "npm:^8.2.0"
     swagger2openapi: "npm:^7.0.8"

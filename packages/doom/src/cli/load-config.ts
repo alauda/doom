@@ -324,7 +324,7 @@ const getCommonConfig = async ({
           return mergeConfig(rspackConfig, {
             ignoreWarnings: [
               {
-                module: /\bflexsearch\b/,
+                module: /\b(flexsearch|vscode-languageserver-types)\b/,
               },
             ],
             resolve: {
@@ -474,27 +474,42 @@ export async function loadConfig(
   })
 
   base = commonConfig.base!
+  lang = commonConfig.lang!
+  root = commonConfig.root!
 
   const mergedConfig = mergeRsbuildConfig(commonConfig, config, {
     base,
-    lang: commonConfig.lang,
-    root: commonConfig.root,
+    lang,
+    root,
   })
 
-  mergedConfig.export =
-    config.export &&
-    (await Promise.all(
-      config.export.map(
+  if (export_) {
+    const hasLocales = !!commonConfig.themeConfig!.locales?.length
+
+    const apiEntries = await glob(
+      `${hasLocales ? commonConfig.lang! + '/' : ''}apis/{advanced_apis,crds,kubernetes_apis}/*/index.{md,mdx}`,
+      { cwd: root },
+    )
+
+    const apiExports = apiEntries.map((entry) => {
+      const scope = entry.replace(/index\.mdx?$/, '')
+      return {
+        name: path.basename(path.dirname(entry)) + '_apis',
+        scope: hasLocales ? scope.replace(lang, '*') : scope,
+      }
+    })
+
+    mergedConfig.export = await Promise.all(
+      [...(config.export ?? []), ...apiExports].map(
         async (item) =>
           ({
             ...item,
             scope: Array.isArray(item.scope) ? item.scope : [item.scope],
-            flattenScope: (
-              await glob(item.scope, { cwd: commonConfig.root })
-            ).filter(isDoc),
+            flattenScope: (await glob(item.scope, { cwd: root })).filter(isDoc),
           }) satisfies ExportItem,
       ),
-    ))
+    )
+  }
 
   if (base && prefix) {
     mergedConfig.base = (mergedConfig.prefix = normalizeSlash(prefix)) + base

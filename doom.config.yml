@@ -24,10 +24,8 @@ api:
     io.k8s.apimachinery.pkg.apis.meta.v1.Patch: https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/patch/
     io.k8s.apimachinery.pkg.apis.meta.v1.Status: https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/status/
 export:
-  - name: Usage
+  - name: usage
     scope: '*/usage/*'
-  - name: Event APIs
-    scope: '*/apis/advanced_apis/event/*'
 permission:
   functionresources:
     - docs/shared/functionresources/*.yaml

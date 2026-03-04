@@ -51,7 +51,7 @@ const getClosestSidebar_ = (
         matched = undefined
       }
 
-      if (exportItem.flattenScope!.includes(sidebar._fileKey)) {
+      if (exportItem.flattenScope?.includes(sidebar._fileKey)) {
         matched = {
           sidebar,
           exportItem,
