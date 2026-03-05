@@ -129,7 +129,7 @@ td {
 }
 
 .rp {
-  &-hover-group__item--active a[target='_blank']:after {
+  &-nav-menu .rp-hover-group__item--active a[target='_blank']:after {
     display: none;
   }
 
