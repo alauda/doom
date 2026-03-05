@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.21.0
+
+### Minor Changes
+
+- [#271](https://github.com/alauda/doom/pull/271) [`4e049bd`](https://github.com/alauda/doom/commit/4e049bd5972abecd81e942dcaee24e3933e00ff7) Thanks [@JounQin](https://github.com/JounQin)! - feat: support adding api export entries automatically
+
 ## 1.20.5
 
 ### Patch Changes
