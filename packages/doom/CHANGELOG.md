@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.21.3
+
+### Patch Changes
+
+- [#280](https://github.com/alauda/doom/pull/280) [`d9a1cef`](https://github.com/alauda/doom/commit/d9a1cef1da28ab5e861e4672502ae2d53c7118b4) Thanks [@JounQin](https://github.com/JounQin)! - fix: @eslint/js not found issue
+
 ## 1.21.2
 
 ### Patch Changes
