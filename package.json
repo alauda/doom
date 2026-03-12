@@ -33,7 +33,6 @@
   "devDependencies": {
     "@changesets/changelog-github": "^0.6.0",
     "@changesets/cli": "^2.30.0",
-    "@eslint/js": "^10.0.1",
     "@swc-node/register": "^1.11.1",
     "@swc/core": "^1.15.18",
     "@types/cli-progress": "^3.11.6",
