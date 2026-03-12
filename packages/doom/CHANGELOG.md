@@ -1,5 +1,13 @@
 # @alauda/doom
 
+## 1.21.1
+
+### Patch Changes
+
+- [#275](https://github.com/alauda/doom/pull/275) [`4759bd4`](https://github.com/alauda/doom/commit/4759bd452f5e45edbbf9fa032495875e797c793c) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): update rspress, ejs dependencies
+
+- [#276](https://github.com/alauda/doom/pull/276) [`fdac5c3`](https://github.com/alauda/doom/commit/fdac5c355fe20ff84237d7a8b4de0c09a4ad09a8) Thanks [@JounQin](https://github.com/JounQin)! - fix: always calculate export
+
 ## 1.21.0
 
 ### Minor Changes
