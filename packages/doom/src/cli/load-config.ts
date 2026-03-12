@@ -483,33 +483,31 @@ export async function loadConfig(
     root,
   })
 
-  if (export_) {
-    const hasLocales = !!commonConfig.themeConfig!.locales?.length
+  const hasLocales = !!commonConfig.themeConfig!.locales?.length
 
-    const apiEntries = await glob(
-      `${hasLocales ? commonConfig.lang! + '/' : ''}apis/{advanced_apis,crds,kubernetes_apis}/*/index.{md,mdx}`,
-      { cwd: root },
-    )
+  const apiEntries = await glob(
+    `${hasLocales ? commonConfig.lang! + '/' : ''}apis/{advanced_apis,crds,kubernetes_apis}/*/index.{md,mdx}`,
+    { cwd: root },
+  )
 
-    const apiExports = apiEntries.map((entry) => {
-      const scope = entry.replace(/index\.mdx?$/, '')
-      return {
-        name: path.basename(path.dirname(entry)) + '_apis',
-        scope: hasLocales ? scope.replace(lang, '*') : scope,
-      }
-    })
+  const apiExports = apiEntries.map((entry) => {
+    const scope = entry.replace(/index\.mdx?$/, '')
+    return {
+      name: path.basename(path.dirname(entry)) + '_apis',
+      scope: hasLocales ? scope.replace(lang, '*') : scope,
+    }
+  })
 
-    mergedConfig.export = await Promise.all(
-      [...(config.export ?? []), ...apiExports].map(
-        async (item) =>
-          ({
-            ...item,
-            scope: Array.isArray(item.scope) ? item.scope : [item.scope],
-            flattenScope: (await glob(item.scope, { cwd: root })).filter(isDoc),
-          }) satisfies ExportItem,
-      ),
-    )
-  }
+  mergedConfig.export = await Promise.all(
+    [...(config.export ?? []), ...apiExports].map(
+      async (item) =>
+        ({
+          ...item,
+          scope: Array.isArray(item.scope) ? item.scope : [item.scope],
+          flattenScope: (await glob(item.scope, { cwd: root })).filter(isDoc),
+        }) satisfies ExportItem,
+    ),
+  )
 
   if (base && prefix) {
     mergedConfig.base = (mergedConfig.prefix = normalizeSlash(prefix)) + base
