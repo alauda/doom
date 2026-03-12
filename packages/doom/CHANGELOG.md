@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.21.5
+
+### Patch Changes
+
+- [#284](https://github.com/alauda/doom/pull/284) [`b55d473`](https://github.com/alauda/doom/commit/b55d4733ec23640e0f7f9614c554894f5fd7fc15) Thanks [@JounQin](https://github.com/JounQin)! - fix: downgrade to ESLint 9 temporarily
+
 ## 1.21.4
 
 ### Patch Changes
