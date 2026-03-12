@@ -26,6 +26,7 @@ __metadata:
     "@alauda/doom-export": "npm:^0.4.1"
     "@cspell/eslint-plugin": "npm:^9.7.0"
     "@eslint-react/eslint-plugin": "npm:^2.13.0"
+    "@eslint/js": "npm:^10.0.1"
     "@inquirer/prompts": "npm:^8.3.0"
     "@openapi-contrib/openapi-schema-to-json-schema": "npm:^5.1.0"
     "@rsbuild/plugin-react": "npm:^1.4.6"
@@ -4321,7 +4322,6 @@ __metadata:
   dependencies:
     "@changesets/changelog-github": "npm:^0.6.0"
     "@changesets/cli": "npm:^2.30.0"
-    "@eslint/js": "npm:^10.0.1"
     "@swc-node/register": "npm:^1.11.1"
     "@swc/core": "npm:^1.15.18"
     "@types/cli-progress": "npm:^3.11.6"
