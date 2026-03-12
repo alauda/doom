@@ -1,0 +1,1 @@
+"use strict";(self.rspackChunkalauda_doom=self.rspackChunkalauda_doom||[]).push([["8245"],{98644(a,e,r){r.d(e,{createArchitectureServices:()=>s.S});var s=r(85877);r(4459)}}]);
