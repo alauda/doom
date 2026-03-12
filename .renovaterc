@@ -4,7 +4,9 @@
     "github>1stG/configs"
   ],
   "ignoreDeps": [
+    "@eslint/js",
     "@playwright/browser-chromium",
+    "eslint",
     "playwright"
   ]
 }
