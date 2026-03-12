@@ -40,6 +40,7 @@ __metadata:
     "@shikijs/transformers": "npm:^4.0.2"
     "@total-typescript/ts-reset": "npm:^0.6.1"
     "@types/react": "npm:^19.2.14"
+    "@typescript-eslint/utils": "npm:^8.57.0"
     ab64: "npm:^0.1.6"
     chokidar: "npm:^5.0.0"
     clsx: "npm:^2.1.1"
@@ -3950,7 +3951,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/utils@npm:8.57.0, @typescript-eslint/utils@npm:^8.55.0":
+"@typescript-eslint/utils@npm:8.57.0, @typescript-eslint/utils@npm:^8.55.0, @typescript-eslint/utils@npm:^8.57.0":
   version: 8.57.0
   resolution: "@typescript-eslint/utils@npm:8.57.0"
   dependencies:
