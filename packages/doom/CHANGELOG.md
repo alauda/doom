@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.21.4
+
+### Patch Changes
+
+- [#282](https://github.com/alauda/doom/pull/282) [`25ed5d4`](https://github.com/alauda/doom/commit/25ed5d4c795d00149856686c59c577425bc0055a) Thanks [@JounQin](https://github.com/JounQin)! - fix: add @typescript-eslint/utils as dependency for eslint 10 compatibility across plugins
+
 ## 1.21.3
 
 ### Patch Changes
