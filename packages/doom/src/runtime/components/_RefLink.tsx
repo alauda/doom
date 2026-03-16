@@ -14,7 +14,8 @@ export const RefLink = ({ $ref }: RefLinkProps) => {
     return null
   }
 
-  const ref = $ref.replace('/components/schemas/', '')
+  // #/components/schemas/, #/components/requestBodies/, etc.
+  const ref = $ref.replace(/^#\/components\/[^/]+\//, '#')
   const plainRef = ref.slice(1)
   const refName = modelName(plainRef)
   return (

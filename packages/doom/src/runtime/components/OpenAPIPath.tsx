@@ -148,7 +148,7 @@ const getRefsForPath = (
 
   const collectRefs = (schema: object) => {
     if ('$ref' in schema && typeof schema.$ref === 'string') {
-      const ref = schema.$ref.replace('#/components/schemas/', '')
+      const ref = schema.$ref.replace(/^#\/components\/[^/]+\//, '')
       if (!knownRefs[ref]) {
         refs.add(ref)
         schema = resolveRef(openapi, schema.$ref)
@@ -294,17 +294,15 @@ export const OpenAPIPath = ({
         )
       })}
 
-      {refs?.map((ref) => {
-        return (
-          <OpenAPIRef
-            key={ref}
-            schema={ref}
-            openapiPath={openapiPath}
-            isCommonRef={false}
-            collectRefs={false}
-          />
-        )
-      })}
+      {refs?.map((ref) => (
+        <OpenAPIRef
+          key={ref}
+          schema={ref}
+          openapiPath={openapiPath}
+          isCommonRef={false}
+          collectRefs={false}
+        />
+      ))}
     </UidProvider>
   )
 }
