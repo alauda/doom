@@ -176,7 +176,7 @@ const getRefsForSchema = (
 
   const collectRefs = (schema: object) => {
     if ('$ref' in schema && typeof schema.$ref === 'string') {
-      const ref = schema.$ref.replace('#/components/schemas/', '')
+      const ref = schema.$ref.replace(/^#\/components\/[^/]+\//, '')
       if (!knownRefs[ref]) {
         refs.add(ref)
         schema = resolveRef(openapi, schema.$ref)
@@ -218,7 +218,8 @@ export const OpenAPIRef = ({
       if (openapiPath_ && pathname !== openapiPath_) {
         continue
       }
-      const schemaItem = openapi.components?.schemas?.[schema]
+      const schemaItem = resolveRef(openapi, schema)
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (schemaItem) {
         return [schemaItem, openapi, pathname]
       }
