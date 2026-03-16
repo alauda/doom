@@ -1,12 +1,12 @@
 # Search
 
-## [#](#_r_8o_-platformloggingalaudaiov2logssearch)/platform/logging.alauda.io/v2/logs/search
+## [#](#_r_e6_-platformloggingalaudaiov2logssearch)/platform/logging.alauda.io/v2/logs/search
 
-### [#](#_r_8o_--log-search)`get` Log Search
+### [#](#_r_e6_--log-search)`get` Log Search
 
 Search logs with authentication.
 
-#### [#](#_r_8o_-parameters)Parameters
+#### [#](#_r_e6_-parameters)Parameters
 
 - `start` (*in query*): `number` required Start time of the time range.
 
@@ -60,13 +60,13 @@ Search logs with authentication.
 
 
 
-#### [#](#_r_8o_-response)Response
+#### [#](#_r_e6_-response)Response
 
-- `200` `object`: Successful log search response*Properties:*- `items`: `[][LogEntry](#_r_8o_-LogEntry)`
+- `200` `object`: Successful log search response*Properties:*- `items`: `[][LogEntry](#_r_e6_-LogEntry)`
 
 
 
-## [#](#_r_8o_-LogEntry)LogEntry
+## [#](#_r_e6_-LogEntry)LogEntry
 
 - `time`: `number`Time of the log entry.
 
@@ -130,13 +130,13 @@ Search logs with authentication.
 
 
 
-## [#](#_r_8q_-platformloggingalaudaiov2clustersclusterlogssearch)/platform/logging.alauda.io/v2/clusters/{cluster}/logs/search
+## [#](#_r_e8_-platformloggingalaudaiov2clustersclusterlogssearch)/platform/logging.alauda.io/v2/clusters/{cluster}/logs/search
 
-### [#](#_r_8q_--log-search-by-cluster)`get` Log Search by Cluster
+### [#](#_r_e8_--log-search-by-cluster)`get` Log Search by Cluster
 
 Search logs by cluster with authentication.
 
-#### [#](#_r_8q_-parameters)Parameters
+#### [#](#_r_e8_-parameters)Parameters
 
 - `cluster` (*in path*): `string` required Name of the cluster.
 
@@ -190,13 +190,13 @@ Search logs by cluster with authentication.
 
 
 
-#### [#](#_r_8q_-response)Response
+#### [#](#_r_e8_-response)Response
 
-- `200` `object`: Successful log search response*Properties:*- `items`: `[][LogEntry](#_r_8q_-LogEntry)`
+- `200` `object`: Successful log search response*Properties:*- `items`: `[][LogEntry](#_r_e8_-LogEntry)`
 
 
 
-## [#](#_r_8q_-LogEntry)LogEntry
+## [#](#_r_e8_-LogEntry)LogEntry
 
 - `time`: `number`Time of the log entry.
 
@@ -260,13 +260,13 @@ Search logs by cluster with authentication.
 
 
 
-## [#](#_r_8s_-platformloggingalaudaiov2projectsprojectclustersclusternamespacesnamespacelogssearch)/platform/logging.alauda.io/v2/projects/{project}/clusters/{cluster}/namespaces/{namespace}/logs/search
+## [#](#_r_ea_-platformloggingalaudaiov2projectsprojectclustersclusternamespacesnamespacelogssearch)/platform/logging.alauda.io/v2/projects/{project}/clusters/{cluster}/namespaces/{namespace}/logs/search
 
-### [#](#_r_8s_--log-search-by-project-cluster-and-namespace)`get` Log Search by Project, Cluster and Namespace
+### [#](#_r_ea_--log-search-by-project-cluster-and-namespace)`get` Log Search by Project, Cluster and Namespace
 
 Search logs within a specific project, cluster, and namespace with authentication.
 
-#### [#](#_r_8s_-parameters)Parameters
+#### [#](#_r_ea_-parameters)Parameters
 
 - `project` (*in path*): `string` required Name of the project.
 
@@ -326,13 +326,13 @@ Search logs within a specific project, cluster, and namespace with authenticatio
 
 
 
-#### [#](#_r_8s_-response)Response
+#### [#](#_r_ea_-response)Response
 
-- `200` `object`: Successful log search response*Properties:*- `items`: `[][LogEntry](#_r_8s_-LogEntry)`
+- `200` `object`: Successful log search response*Properties:*- `items`: `[][LogEntry](#_r_ea_-LogEntry)`
 
 
 
-## [#](#_r_8s_-LogEntry)LogEntry
+## [#](#_r_ea_-LogEntry)LogEntry
 
 - `time`: `number`Time of the log entry.
 

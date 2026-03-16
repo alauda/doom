@@ -1,10 +1,10 @@
 # CodeQualityTaskSummary
 
-## [#](#_r_84_-pluginsv1alpha1templatecodequalitytasktask-idsummary)/plugins/v1alpha1/template/codeQuality/task/{task-id}/summary
+## [#](#_r_ar_-pluginsv1alpha1templatecodequalitytasktask-idsummary)/plugins/v1alpha1/template/codeQuality/task/{task-id}/summary
 
-### [#](#_r_84_--getsummarybytaskid)`get` GetSummaryByTaskID
+### [#](#_r_ar_--getsummarybytaskid)`get` GetSummaryByTaskID
 
-#### [#](#_r_84_-parameters)Parameters
+#### [#](#_r_ar_-parameters)Parameters
 
 - `task-id` (*in path*): `string` required code scan task id
 
@@ -19,11 +19,11 @@
 
 
 
-#### [#](#_r_84_-response)Response
+#### [#](#_r_ar_-response)Response
 
-- `200` [CodeQualityTaskMetrics](#_r_84_-v1alpha1.CodeQualityTaskMetrics): OK
+- `200` [CodeQualityTaskMetrics](#_r_ar_-v1alpha1.CodeQualityTaskMetrics): OK
 
-## [#](#_r_84_-v1alpha1.CodeQualityTaskMetrics)CodeQualityTaskMetrics
+## [#](#_r_ar_-v1alpha1.CodeQualityTaskMetrics)CodeQualityTaskMetrics
 
 - `apiVersion`: `string`APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: [https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources](https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources)
 
@@ -34,35 +34,35 @@
 - `metadata`: [ObjectMeta](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/object-meta/)ObjectMeta is metadata that all persisted resources must have, which includes all objects users must create.
 
 
-- `spec`: [CodeQualityTaskMetricsSpec](#_r_84_-v1alpha1.CodeQualityTaskMetricsSpec)
-- `status`: [CodeQualityTaskMetricsStatus](#_r_84_-v1alpha1.CodeQualityTaskMetricsStatus)
+- `spec`: [CodeQualityTaskMetricsSpec](#_r_ar_-v1alpha1.CodeQualityTaskMetricsSpec)
+- `status`: [CodeQualityTaskMetricsStatus](#_r_ar_-v1alpha1.CodeQualityTaskMetricsStatus)
 
-## [#](#_r_84_-v1alpha1.CodeQualityTaskMetricsSpec)CodeQualityTaskMetricsSpec
+## [#](#_r_ar_-v1alpha1.CodeQualityTaskMetricsSpec)CodeQualityTaskMetricsSpec
 
-- `component`: [CodeQualityTaskMetricsSpecComponent](#_r_84_-v1alpha1.CodeQualityTaskMetricsSpecComponent)
+- `component`: [CodeQualityTaskMetricsSpecComponent](#_r_ar_-v1alpha1.CodeQualityTaskMetricsSpecComponent)
 - `metrics`: `map[string]string`
-- `summary`: [CodeQualityTaskMetricsSpecSummary](#_r_84_-v1alpha1.CodeQualityTaskMetricsSpecSummary)
-- `task`: [CodeQualityTaskMetricsSpecTask](#_r_84_-v1alpha1.CodeQualityTaskMetricsSpecTask)
+- `summary`: [CodeQualityTaskMetricsSpecSummary](#_r_ar_-v1alpha1.CodeQualityTaskMetricsSpecSummary)
+- `task`: [CodeQualityTaskMetricsSpecTask](#_r_ar_-v1alpha1.CodeQualityTaskMetricsSpecTask)
 
-## [#](#_r_84_-v1alpha1.CodeQualityTaskMetricsSpecComponent)CodeQualityTaskMetricsSpecComponent
+## [#](#_r_ar_-v1alpha1.CodeQualityTaskMetricsSpecComponent)CodeQualityTaskMetricsSpecComponent
 
 - `id`: `string`
 - `key`: `string`
 - `name`: `string`
 
-## [#](#_r_84_-v1alpha1.CodeQualityTaskMetricsSpecSummary)CodeQualityTaskMetricsSpecSummary
+## [#](#_r_ar_-v1alpha1.CodeQualityTaskMetricsSpecSummary)CodeQualityTaskMetricsSpecSummary
 
-- `new`: [CodeQualityTaskMetricsSpecSummaryOverview](#_r_84_-v1alpha1.CodeQualityTaskMetricsSpecSummaryOverview)
-- `total`: [CodeQualityTaskMetricsSpecSummaryOverview](#_r_84_-v1alpha1.CodeQualityTaskMetricsSpecSummaryOverview)
+- `new`: [CodeQualityTaskMetricsSpecSummaryOverview](#_r_ar_-v1alpha1.CodeQualityTaskMetricsSpecSummaryOverview)
+- `total`: [CodeQualityTaskMetricsSpecSummaryOverview](#_r_ar_-v1alpha1.CodeQualityTaskMetricsSpecSummaryOverview)
 
-## [#](#_r_84_-v1alpha1.CodeQualityTaskMetricsSpecSummaryOverview)CodeQualityTaskMetricsSpecSummaryOverview
+## [#](#_r_ar_-v1alpha1.CodeQualityTaskMetricsSpecSummaryOverview)CodeQualityTaskMetricsSpecSummaryOverview
 
 - `bugs`: `string`
 - `codeSmells`: `string`
 - `duplicatedLinesDensity`: `string`
 - `vulnerabilities`: `string`
 
-## [#](#_r_84_-v1alpha1.CodeQualityTaskMetricsSpecTask)CodeQualityTaskMetricsSpecTask
+## [#](#_r_ar_-v1alpha1.CodeQualityTaskMetricsSpecTask)CodeQualityTaskMetricsSpecTask
 
 - `analysisId`: `string`
 - `executedAt`: `string`
@@ -71,7 +71,7 @@
 - `startedAt`: `string`
 - `status`: `string`
 
-## [#](#_r_84_-v1alpha1.CodeQualityTaskMetricsStatus)CodeQualityTaskMetricsStatus
+## [#](#_r_ar_-v1alpha1.CodeQualityTaskMetricsStatus)CodeQualityTaskMetricsStatus
 
 - `reason`: `string`
 - `status`: `string`

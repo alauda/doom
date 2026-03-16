@@ -1,10 +1,10 @@
 # Projects
 
-## [#](#_r_8u_-pluginsv1alpha1templateprojects)/plugins/v1alpha1/template/projects
+## [#](#_r_ec_-pluginsv1alpha1templateprojects)/plugins/v1alpha1/template/projects
 
-### [#](#_r_8u_--listprojects)`get` ListProjects
+### [#](#_r_ec_--listprojects)`get` ListProjects
 
-#### [#](#_r_8u_-parameters)Parameters
+#### [#](#_r_ec_-parameters)Parameters
 
 - `itemsPerPage` (*in query*): `string` items to be returned in a page
 
@@ -13,28 +13,28 @@
 
 
 
-#### [#](#_r_8u_-response)Response
+#### [#](#_r_ec_-response)Response
 
-- `200` [ProjectList](#_r_8u_-v1alpha1.ProjectList): OK
+- `200` [ProjectList](#_r_ec_-v1alpha1.ProjectList): OK
 
-### [#](#_r_8u_--createproject)`post` CreateProject
+### [#](#_r_ec_--createproject)`post` CreateProject
 
-#### [#](#_r_8u_-request-body)Request Body
+#### [#](#_r_ec_-request-body)Request Body
 
-[Project](#_r_8u_-v1alpha1.Project)required
+[Project](#_r_ec_-v1alpha1.Project)required
 
-#### [#](#_r_8u_-response-1)Response
+#### [#](#_r_ec_-response-1)Response
 
-- `201` [Project](#_r_8u_-v1alpha1.Project): Project Created
+- `201` [Project](#_r_ec_-v1alpha1.Project): Project Created
 
-## [#](#_r_8u_-v1alpha1.ProjectList)ProjectList
+## [#](#_r_ec_-v1alpha1.ProjectList)ProjectList
 
 TypeMeta describes an individual object in an API response or request with strings representing the type of the object and its API schema version. Structures that are versioned or persisted should inline TypeMeta.
 
 - `apiVersion`: `string`APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: [https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources](https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources)
 
 
-- `items`: `[][Project](#_r_8u_-v1alpha1.Project)`
+- `items`: `[][Project](#_r_ec_-v1alpha1.Project)`
 - `kind`: `string`Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: [https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds](https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds)
 
 
@@ -42,7 +42,7 @@ TypeMeta describes an individual object in an API response or request with strin
 
 
 
-## [#](#_r_8u_-v1alpha1.Project)Project
+## [#](#_r_ec_-v1alpha1.Project)Project
 
 - `apiVersion`: `string`APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: [https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources](https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources)
 
@@ -53,25 +53,25 @@ TypeMeta describes an individual object in an API response or request with strin
 - `metadata`: [ObjectMeta](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/object-meta/)ObjectMeta is metadata that all persisted resources must have, which includes all objects users must create.
 
 
-- `spec`: [ProjectSpec](#_r_8u_-v1alpha1.ProjectSpec)
+- `spec`: [ProjectSpec](#_r_ec_-v1alpha1.ProjectSpec)
 
-## [#](#_r_8u_-v1alpha1.ProjectSpec)ProjectSpec
+## [#](#_r_ec_-v1alpha1.ProjectSpec)ProjectSpec
 
-- `access`: [Addressable](#_r_8u_-v1.Addressable)
-- `address`: [Addressable](#_r_8u_-v1.Addressable)
-- `extendedAddresses`: `map[string][Addressable](#_r_8u_-v1.Addressable)`
+- `access`: [Addressable](#_r_ec_-v1.Addressable)
+- `address`: [Addressable](#_r_ec_-v1.Addressable)
+- `extendedAddresses`: `map[string][Addressable](#_r_ec_-v1.Addressable)`
 - `limited`: `boolean`
-- `namespaceRefs`: `[][ObjectReference](#_r_8u_-v1.ObjectReference)`
+- `namespaceRefs`: `[][ObjectReference](#_r_ec_-v1.ObjectReference)`
 - `properties`: `string`
 - `public`: `boolean`
 - `readOnly`: `boolean`
 - `subType`: `string`
 
-## [#](#_r_8u_-v1.Addressable)Addressable
+## [#](#_r_ec_-v1.Addressable)Addressable
 
 - `url`: `string`
 
-## [#](#_r_8u_-v1.ObjectReference)ObjectReference
+## [#](#_r_ec_-v1.ObjectReference)ObjectReference
 
 ObjectReference contains enough information to let you inspect or modify the referred object.
 

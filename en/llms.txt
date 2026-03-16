@@ -5,6 +5,8 @@
 - [CodeQualityTaskSummary](/en/apis/advanced_apis/codeQualityTaskSummary.md)
 - [Event APIs](/en/apis/advanced_apis/event/index.md)
 - [Search](/en/apis/advanced_apis/event/search.md)
+- [ApplicationSet](/en/apis/advanced_apis/gitops/applicationsets.md)
+- [GitOps APIs](/en/apis/advanced_apis/gitops/index.md)
 - [Advanced APIs](/en/apis/advanced_apis/index.md)
 - [Aggregation](/en/apis/advanced_apis/log/aggregation.md)
 - [Log APIs](/en/apis/advanced_apis/log/index.md)
