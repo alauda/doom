@@ -50,7 +50,7 @@ import { SourceCode } from '@rspress/core/theme'
     `doc/zh` 生成目标语言文档的目录结构。
   </Directive>
 
-### `ExternalSite`
+### `ExternalSite` \{#external-site}
 
 引用外部站点组件
 

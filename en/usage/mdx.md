@@ -32,27 +32,27 @@ Document overview component used to display the document directory
 
 ### `Directive`
 
-Sometimes, due to nested indentation, the [custom container](https://rspress.dev/zh/guide/basic/use-mdx#%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AE%B9%E5%99%A8) syntax may fail. You can use the `Directive` component as a replacement.
+Sometimes, due to nested indentation, the [custom container](https://rspress.dev/zh/guide/basic/use-mdx#%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AE%B9%E5%99%A8) syntax may fail. The `Directive` component can be used as a replacement.
 
 ```mdx
-- The directory structure of multilingual documents (`doc/en`) needs to be exactly the same as the documents under the `doc/zh` directory to ensure that the links in multilingual documents are identical except for the language identifier.
+- The directory structure of multilingual documents (`doc/en`) needs to be exactly the same as the documents under the `doc/zh` directory to ensure that the links of multilingual documents are identical except for the language identifier.
 
   <Directive type="danger" title="Note">
-    If you are using automated translation tools, you do not need to worry about
-    this issue. The automated translation tools will automatically generate the
+    If automated translation tools are used for translation, this issue can be
+    ignored, as the automated translation tools will automatically generate the
     target language document directory structure based on `doc/zh`.
   </Directive>
 ```
 
-- The directory structure of multilingual documents (`doc/en`) needs to be exactly the same as the documents under the `doc/zh` directory to ensure that the links in multilingual documents are identical except for the language identifier.
+- The directory structure of multilingual documents (`doc/en`) needs to be exactly the same as the documents under the `doc/zh` directory to ensure that the links of multilingual documents are identical except for the language identifier.
 
   <Directive type="danger" title="Note">
-    If you are using automated translation tools, you do not need to worry about
-    this issue. The automated translation tools will automatically generate the
+    If automated translation tools are used for translation, this issue can be
+    ignored, as the automated translation tools will automatically generate the
     target language document directory structure based on `doc/zh`.
   </Directive>
 
-### `ExternalSite`
+### `ExternalSite` \{#external-site}
 
 Component for referencing external sites
 
@@ -76,11 +76,11 @@ In mdx, `<ExternalSiteLink name="connectors" href="link" children="Content" />` 
 
 ```mdx
 <ExternalSiteLink name="connectors" href="link">
-  Content {/* will be rendered inside a `p` element */}
+  Content {/* This will be rendered inside a `p` element */}
 </ExternalSiteLink>
 ```
 
-If you do not want the text to be rendered inside a `p` element, you can pass it using the `children` attribute as shown in the example above.
+If you do not want the text to be rendered inside a `p` element, you can pass it using the `children` prop as shown in the example above.
 
 :::
 
@@ -166,7 +166,7 @@ key: value
 
 ## Custom Component Reuse
 
-According to the [convention](/en/usage/convention.md), we can extract reusable content into the `shared` directory, then import it where needed, for example:
+According to the [convention](/en/usage/convention.md), we can extract reusable content into the `shared` directory and then import it where needed, for example:
 
 ```mdx
 import CommonContent from './shared/CommonContent.mdx'
@@ -174,7 +174,7 @@ import CommonContent from './shared/CommonContent.mdx'
 <CommonContent />
 ```
 
-If you need to use more [runtime](https://rspress.dev/zh/api/client-api/api-runtime) related APIs, you can implement components with `.jsx/.tsx` and then import and use them in `.mdx` files.
+If you need to use more [runtime](https://rspress.dev/zh/api/client-api/api-runtime) related APIs, you can implement components in `.jsx/.tsx` and then import and use them in `.mdx` files.
 
 ```tsx
 // shared/CommonContent.tsx
