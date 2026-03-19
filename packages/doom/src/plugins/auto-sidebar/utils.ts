@@ -3,9 +3,8 @@ import path from 'node:path'
 
 import { logger } from '@rspress/core'
 import type { NavItem } from '@rspress/shared'
-import { loadFrontMatter } from '@rspress/shared/node-utils'
+import { extractTextAndId, loadFrontMatter } from '@rspress/shared/node-utils'
 
-import { extractTextAndId } from '../../shared/index.ts'
 import { pathExists } from '../../utils/index.ts'
 
 import type { DoomSidebar } from './walk.ts'

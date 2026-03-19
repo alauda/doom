@@ -12,7 +12,13 @@ import doom from '@alauda/doom/eslint'
 
 export default config(
   {
-    ignores: ['dist', '**/lib', '**/pyodide'],
+    ignores: [
+      'dist',
+      '**/lib',
+      '**/pyodide',
+      // main language is en which is different with docs
+      'fixture-docs/zh',
+    ],
   },
   ...(await doom(new URL('docs', import.meta.url))),
   eslint.configs.recommended,

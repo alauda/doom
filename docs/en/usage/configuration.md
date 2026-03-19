@@ -1,7 +1,7 @@
 ---
 description: Configure the `doom` documentation tool
 weight: 1
-sourceSHA: c1e663048b6acbe0fdfddf42fbe19d2b8b683171573c82ef39722a357054cc84
+sourceSHA: 27119a6df4df3d54a1dc267141c4501c4b0358a7ec6091bf45a0274761e24885
 ---
 
 # Configuration {#configuration}
@@ -20,29 +20,29 @@ export default defineConfig({})
 
 ## Basic Configuration {#basic}
 
-- `lang`: Default documentation language. To accommodate most projects, we support both Chinese and English documents by default. The default language is `en`. If the current documentation project does not require multilingual support, this can be set to `null` or `undefined`.
-- `title`: Documentation title, displayed on the browser tab.
-- `logo`: Logo at the top left of the documentation, supports image URLs or file paths. Absolute paths refer to files under the `public` directory, relative paths refer to files relative to the current tool directory. By default, the built-in Alauda logo from the `doom` package is used.
-- `logoText`: Documentation title, displayed next to the logo at the top left.
-- `icon`: Documentation favicon, defaults to the same as `logo`.
-- `base`: Base path for the documentation, used when deploying to a non-root path, such as `product-docs`. Defaults to `/`.
-- `outDir`: Directory for build outputs, defaults to `dist/{base}/{version}`. If specified, it changes to `dist/{outDir}/{version}`, where `version` is optional. See [Multi-version Build](./deploy#multi-version) for reference.
+- `lang`: Default document language. To accommodate most projects, we support both Chinese and English documents by default. The default language is `en`. If the current documentation project does not require multilingual support, this can be set to `null` or `undefined`.
+- `title`: Document title, displayed on the browser tab.
+- `logo`: Logo at the top left of the document, supports image URLs or file paths. Absolute paths refer to files under the `public` directory, relative paths refer to files relative to the current tool directory. Defaults to the Alauda logo built into the `doom` package.
+- `logoText`: Document title, displayed at the logo position in the top left.
+- `icon`: Document favicon, defaults to the same as `logo`.
+- `base`: Base path of the document, used when deploying to a non-root path, e.g., `product-docs`. Defaults to `/`.
+- `outDir`: Build output directory, defaults to `dist/{base}/{version}`. If specified, it changes to `dist/{outDir}/{version}`, where `version` is optional. Refer to [Multi-version Build](./deploy#multi-version).
 
 ## API Documentation Configuration {#api}
 
 ```yaml
 api:
-  # CRD definition file paths, relative to the directory of doom.config.*, supports glob matching, json/yaml files
+  # CRD definition file paths, relative to the directory where doom.config.* is located, supports glob matching, json/yaml files
   crds:
     - docs/shared/crds/*.yaml
-  # OpenAPI definition file paths, relative to the directory of doom.config.*, supports glob matching, json/yaml files
+  # OpenAPI definition file paths, relative to the directory where doom.config.* is located, supports glob matching, json/yaml files
   openapis:
     - docs/shared/openapis/*.json
-  # When rendering OpenAPI related resource definitions, they are inlined by default. To extract related resource definitions into separate files, configure the following options.
+  # When rendering OpenAPI related resource definitions, they are inlined by default. To extract related resource definitions into separate files, configure the following options
   # Reference https://doom.alauda.cn/apis/references/CodeQuality.html#v1alpha1.CodeQualitySpec
   references:
     v1alpha1.CodeQualityBranch: /apis/references/CodeQualityBranch#v1alpha1.CodeQualityBranch
-  # Optional, API documentation path prefix. If the current business uses gateway or other proxy services, this can be configured.
+  # Optional, API documentation path prefix. If the current business uses gateway or other proxy services, this can be configured
   pathPrefix: /apis
 ```
 
@@ -51,7 +51,7 @@ Refer to [API Documentation](./api) for writing documentation.
 ## Permission Documentation Configuration {#permission}
 
 ```yaml
-# The following resource file paths are relative to the directory of doom.config.*, support glob matching, json/yaml files
+# The following resource file paths are relative to the directory where doom.config.* is located, supports glob matching, json/yaml files
 permission:
   functionresources:
     # `kubectl get functionresources`
@@ -67,23 +67,23 @@ Refer to [Permission Documentation](./permission) for writing documentation.
 
 ```yaml
 reference:
-  - repo: alauda-public/product-doc-guide # Optional, repository address of the referenced documentation. If not filled, the current documentation repository address is used by default.
+  - repo: alauda-public/product-doc-guide # Optional, referenced documentation repository address. If not filled, the current documentation repository address is used by default
     branch: # [string] Optional, branch of the referenced documentation repository
-    publicBase: # [string] Optional, when using a remote repository, the absolute path where static resources corresponding to /images/xx.png are located. Defaults to docs/public
+    publicBase: # [string] Optional, when using a remote repository, the absolute path /images/xx.png corresponds to the directory of static resources, defaults to docs/public
     sources:
-      - name: anchor # Name of the referenced documentation, used for referencing in documents, globally unique
-        path: docs/index.mdx#介绍 # Path of the referenced documentation, supports anchor positioning. For remote repositories, relative to the root of the repository; for local, relative to the directory of doom.config.*
-        ignoreHeading: # [boolean] Optional, whether to ignore the heading. If true, the anchor heading will not be displayed in the referenced document.
+      - name: anchor # Name of the referenced document, used for referencing in documentation, globally unique
+        path: docs/index.mdx#介绍 # Path of the referenced document, supports anchor positioning. For remote repositories, relative to the repository root; for local, relative to the directory where doom.config.* is located
+        ignoreHeading: # [boolean] Optional, whether to ignore the title. If true, the anchor title will not be displayed in the referenced document
         processors: # Optional, processors for referenced document content
           - type: ejsTemplate
-            data: # ejs template parameters, accessed via `<%= data.xx %>`
-        frontmatterMode: merge # Optional, frontmatter handling mode for referenced documents. Defaults to ignore. Options: ignore/merge/replace/remove
+            data: # ejs template parameters, accessed using `<%= data.xx %>`
+        frontmatterMode: merge # Optional, mode for handling frontmatter of referenced documents, defaults to ignore. Options: ignore/merge/replace/remove
 ```
 
 ### `frontmatterMode`
 
-- `ignore`: Ignore the frontmatter of the referenced document, keep using the current document's frontmatter.
-- `merge`: Merge the frontmatter of the referenced document. If keys conflict, the referenced document's values override the current document's.
+- `ignore`: Ignore the frontmatter of the referenced document, keep the frontmatter of the current document.
+- `merge`: Merge the frontmatter of the referenced document. If keys overlap, the referenced document's values override the current document's.
 - `replace`: Replace the current document's frontmatter with that of the referenced document.
 - `remove`: Remove the current document's frontmatter.
 
@@ -94,7 +94,7 @@ Refer to [Reference Documentation](./reference#reference) for writing documentat
 ```yaml
 releaseNotes:
   queryTemplates:
-    fixed: # JQL statements that can include ejs templates
+    fixed: # JQL statements that may contain ejs templates
     unfixed:
 ```
 
@@ -106,23 +106,23 @@ releaseNotes:
 {/* release-notes-for-bugs?template=fixed&project=DevOps */}
 ```
 
-Taking the above `template=fixed&project=DevOps` as an example, `fixed` is the template name defined in `queryTemplates`. The remaining `query` parameter `project=DevOps` is passed as [`ejs`](https://github.com/mde/ejs) template parameters to the `fixed` template, which after processing is used to form a jira [`jql`](https://www.atlassian.com/zh/software/jira/guides/jql/overview#what-is-jql) request to `https://jira.alauda.cn/rest/api/2/search?jql=<jql>`. This API requires authentication, and the environment variables `JIRA_USERNAME` and `JIRA_PASSWORD` must be provided to preview the effect.
+Taking `template=fixed&project=DevOps` as an example, `fixed` is the template name defined in `queryTemplates`. The remaining `query` parameter `project=DevOps` is passed as [`ejs`](https://github.com/mde/ejs) template parameters to the `fixed` template, which is then processed to form a jira [`jql`](https://www.atlassian.com/zh/software/jira/guides/jql/overview#what-is-jql) request to `https://jira.alauda.cn/rest/api/2/search?jql=<jql>`. This API requires authentication, and the environment variables `JIRA_USERNAME` and `JIRA_PASSWORD` must be provided to preview the effect.
 
 ## Sidebar Configuration {#sidebar}
 
 ```yaml
 sidebar:
-  collapsed: false # Optional, whether the sidebar is collapsed by default. Defaults to collapsed. When documentation content is small, consider setting to false.
+  collapsed: false # Optional, whether the sidebar is collapsed by default. Defaults to collapsed. If the document content is small, consider setting to false.
 ```
 
-## Internal Documentation Routes Configuration {#internal-routes}
+## Internal Document Routes Configuration {#internal-routes}
 
 ```yaml
-internalRoutes: # Optional, supports glob matching, relative to the docs directory. When the CLI option `-i, --ignore` is enabled, matched routes/files will be ignored.
+internalRoutes: # Optional, supports glob matching, relative to the docs directory. Routes/files matched when the CLI option `-i, --ignore` is enabled will be ignored.
   - '*/internal/**'
 ```
 
-## Only Include Documentation Routes Configuration {#only-include-routes}
+## Only Include Document Routes Configuration {#only-include-routes}
 
 ```yaml
 onlyIncludeRoutes: # Optional, supports glob matching, relative to the docs directory. When the CLI option `-i, --ignore` is enabled, only routes/files under this configuration will be enabled. Can be combined with `internalRoutes` to further exclude some routes.
@@ -141,25 +141,25 @@ shiki:
 ```
 
 :::warning
-Unconfigured languages will trigger warnings in the command line and fall back to rendering as `plaintext`.
+Unconfigured languages will trigger warnings in the command line and fall back to `plaintext` rendering.
 :::
 
 ## `sites.yaml` Configuration {#sites}
 
-The `sites.yaml` configuration file is used to configure subsite information associated with the current documentation site. This information is used by [External Site Components](./mdx#externalsite) and when building single-version documentation.
+The `sites.yaml` configuration file is used to configure subsite information associated with the current documentation site. It is used by [External Site Components](./mdx#external-site) and when building single-version documentation.
 
 ```yaml
 - name: connectors # Globally unique name
   base: /devops-connectors # Base path for site access
-  version: v1.1 # Version used for ExternalSite/ExternalSiteLink redirection when building multi-version sites
+  version: v1.1 # Version used for ExternalSite/ExternalSiteLink redirects when building multi-version sites
 
-  displayName: # Site display name. If not filled or language not matched, defaults to `name`
+  displayName: # Site display name. If not filled or language not matched, defaults to name
     en: DevOps Connectors
     zh: DevOps 连接器
 
-  # The following properties are used to pull images when building the entire site. If not filled, this will be ignored during final packaging.
+  # The following attributes are used to pull images when building the entire site. If not filled, this will be ignored during final full site packaging.
   # Usually required for subsite references, not required for parent site references.
-  repo: https://github.com/AlaudaDevops/connectors-operator # Site repository address. For internal gitlab repositories, related slugs like `alauda/product-docs` can be used directly.
+  repo: https://github.com/AlaudaDevops/connectors-operator # Site repository address. For internal GitLab repositories, related slugs like `alauda/product-docs` can be used directly.
   image: devops/connectors-docs # Site build image, used to pull images when building the entire site.
 ```
 
@@ -169,10 +169,10 @@ The `sites.yaml` configuration file is used to configure subsite information ass
 translate:
   # System prompt, ejs template. Parameters passed in include `sourceLang`, `targetLang`, `userPrompt`, `additionalPrompts`, `terms`, `titleTranslationPrompt`.
   # Among them, `sourceLang` and `targetLang` are the strings `中文` and `英文`,
-  #     `userPrompt` is the global user configuration below, which may be empty
-  #     `additionalPrompts` is the `additionalPrompts` configuration in the document's `frontmatter.i18n`, which may be empty
-  #     `terms` and `titleTranslationPrompt` are dynamically generated prompts based on terminology and title tables contained in the document, used to guide AI translation according to terminology and title mappings, which may be empty
-  # The default system prompt is as follows and can be modified according to actual needs
+  # `userPrompt` is the global user configuration below, which may be empty.
+  # `additionalPrompts` is the `additionalPrompts` configuration in document `frontmatter.i18n`, which may be empty.
+  # `terms` and `titleTranslationPrompt` are prompts dynamically generated based on terminology and title tables contained in the document content, used to guide AI to translate according to terminology and title mappings, which may be empty.
+  # The default system prompt is as follows and can be modified according to actual needs.
   systemPrompt: |
 You are a professional technical documentation engineer, skilled in writing high-quality technical documentation in <%= targetLang %>. Please accurately translate the following text from <%= sourceLang %> to <%= targetLang %>, maintaining the style consistent with technical documentation in <%= sourceLang %>.
 
@@ -232,15 +232,15 @@ The text for translation is provided below, within triple quotes:
 ## Editing Documentation in Code Repository {#edit-repo}
 
 ```yaml
-editRepoBaseUrl: alauda/doom/tree/main/docs # The https://github.com/ prefix can be omitted. Only effective when the CLI flag `-R, --edit-repo` is enabled.
+editRepoBaseUrl: alauda/doom/tree/main/docs # The https://github.com/ prefix can be omitted. Effective only when the CLI flag `-R, --edit-repo` is enabled.
 ```
 
 ## Documentation Export Configuration {#export}
 
 ```yaml
 export:
-  - name: Concepts # Optional, globally unique PDF name, defaults to the documentation title
-    scope: '*/concepts' # Required, string or array, document scope, supports glob matching, relative to the docs directory
+  - name: Concepts # Optional, globally unique PDF name, defaults to the document title
+    scope: '*/concepts' # Required, string or array, document scope, supports glob matching, relative to docs directory
 ```
 
 ## Documentation Lint Configuration {#lint}
@@ -253,7 +253,7 @@ lint:
 ## Algolia Search Configuration {#algolia}
 
 ```yaml
-algolia: # Optional, Algolia search configuration, only effective when the CLI flag `-a, --algolia` is enabled
+algolia: # Optional, Algolia search configuration, effective only when the CLI flag `-a, --algolia` is enabled
   appId: # Algolia Application ID
   apiKey: # Algolia API Key
   indexName: # Algolia index name
@@ -261,9 +261,9 @@ algolia: # Optional, Algolia search configuration, only effective when the CLI f
 
 Please use `public/robots.txt` for Algolia crawler verification.
 
-::: info
+:::info
 
-Due to the current architecture limitations of `rspress`, using Algolia search requires implementing via a [custom theme](https://rspress.dev/zh/guide/advanced/custom-theme). To unify usage of related theme features, we provide the `@alauda/doom/theme` theme entry. Please add the following theme configuration file to enable:
+Due to current architectural limitations of `rspress`, Algolia search functionality must be implemented via [custom themes](https://rspress.dev/zh/guide/advanced/custom-theme). To unify the use of related theme features, we provide the `@alauda/doom/theme` theme entry. Please add the following theme configuration file to enable it:
 
 ```ts title="theme/index.ts"
 export * from '@alauda/doom/theme'
@@ -274,5 +274,5 @@ export * from '@alauda/doom/theme'
 ## Sitemap Configuration {#sitemap}
 
 ```yaml
-siteUrl: https://docs.alauda.cn # Optional, site URL used to generate sitemap, only effective when the CLI flag `-S, --site-url` is enabled
+siteUrl: https://docs.alauda.cn # Optional, site URL used for generating sitemap, effective only when the CLI flag `-S, --site-url` is enabled
 ```

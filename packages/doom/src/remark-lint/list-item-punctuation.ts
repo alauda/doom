@@ -3,7 +3,7 @@ import { toString } from 'mdast-util-to-string'
 import { lintRule } from 'unified-lint-rule'
 import { visitParents } from 'unist-util-visit-parents'
 
-import { PUNCTUATION_REGEX } from './constants.ts'
+import { PUNCTUATION_REGEX } from './utils.ts'
 
 const ALLOWED_PUNCTUATIONS = new Set([';', '.'])
 

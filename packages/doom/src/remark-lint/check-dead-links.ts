@@ -1,44 +1,16 @@
-import fs from 'node:fs/promises'
 import path from 'node:path'
 
-import {
-  PluginDriver,
-  RouteService,
-  remarkLink,
-  type UserConfig,
-} from '@rspress/core'
+import { PluginDriver, RouteService, remarkLink } from '@rspress/core'
 import { isProduction } from '@rspress/shared'
 import type { Root } from 'mdast'
 import { lintRule } from 'unified-lint-rule'
 
-import { loadConfig } from '../cli/load-config.ts'
-import type { GlobalCliOptions } from '../types.ts'
-import { OPTIONS_FILE } from '../utils/index.ts'
-
-let config: UserConfig | undefined
-let configFilePath: string | undefined
+import { getConfig } from './utils.ts'
 
 export const checkDeadLinks = lintRule<Root>(
   'doom-lint:check-dead-links',
   async (tree, vfile) => {
-    if (!config || !configFilePath) {
-      let optionsText: string | undefined
-
-      try {
-        optionsText = await fs.readFile(OPTIONS_FILE, 'utf8')
-      } catch {
-        //
-      }
-
-      const { root, globalOptions } = (
-        optionsText ? JSON.parse(optionsText) : {}
-      ) as {
-        root?: string
-        globalOptions: GlobalCliOptions
-      }
-
-      ;({ config, configFilePath } = await loadConfig(root, globalOptions))
-    }
+    const { config, configFilePath } = await getConfig()
 
     const relativePath = path.relative(config.root!, vfile.path)
 
