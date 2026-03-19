@@ -74,6 +74,7 @@ export const noUnmatchedAnchor = lintRule<Root>(
     const filepath = vfile.path
     const dirpath = path.dirname(filepath)
     const configRoot = config.root!
+    const configLang = config.lang!
 
     const relativePath = path.relative(configRoot, filepath)
 
@@ -117,43 +118,47 @@ export const noUnmatchedAnchor = lintRule<Root>(
 
       const { url: parsedUrl, hash } = parseUrl(url)
 
-      let referencedFilepath = filepath
+      let refFilepath = filepath
 
       if (parsedUrl.startsWith('/')) {
-        referencedFilepath = path.resolve(configRoot, config.lang! + parsedUrl)
+        refFilepath = path.resolve(configRoot, configLang + parsedUrl)
       } else if (parsedUrl) {
-        referencedFilepath = path.resolve(dirpath, parsedUrl)
+        refFilepath = path.resolve(dirpath, parsedUrl)
       }
 
-      let ext = path.extname(referencedFilepath)
+      let ext = path.extname(refFilepath)
 
       if (ext === '.html') {
-        referencedFilepath = referencedFilepath.slice(0, -ext.length)
+        refFilepath = refFilepath.slice(0, -ext.length)
         ext = ''
       }
 
       if (!ext) {
         for (const ext of ['.md', '.mdx'] as const) {
-          if (fs.existsSync(referencedFilepath + ext)) {
-            referencedFilepath += ext
+          if (fs.existsSync(refFilepath + ext)) {
+            refFilepath += ext
             break
           }
         }
       }
 
-      if (!isDoc(referencedFilepath)) {
+      if (!isDoc(refFilepath)) {
         return
       }
 
       // If the referenced file does not exist, we ignore it here and let the `check-dead-links` rule handle it
-      if (
-        filepath !== referencedFilepath &&
-        !fs.existsSync(referencedFilepath)
-      ) {
+      if (filepath !== refFilepath && !fs.existsSync(refFilepath)) {
         return
       }
 
-      const anchors = getAnchors(referencedFilepath)
+      const relativeRefPath = path.relative(configRoot, refFilepath)
+
+      // We ignore API docs because their anchors are generated dynamically and may not be present in the source files
+      if (relativeRefPath.startsWith(`${configLang}/apis/`)) {
+        return
+      }
+
+      const anchors = getAnchors(refFilepath)
 
       if (!anchors.has(hash)) {
         vfile.message(
@@ -163,7 +168,7 @@ export const noUnmatchedAnchor = lintRule<Root>(
             .map((a) => `\`${a}\``)
             .join(', ')}] in file \`${path.relative(
             configRoot,
-            referencedFilepath,
+            refFilepath,
           )}\``,
           { ancestors: [...parents, node], place: node.position },
         )
