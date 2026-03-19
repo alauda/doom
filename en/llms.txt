@@ -34,7 +34,7 @@
 - [Deployment](/en/usage/deploy.md): After the documentation project development is completed, we can deploy the project to the ACP platform
 - [Internationalization](/en/usage/i18n.md): Using Internationalized Text in Reusable Components
 - [Usage](/en/usage/index.md)
-- [Markdown](/en/usage/markdown.md): In addition to the standard gfm syntax, Doom includes some additional Markdown extension features.
+- [Markdown](/en/usage/markdown.md): In addition to the standard gfm syntax, Doom has built-in some additional Markdown extension features.
 - [MDX](/en/usage/mdx.md): Using MDX enables dynamic content display and content reuse
 - [Permission Description Document](/en/usage/permission.md)
 - [Referencing Documents](/en/usage/reference.md): In Markdown files: In MDX files: The name above refers to the name of the referenced document. For more information, please refer to Document Reference Configuration. If the referenced document content uses static resources from a remote repository, the related static resources will be automatically stored locally in the <root>/public/_remotes/<name> directory. Here is an example using <!-- reference-start#ref -->:

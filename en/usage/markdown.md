@@ -1,15 +1,15 @@
 # Markdown
 
-In addition to the standard [gfm](https://github.github.com/gfm) syntax, Doom includes some additional Markdown extension features.
+In addition to the standard [gfm](https://github.github.com/gfm) syntax, Doom has built-in some additional Markdown extension features.
 
-## Callouts
+## Callouts \{#callouts}
 
 Source code annotation component
 
 ::: note
 
 1. Please use inline code comments according to the actual language, such as `;`, `%`, `#`, `//`, `/** */`, `--`, and `<!-- -->`, etc.
-2. If you want to treat them as code comments, use `[\!code callout]` for escaping.
+2. If you want to treat them as code comments, please escape them with `[\!code callout]`.
 3. Sometimes, `:::callouts` may display abnormally due to nested indentation; you can use `<div class="doom-callouts">` or the `<Callouts>` component instead.
 
 :::
@@ -58,6 +58,30 @@ Memory overhead per virtual machine ≈ (1.002 × requested memory) \
 
 For more source code transformation features, please refer to [Shiki Transformers](https://shiki.style/packages/transformers#transformers).
 
+## Callout \{#callout}
+
+Similar to the `Callouts` component, but used independently outside of code blocks.
+
+```mdx
+:callout[1]:callout[A]
+
+| Header X:callout[x] | Header Y:callout[y] |
+| ------------------- | ------------------- |
+| x                   | y                   |
+
+- :callout[x] details of x
+- :callout[y] details of y
+```
+
+:callout\[1]:callout\[A]
+
+| Header X:callout\[x] | Header Y:callout\[y] |
+| -------------------- | -------------------- |
+| x                    | y                    |
+
+- :callout\[x] details of x
+- :callout\[y] details of y
+
 ## [Mermaid](https://mermaid.js.org)
 
 Chart drawing tool
@@ -80,4 +104,4 @@ graph TD;
     C-->D;
 ```
 
-With [Markdown Preview Mermaid](https://github.com/mjbvz/vscode-markdown-mermaid), you can preview in real-time in VSCode.
+With [Markdown Preview Mermaid](https://github.com/mjbvz/vscode-markdown-mermaid), you can preview in real time in VSCode.

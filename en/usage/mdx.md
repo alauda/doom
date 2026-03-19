@@ -4,11 +4,9 @@
 
 ## rspress Components
 
-Most of the [built-in components](https://rspress.dev/zh/guide/default-theme/components) provided by the `rspress` theme have been adjusted to global components, which can be used directly in `.mdx` files without import, including:
+Most of the [built-in components](https://rspress.dev/zh/guide/default-theme/components) provided by the `rspress` theme have been adjusted to global components, which can be used directly in `.mdx` files without importing, including:
 
 - `Badge`
-- `Card`
-- `LinkCard`
 - `PackageManagerTabs`
 - `Steps`
 - `Tab/Tabs`
@@ -24,37 +22,106 @@ import { SourceCode } from '@rspress/core/theme'
 
 ## doom Components
 
-`doom` provides some global components to assist in documentation writing, which can be used directly without import. Currently, these include:
+`doom` provides some global components to assist in documentation writing, which can be used directly without importing. Currently, these include:
 
 ### `Overview`
 
 Document overview component used to display the document directory
 
-### `Directive`
+### `Callouts`
 
-Sometimes, due to nested indentation, the [custom container](https://rspress.dev/zh/guide/basic/use-mdx#%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AE%B9%E5%99%A8) syntax may fail. The `Directive` component can be used as a replacement.
+Same as the [Callouts](/en/usage/markdown.md#callouts) Markdown extension feature, source code annotation component
+
+````mdx
+```sh
+Memory overhead per virtual machine ≈ (1.002 × requested memory) \
+              + 218 MiB \  # [\!code callout]
+              + 8 MiB × (number of vCPUs) \  # [\!code callout]
+              + 16 MiB × (number of graphics devices) \  # [\!code callout]
+              + (additional memory overhead) # [\!code callout]
+```
+
+<Callouts>
+
+1. Required for the processes that run in the `virt-launcher` pod.
+2. Number of virtual CPUs requested by the virtual machine.
+3. Number of virtual graphics cards requested by the virtual machine.
+4. Additional memory overhead:
+   - If your environment includes a Single Root I/O Virtualization (SR-IOV) network device or a Graphics Processing Unit (GPU), allocate 1 GiB additional memory overhead for each device.
+   - If Secure Encrypted Virtualization (SEV) is enabled, add 256 MiB.
+   - If Trusted Platform Module (TPM) is enabled, add 53 MiB.
+
+</Callouts>
+````
+
+```sh
+Memory overhead per virtual machine ≈ (1.002 × requested memory) \
+              + 218 MiB \  # [!code callout]
+              + 8 MiB × (number of vCPUs) \  # [!code callout]
+              + 16 MiB × (number of graphics devices) \  # [!code callout]
+              + (additional memory overhead) # [!code callout]
+```
+
+1. Required for the processes that run in the `virt-launcher` pod.
+2. Number of virtual CPUs requested by the virtual machine.
+3. Number of virtual graphics cards requested by the virtual machine.
+4. Additional memory overhead:
+   - If your environment includes a Single Root I/O Virtualization (SR-IOV) network device or a Graphics Processing Unit (GPU), allocate 1 GiB additional memory overhead for each device.
+   - If Secure Encrypted Virtualization (SEV) is enabled, add 256 MiB.
+   - If Trusted Platform Module (TPM) is enabled, add 53 MiB.
+
+### `Callout`
+
+Same as the [Callout](/en/usage/markdown.md#callout) Markdown extension feature, standalone annotation component outside code blocks
 
 ```mdx
-- The directory structure of multilingual documents (`doc/en`) needs to be exactly the same as the documents under the `doc/zh` directory to ensure that the links of multilingual documents are identical except for the language identifier.
+<Callout>1</Callout>
+<Callout>A</Callout>
+
+| Header X<Callout>x</Callout> | Header Y<Callout>y</Callout> |
+| ---------------------------- | ---------------------------- |
+| x                            | y                            |
+
+- <Callout>x</Callout> details of x
+- <Callout>y</Callout> details of y
+```
+
+1
+
+A
+
+| Header X<Callout>x</Callout> | Header Y<Callout>y</Callout> |
+| ---------------------------- | ---------------------------- |
+| x                            | y                            |
+
+- <Callout>x</Callout> details of x
+- <Callout>y</Callout> details of y
+
+### `Directive`
+
+Sometimes, due to nested indentation, the [custom container](https://rspress.dev/zh/guide/basic/use-mdx#%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AE%B9%E5%99%A8) syntax may fail; you can use the `Directive` component instead
+
+```mdx
+- The directory structure of multilingual documents (`doc/en`) needs to be exactly the same as that under the `doc/zh` directory to ensure that links in multilingual documents are identical except for the language identifier.
 
   <Directive type="danger" title="Note">
-    If automated translation tools are used for translation, this issue can be
-    ignored, as the automated translation tools will automatically generate the
-    target language document directory structure based on `doc/zh`.
+    If you are using automated translation tools, you do not need to worry about
+    this issue, as the automated translation tool will automatically generate
+    the target language document directory structure based on `doc/zh`.
   </Directive>
 ```
 
-- The directory structure of multilingual documents (`doc/en`) needs to be exactly the same as the documents under the `doc/zh` directory to ensure that the links of multilingual documents are identical except for the language identifier.
+- The directory structure of multilingual documents (`doc/en`) needs to be exactly the same as that under the `doc/zh` directory to ensure that links in multilingual documents are identical except for the language identifier.
 
   <Directive type="danger" title="Note">
-    If automated translation tools are used for translation, this issue can be
-    ignored, as the automated translation tools will automatically generate the
-    target language document directory structure based on `doc/zh`.
+    If you are using automated translation tools, you do not need to worry about
+    this issue, as the automated translation tool will automatically generate
+    the target language document directory structure based on `doc/zh`.
   </Directive>
 
 ### `ExternalSite` \{#external-site}
 
-Component for referencing external sites
+External site reference component
 
 ```mdx
 <ExternalSite name="connectors" />
@@ -63,7 +130,7 @@ Component for referencing external sites
 NoteBecause DevOps Connectors releases on a different cadence from Alauda Container Platform, the DevOps Connectors documentation is now available as a separate documentation set at [DevOps Connectors](/devops-connectors/en/).
 ### `ExternalSiteLink`
 
-Component for referencing external site links
+External site link reference component
 
 ```mdx
 <ExternalSiteLink name="connectors" href="link.mdx#hash" children="Content" />
@@ -72,21 +139,21 @@ Component for referencing external site links
 [Content](/devops-connectors/en/link#hash)
 :::tip
 
-In mdx, `<ExternalSiteLink name="connectors" href="link" children="Content" />` has a different meaning from the following content:
+In mdx, `<ExternalSiteLink name="connectors" href="link" children="Content" />` differs in meaning from the following content
 
 ```mdx
 <ExternalSiteLink name="connectors" href="link">
-  Content {/* This will be rendered inside a `p` element */}
+  Content {/* will be rendered inside a `p` element */}
 </ExternalSiteLink>
 ```
 
-If you do not want the text to be rendered inside a `p` element, you can pass it using the `children` prop as shown in the example above.
+If you do not want the text to be rendered inside a `p` element, you can pass it via the `children` prop as shown in the example above.
 
 :::
 
 ### `AcpApisOverview` and `ExternalApisOverview`
 
-Components for referencing external site API overviews
+External site API overview components
 
 ```mdx
 <AcpApisOverview />
@@ -100,7 +167,7 @@ NoteFor the introduction to the usage methods of ACP APIs, please refer to [ACP 
 NoteFor the introduction to the usage methods of DevOps Connectors APIs, please refer to [DevOps Connectors APIs Guide](/devops-connectors/en/apis/overview/).
 ### Term
 
-Term component, plain text, dynamically mounted and injected
+Terminology component, plain text, dynamically mounted and injected
 
 ```mdx
 <Term name="company" textCase="capitalize" />
@@ -115,12 +182,12 @@ Term component, plain text, dynamically mounted and injected
 
 #### `props`
 
-- `name`: Built-in term name, refer to [dynamic mount configuration file](/en/usage/deploy.md#overrides)
-- `textCase`: Text case transformation, optional values are `lower`, `upper`, `capitalize`
+- `name`: built-in term name, refer to [dynamic mount configuration file](/en/usage/deploy.md#overrides)
+- `textCase`: text case transformation, optional values are `lower`, `upper`, `capitalize`
 
 ### `TermsTable`
 
-Built-in term list display component
+Built-in terminology list display component
 
 ```mdx
 <TermsTable />
@@ -136,7 +203,7 @@ Built-in term list display component
 
 #### `props`
 
-- `terms`: `NormalizedTermItem[]`, optional, custom term list for convenient reuse when rendering custom terms in internal documentation
+- `terms`: `NormalizedTermItem[]`, optional, custom terminology list for convenient reuse when rendering custom terms in internal documents
 
 ### `JsonViewer`
 
@@ -166,7 +233,7 @@ key: value
 
 ## Custom Component Reuse
 
-According to the [convention](/en/usage/convention.md), we can extract reusable content into the `shared` directory and then import it where needed, for example:
+According to the [convention](/en/usage/convention.md), we can extract reusable content into the `shared` directory, then import it where needed, for example:
 
 ```mdx
 import CommonContent from './shared/CommonContent.mdx'
@@ -174,7 +241,7 @@ import CommonContent from './shared/CommonContent.mdx'
 <CommonContent />
 ```
 
-If you need to use more [runtime](https://rspress.dev/zh/api/client-api/api-runtime) related APIs, you can implement components in `.jsx/.tsx` and then import and use them in `.mdx` files.
+If you need to use more [runtime](https://rspress.dev/zh/api/client-api/api-runtime) related APIs, you can implement components using `.jsx/.tsx` and then import and use them in `.mdx` files.
 
 ```tsx
 // shared/CommonContent.tsx
