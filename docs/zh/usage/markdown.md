@@ -6,7 +6,7 @@ weight: 3
 
 除了标准的 [gfm](https://github.github.com/gfm) 语法外，Doom 内置了一些额外的 Markdown 扩展功能。
 
-## Callouts
+## Callouts {#callouts}
 
 源码标注组件
 
@@ -61,6 +61,30 @@ Memory overhead per virtual machine ≈ (1.002 × requested memory) \
 :::
 
 更多源码转换功能请参考 [Shiki Transformers](https://shiki.style/packages/transformers#transformers)。
+
+## Callout {#callout}
+
+类似 `Callouts` 组件，但用于代码块外独立使用。
+
+```mdx
+:callout[1]:callout[A]
+
+| Header X:callout[x] | Header Y:callout[y] |
+| ------------------- | ------------------- |
+| x                   | y                   |
+
+- :callout[x] details of x
+- :callout[y] details of y
+```
+
+:callout[1]:callout[A]
+
+| Header X:callout[x] | Header Y:callout[y] |
+| ------------------- | ------------------- |
+| x                   | y                   |
+
+- :callout[x] details of x
+- :callout[y] details of y
 
 ## [Mermaid](https://mermaid.js.org)
 

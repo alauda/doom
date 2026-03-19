@@ -40,9 +40,7 @@ td {
   }
 }
 
-@mixin callout {
-  counter-increment: callouts;
-  content: counter(callouts);
+@mixin callout-base {
   border-radius: 50%;
   background-color: #06c;
   color: #fff;
@@ -52,6 +50,13 @@ td {
   justify-content: center;
   align-items: center;
   margin-left: 4px;
+  margin-right: 4px;
+}
+
+@mixin callout {
+  counter-increment: callouts;
+  content: counter(callouts);
+  @include callout-base;
 }
 
 .has-callouts {
@@ -92,6 +97,10 @@ td {
       }
     }
   }
+}
+
+.doom-callout {
+  @include callout-base;
 }
 
 .doom-auto-toc {

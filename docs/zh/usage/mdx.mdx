@@ -12,8 +12,6 @@ weight: 3
 `rspress` 主题提供的[内置组件](https://rspress.dev/zh/guide/default-theme/components)大部分已调整为全局组件，可以在 `.mdx` 文件中无需导入直接使用，包括：
 
 - `Badge`
-- `Card`
-- `LinkCard`
 - `PackageManagerTabs`
 - `Steps`
 - `Tab/Tabs`
@@ -34,6 +32,78 @@ import { SourceCode } from '@rspress/core/theme'
 ### `Overview`
 
 文档概览组件，用于展示文档目录
+
+### `Callouts`
+
+同 [Callouts](./markdown.md#callouts) Markdown 扩展功能，源码标注组件
+
+````mdx
+```sh
+Memory overhead per virtual machine ≈ (1.002 × requested memory) \
+              + 218 MiB \  # [\!code callout]
+              + 8 MiB × (number of vCPUs) \  # [\!code callout]
+              + 16 MiB × (number of graphics devices) \  # [\!code callout]
+              + (additional memory overhead) # [\!code callout]
+```
+
+<Callouts>
+
+1. Required for the processes that run in the `virt-launcher` pod.
+2. Number of virtual CPUs requested by the virtual machine.
+3. Number of virtual graphics cards requested by the virtual machine.
+4. Additional memory overhead:
+   - If your environment includes a Single Root I/O Virtualization (SR-IOV) network device or a Graphics Processing Unit (GPU), allocate 1 GiB additional memory overhead for each device.
+   - If Secure Encrypted Virtualization (SEV) is enabled, add 256 MiB.
+   - If Trusted Platform Module (TPM) is enabled, add 53 MiB.
+
+</Callouts>
+````
+
+```sh
+Memory overhead per virtual machine ≈ (1.002 × requested memory) \
+              + 218 MiB \  # [!code callout]
+              + 8 MiB × (number of vCPUs) \  # [!code callout]
+              + 16 MiB × (number of graphics devices) \  # [!code callout]
+              + (additional memory overhead) # [!code callout]
+```
+
+<Callouts>
+
+1. Required for the processes that run in the `virt-launcher` pod.
+2. Number of virtual CPUs requested by the virtual machine.
+3. Number of virtual graphics cards requested by the virtual machine.
+4. Additional memory overhead:
+   - If your environment includes a Single Root I/O Virtualization (SR-IOV) network device or a Graphics Processing Unit (GPU), allocate 1 GiB additional memory overhead for each device.
+   - If Secure Encrypted Virtualization (SEV) is enabled, add 256 MiB.
+   - If Trusted Platform Module (TPM) is enabled, add 53 MiB.
+
+</Callouts>
+
+### `Callout`
+
+同 [Callout](./markdown.md#callout) Markdown 扩展功能，代码块外独立标注组件
+
+```mdx
+<Callout>1</Callout>
+<Callout>A</Callout>
+
+| Header X<Callout>x</Callout> | Header Y<Callout>y</Callout> |
+| ---------------------------- | ---------------------------- |
+| x                            | y                            |
+
+- <Callout>x</Callout> details of x
+- <Callout>y</Callout> details of y
+```
+
+<Callout>1</Callout>
+<Callout>A</Callout>
+
+| Header X<Callout>x</Callout> | Header Y<Callout>y</Callout> |
+| ---------------------------- | ---------------------------- |
+| x                            | y                            |
+
+- <Callout>x</Callout> details of x
+- <Callout>y</Callout> details of y
 
 ### `Directive`
 
