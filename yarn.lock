@@ -49,6 +49,7 @@ __metadata:
     eslint: "npm:^9.39.3"
     eslint-plugin-mdx: "npm:^3.7.0"
     globals: "npm:^17.4.0"
+    hastscript: "npm:^9.0.1"
     html-tag-names: "npm:^2.1.0"
     jsencrypt: "npm:^3.5.4"
     masonry-layout: "npm:^4.2.2"
@@ -7194,7 +7195,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"hastscript@npm:^9.0.0":
+"hastscript@npm:^9.0.0, hastscript@npm:^9.0.1":
   version: 9.0.1
   resolution: "hastscript@npm:9.0.1"
   dependencies:

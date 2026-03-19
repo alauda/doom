@@ -1,5 +1,6 @@
 export * from './AcpApisOverview.js'
 export * from './Badge.js'
+export * from './Callout.js'
 export * from './Callouts.js'
 export * from './Directive.js'
 export * from './ExternalApisOverview.js'

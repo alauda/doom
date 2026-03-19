@@ -66,6 +66,7 @@
     "eslint": "^9.39.3",
     "eslint-plugin-mdx": "^3.7.0",
     "globals": "^17.4.0",
+    "hastscript": "^9.0.1",
     "html-tag-names": "^2.1.0",
     "jsencrypt": "^3.5.4",
     "masonry-layout": "^4.2.2",

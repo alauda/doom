@@ -1,3 +1,4 @@
+import { h } from 'hastscript'
 import type { Root } from 'mdast'
 import { toMarkdown } from 'mdast-util-to-markdown'
 import type { Plugin } from 'unified'
@@ -25,8 +26,6 @@ export const remarkDirectives: Plugin<[], Root> = function () {
         return
       }
 
-      const data = node.data || (node.data = {})
-
       if (
         node.type === 'containerDirective' &&
         CONTAINER_DIRECTIVE_TYPES.has(node.name)
@@ -34,9 +33,28 @@ export const remarkDirectives: Plugin<[], Root> = function () {
         return
       }
 
+      const data = (node.data ||= {})
+
+      const setProperties = (className: string) => {
+        // https://github.com/syntax-tree/hastscript/pull/24
+        const n = h(data.hName || 'div', node.attributes!)
+        data.hProperties = {
+          ...n.properties,
+          className: [
+            ...((n.properties.className || []) as string[]),
+            className,
+          ],
+        }
+      }
+
       switch (node.name) {
         case 'callouts': {
-          data.hProperties = { className: 'doom-callouts' }
+          setProperties('doom-callouts')
+          break
+        }
+        case 'callout': {
+          data.hName = 'span'
+          setProperties('doom-callout')
           break
         }
         default: {

@@ -26,10 +26,6 @@ const getAnchors = (filepath: string) => {
 
   let ast = astCache.get(filepath)
   if (!ast) {
-    if (!isDoc(filepath)) {
-      return anchors
-    }
-
     const processor = filepath.endsWith('.mdx') ? mdxProcessor : mdProcessor
     ast = processor.parse(fs.readFileSync(filepath, 'utf-8'))
     astCache.set(filepath, ast)
@@ -77,8 +73,9 @@ export const noUnmatchedAnchor = lintRule<Root>(
 
     const filepath = vfile.path
     const dirpath = path.dirname(filepath)
+    const configRoot = config.root!
 
-    const relativePath = path.relative(config.root!, filepath)
+    const relativePath = path.relative(configRoot, filepath)
 
     // Ignore files outside the root directory
     if (relativePath.startsWith('..')) {
@@ -123,10 +120,7 @@ export const noUnmatchedAnchor = lintRule<Root>(
       let referencedFilepath = filepath
 
       if (parsedUrl.startsWith('/')) {
-        referencedFilepath = path.resolve(
-          config.root!,
-          config.lang! + parsedUrl,
-        )
+        referencedFilepath = path.resolve(configRoot, config.lang! + parsedUrl)
       } else if (parsedUrl) {
         referencedFilepath = path.resolve(dirpath, parsedUrl)
       }
@@ -147,6 +141,18 @@ export const noUnmatchedAnchor = lintRule<Root>(
         }
       }
 
+      if (!isDoc(referencedFilepath)) {
+        return
+      }
+
+      // If the referenced file does not exist, we ignore it here and let the `check-dead-links` rule handle it
+      if (
+        filepath !== referencedFilepath &&
+        !fs.existsSync(referencedFilepath)
+      ) {
+        return
+      }
+
       const anchors = getAnchors(referencedFilepath)
 
       if (!anchors.has(hash)) {
@@ -156,7 +162,7 @@ export const noUnmatchedAnchor = lintRule<Root>(
           ]
             .map((a) => `\`${a}\``)
             .join(', ')}] in file \`${path.relative(
-            config.root!,
+            configRoot,
             referencedFilepath,
           )}\``,
           { ancestors: [...parents, node], place: node.position },
