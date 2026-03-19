@@ -33,19 +33,6 @@ export const getUnversionedVersion = (version?: string) => {
     : version
 }
 
-/**
- * hello world {#custom-id} -> { text: 'hello world', id: 'custom-id' }
- */
-export const extractTextAndId = (title: string) => {
-  const customIdReg = /\\?\{#[^}]*\}/
-  const text = title.replace(customIdReg, '').trimEnd()
-  const customId = title.match(customIdReg)?.[0]?.slice(2, -1) || ''
-  return [
-    text.replace(/\\{2}/g, '').replace(/(^|[^\\])\\([[\]])/g, '$1$2'),
-    customId,
-  ]
-}
-
 export const normalizeSlash = (url: string) =>
   removeTrailingSlash(addLeadingSlash(normalizePosixPath(url)))
 

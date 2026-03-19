@@ -5,6 +5,7 @@ import type { Options } from '@cspell/eslint-plugin'
 import cspellRecommended from '@cspell/eslint-plugin/recommended'
 import js from '@eslint/js'
 import react from '@eslint-react/eslint-plugin'
+import type { UserConfig } from '@rspress/shared'
 import { merge } from 'es-toolkit/compat'
 import { defineConfig } from 'eslint/config'
 import * as mdx from 'eslint-plugin-mdx'
@@ -24,24 +25,21 @@ try {
 }
 
 async function doom(
-  cspellOptions?: Options | null,
+  userConfig?: UserConfig | null,
 ): Promise<tseslint.ConfigArray>
 async function doom(root: string | URL): Promise<tseslint.ConfigArray>
-async function doom(
-  cspellOptionsOrRoot?: Partial<Options> | string | null | URL,
-) {
+async function doom(userConfigOrRoot?: UserConfig | string | null | URL) {
   let cspellOptions: Partial<Options> | null | undefined
-  if (
-    typeof cspellOptionsOrRoot === 'string' ||
-    cspellOptionsOrRoot instanceof URL
-  ) {
-    const { config } = await loadConfig(cspellOptionsOrRoot)
+  let config: UserConfig | undefined
+  if (typeof userConfigOrRoot === 'string' || userConfigOrRoot instanceof URL) {
+    ;({ config } = await loadConfig(userConfigOrRoot))
     cspellOptions = config.lint?.cspellOptions
-  } else {
-    cspellOptions = cspellOptionsOrRoot
+  } else if (userConfigOrRoot) {
+    config = userConfigOrRoot
+    cspellOptions = userConfigOrRoot.lint?.cspellOptions
   }
 
-  const cspellEnabled = cspellOptions !== null
+  const cspellEnabled = userConfigOrRoot !== null
 
   return defineConfig([
     {
@@ -61,7 +59,7 @@ async function doom(
       },
     },
     {
-      files: ['**/en/**/*.{js,jsx,md,mdx,ts,tsx}'],
+      files: [`**/${config?.lang ?? 'en'}/**/*.{js,jsx,md,mdx,ts,tsx}`],
       extends: cspellEnabled ? [cspellRecommended] : [],
       languageOptions: {
         globals: globals.browser,

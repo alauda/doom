@@ -53,7 +53,7 @@ export const lintCommand = new Command('lint')
       overrideConfigFile: true,
       ignorePatterns: globalOptions.ignore ? config.internalRoutes : undefined,
       // @ts-expect-error -- stronger types
-      overrideConfig: await doom(cspell ? config.lint?.cspellOptions : null),
+      overrideConfig: await doom(cspell ? config : null),
     })
 
     logger.start(

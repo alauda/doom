@@ -29,31 +29,35 @@ export const site = lintRule<Root>('doom:lint-site', async (root, vfile) => {
     }
   }
 
-  visitParents(root, 'mdxJsxFlowElement', (element, parents) => {
-    if (!sites?.length || !element.name || !SITE_ELEMENTS.has(element.name)) {
-      return
-    }
+  visitParents(
+    root,
+    ['mdxJsxFlowElement', 'mdxJsxTextElement'] as const,
+    (element, parents) => {
+      if (!sites?.length || !element.name || !SITE_ELEMENTS.has(element.name)) {
+        return
+      }
 
-    const nameAttr = element.attributes.find(
-      (attr): attr is MdxJsxAttribute =>
-        attr.type === 'mdxJsxAttribute' && attr.name === 'name',
-    )
+      const nameAttr = element.attributes.find(
+        (attr): attr is MdxJsxAttribute =>
+          attr.type === 'mdxJsxAttribute' && attr.name === 'name',
+      )
 
-    const nameVal = nameAttr?.value
+      const nameVal = nameAttr?.value
 
-    if (
-      typeof nameVal === 'string' &&
-      sites.some((site) => site.name === nameVal)
-    ) {
-      return
-    }
+      if (
+        typeof nameVal === 'string' &&
+        sites.some((site) => site.name === nameVal)
+      ) {
+        return
+      }
 
-    vfile.message(
-      `Invalid site \`name\` property value \`${typeof nameVal === 'string' ? nameVal : nameVal?.value}\` which should be static string matching a site name from \`${SITES_FILE}\` config.`,
-      {
-        ancestors: [...parents, element],
-        place: (nameAttr ?? element).position,
-      },
-    )
-  })
+      vfile.message(
+        `Invalid site \`name\` property value \`${typeof nameVal === 'string' ? nameVal : nameVal?.value}\` which should be static string matching a site name from \`${SITES_FILE}\` config.`,
+        {
+          ancestors: [...parents, element],
+          place: (nameAttr ?? element).position,
+        },
+      )
+    },
+  )
 })
