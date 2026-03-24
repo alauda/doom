@@ -4,4 +4,18 @@ weight: 30
 
 # ApplicationSet
 
-<OpenAPIPath path="/gitops/v1/project/{project}/applicationsets" />
+<OpenAPIPath
+  path={[
+    '/gitops/v1/project/{project}/applicationsets',
+    '/gitops/v1/project/{project}/applicationsets/{name}',
+    '/gitops/v1/project/{project}/applicationsets/{name}/applications',
+    '/gitops/v1/project/{project}/applicationsets/{name}/applications/{app_name}',
+    '/gitops/v1/project/{project}/applicationsets/{name}/applications/{app_name}/sync',
+    '/gitops/v1/project/{project}/applicationsets/{name}/events',
+    '/gitops/v1/project/{project}/applicationsets/{name}/prometheusrules',
+    '/gitops/v1/project/{project}/applicationsets/{name}/prometheusrules/{rule_name}',
+    '/gitops/v1/project/{project}/applicationsets/{name}/refresh',
+    '/gitops/v1/project/{project}/applicationsets/{name}/sync',
+    '/gitops/v1/project/{project}/applicationsets/{name}/topology',
+  ]}
+/>

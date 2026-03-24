@@ -1,7 +1,7 @@
 import { usePage } from '@rspress/core/runtime'
 import openapisMap from 'doom-@api-openapisMap'
 import type { OpenAPIV3_1 } from 'openapi-types'
-import { type ReactNode, useId, useMemo } from 'react'
+import { type ReactNode, useMemo } from 'react'
 
 import { modelName, omitRoutePathRefs, resolveRef } from '../utils.js'
 
@@ -9,7 +9,6 @@ import { Markdown } from './Markdown.js'
 import { HeadingTitle } from './_HeadingTitle.js'
 import { RefLink } from './_RefLink.js'
 import { X } from './_X.js'
-import { UidProvider, useUid } from './_context.js'
 
 export interface OpenAPIRefProps {
   /**
@@ -20,12 +19,6 @@ export interface OpenAPIRefProps {
    * The specific path to the OpenAPI schema, otherwise the first matched will be used.
    */
   openapiPath?: string
-  /**
-   * Whether is a common reference, no `uid` will be generated.
-   *
-   * @default true
-   */
-  isCommonRef?: boolean
   /**
    * Whether to collect references from the schema.
    *
@@ -197,20 +190,9 @@ const getRefsForSchema = (
 export const OpenAPIRef = ({
   schema,
   openapiPath: openapiPath_,
-  isCommonRef = true,
   collectRefs = true,
 }: OpenAPIRefProps) => {
   const { page } = usePage()
-
-  let uid = useUid()
-
-  const innerId = useId()
-
-  if (isCommonRef) {
-    uid = '' // common references do not need a unique ID
-  } else if (!uid) {
-    uid = innerId
-  }
 
   // eslint-disable-next-line react-hooks/preserve-manual-memoization
   const [schemaItem, openapi, openapiPath] = useMemo(() => {
@@ -243,7 +225,7 @@ export const OpenAPIRef = ({
   }
 
   return (
-    <UidProvider value={uid}>
+    <>
       <HeadingTitle slug={schema} level={2}>
         {modelName(schema)}
       </HeadingTitle>
@@ -259,11 +241,10 @@ export const OpenAPIRef = ({
           key={schema}
           schema={schema}
           openapiPath={openapiPath}
-          isCommonRef={isCommonRef}
           collectRefs={false}
         />
       ))}
-    </UidProvider>
+    </>
   )
 }
 

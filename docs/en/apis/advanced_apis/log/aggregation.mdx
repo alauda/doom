@@ -1,10 +1,14 @@
 ---
 weight: 10
-sourceSHA: 1d46a290336ad1b760dcaf335f590ae2ae8267c82c82be018d2fc496ae91d410
+sourceSHA: ed514eee90e7cc8f74e4f4365809e107d48638addcd7d6a2a2216a294207ca09
 ---
 
 # Aggregation
 
-<OpenAPIPath path="/platform/logging.alauda.io/v2/logs/aggregation" />
-<OpenAPIPath path="/platform/logging.alauda.io/v2/clusters/{cluster}/logs/aggregation" />
-<OpenAPIPath path="/platform/logging.alauda.io/v2/projects/{project}/clusters/{cluster}/namespaces/{namespace}/logs/aggregation" />
+<OpenAPIPath
+  path={[
+    '/platform/logging.alauda.io/v2/logs/aggregation',
+    '/platform/logging.alauda.io/v2/clusters/{cluster}/logs/aggregation',
+    '/platform/logging.alauda.io/v2/projects/{project}/clusters/{cluster}/namespaces/{namespace}/logs/aggregation',
+  ]}
+/>

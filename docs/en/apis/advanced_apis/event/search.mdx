@@ -1,9 +1,13 @@
 ---
 weight: 10
-sourceSHA: fa591f45a8cca0a7d28b464ddb8879dd40e4f18183e9c5515831f03e330dbf99
+sourceSHA: 2e7745d5e9893dddc5a1725538c3cfabcc2fc55fe4dbe29b3df1375b0784a39d
 ---
 
 # Search
 
-<OpenAPIPath path="/platform/events.alauda.io/v1/events" />
-<OpenAPIPath path="/platform/events.alauda.io/v1/projects/{project}/clusters/{cluster}/namespaces/{namespace}/events" />
+<OpenAPIPath
+  path={[
+    '/platform/events.alauda.io/v1/events',
+    '/platform/events.alauda.io/v1/projects/{project}/clusters/{cluster}/namespaces/{namespace}/events',
+  ]}
+/>

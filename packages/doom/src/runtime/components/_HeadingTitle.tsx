@@ -2,7 +2,6 @@ import BananaSlug from 'github-slugger'
 import { Children, type ReactNode, useMemo } from 'react'
 
 import { X } from './_X.js'
-import { useUid } from './_context.js'
 
 export interface HeadingTitleProps {
   slug?: string
@@ -18,7 +17,6 @@ export const HeadingTitle = ({
   level,
   children,
 }: HeadingTitleProps) => {
-  const uid = useUid()
   const HeadingComponents = useMemo(() => {
     return [null, X.h1, X.h2, X.h3, X.h4, X.h5, X.h6] as const
   }, [])
@@ -27,16 +25,15 @@ export const HeadingTitle = ({
     () =>
       // eslint-disable-next-line @eslint-react/no-children-to-array
       Children.toArray(children)
-        .filter((it) => typeof it === 'string')
+        .filter((it): it is string => typeof it === 'string' && !!it.trim())
         .join(''),
     [children],
   )
   const id = useMemo(
     () =>
-      [uid, slug || slugger?.slug(slugFromChildren)]
-        .filter(Boolean)
-        .join('-') || undefined,
-    [uid, slug, slugger, slugFromChildren],
+      [slug || slugger?.slug(slugFromChildren)].filter(Boolean).join('-') ||
+      undefined,
+    [slug, slugger, slugFromChildren],
   )
   return (
     <HeadingComponent id={id}>

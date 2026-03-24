@@ -4,7 +4,7 @@ import openapisMap from 'doom-@api-openapisMap'
 import virtual from 'doom-@api-virtual'
 import BananaSlug from 'github-slugger'
 import { OpenAPIV3, type OpenAPIV3_1 } from 'openapi-types'
-import { Fragment, useId, useMemo, type ReactNode } from 'react'
+import { Fragment, useMemo, type ReactNode } from 'react'
 
 import { omitRoutePathRefs, resolveRef } from '../utils.js'
 
@@ -13,13 +13,12 @@ import { OpenAPIProperties, OpenAPIProperty, OpenAPIRef } from './OpenAPIRef.js'
 import { HeadingTitle } from './_HeadingTitle.js'
 import { RefLink } from './_RefLink.js'
 import { X } from './_X.js'
-import { UidProvider } from './_context.js'
 
 export interface OpenAPIPathProps {
   /**
-   * The path under the OpenAPI schema `paths` definition.
+   * The path or paths under the OpenAPI schema `paths` definition.
    */
-  path: string
+  path: string | string[]
   /**
    * The specific path to the OpenAPI schema, otherwise the first matched will be used.
    */
@@ -133,18 +132,17 @@ export const OpenAPIResponses = ({
   )
 }
 
-const getRefsForPath = (
+const setRefsForPath = (
   openapi: OpenAPIV3_1.Document,
   path: string,
   knownRefs: Record<string, string>,
+  refs: Set<string>,
 ) => {
   const pathSchema = openapi.paths?.[path]
 
   if (!pathSchema) {
-    return []
+    return
   }
-
-  const refs = new Set<string>()
 
   const collectRefs = (schema: object) => {
     if ('$ref' in schema && typeof schema.$ref === 'string') {
@@ -171,40 +169,26 @@ const getRefsForPath = (
       }
     }
   }
-
-  return Array.from(refs)
 }
 
-export const OpenAPIPath = ({
+export interface OpenAPIPathBaseProps extends Omit<
+  OpenAPIPathProps,
+  'openapiPath'
+> {
+  path: string
+  pathItem?: OpenAPIV3_1.PathItemObject
+  openapi?: OpenAPIV3_1.Document
+  slugger: BananaSlug
+}
+
+const OpenAPIPathBase = ({
   path,
-  openapiPath: openapiPath_,
+  pathItem,
+  openapi,
   pathPrefix: pathPrefix_,
-}: OpenAPIPathProps) => {
-  const { page } = usePage()
-
+  slugger,
+}: OpenAPIPathBaseProps) => {
   const pathPrefix = pathPrefix_ ?? (virtual.pathPrefix || '')
-
-  const id = useId()
-
-  const slugger = useMemo(() => new BananaSlug(), [])
-
-  const [pathItem, openapi, openapiPath, refs] = useMemo(() => {
-    for (const [pathname, openapi] of Object.entries(openapisMap)) {
-      if (openapiPath_ && pathname !== openapiPath_) {
-        continue
-      }
-      const pathItem = openapi.paths?.[path]
-      if (pathItem) {
-        return [
-          pathItem as OpenAPIV3_1.PathItemObject,
-          openapi,
-          pathname,
-          getRefsForPath(openapi, path, omitRoutePathRefs(page.routePath)),
-        ]
-      }
-    }
-    return []
-  }, [openapiPath_, page.routePath, path])
 
   if (!pathItem || !openapi) {
     console.error(`No OpenAPI path definition found for ${path}`)
@@ -212,7 +196,7 @@ export const OpenAPIPath = ({
   }
 
   return (
-    <UidProvider value={id}>
+    <>
       <HeadingTitle slugger={slugger} level={2}>
         {pathPrefix}
         {path}
@@ -293,17 +277,82 @@ export const OpenAPIPath = ({
           </Fragment>
         )
       })}
+    </>
+  )
+}
 
-      {refs?.map((ref) => (
-        <OpenAPIRef
-          key={ref}
-          schema={ref}
-          openapiPath={openapiPath}
-          isCommonRef={false}
-          collectRefs={false}
-        />
+export const OpenAPIPath = ({
+  path,
+  openapiPath,
+  pathPrefix,
+}: OpenAPIPathProps) => {
+  const { page } = usePage()
+
+  const { paths, pathMap, refMap } = useMemo(() => {
+    const paths = Array.isArray(path) ? path : [path]
+
+    const pathMap = new Map<
+      string,
+      {
+        pathItem: OpenAPIV3_1.PathItemObject
+        openapi: OpenAPIV3_1.Document
+      }
+    >()
+    const refMap = new Map<string, Set<string>>()
+
+    for (const [pathname, openapi] of Object.entries(openapisMap)) {
+      if (openapiPath && pathname !== openapiPath) {
+        continue
+      }
+      for (const path of paths) {
+        const pathItem = openapi.paths?.[path]
+        if (pathItem) {
+          pathMap.set(path, {
+            pathItem,
+            openapi,
+          })
+
+          if (!refMap.has(pathname)) {
+            refMap.set(pathname, new Set())
+          }
+          const refs = refMap.get(pathname)!
+          setRefsForPath(openapi, path, omitRoutePathRefs(page.routePath), refs)
+        }
+      }
+    }
+    return { paths, pathMap, refMap }
+  }, [openapiPath, page.routePath, path])
+
+  const slugger = useMemo(() => new BananaSlug(), [])
+
+  return (
+    <>
+      {paths.map((path) => {
+        const p = pathMap.get(path)
+        return (
+          <OpenAPIPathBase
+            key={path}
+            path={path}
+            pathItem={p?.pathItem}
+            openapi={p?.openapi}
+            pathPrefix={pathPrefix}
+            slugger={slugger}
+          />
+        )
+      })}
+      {[...refMap.entries()].map(([openapiPath, refs]) => (
+        <Fragment key={openapiPath}>
+          {[...refs].map((ref) => (
+            <OpenAPIRef
+              key={ref}
+              schema={ref}
+              openapiPath={openapiPath}
+              collectRefs={false}
+            />
+          ))}
+        </Fragment>
       ))}
-    </UidProvider>
+    </>
   )
 }
 
