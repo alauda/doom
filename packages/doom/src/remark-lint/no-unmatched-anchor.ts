@@ -162,14 +162,7 @@ export const noUnmatchedAnchor = lintRule<Root>(
 
       if (!anchors.has(hash)) {
         vfile.message(
-          `Unmatched anchor \`${hash}\` in link \`${url}\`, expected one of [${[
-            ...anchors,
-          ]
-            .map((a) => `\`${a}\``)
-            .join(', ')}] in file \`${path.relative(
-            configRoot,
-            refFilepath,
-          )}\``,
+          `Unmatched anchor \`${hash}\` in link \`${url}\`, make sure the target has the correct id with \`{#${hash}}\` in heading or \`<a id="${hash}"></a>\` element.`,
           { ancestors: [...parents, node], place: node.position },
         )
       }
