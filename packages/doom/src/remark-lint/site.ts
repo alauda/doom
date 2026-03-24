@@ -20,7 +20,7 @@ const sitesConfigFilePath = path.resolve(SITES_FILE)
 
 let sites: DoomSite[] | undefined
 
-export const site = lintRule<Root>('doom:lint-site', async (root, vfile) => {
+export const site = lintRule<Root>('doom-lint:site', async (root, vfile) => {
   if (!sites) {
     if (await pathExists(sitesConfigFilePath, 'file')) {
       sites = await resolveStaticConfig<DoomSite[]>(sitesConfigFilePath)
