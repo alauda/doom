@@ -1,5 +1,21 @@
 # @alauda/doom
 
+## 1.22.0
+
+### Minor Changes
+
+- [#289](https://github.com/alauda/doom/pull/289) [`97b7680`](https://github.com/alauda/doom/commit/97b76804a0d4b02674e7442e2c3759daccc2a732) Thanks [@JounQin](https://github.com/JounQin)! - feat: add new rule no-unmatched-anchor
+
+- [#292](https://github.com/alauda/doom/pull/292) [`be22246`](https://github.com/alauda/doom/commit/be22246117ae2492b403bd58b8a51fc9e5bd13b7) Thanks [@JounQin](https://github.com/JounQin)! - feat: deduplicate shared refs with a single component
+
+- [#296](https://github.com/alauda/doom/pull/296) [`8db8744`](https://github.com/alauda/doom/commit/8db8744f982ccbf5f46b1a2a0c2e18a49c5f063c) Thanks [@JounQin](https://github.com/JounQin)! - feat: support download links via extensions
+
+- [#290](https://github.com/alauda/doom/pull/290) [`6c73df6`](https://github.com/alauda/doom/commit/6c73df6e4e2322c4fe418fd898919ee6a42ab89c) Thanks [@JounQin](https://github.com/JounQin)! - feat: add new `callout` directive and component
+
+### Patch Changes
+
+- [#287](https://github.com/alauda/doom/pull/287) [`2d83618`](https://github.com/alauda/doom/commit/2d836180f4595c5073e7f2770de0a8f6391f491c) Thanks [@JounQin](https://github.com/JounQin)! - fix: ref in #/components/requestBodies/
+
 ## 1.21.5
 
 ### Patch Changes
