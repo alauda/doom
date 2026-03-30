@@ -109,7 +109,7 @@
     "unist-util-position": "^5.0.0",
     "unist-util-visit-parents": "^6.0.2",
     "x-fetch": "^0.2.6",
-    "yaml": "^2.8.2",
+    "yaml": "^2.8.3",
     "yoctocolors": "^2.1.2"
   }
 }
