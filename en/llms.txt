@@ -4,13 +4,13 @@
 
 - [CodeQualityTaskSummary](/en/apis/advanced_apis/codeQualityTaskSummary.md)
 - [Event APIs](/en/apis/advanced_apis/event/index.md)
-- [Search](/en/apis/advanced_apis/event/search.md)
-- [ApplicationSet](/en/apis/advanced_apis/gitops/applicationsets.md)
+- [Search](/en/apis/advanced_apis/event/search.md): <OpenAPIPath path={[ '/platform/events.alauda.io/v1/events', '/platform/events.alauda.io/v1/projects/{project}/clusters/{cluster}/namespaces/{namespace}/events', ]} />
+- [ApplicationSet](/en/apis/advanced_apis/gitops/applicationsets.md): <OpenAPIPath path={[ '/gitops/v1/project/{project}/applicationsets', '/gitops/v1/project/{project}/applicationsets/{name}', '/gitops/v1/project/{project}/applicationsets/{name}/applications', '/gitops/v1/project/{project}/applicationsets/{name}/applications/{app_name}', '/gitops/v1/project/{project}/applicationsets/{name}/applications/{app_name}/sync', '/gitops/v1/project/{project}/applicationsets/{name}/events', '/gitops/v1/project/{project}/applicationsets/{name}/prometheusrules', '/gitops/v1/project/{project}/applicationsets/{name}/prometheusrules/{rule_name}', '/gitops/v1/project/{project}/applicationsets/{name}/refresh', '/gitops/v1/project/{project}/applicationsets/{name}/sync', '/gitops/v1/project/{project}/applicationsets/{name}/topology', ]} />
 - [GitOps APIs](/en/apis/advanced_apis/gitops/index.md)
 - [Advanced APIs](/en/apis/advanced_apis/index.md)
-- [Aggregation](/en/apis/advanced_apis/log/aggregation.md)
+- [Aggregation](/en/apis/advanced_apis/log/aggregation.md): <OpenAPIPath path={[ '/platform/logging.alauda.io/v2/logs/aggregation', '/platform/logging.alauda.io/v2/clusters/{cluster}/logs/aggregation', '/platform/logging.alauda.io/v2/projects/{project}/clusters/{cluster}/namespaces/{namespace}/logs/aggregation', ]} />
 - [Log APIs](/en/apis/advanced_apis/log/index.md)
-- [Search](/en/apis/advanced_apis/log/search.md)
+- [Search](/en/apis/advanced_apis/log/search.md): <OpenAPIPath path={[ '/platform/logging.alauda.io/v2/logs/search', '/platform/logging.alauda.io/v2/clusters/{cluster}/logs/search', '/platform/logging.alauda.io/v2/projects/{project}/clusters/{cluster}/namespaces/{namespace}/logs/search', ]} />
 - [Projects](/en/apis/advanced_apis/projects.md)
 - [ArtifactCleanupRun - K8sCrd](/en/apis/crds/ArtifactCleanupRun-K8sCrd.md)
 - [ArtifactCleanupRun](/en/apis/crds/ArtifactCleanupRun.md)

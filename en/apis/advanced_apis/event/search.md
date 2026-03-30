@@ -1,12 +1,12 @@
 # Search
 
-## [#](#_r_8_-platformeventsalaudaiov1events)/platform/events.alauda.io/v1/events
+## [#](#platformeventsalaudaiov1events)/platform/events.alauda.io/v1/events
 
-### [#](#_r_8_--retrieve-kubernetes-events)`get` Retrieve Kubernetes events
+### [#](#retrieve-kubernetes-events)`get` Retrieve Kubernetes events
 
 Retrieve the k8s events using query parameters.
 
-#### [#](#_r_8_-parameters)Parameters
+#### [#](#parameters)Parameters
 
 - `start_time` (*in query*): `number` required Required: Unix timestamp for start time.
 
@@ -42,36 +42,17 @@ Retrieve the k8s events using query parameters.
 
 
 
-#### [#](#_r_8_-response)Response
+#### [#](#response)Response
 
-- `200` [EventsResponse](#_r_8_-EventsResponse): Successful retrieval of events.
+- `200` [EventsResponse](#EventsResponse): Successful retrieval of events.
 
-## [#](#_r_8_-EventsResponse)EventsResponse
+## [#](#platformeventsalaudaiov1projectsprojectclustersclusternamespacesnamespaceevents)/platform/events.alauda.io/v1/projects/{project}/clusters/{cluster}/namespaces/{namespace}/events
 
-- `items`: `[][EventItem](#_r_8_-EventItem)`List of event items.
-
-
-- `total_items`: `integer`Total number of event items.
-
-
-- `total_page`: `integer`Total number of pages.
-
-
-
-## [#](#_r_8_-EventItem)EventItem
-
-- `spec`: `object`Specification details for the event.
-
-
-
-
-## [#](#_r_b_-platformeventsalaudaiov1projectsprojectclustersclusternamespacesnamespaceevents)/platform/events.alauda.io/v1/projects/{project}/clusters/{cluster}/namespaces/{namespace}/events
-
-### [#](#_r_b_--retrieve-kubernetes-events-for-a-specific-project-and-namespace)`get` Retrieve Kubernetes events for a specific project and namespace
+### [#](#retrieve-kubernetes-events-for-a-specific-project-and-namespace)`get` Retrieve Kubernetes events for a specific project and namespace
 
 Retrieve the k8s events with a business view. For these requests, the cluster, project, and namespace fields must be provided.
 
-#### [#](#_r_b_-parameters)Parameters
+#### [#](#parameters-1)Parameters
 
 - `projectName` (*in path*): `string` required Required: Name of the project.
 
@@ -110,13 +91,13 @@ Retrieve the k8s events with a business view. For these requests, the cluster, p
 
 
 
-#### [#](#_r_b_-response)Response
+#### [#](#response-1)Response
 
-- `200` [EventsResponse](#_r_b_-EventsResponse): Successful retrieval of events.
+- `200` [EventsResponse](#EventsResponse): Successful retrieval of events.
 
-## [#](#_r_b_-EventsResponse)EventsResponse
+## [#](#EventsResponse)EventsResponse
 
-- `items`: `[][EventItem](#_r_b_-EventItem)`List of event items.
+- `items`: `[][EventItem](#EventItem)`List of event items.
 
 
 - `total_items`: `integer`Total number of event items.
@@ -126,7 +107,7 @@ Retrieve the k8s events with a business view. For these requests, the cluster, p
 
 
 
-## [#](#_r_b_-EventItem)EventItem
+## [#](#EventItem)EventItem
 
 - `spec`: `object`Specification details for the event.
 

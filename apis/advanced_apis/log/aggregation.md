@@ -1,12 +1,12 @@
 # Aggregation
 
-## [#](#_r_e0_-platformloggingalaudaiov2logsaggregation)/platform/logging.alauda.io/v2/logs/aggregation
+## [#](#platformloggingalaudaiov2logsaggregation)/platform/logging.alauda.io/v2/logs/aggregation
 
-### [#](#_r_e0_--log-aggregation)`get` Log Aggregation
+### [#](#log-aggregation)`get` Log Aggregation
 
 Aggregate logs into buckets for chart display with authentication.
 
-#### [#](#_r_e0_-parameters)Parameters
+#### [#](#parameters)Parameters
 
 - `buckets` (*in query*): `integer` Number of buckets for aggregation. Default is 30.
 
@@ -54,25 +54,19 @@ Aggregate logs into buckets for chart display with authentication.
 
 
 
-#### [#](#_r_e0_-response)Response
+#### [#](#response)Response
 
-- `200` `object`: Successful aggregation response*Properties:*- `buckets`: `[][Bucket](#_r_e0_-Bucket)`
-
-
-
-## [#](#_r_e0_-Bucket)Bucket
-
-- `time`: `number`
-- `count`: `integer`
+- `200` `object`: Successful aggregation response*Properties:*- `buckets`: `[][Bucket](#Bucket)`
 
 
-## [#](#_r_e2_-platformloggingalaudaiov2clustersclusterlogsaggregation)/platform/logging.alauda.io/v2/clusters/{cluster}/logs/aggregation
 
-### [#](#_r_e2_--log-aggregation-by-cluster)`get` Log Aggregation by Cluster
+## [#](#platformloggingalaudaiov2clustersclusterlogsaggregation)/platform/logging.alauda.io/v2/clusters/{cluster}/logs/aggregation
+
+### [#](#log-aggregation-by-cluster)`get` Log Aggregation by Cluster
 
 Aggregate logs by cluster into buckets with authentication.
 
-#### [#](#_r_e2_-parameters)Parameters
+#### [#](#parameters-1)Parameters
 
 - `cluster` (*in path*): `string` required Name of the cluster.
 
@@ -120,25 +114,19 @@ Aggregate logs by cluster into buckets with authentication.
 
 
 
-#### [#](#_r_e2_-response)Response
+#### [#](#response-1)Response
 
-- `200` `object`: Successful aggregation response*Properties:*- `buckets`: `[][Bucket](#_r_e2_-Bucket)`
-
-
-
-## [#](#_r_e2_-Bucket)Bucket
-
-- `time`: `number`
-- `count`: `integer`
+- `200` `object`: Successful aggregation response*Properties:*- `buckets`: `[][Bucket](#Bucket)`
 
 
-## [#](#_r_e4_-platformloggingalaudaiov2projectsprojectclustersclusternamespacesnamespacelogsaggregation)/platform/logging.alauda.io/v2/projects/{project}/clusters/{cluster}/namespaces/{namespace}/logs/aggregation
 
-### [#](#_r_e4_--log-aggregation-by-project-cluster-and-namespace)`get` Log Aggregation by Project, Cluster and Namespace
+## [#](#platformloggingalaudaiov2projectsprojectclustersclusternamespacesnamespacelogsaggregation)/platform/logging.alauda.io/v2/projects/{project}/clusters/{cluster}/namespaces/{namespace}/logs/aggregation
+
+### [#](#log-aggregation-by-project-cluster-and-namespace)`get` Log Aggregation by Project, Cluster and Namespace
 
 Aggregate logs within a specific project, cluster, and namespace into buckets with authentication.
 
-#### [#](#_r_e4_-parameters)Parameters
+#### [#](#parameters-2)Parameters
 
 - `project` (*in path*): `string` required Name of the project.
 
@@ -189,13 +177,13 @@ Aggregate logs within a specific project, cluster, and namespace into buckets wi
 
 
 
-#### [#](#_r_e4_-response)Response
+#### [#](#response-2)Response
 
-- `200` `object`: Successful aggregation response*Properties:*- `buckets`: `[][Bucket](#_r_e4_-Bucket)`
+- `200` `object`: Successful aggregation response*Properties:*- `buckets`: `[][Bucket](#Bucket)`
 
 
 
-## [#](#_r_e4_-Bucket)Bucket
+## [#](#Bucket)Bucket
 
 - `time`: `number`
 - `count`: `integer`

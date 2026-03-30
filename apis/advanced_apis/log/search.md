@@ -1,12 +1,12 @@
 # Search
 
-## [#](#_r_e6_-platformloggingalaudaiov2logssearch)/platform/logging.alauda.io/v2/logs/search
+## [#](#platformloggingalaudaiov2logssearch)/platform/logging.alauda.io/v2/logs/search
 
-### [#](#_r_e6_--log-search)`get` Log Search
+### [#](#log-search)`get` Log Search
 
 Search logs with authentication.
 
-#### [#](#_r_e6_-parameters)Parameters
+#### [#](#parameters)Parameters
 
 - `start` (*in query*): `number` required Start time of the time range.
 
@@ -60,83 +60,19 @@ Search logs with authentication.
 
 
 
-#### [#](#_r_e6_-response)Response
+#### [#](#response)Response
 
-- `200` `object`: Successful log search response*Properties:*- `items`: `[][LogEntry](#_r_e6_-LogEntry)`
-
-
-
-## [#](#_r_e6_-LogEntry)LogEntry
-
-- `time`: `number`Time of the log entry.
-
-
-- `node`: `string`Name of the node.
-
-
-- `podName`: `string`Name of the pod.
-
-
-- `podId`: `string`Identifier of the pod.
-
-
-- `logData`: `string`Log data as a JSON string.
-
-
-- `logLevel`: `string`Severity level of the log.
-
-
-- `containerName`: `string`Name of the container.
-
-
-- `cluster`: `string`Name of the cluster.
-
-
-- `containerId`: `string`Identifier of the container.
-
-
-- `containerId8`: `string`Shortened container identifier.
-
-
-- `@timestamp`: `string`Timestamp in string format.
-
-
-- `namespace`: `string`Namespace of the log.
-
-
-- `project`: `string`Project associated with the log.
-
-
-- `path`: `string`Log path.
-
-
-- `logId`: `string`Unique identifier of the log.
-
-
-- `logType`: `string`Type of the log.
-
-
-- `logIndex`: `string`Index name for the log.
-
-
-- `component`: `string`Component related to the log.
-
-
-- `product`: `string`Product name associated with the log.
-
-
-- `workload`: `string`Workload details.
+- `200` `object`: Successful log search response*Properties:*- `items`: `[][LogEntry](#LogEntry)`
 
 
 
+## [#](#platformloggingalaudaiov2clustersclusterlogssearch)/platform/logging.alauda.io/v2/clusters/{cluster}/logs/search
 
-## [#](#_r_e8_-platformloggingalaudaiov2clustersclusterlogssearch)/platform/logging.alauda.io/v2/clusters/{cluster}/logs/search
-
-### [#](#_r_e8_--log-search-by-cluster)`get` Log Search by Cluster
+### [#](#log-search-by-cluster)`get` Log Search by Cluster
 
 Search logs by cluster with authentication.
 
-#### [#](#_r_e8_-parameters)Parameters
+#### [#](#parameters-1)Parameters
 
 - `cluster` (*in path*): `string` required Name of the cluster.
 
@@ -190,83 +126,19 @@ Search logs by cluster with authentication.
 
 
 
-#### [#](#_r_e8_-response)Response
+#### [#](#response-1)Response
 
-- `200` `object`: Successful log search response*Properties:*- `items`: `[][LogEntry](#_r_e8_-LogEntry)`
-
-
-
-## [#](#_r_e8_-LogEntry)LogEntry
-
-- `time`: `number`Time of the log entry.
-
-
-- `node`: `string`Name of the node.
-
-
-- `podName`: `string`Name of the pod.
-
-
-- `podId`: `string`Identifier of the pod.
-
-
-- `logData`: `string`Log data as a JSON string.
-
-
-- `logLevel`: `string`Severity level of the log.
-
-
-- `containerName`: `string`Name of the container.
-
-
-- `cluster`: `string`Name of the cluster.
-
-
-- `containerId`: `string`Identifier of the container.
-
-
-- `containerId8`: `string`Shortened container identifier.
-
-
-- `@timestamp`: `string`Timestamp in string format.
-
-
-- `namespace`: `string`Namespace of the log.
-
-
-- `project`: `string`Project associated with the log.
-
-
-- `path`: `string`Log path.
-
-
-- `logId`: `string`Unique identifier of the log.
-
-
-- `logType`: `string`Type of the log.
-
-
-- `logIndex`: `string`Index name for the log.
-
-
-- `component`: `string`Component related to the log.
-
-
-- `product`: `string`Product name associated with the log.
-
-
-- `workload`: `string`Workload details.
+- `200` `object`: Successful log search response*Properties:*- `items`: `[][LogEntry](#LogEntry)`
 
 
 
+## [#](#platformloggingalaudaiov2projectsprojectclustersclusternamespacesnamespacelogssearch)/platform/logging.alauda.io/v2/projects/{project}/clusters/{cluster}/namespaces/{namespace}/logs/search
 
-## [#](#_r_ea_-platformloggingalaudaiov2projectsprojectclustersclusternamespacesnamespacelogssearch)/platform/logging.alauda.io/v2/projects/{project}/clusters/{cluster}/namespaces/{namespace}/logs/search
-
-### [#](#_r_ea_--log-search-by-project-cluster-and-namespace)`get` Log Search by Project, Cluster and Namespace
+### [#](#log-search-by-project-cluster-and-namespace)`get` Log Search by Project, Cluster and Namespace
 
 Search logs within a specific project, cluster, and namespace with authentication.
 
-#### [#](#_r_ea_-parameters)Parameters
+#### [#](#parameters-2)Parameters
 
 - `project` (*in path*): `string` required Name of the project.
 
@@ -326,13 +198,13 @@ Search logs within a specific project, cluster, and namespace with authenticatio
 
 
 
-#### [#](#_r_ea_-response)Response
+#### [#](#response-2)Response
 
-- `200` `object`: Successful log search response*Properties:*- `items`: `[][LogEntry](#_r_ea_-LogEntry)`
+- `200` `object`: Successful log search response*Properties:*- `items`: `[][LogEntry](#LogEntry)`
 
 
 
-## [#](#_r_ea_-LogEntry)LogEntry
+## [#](#LogEntry)LogEntry
 
 - `time`: `number`Time of the log entry.
 
