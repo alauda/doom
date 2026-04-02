@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 1.22.1
+
+### Patch Changes
+
+- [#297](https://github.com/alauda/doom/pull/297) [`9796a59`](https://github.com/alauda/doom/commit/9796a59b497899a92bf9553d9cc948801087aa34) Thanks [@JounQin](https://github.com/JounQin)! - fix: should only consider stable original config nav length
+
 ## 1.22.0
 
 ### Minor Changes
