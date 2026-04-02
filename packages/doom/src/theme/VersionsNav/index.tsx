@@ -22,6 +22,10 @@ import { useForceRender } from './context.tsx'
 
 import { useLang, useTranslation } from '@alauda/doom/runtime'
 
+type HackNavItem = NavItem & {
+  _hacked: true
+}
+
 const LEGACY_VERSIONS = ['3.18.1', '3.18.0', '3.16', '3.14']
 
 const LEGACY_NAV_ITEMS = LEGACY_VERSIONS.map((v) => ({
@@ -44,8 +48,6 @@ const VersionsNav_ = () => {
     () => (Array.isArray(nav) ? nav : nav!.default),
     [nav],
   )
-
-  const originalConfigNav = useMemo(() => [...configNav], [configNav])
 
   // hack to rerender nav when configNav is changed
   const forceRender = useForceRender()
@@ -104,17 +106,18 @@ const VersionsNav_ = () => {
   }, [version, versionsBase])
 
   const navList = useMemo(() => {
-    const navList: NavItem[] = []
+    const navList: HackNavItem[] = []
     if (downloadLink) {
       navList.push({
         text: t('download_pdf'),
         link: downloadLink,
+        _hacked: true,
       })
     }
 
     if (versionsBase == null) {
       if (version) {
-        navList.push({ text: version, items: [] })
+        navList.push({ text: version, items: [], _hacked: true })
       }
     } else {
       const versionItems: NavItem[] = versions.map((v) => ({
@@ -131,6 +134,7 @@ const VersionsNav_ = () => {
       navList.push({
         text: version,
         items: versionItems as NavItemWithLink[],
+        _hacked: true,
       })
     }
     return navList
@@ -138,10 +142,12 @@ const VersionsNav_ = () => {
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/immutability
-    configNav.length = originalConfigNav.length
+    configNav.length = configNav.filter(
+      (item) => !('_hacked' in item && item._hacked === true),
+    ).length
     configNav.push(...navList)
     forceRender()
-  }, [configNav, forceRender, navList, originalConfigNav])
+  }, [configNav, forceRender, navList])
 
   return null
 }
