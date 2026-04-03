@@ -88,7 +88,10 @@ export const replaceLinksWithOutline = (
   const outlines = extractOutlines(pdfDoc, outlinesObj)
 
   for (const [index, outlineNode] of outlineNodes.entries()) {
-    const outline = outlines[index]
+    const outline = outlines.at(index)
+    if (!outline) {
+      continue
+    }
     outlineMap.set(outlineNode, outline)
     for (const [index, outlineChild] of outlineNode.children.entries()) {
       outlineMap.set(outlineChild, outline.children[index])
