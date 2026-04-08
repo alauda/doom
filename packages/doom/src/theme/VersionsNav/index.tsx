@@ -111,6 +111,7 @@ const VersionsNav_ = () => {
       navList.push({
         text: t('download_pdf'),
         link: downloadLink,
+        download: true,
         _hacked: true,
       })
     }
@@ -141,7 +142,6 @@ const VersionsNav_ = () => {
   }, [downloadLink, t, version, versionsBase, versions])
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/immutability
     configNav.length = configNav.filter(
       (item) => !('_hacked' in item && item._hacked === true),
     ).length

@@ -14,6 +14,7 @@ export interface MasonryProps extends HTMLAttributes<HTMLDivElement> {
 
 const LazyMasonry = lazy(() =>
   import('masonry-layout').then(({ default: MasonryLayout }) => {
+    // eslint-disable-next-line @eslint-react/component-hook-factories
     const Masonry = ({ options, ...props }: MasonryProps) => {
       const ref = useRef<HTMLDivElement>(null)
       useLayoutEffect(() => {

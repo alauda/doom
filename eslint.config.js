@@ -2,15 +2,16 @@
 
 import eslint from '@eslint/js'
 import react from '@eslint-react/eslint-plugin'
+import { defineConfig } from 'eslint/config'
 import { createTypeScriptImportResolver } from 'eslint-import-resolver-typescript'
 import { importX } from 'eslint-plugin-import-x'
 import reactHooks from 'eslint-plugin-react-hooks'
 import * as regexp from 'eslint-plugin-regexp'
-import { config, configs } from 'typescript-eslint'
+import { configs } from 'typescript-eslint'
 
 import doom from '@alauda/doom/eslint'
 
-export default config(
+export default defineConfig(
   {
     ignores: [
       'dist',
@@ -24,8 +25,9 @@ export default config(
   eslint.configs.recommended,
   importX.flatConfigs.recommended,
   importX.flatConfigs.typescript,
-  react.configs.recommended,
   reactHooks.configs.flat.recommended,
+  react.configs.recommended,
+  react.configs['disable-conflict-eslint-plugin-react-hooks'],
   regexp.configs['flat/recommended'],
   {
     files: ['**/*.{ts,tsx}'],
@@ -51,6 +53,8 @@ export default config(
   {
     files: ['**/*.mdx'],
     rules: {
+      '@eslint-react/jsx-no-children-prop': 'off',
+      '@eslint-react/rules-of-hooks': 'off',
       'react-hooks/rules-of-hooks': 'off',
     },
   },

@@ -82,6 +82,8 @@ async function doom(userConfigOrRoot?: UserConfig | string | null | URL) {
     {
       files: ['**/*.mdx'],
       rules: {
+        '@eslint-react/jsx-no-children-prop': 'off',
+        '@eslint-react/rules-of-hooks': 'off',
         'no-unused-expressions': 'off',
       },
     },

@@ -4,7 +4,6 @@ export function useInterval(cb: () => void, delay?: number | null) {
   const cbRef = useRef<() => void>(cb)
 
   // Remember the latest callback.
-  // eslint-disable-next-line react-hooks/refs
   cbRef.current = cb
 
   // Set up the interval.

@@ -6,7 +6,6 @@ export const useMemoizedFn =
   <T extends (...args: any[]) => any>(fn: T): T => {
     /* eslint-enable @typescript-eslint/no-explicit-any */
     const fnRef = useRef(fn)
-    // eslint-disable-next-line react-hooks/refs
     fnRef.current = fn
     return useCallback(
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
