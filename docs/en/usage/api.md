@@ -1,11 +1,11 @@
 ---
 weight: 5
-sourceSHA: bc9fb7c73510cec1f7c61416bf84345906a57f90e1b03c5e15e378c69087102f
+sourceSHA: d96b3f9ae640703cd6597ffaac0372f1efc72064af86502bca3eae69670a77c2
 ---
 
 # API Documentation
 
-Based on actual business needs, we generally divide APIs into three categories: standard K8S API, advanced API, and CRD (Custom Resource Definition). Therefore, the directory structure is usually organized as follows:
+According to actual business needs, we generally divide APIs into three types: standard K8S API, advanced API, and CRD (Custom Resource Definition). Therefore, the directory structure is usually organized as follows:
 
 ```sh
 ├── apis
@@ -17,6 +17,8 @@ Based on actual business needs, we generally divide APIs into three categories: 
 
 ## K8S API
 
+### Standard K8S API
+
 ```mdx title="kubernetes_apis/workload/daemonset.mdx"
 # DaemonSet [apps/v1]
 
@@ -27,6 +29,8 @@ Based on actual business needs, we generally divide APIs into three categories: 
 ```
 
 Refer to [DaemonSet](../apis/kubernetes_apis/workload/daemonset).
+
+### CRD
 
 ```mdx title="crds/ArtifactCleanupRun.mdx"
 # ArtifactCleanupRun
@@ -41,7 +45,7 @@ Refer to [ArtifactCleanupRun](../apis/crds/ArtifactCleanupRun).
 - `name`: Reference name under OpenAPI schema `definitions` (v2) or `components/schemas` (v3), or CRD `metadata.name`
 - `namespaced`: Indicates whether the resource is namespace-scoped; defaults to `true`, meaning the API Endpoints include the namespace path parameter `namespaces/{namespace}`
 - `pathPrefix`: Can be used to override the global configuration `api.pathPrefix`
-- `filepath`: Similar to [specified openapi path](#specified-openapi-path), used to specify a particular openapi or CRD file
+- `filepath`: Similar to [specifying openapi path](#specified-openapi-path), used to specify a particular openapi or CRD file
 - `apiGroup`: Optional, specifies the API group; openapi will try to read the referenced `x-kubernetes-group-version-kind`, same below
 - `apiVersion`: Optional, specifies the API version; CRD defaults to using the first version in `spec.versions`
 - `apiKind`: Optional, specifies the API resource kind
@@ -60,26 +64,7 @@ Refer to [CodeQualityTaskSummary](../apis/advanced_apis/codeQualityTaskSummary).
 
 - `path`: Path under OpenAPI schema `paths`
 - `pathPrefix`: Can be used to override the global configuration `api.pathPrefix`
-- `openapiPath`: See [specified openapi path](#specified-openapi-path)
-
-## CRD (deprecated)
-
-:::warning
-Please use the `K8sAPI` component instead of the `K8sCrd` component. The `K8sCrd` component will be removed in future versions.
-:::
-
-```mdx title="crds/ArtifactCleanupRun-K8sCrd.mdx"
-# ArtifactCleanupRun - K8sCrd
-
-<K8sCrd name="artifactcleanupruns.artifacts.katanomi.dev" />
-```
-
-Refer to [ArtifactCleanupRun-K8sCrd](../apis/crds/ArtifactCleanupRun-K8sCrd).
-
-### `props`
-
-- `name`: CRD `metadata.name`
-- `crdPath`: Similar to [specified openapi path](#specified-openapi-path), used to specify a particular CRD file
+- `openapiPath`: See [specifying openapi path](#specified-openapi-path)
 
 ## Common References
 
@@ -94,11 +79,11 @@ Refer to [CodeQuality](../apis/references/CodeQuality).
 ### `props`
 
 - `schema`: Reference name under OpenAPI schema `definitions` (v2) or `components/schemas` (v3)
-- `openapiPath`: See [specified openapi path](#specified-openapi-path)
+- `openapiPath`: See [specifying openapi path](#specified-openapi-path)
 
-## Specified openapi path {#specified-openapi-path}
+## Specifying openapi Path {#specified-openapi-path}
 
-For the `OpenAPIPath` and `OpenAPIRef` components, by default, all openapi definition files are searched until a match is found. If you need to specify a particular openapi file, you can use the `openapiPath` property to specify it:
+For `OpenAPIPath` and `OpenAPIRef` components, by default, the system searches through all openapi definition files until a match is found. If you need to specify a particular openapi file, you can use the `openapiPath` property:
 
 ```mdx
 <OpenAPIPath
