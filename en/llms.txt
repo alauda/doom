@@ -12,7 +12,6 @@
 - [Log APIs](/en/apis/advanced_apis/log/index.md)
 - [Search](/en/apis/advanced_apis/log/search.md): <OpenAPIPath path={[ '/platform/logging.alauda.io/v2/logs/search', '/platform/logging.alauda.io/v2/clusters/{cluster}/logs/search', '/platform/logging.alauda.io/v2/projects/{project}/clusters/{cluster}/namespaces/{namespace}/logs/search', ]} />
 - [Projects](/en/apis/advanced_apis/projects.md)
-- [ArtifactCleanupRun - K8sCrd](/en/apis/crds/ArtifactCleanupRun-K8sCrd.md)
 - [ArtifactCleanupRun](/en/apis/crds/ArtifactCleanupRun.md)
 - [CRDs](/en/apis/crds/index.md)
 - [APIs](/en/apis/index.md): The apis entry is only for demonstration purposes. It is not a real API.
@@ -28,7 +27,7 @@
 - [Status](/en/apis/references/Status.md)
 - [Common References](/en/apis/references/index.md)
 - [Getting Started](/en/start.md)
-- [API Documentation](/en/usage/api.md): Based on actual business needs, we generally divide APIs into three categories: standard K8S API, advanced API, and CRD (Custom Resource Definition). Therefore, the directory structure is usually organized as follows:
+- [API Documentation](/en/usage/api.md): According to actual business needs, we generally divide APIs into three types: standard K8S API, advanced API, and CRD (Custom Resource Definition). Therefore, the directory structure is usually organized as follows:
 - [Configuration](/en/usage/configuration.md): Configure the `doom` documentation tool
 - [Convention](/en/usage/convention.md): Based on the principle of "convention over configuration", we agree on the organization of documents to automatically generate the left sidebar and related content.
 - [Deployment](/en/usage/deploy.md): After the documentation project development is completed, we can deploy the project to the ACP platform

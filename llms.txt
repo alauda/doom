@@ -12,7 +12,6 @@
 - [Log APIs](/apis/advanced_apis/log/index.md)
 - [Search](/apis/advanced_apis/log/search.md): <OpenAPIPath path={[ '/platform/logging.alauda.io/v2/logs/search', '/platform/logging.alauda.io/v2/clusters/{cluster}/logs/search', '/platform/logging.alauda.io/v2/projects/{project}/clusters/{cluster}/namespaces/{namespace}/logs/search', ]} />
 - [Projects](/apis/advanced_apis/projects.md)
-- [ArtifactCleanupRun - K8sCrd](/apis/crds/ArtifactCleanupRun-K8sCrd.md)
 - [ArtifactCleanupRun](/apis/crds/ArtifactCleanupRun.md)
 - [CRDs](/apis/crds/index.md)
 - [APIs](/apis/index.md): The apis entry is only for demonstration purposes. It is not a real API.

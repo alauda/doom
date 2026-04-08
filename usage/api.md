@@ -12,6 +12,8 @@
 
 ## K8S API
 
+### 标准 K8S API
+
 ```mdx title="kubernetes_apis/workload/daemonset.mdx"
 # DaemonSet [apps/v1]
 
@@ -22,6 +24,8 @@
 ```
 
 参考 [DaemonSet](/apis/kubernetes_apis/workload/daemonset.md)。
+
+### CRD
 
 ```mdx title="crds/ArtifactCleanupRun.mdx"
 # ArtifactCleanupRun
@@ -56,25 +60,6 @@
 - `path`: OpenAPI schema `paths` 下的路径
 - `pathPrefix`: 可以用于覆盖全局配置中的 `api.pathPrefix`
 - `openapiPath`: 参考[指定 openapi 路径](#specified-openapi-path)
-
-## CRD (deprecated)
-
-:::warning
-请使用 `K8sAPI` 组件替代 `K8sCrd` 组件，`K8sCrd` 组件将在未来版本中移除。
-:::
-
-```mdx title="crds/ArtifactCleanupRun-K8sCrd.mdx"
-# ArtifactCleanupRun - K8sCrd
-
-<K8sCrd name="artifactcleanupruns.artifacts.katanomi.dev" />
-```
-
-参考 [ArtifactCleanupRun-K8sCrd](/apis/crds/ArtifactCleanupRun-K8sCrd.md)。
-
-### `props`
-
-- `name`: CRD `metadata.name`
-- `crdPath`: 类似[指定 openapi 路径](#specified-openapi-path)，用于指定特定的 CRD 文件
 
 ## 公共引用
 
