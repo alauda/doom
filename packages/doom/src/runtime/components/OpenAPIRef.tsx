@@ -54,7 +54,7 @@ export const OpenAPIProperty = ({
   const prop$Ref = get$Ref(property)
 
   const propObj = prop$Ref
-    ? resolveRef(openapi, prop$Ref)
+    ? resolveRef(openapi, prop$Ref)!
     : (property as OpenAPIV3_1.SchemaObject)
 
   const type = propObj.type
@@ -66,7 +66,7 @@ export const OpenAPIProperty = ({
     const { items } = propObj
     const items$Ref = get$Ref(items)
     const itemsObj = items$Ref
-      ? resolveRef(openapi, items$Ref)
+      ? resolveRef(openapi, items$Ref)!
       : (items as OpenAPIV3_1.SchemaObject)
     const itemsType = itemsObj.type
     typeNode = (
@@ -84,7 +84,7 @@ export const OpenAPIProperty = ({
       const props = propObj.additionalProperties
       const props$Ref = get$Ref(props)
       const propsObj = props$Ref
-        ? resolveRef(openapi, props$Ref)
+        ? resolveRef(openapi, props$Ref)!
         : (props as OpenAPIV3_1.SchemaObject)
       const propsType = propsObj.type
       typeNode = (
@@ -172,7 +172,7 @@ const getRefsForSchema = (
       const ref = schema.$ref.replace(/^#\/components\/[^/]+\//, '')
       if (!knownRefs[ref]) {
         refs.add(ref)
-        schema = resolveRef(openapi, schema.$ref)
+        schema = resolveRef(openapi, schema.$ref)!
       }
     }
     for (const value of Object.values(schema) as unknown[]) {
@@ -201,7 +201,6 @@ export const OpenAPIRef = ({
         continue
       }
       const schemaItem = resolveRef(openapi, schema)
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (schemaItem) {
         return [schemaItem, openapi, pathname]
       }

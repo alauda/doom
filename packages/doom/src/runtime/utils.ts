@@ -8,6 +8,23 @@ export const modelName = (ref: string) => {
   return upperFirst(lastPart.startsWith('#') ? lastPart.slice(1) : lastPart)
 }
 
+// https://swagger.io/docs/specification/v3_0/components/#components-structure
+const COMPONENTS = [
+  'schemas',
+  'parameters',
+  'securitySchemes',
+  'requestBodies',
+  'responses',
+  'headers',
+  'examples',
+  'links',
+  'callbacks',
+]
+
+const COMPONENTS_REFS = COMPONENTS.map(
+  (component) => `#/components/${component}/`,
+)
+
 export const resolveRef = <
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
   T extends object = OpenAPIV3_1.SchemaObject,
@@ -15,10 +32,16 @@ export const resolveRef = <
   openapi: OpenAPIV3_1.Document,
   ref: string,
 ) => {
-  if (!ref.startsWith('#/')) {
-    ref = `#/components/schemas/${ref}`
+  const refs = ref.startsWith('#/')
+    ? [ref]
+    : COMPONENTS_REFS.map((prefix) => `${prefix}${ref}`)
+
+  for (const ref of refs) {
+    const resolved = get(openapi, ref.slice(2).split('/')) as T | undefined
+    if (resolved) {
+      return resolved
+    }
   }
-  return get(openapi, ref.slice(2).split('/')) as T
 }
 
 const DEFAULT_COMMON_REFS = {
