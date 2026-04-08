@@ -1,5 +1,17 @@
 # @alauda/doom
 
+## 2.0.0
+
+### Major Changes
+
+- [#303](https://github.com/alauda/doom/pull/303) [`13565e8`](https://github.com/alauda/doom/commit/13565e87bd19bdd711396689db8fecdc5bd1910c) Thanks [@JounQin](https://github.com/JounQin)! - chore!: alias deprecated K8sCrd to K8sAPI component
+
+- [#301](https://github.com/alauda/doom/pull/301) [`460ae2d`](https://github.com/alauda/doom/commit/460ae2dde95114787627631f26b628786969380a) Thanks [@JounQin](https://github.com/JounQin)! - chore!: bump eslint v10
+
+### Patch Changes
+
+- [#304](https://github.com/alauda/doom/pull/304) [`603a0b8`](https://github.com/alauda/doom/commit/603a0b894e0d4d34af6f3f5b7db6548d0b77ee36) Thanks [@JounQin](https://github.com/JounQin)! - fix: resolve more components refs
+
 ## 1.22.1
 
 ### Patch Changes
