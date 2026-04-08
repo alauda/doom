@@ -41,7 +41,7 @@ export const OpenAPIParameters = ({
       {parameters.map((param, index) => {
         const paramObj =
           '$ref' in param
-            ? resolveRef<OpenAPIV3_1.ParameterObject>(openapi, param.$ref)
+            ? resolveRef<OpenAPIV3_1.ParameterObject>(openapi, param.$ref)!
             : param
         const type =
           paramObj.schema &&
@@ -85,7 +85,7 @@ export const OpenAPIResponses = ({
       {Object.entries(responses).map(([code, response]) => {
         const responseObj =
           '$ref' in response
-            ? resolveRef<OpenAPIV3_1.ResponseObject>(openapi, response.$ref)
+            ? resolveRef<OpenAPIV3_1.ResponseObject>(openapi, response.$ref)!
             : response
         const responseContent = responseObj.content
         const schema = (
@@ -149,7 +149,7 @@ const setRefsForPath = (
       const ref = schema.$ref.replace(/^#\/components\/[^/]+\//, '')
       if (!knownRefs[ref]) {
         refs.add(ref)
-        schema = resolveRef(openapi, schema.$ref)
+        schema = resolveRef(openapi, schema.$ref)!
       }
     }
     for (const value of Object.values(schema) as unknown[]) {

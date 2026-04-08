@@ -11,7 +11,8 @@ export const RefLink = ({ $ref }: RefLinkProps) => {
     return null
   }
 
-  // #/components/schemas/, #/components/requestBodies/, etc.
+  // https://swagger.io/docs/specification/v3_0/components/#components-structure
+  // #/components/schemas/, #/components/requestBodies/, #/components/responses/, etc.
   const ref = $ref.replace(/^#\/components\/[^/]+\//, '#')
   const plainRef = ref.slice(1)
   const refName = modelName(plainRef)

@@ -56,7 +56,7 @@ const derefSchema = (
 ) => {
   const $ref = getSchemaValue(schema as OpenAPIV3_1.ReferenceObject, '$ref')
   if (fullSchema && $ref) {
-    return resolveRef(fullSchema, $ref)
+    return resolveRef(fullSchema, $ref)!
   }
   return schema as OpenAPIV3_1.SchemaObject
 }
