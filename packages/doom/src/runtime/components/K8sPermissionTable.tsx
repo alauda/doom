@@ -106,7 +106,7 @@ export const K8sPermissionTable = ({ functions }: K8sPermissionTableProps) => {
         }
         return matched
       }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line @eslint-react/exhaustive-deps
     functions,
   )
 
