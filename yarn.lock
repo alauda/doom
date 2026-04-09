@@ -4373,7 +4373,7 @@ __metadata:
     eslint-plugin-import-x: "npm:^4.16.2"
     eslint-plugin-react-hooks: "npm:^7.0.1"
     eslint-plugin-regexp: "npm:^3.1.0"
-    nano-staged: "npm:^0.9.0"
+    nano-staged: "npm:^1.0.0"
     npm-run-all2: "npm:^8.0.4"
     prettier: "npm:^3.8.1"
     prettier-plugin-pkg: "npm:^0.22.1"
@@ -9030,14 +9030,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nano-staged@npm:^0.9.0":
-  version: 0.9.0
-  resolution: "nano-staged@npm:0.9.0"
-  dependencies:
-    picocolors: "npm:^1.0.0"
+"nano-staged@npm:^1.0.0":
+  version: 1.0.2
+  resolution: "nano-staged@npm:1.0.2"
   bin:
     nano-staged: lib/bin.js
-  checksum: 10c0/7052f159e1c0ce5c4d65df3a17288bd099779819fe13fa658bdd10c0eb41b0094ffa9391d84bd3774f9bcfd41fa5e5f82f0d7cb6f69c2e04d4580cf7f6d7b3f2
+  checksum: 10c0/bc69db9fd60484e32bd3f44d6038e2f87dae8f176df56a3798a187c55568cfe48011d995884e7cbb55a5c0c345e7461c0048950b01a4136c64ad4f0e36b03334
   languageName: node
   linkType: hard
 
