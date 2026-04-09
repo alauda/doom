@@ -9,7 +9,7 @@ import { removeLeadingSlash } from '@rspress/shared'
 import { Command } from 'commander'
 import ejs from 'ejs'
 import matter from 'gray-matter'
-import { AzureOpenAI, RateLimitError } from 'openai'
+import { OpenAI, RateLimitError } from 'openai'
 import { pRateLimit } from 'p-ratelimit'
 import { glob } from 'tinyglobby'
 import { cyan, red } from 'yoctocolors'
@@ -114,8 +114,8 @@ The text for translation is provided below, within triple quotes:
 <% } %>
 `.trim()
 
-let openai: AzureOpenAI | undefined
-const openaiModel = process.env.AZURE_OPENAI_MODEL || 'gpt-4.1-mini'
+let openai: OpenAI | undefined
+const openaiModel = process.env.ALAUDA_OPENAI_MODEL || 'gpt-5.4-mini'
 
 export interface InternalTranslateOptions extends TranslateOptions {
   source: Language
@@ -305,12 +305,9 @@ export const translate = async ({
   isChunk = false,
 }: InternalTranslateOptions) => {
   if (!openai) {
-    openai = new AzureOpenAI({
-      endpoint:
-        process.env.AZURE_OPENAI_ENDPOINT ||
-        'https://azure-ai-api-gateway.alauda.cn',
-      apiKey: process.env.AZURE_OPENAI_API_KEY,
-      apiVersion: process.env.OPENAI_API_VERSION || '2025-04-01-preview',
+    openai = new OpenAI({
+      baseURL: process.env.ALAUDA_OPENAI_BASE_URL,
+      apiKey: process.env.ALAUDA_OPENAI_API_KEY,
     })
   }
 
@@ -416,7 +413,7 @@ export const translateCommand = new Command('translate')
   )
   .option(
     '-C, --copy [boolean]',
-    'Wether to copy relative assets to the target directory instead of following links',
+    'Whether to copy relative assets to the target directory instead of following links',
     parseBoolean,
     false,
   )
