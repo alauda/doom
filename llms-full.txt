@@ -19730,7 +19730,7 @@ Options:
   -s, --source <language>  Document source language, one of en, zh, ru (default: "en")
   -t, --target <language>  Document target language, one of en, zh, ru (default: "zh")
   -g, --glob <path...>     Glob patterns of source dirs/files to translate
-  -C, --copy [boolean]     Wether to copy relative assets to the target directory instead of following links (default: false)
+  -C, --copy [boolean]     Whether to copy relative assets to the target directory instead of following links (default: false)
   -h, --help               display help for command
 ```
 
@@ -19752,7 +19752,7 @@ Options:
 :::
 
 :::tip
-翻译功能须在本地配置 `AZURE_OPENAI_API_KEY` 环境变量，请联系各自团队 Leader 获取
+翻译功能须在本地配置 `ALAUDA_OPENAI_BASE_URL` 和 `ALAUDA_OPENAI_API_KEY` 环境变量，请联系各自团队 Leader 获取
 :::
 
 文档中可以使用元数据控制翻译行为
