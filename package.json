@@ -25,6 +25,8 @@
     "release": "yarn build && changeset publish",
     "serve": "yarn doom serve",
     "swc-node": "node --enable-source-maps --import @swc-node/register/esm-register",
+    "test": "rstest run",
+    "test:watch": "rstest watch",
     "translate": "yarn doom translate -g '*' -s zh -t en",
     "typecov": "type-coverage",
     "version": "changeset version && yarn --no-immutable"
@@ -32,6 +34,7 @@
   "devDependencies": {
     "@changesets/changelog-github": "^0.6.0",
     "@changesets/cli": "^2.30.0",
+    "@rstest/core": "^0.9.6",
     "@swc-node/register": "^1.11.1",
     "@swc/core": "^1.15.24",
     "@types/cli-progress": "^3.11.6",
@@ -66,7 +69,8 @@
     "ignoreAsAssertion": true,
     "ignoreFiles": [
       "**/lib/**/*.d.ts",
-      "**/pyodide/**/*.d.ts"
+      "**/pyodide/**/*.d.ts",
+      "**/test/**"
     ],
     "ignoreNonNullAssertion": true,
     "showRelativePath": true,

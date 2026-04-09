@@ -1,7 +1,9 @@
 {
   "extends": "./tsconfig.base",
   "compilerOptions": {
+    "allowImportingTsExtensions": true,
     "noEmit": true,
+    "rewriteRelativeImportExtensions": false,
     "paths": {
       "@alauda/doom/config": ["./packages/doom/src/config.ts"],
       "@alauda/doom/runtime": ["./packages/doom/src/runtime/index.ts"],
@@ -9,16 +11,5 @@
       "@alauda/doom-export": ["./packages/export/src/index.ts"]
     }
   },
-  "exclude": ["**/test/**"],
-  "references": [
-    {
-      "path": "./packages/export"
-    },
-    {
-      "path": "./packages/doom"
-    }
-  ],
-  "mdx": {
-    "checkMdx": true
-  }
+  "include": ["packages/*/test/**/*.ts"]
 }

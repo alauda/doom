@@ -40,7 +40,7 @@ jobs:
       - name: Build and Lint
         run: |
           yarn build
-          yarn run-p docs lint typecov
+          yarn run-p docs lint test typecov
         env:
           PARSER_NO_WATCH: true
           RAW_TERMS_URL: ${{ vars.RAW_TERMS_URL }}
