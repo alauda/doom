@@ -1,5 +1,13 @@
 # @alauda/doom
 
+## 2.1.0
+
+### Minor Changes
+
+- [#306](https://github.com/alauda/doom/pull/306) [`f3176ef`](https://github.com/alauda/doom/commit/f3176efc1928fc8157433b582ccc2bfdaf80e932) Thanks [@JounQin](https://github.com/JounQin)! - chore: switch to OpenAI-compatible service config and rename related env vars
+
+  Migration: replace `AZURE_OPENAI_ENDPOINT` / `AZURE_OPENAI_API_KEY` / `AZURE_OPENAI_MODEL` with `ALAUDA_OPENAI_BASE_URL` / `ALAUDA_OPENAI_API_KEY` / `ALAUDA_OPENAI_MODEL`.
+
 ## 2.0.0
 
 ### Major Changes
