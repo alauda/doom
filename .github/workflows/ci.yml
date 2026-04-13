@@ -10,6 +10,7 @@ concurrency:
 
 permissions:
   contents: read
+  id-token: write
 
 jobs:
   ci:
@@ -37,10 +38,14 @@ jobs:
       - name: Install Dependencies
         run: yarn --immutable
 
-      - name: Build and Lint
+      - name: Build, Lint and Test
         run: |
           yarn build
           yarn run-p docs lint test typecov
         env:
           PARSER_NO_WATCH: true
           RAW_TERMS_URL: ${{ vars.RAW_TERMS_URL }}
+
+      - uses: codecov/codecov-action@v6
+        with:
+          use_oidc: true
