@@ -10,7 +10,6 @@ This monorepo contains the Doom documentation tool, export functionality, and re
 ## Commands
 
 - **Build**: `yarn build` (clean and compile TypeScript)
-- **Clean**: `yarn clean` (clean TypeScript build artifacts)
 - **Dev**: `yarn dev` (development mode with file watching)
 - **Docs**: `yarn docs` (build and export docs) | `yarn docs:build` | `yarn docs:export`
 - **Format**: `yarn format` (format code with Prettier)
