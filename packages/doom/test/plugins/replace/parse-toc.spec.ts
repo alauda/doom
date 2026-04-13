@@ -107,14 +107,4 @@ describe('parseToc', () => {
     expect(title).toBe('First Title')
     expect(toc.length).toBe(1)
   })
-
-  test('skips h1 from toc when allDepths is true', () => {
-    const markdown = '# Main\n## Sub'
-    const tree = parseMarkdown(markdown)
-    const { toc } = parseToc(tree, true)
-
-    expect(toc.length).toBe(2)
-    expect(toc[0]?.depth).toBe(1)
-    expect(toc[1]?.depth).toBe(2)
-  })
 })

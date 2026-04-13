@@ -43,7 +43,12 @@ export default lintRule('doom-lint:rule-name', (tree, file) => {
 
 1. Create `src/remark-lint/my-rule.ts` following the pattern above
 2. Export it from `src/remark-lint/index.ts`
-3. Rule will be included in doom's lint pipeline automatically
+3. Add unit tests in `test/remark-lint/my-rule.spec.ts`
+4. Rule will be included in doom's lint pipeline automatically
+
+## TESTING
+
+Unit tests in `packages/doom/test/remark-lint/` — each rule has a corresponding `.spec.ts` file. Run with `yarn test` from repo root.
 
 ## NOTES
 

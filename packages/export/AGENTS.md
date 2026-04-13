@@ -17,6 +17,10 @@ src/
 ├── merge-pdfs/               # PDF merge utilities
 ├── helpers.ts                # pkgResolve for package path resolution
 └── index.ts                  # Public entry: re-exports export-pdf-core
+test/
+├── export-pdf-core/          # Unit tests for export-pdf-core utils
+├── html-export-pdf/          # Unit tests for html-export-pdf utils
+└── merge-pdfs/               # Unit tests for merge-pdfs utils
 pyodide/                      # Vendored Pyodide runtime (DO NOT MODIFY)
 ```
 
@@ -49,4 +53,4 @@ Consumed by `@alauda/doom` CLI (`packages/doom/src/cli/export.ts`):
 - Playwright + Chromium pinned at 1.57.0 — browser must be installed for export
 - `pyodide/` is vendored upstream — contains use-after-free warnings (known, upstream issue)
 - Published files: `lib/` + `pyodide/` — pyodide assets shipped with package
-- No unit tests — validation via docs export in CI (`yarn docs:export`)
+- Unit tests via rstest in `test/` — run with `yarn test` from repo root

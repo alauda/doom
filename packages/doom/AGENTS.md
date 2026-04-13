@@ -20,6 +20,10 @@ src/
 ├── cspell.ts      # CSpell config (exported as @alauda/doom/cspell)
 ├── types.ts       # Public types (exported as @alauda/doom/types)
 └── remarkrc.ts    # Remark configuration
+test/
+├── plugins/       # Plugin unit tests (replace/)
+├── remark-lint/   # Remark-lint rule tests
+└── utils/         # Utility function tests
 ```
 
 ## EXPORTS MAP

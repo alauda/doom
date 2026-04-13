@@ -57,3 +57,4 @@ Current virtual modules: `doom-@api-crdsMap`, `doom-@api-openapisMap`, `doom-@ap
 - `shared.ts` at plugin root provides `createMdxImport` helper for AST import nodes
 - `auto-sidebar` removes the default `auto-nav-sidebar` plugin via `utils.removePlugin`
 - `api` plugin normalizes OpenAPI v2→v3 via `swagger2openapi` and converts schemas via `openapi-schema-to-json-schema`
+- Unit tests in `packages/doom/test/plugins/` — run with `yarn test` from repo root

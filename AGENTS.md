@@ -43,7 +43,6 @@ doom/
 
 ## ANTI-PATTERNS (THIS PROJECT)
 
-- No unit test runner exists — validation is type-coverage + lint + docs build
 - Virtual module names (`doom-@api-*`, `doom-@global-virtual`, `virtual-site-data`) must be added to ESLint `import-x/no-unresolved` ignore list when created
 - `@typescript-eslint/no-non-null-assertion` is OFF — non-null assertions allowed
 - `@typescript-eslint/no-misused-promises` is OFF
@@ -63,13 +62,14 @@ yarn docs:build           # Build docs site
 yarn docs:export          # Export docs to PDF
 yarn lint                 # ESLint
 yarn format               # Prettier --write
+yarn test                 # Unit tests (rstest)
 yarn typecov              # Type coverage check (must be 100%)
 yarn release              # Build + changeset publish
 ```
 
 ## BUILD & CI
 
-- **CI matrix**: Node [20, 22, 24] — runs `build`, `docs`, `lint`, `typecov` in parallel
+- **CI matrix**: Node [20, 22, 24] — runs `build`, `docs`, `lint`, `test`, `typecov` in parallel
 - **Release**: changesets/action on push to main → `changeset publish`
 - **GH Pages**: builds docs + exports PDFs, deploys to doom.js.org via peaceiris/actions-gh-pages
 - **Autofix**: PR auto-formatting via autofix-ci
