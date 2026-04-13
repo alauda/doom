@@ -265,35 +265,3 @@ describe('RELATIVE_URL_PATTERN', () => {
     expect(RELATIVE_URL_PATTERN.test('..')).toBe(false)
   })
 })
-
-describe('RELATIVE_URL_PATTERN', () => {
-  test('matches paths starting with ./', () => {
-    expect(RELATIVE_URL_PATTERN.test('./file.md')).toBe(true)
-    expect(RELATIVE_URL_PATTERN.test('./path/to/file.md')).toBe(true)
-  })
-
-  test('matches paths starting with ../', () => {
-    expect(RELATIVE_URL_PATTERN.test('../file.md')).toBe(true)
-    expect(RELATIVE_URL_PATTERN.test('../parent/file.md')).toBe(true)
-    expect(RELATIVE_URL_PATTERN.test('../../grandparent/file.md')).toBe(true)
-  })
-
-  test('does not match absolute paths', () => {
-    expect(RELATIVE_URL_PATTERN.test('/absolute/path.md')).toBe(false)
-  })
-
-  test('does not match paths without leading dot', () => {
-    expect(RELATIVE_URL_PATTERN.test('path/to/file.md')).toBe(false)
-    expect(RELATIVE_URL_PATTERN.test('file.md')).toBe(false)
-  })
-
-  test('does not match URLs', () => {
-    expect(RELATIVE_URL_PATTERN.test('https://example.com/file.md')).toBe(false)
-    expect(RELATIVE_URL_PATTERN.test('http://example.com/file.md')).toBe(false)
-  })
-
-  test('does not match standalone dots', () => {
-    expect(RELATIVE_URL_PATTERN.test('.')).toBe(false)
-    expect(RELATIVE_URL_PATTERN.test('..')).toBe(false)
-  })
-})
