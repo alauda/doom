@@ -33,5 +33,5 @@ Rstest is the natural choice — it's the Rspack ecosystem's testing framework (
 - **New devDependency**: `@rstest/core` (and optionally `@rstest/coverage-istanbul`) at root
 - **CI**: New `test` step added to matrix — increases CI time but catches logic regressions
 - **Type coverage**: Test files must be properly excluded from type-coverage runs; the 100% threshold must remain unaffected
-- **Build**: Test files (`__tests__/**/*.test.ts`) excluded from `tsc -b` composite build via tsconfig adjustments
+- **Build**: Test files (`__tests__/**/*.spec.ts`) excluded from `tsc -b` composite build via tsconfig adjustments
 - **No runtime impact**: Tests are dev-only, no changes to published packages

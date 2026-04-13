@@ -44,24 +44,24 @@ The TypeScript build uses composite project references: each package's `tsconfig
 packages/doom/test/
 ├── remark-lint/
 │   ├── _helper.ts              # Shared lint rule test helper
-│   ├── no-deep-heading.test.ts
-│   ├── maximum-link-content-length.test.ts
+│   ├── no-deep-heading.spec.ts
+│   ├── maximum-link-content-length.spec.ts
 │   └── ...
 ├── plugins/replace/
-│   ├── parse-toc.test.ts
-│   └── utils.test.ts
+│   ├── parse-toc.spec.ts
+│   └── utils.spec.ts
 └── utils/
-    └── helpers.test.ts
+    └── helpers.spec.ts
 
 packages/export/test/
 ├── html-export-pdf/utils/
-│   ├── isValidUrl.test.ts
-│   └── replaceExt.test.ts
+│   ├── isValidUrl.spec.ts
+│   └── replaceExt.spec.ts
 ├── export-pdf-core/utils/
-│   ├── getUrlLink.test.ts
-│   └── convertPathToPosix.test.ts
+│   ├── getUrlLink.spec.ts
+│   └── convertPathToPosix.spec.ts
 └── merge-pdfs/
-    └── formatDate.test.ts
+    └── formatDate.spec.ts
 ```
 
 ### 2. Rstest Configuration: Root projects + shared config
