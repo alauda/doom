@@ -51,7 +51,7 @@ const y = 2`
       transformers: [transformer],
     })
 
-    expect(html).toContain('callout')
+    expect(html).toContain('<span class="line callout"')
   })
 
   test('transformer adds has-callouts class to pre element', async () => {
@@ -65,7 +65,7 @@ const y = 2`
       transformers: [transformer],
     })
 
-    expect(html).toContain('has-callouts')
+    expect(html).toContain('<pre class="shiki github-light has-callouts"')
   })
 
   test('transformer uses custom classes when provided', async () => {

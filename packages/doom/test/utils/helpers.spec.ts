@@ -86,7 +86,7 @@ describe('pkgResolve', () => {
     const result = pkgResolve('src', '..', 'package.json')
 
     expect(result).toContain('package.json')
-    expect(result).not.toContain('src')
+    expect(result).toBe(pkgResolve('package.json'))
   })
 
   test('pkgResolve is one level above baseResolve', () => {

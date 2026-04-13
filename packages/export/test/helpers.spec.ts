@@ -32,6 +32,6 @@ describe('pkgResolve', () => {
   test('handles parent directory references', () => {
     const result = pkgResolve('src', '..', 'package.json')
     expect(result).toContain('package.json')
-    expect(result).not.toContain('src')
+    expect(result).toBe(pkgResolve('package.json'))
   })
 })
