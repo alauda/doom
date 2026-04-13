@@ -51,7 +51,7 @@ export default defineConfig(
     },
   },
   {
-    files: ['**/*.{ts,tsx}'],
+    files: ['**/test/**/*.spec.{ts,tsx}'],
     rules: {
       '@typescript-eslint/no-floating-promises': 'off',
     },
