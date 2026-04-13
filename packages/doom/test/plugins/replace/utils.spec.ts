@@ -1,13 +1,15 @@
-import { describe, expect, test } from '@rstest/core'
+import { afterEach, describe, expect, rstest, test } from '@rstest/core'
 import type { Root } from 'mdast'
 import remarkFrontmatter from 'remark-frontmatter'
 import remarkParse from 'remark-parse'
 import { unified } from 'unified'
+import { red } from 'yoctocolors'
 
 import type { ReferenceItem } from '#plugins/replace/types.ts'
 import {
-  normalizeReferenceItems,
   getFrontmatterNode,
+  normalizeReferenceItems,
+  RELATIVE_URL_PATTERN,
 } from '#plugins/replace/utils.ts'
 
 const parser = unified().use(remarkParse).use(remarkFrontmatter, ['yaml'])
@@ -17,6 +19,12 @@ const parseMarkdownWithFrontmatter = (markdown: string): Root => {
 }
 
 describe('normalizeReferenceItems', () => {
+  const consoleError = console.error
+
+  afterEach(() => {
+    console.error = consoleError
+  })
+
   test('returns empty object for empty array', () => {
     const result = normalizeReferenceItems([])
 
@@ -142,10 +150,18 @@ describe('normalizeReferenceItems', () => {
       },
     ]
 
+    console.error = rstest.fn()
+
     const result = normalizeReferenceItems(items)
 
     expect(result['config'].path).toBe('/second.md')
     expect(result['config'].anchor).toBe('anchor')
+
+    expect(console.error).toHaveBeenCalledWith(
+      expect.stringContaining(
+        `Duplicate source name \`${red('config')}\` will be deduplicated`,
+      ),
+    )
   })
 
   test('handles multiple items with different repos', () => {
@@ -206,5 +222,78 @@ describe('getFrontmatterNode', () => {
     expect(frontmatter).toBeDefined()
     expect(frontmatter?.type).toBe('yaml')
     expect(frontmatter?.value).toBeTruthy()
+  })
+
+  test('returns undefined when content is empty', () => {
+    const markdown = ''
+    const tree = parseMarkdownWithFrontmatter(markdown)
+
+    const frontmatter = getFrontmatterNode(tree)
+
+    expect(frontmatter).toBeUndefined()
+  })
+})
+
+describe('RELATIVE_URL_PATTERN', () => {
+  test('matches paths starting with ./', () => {
+    expect(RELATIVE_URL_PATTERN.test('./file.md')).toBe(true)
+    expect(RELATIVE_URL_PATTERN.test('./path/to/file.md')).toBe(true)
+  })
+
+  test('matches paths starting with ../', () => {
+    expect(RELATIVE_URL_PATTERN.test('../file.md')).toBe(true)
+    expect(RELATIVE_URL_PATTERN.test('../parent/file.md')).toBe(true)
+    expect(RELATIVE_URL_PATTERN.test('../../grandparent/file.md')).toBe(true)
+  })
+
+  test('does not match absolute paths', () => {
+    expect(RELATIVE_URL_PATTERN.test('/absolute/path.md')).toBe(false)
+  })
+
+  test('does not match paths without leading dot', () => {
+    expect(RELATIVE_URL_PATTERN.test('path/to/file.md')).toBe(false)
+    expect(RELATIVE_URL_PATTERN.test('file.md')).toBe(false)
+  })
+
+  test('does not match URLs', () => {
+    expect(RELATIVE_URL_PATTERN.test('https://example.com/file.md')).toBe(false)
+    expect(RELATIVE_URL_PATTERN.test('http://example.com/file.md')).toBe(false)
+  })
+
+  test('does not match standalone dots', () => {
+    expect(RELATIVE_URL_PATTERN.test('.')).toBe(false)
+    expect(RELATIVE_URL_PATTERN.test('..')).toBe(false)
+  })
+})
+
+describe('RELATIVE_URL_PATTERN', () => {
+  test('matches paths starting with ./', () => {
+    expect(RELATIVE_URL_PATTERN.test('./file.md')).toBe(true)
+    expect(RELATIVE_URL_PATTERN.test('./path/to/file.md')).toBe(true)
+  })
+
+  test('matches paths starting with ../', () => {
+    expect(RELATIVE_URL_PATTERN.test('../file.md')).toBe(true)
+    expect(RELATIVE_URL_PATTERN.test('../parent/file.md')).toBe(true)
+    expect(RELATIVE_URL_PATTERN.test('../../grandparent/file.md')).toBe(true)
+  })
+
+  test('does not match absolute paths', () => {
+    expect(RELATIVE_URL_PATTERN.test('/absolute/path.md')).toBe(false)
+  })
+
+  test('does not match paths without leading dot', () => {
+    expect(RELATIVE_URL_PATTERN.test('path/to/file.md')).toBe(false)
+    expect(RELATIVE_URL_PATTERN.test('file.md')).toBe(false)
+  })
+
+  test('does not match URLs', () => {
+    expect(RELATIVE_URL_PATTERN.test('https://example.com/file.md')).toBe(false)
+    expect(RELATIVE_URL_PATTERN.test('http://example.com/file.md')).toBe(false)
+  })
+
+  test('does not match standalone dots', () => {
+    expect(RELATIVE_URL_PATTERN.test('.')).toBe(false)
+    expect(RELATIVE_URL_PATTERN.test('..')).toBe(false)
   })
 })

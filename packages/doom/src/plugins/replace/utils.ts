@@ -51,8 +51,8 @@ export const mdProcessor = unified()
 export const mdxProcessor = mdProcessor().use(remarkMdx).freeze()
 
 export const getFrontmatterNode = (ast: Root): Yaml | undefined => {
-  const firstNode = ast.children[0]
-  return firstNode.type === 'yaml' ? firstNode : undefined
+  const firstNode = ast.children.at(0)
+  return firstNode?.type === 'yaml' ? firstNode : undefined
 }
 
 const { CI } = process.env

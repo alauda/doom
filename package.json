@@ -27,8 +27,7 @@
     "release": "yarn build && changeset publish",
     "serve": "yarn doom serve",
     "swc-node": "node --enable-source-maps --import @swc-node/register/esm-register",
-    "test": "rstest run",
-    "test:watch": "rstest watch",
+    "test": "rstest --coverage",
     "translate": "yarn doom translate -g '*' -s zh -t en",
     "typecov": "type-coverage",
     "version": "changeset version && yarn --no-immutable"
@@ -37,6 +36,7 @@
     "@changesets/changelog-github": "^0.6.0",
     "@changesets/cli": "^2.30.0",
     "@rstest/core": "^0.9.6",
+    "@rstest/coverage-istanbul": "^0.3.1",
     "@swc-node/register": "^1.11.1",
     "@swc/core": "^1.15.24",
     "@types/cli-progress": "^3.11.6",

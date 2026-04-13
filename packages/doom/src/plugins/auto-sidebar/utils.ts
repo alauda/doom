@@ -86,11 +86,16 @@ export async function extractInfoFromFrontmatter(
   }
 }
 
-export function combineWalkResult(
-  walks: { nav: NavItem[]; sidebar: Record<string, DoomSidebar[]> }[],
-  versions: string[],
-) {
-  return walks.reduce(
+export interface WalkResult {
+  nav: NavItem[]
+  sidebar: Record<string, DoomSidebar[]>
+}
+
+export function combineWalkResult(walks: WalkResult[], versions: string[]) {
+  return walks.reduce<{
+    nav: Record<string, NavItem[]>
+    sidebar: Record<string, DoomSidebar[]>
+  }>(
     (acc, cur, curIndex) => ({
       nav: { ...acc.nav, [versions[curIndex] || 'default']: cur.nav },
       sidebar: { ...acc.sidebar, ...cur.sidebar },

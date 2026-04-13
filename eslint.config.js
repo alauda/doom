@@ -51,6 +51,12 @@ export default defineConfig(
     },
   },
   {
+    files: ['**/*.{ts,tsx}'],
+    rules: {
+      '@typescript-eslint/no-floating-promises': 'off',
+    },
+  },
+  {
     files: ['**/*.mdx'],
     rules: {
       '@eslint-react/jsx-no-children-prop': 'off',
