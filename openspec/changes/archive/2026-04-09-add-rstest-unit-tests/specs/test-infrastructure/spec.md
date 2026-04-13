@@ -23,18 +23,18 @@ The system SHALL have a root `rstest.config.ts` that discovers per-package test 
 Each package (`packages/doom` and `packages/export`) SHALL have its own `rstest.config.ts` that:
 
 - Sets `testEnvironment: 'node'`
-- Includes test files matching `test/**/*.test.ts`
+- Includes test files matching `test/**/*.spec.ts`
 - Imports shared configuration from the root
 
 #### Scenario: Doom package test discovery
 
 - **WHEN** rstest runs the `doom` project
-- **THEN** it discovers test files under `packages/doom/test/**/*.test.ts`
+- **THEN** it discovers test files under `packages/doom/test/**/*.spec.ts`
 
 #### Scenario: Export package test discovery
 
 - **WHEN** rstest runs the `export` project
-- **THEN** it discovers test files under `packages/export/test/**/*.test.ts`
+- **THEN** it discovers test files under `packages/export/test/**/*.spec.ts`
 
 ### Requirement: Test scripts in root package.json
 
