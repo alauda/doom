@@ -1,0 +1,42 @@
+schema: spec-driven
+
+context: |
+  Doom - documentation generator built on Rspress.
+  Monorepo: CLI + theme + runtime + plugins (`@alauda/doom`) and PDF export engine (`@alauda/doom-export`).
+
+  Tech stack: TypeScript 6, React, unified/remark ecosystem, Rspress, Playwright (PDF export), pdf-lib, pyodide
+  Package manager: Yarn 4 Berry (nodeLinker: node-modules, strict --immutable in CI)
+  Module system: ESM only ("type": "module" in all packages)
+  Node.js: >=22.18.0 for @alauda/doom, >=20.19.0 for @alauda/doom-export
+
+  Code style:
+    - No semicolons (Prettier semi: false)
+    - Single quotes (except .changeset/*.md which uses double quotes)
+    - Prettier + ESLint enforced
+    - TypeScript strict: true, NodeNext module resolution, rewriteRelativeImportExtensions
+    - 100% type coverage enforced (type-coverage atLeast: 100, strict: true)
+    - No unit test runner - validation is type-coverage + lint + docs build
+
+  Conventions:
+    - Conventional Commits with changesets for versioning/release
+    - simple-git-hooks + nano-staged for pre-commit formatting
+    - @typescript-eslint/no-non-null-assertion is OFF (non-null assertions allowed)
+    - @typescript-eslint/no-misused-promises is OFF
+    - Virtual module names (doom-@api-*, doom-@global-virtual, virtual-site-data) must be added to ESLint import-x/no-unresolved ignore list
+
+  Structure:
+    - packages/doom/       - Main package: CLI, theme, runtime, plugins, remark-lint
+    - packages/export/     - PDF export via Playwright + pdf-lib + pyodide
+    - docs/                - Production documentation content (zh/en)
+    - fixture-docs/        - Test/dev documentation fixture
+    - theme/               - Theme entry re-export
+
+rules:
+  proposal:
+    - Include impact on both @alauda/doom and @alauda/doom-export if cross-package
+    - Consider type-coverage implications (must remain 100%)
+    - Note any new virtual modules that need ESLint ignore entries
+  tasks:
+    - Validate with yarn build, yarn lint, and yarn typecov
+    - Never suppress type errors with as any, @ts-ignore, or @ts-expect-error
+    - Match existing code patterns (no semicolons, single quotes, ESM imports)
