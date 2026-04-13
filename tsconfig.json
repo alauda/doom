@@ -9,7 +9,6 @@
       "@alauda/doom-export": ["./packages/export/src/index.ts"]
     }
   },
-  "exclude": ["**/test/**"],
   "references": [
     {
       "path": "./packages/export"
