@@ -1,8 +1,8 @@
 import { describe, expect, test } from '@rstest/core'
 
-import { noMultiOpenAPIPaths } from '../../src/remark-lint/no-multi-open-api-paths.ts'
-
 import { lintMdx } from './_helper.ts'
+
+import { noMultiOpenAPIPaths } from '#remark-lint/no-multi-open-api-paths.ts'
 
 describe('no-multi-open-api-paths', () => {
   test('allows single OpenAPIPath', async () => {

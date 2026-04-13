@@ -1,6 +1,6 @@
 import { describe, test, expect } from '@rstest/core'
 
-import { isValidUrl } from '../../../src/html-export-pdf/utils/isValidUrl.ts'
+import { isValidUrl } from '#html-export-pdf/utils/isValidUrl.ts'
 
 describe('isValidUrl', () => {
   test('returns true for http protocol', () => {

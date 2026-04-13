@@ -2,7 +2,7 @@ import path from 'node:path'
 
 import { describe, expect, test } from '@rstest/core'
 
-import { baseResolve, pkgResolve } from '../../src/utils/helpers.ts'
+import { baseResolve, pkgResolve } from '#utils/helpers.ts'
 
 describe('baseResolve', () => {
   test('resolves path relative to BASE_DIR', () => {

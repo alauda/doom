@@ -1,6 +1,6 @@
 import { describe, test, expect } from '@rstest/core'
 
-import { formatDate } from '../../src/merge-pdfs/formatDate.ts'
+import { formatDate } from '#merge-pdfs/formatDate.ts'
 
 describe('formatDate', () => {
   test("formats date in D:YYYYMMDDHHmmSS±HH'mm' pattern", () => {

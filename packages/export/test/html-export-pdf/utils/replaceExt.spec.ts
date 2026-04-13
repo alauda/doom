@@ -1,6 +1,6 @@
 import { describe, test, expect } from '@rstest/core'
 
-import { replaceExt } from '../../../src/html-export-pdf/utils/replaceExt.ts'
+import { replaceExt } from '#html-export-pdf/utils/replaceExt.ts'
 
 describe('replaceExt', () => {
   test('replaces extension with new one', () => {

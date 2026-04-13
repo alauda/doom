@@ -1,8 +1,8 @@
 import { describe, expect, test } from '@rstest/core'
 
-import { listTableIntroduction } from '../../src/remark-lint/list-table-introduction.ts'
-
 import { lint } from './_helper.ts'
+
+import { listTableIntroduction } from '#remark-lint/list-table-introduction.ts'
 
 describe('list-table-introduction', () => {
   test('allows list after paragraph', async () => {

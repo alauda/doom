@@ -1,8 +1,8 @@
 import { describe, expect, test } from '@rstest/core'
 
-import { tableSize } from '../../src/remark-lint/table-size.ts'
-
 import { lint } from './_helper.ts'
+
+import { tableSize } from '#remark-lint/table-size.ts'
 
 describe('table-size', () => {
   test('allows table with 2+ rows and columns', async () => {

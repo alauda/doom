@@ -4,11 +4,11 @@ import remarkFrontmatter from 'remark-frontmatter'
 import remarkParse from 'remark-parse'
 import { unified } from 'unified'
 
-import type { ReferenceItem } from '../../../src/plugins/replace/types.ts'
+import type { ReferenceItem } from '#plugins/replace/types.ts'
 import {
   normalizeReferenceItems,
   getFrontmatterNode,
-} from '../../../src/plugins/replace/utils.ts'
+} from '#plugins/replace/utils.ts'
 
 const parser = unified().use(remarkParse).use(remarkFrontmatter, ['yaml'])
 

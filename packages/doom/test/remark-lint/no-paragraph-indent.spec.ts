@@ -1,8 +1,8 @@
 import { describe, expect, test } from '@rstest/core'
 
-import { noParagraphIndent } from '../../src/remark-lint/no-paragraph-indent.ts'
-
 import { lint } from './_helper.ts'
+
+import { noParagraphIndent } from '#remark-lint/no-paragraph-indent.ts'
 
 describe('no-paragraph-indent', () => {
   test('allows unindented paragraph', async () => {

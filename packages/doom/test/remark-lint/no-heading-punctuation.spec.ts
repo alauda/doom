@@ -1,8 +1,8 @@
 import { describe, expect, test } from '@rstest/core'
 
-import { noHeadingPunctuation } from '../../src/remark-lint/no-heading-punctuation.ts'
-
 import { lint } from './_helper.ts'
+
+import { noHeadingPunctuation } from '#remark-lint/no-heading-punctuation.ts'
 
 describe('no-heading-punctuation', () => {
   test('allows clean headings', async () => {

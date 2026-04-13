@@ -1,8 +1,8 @@
 import { describe, expect, test } from '@rstest/core'
 
-import { noEmptyTableCell } from '../../src/remark-lint/no-empty-table-cell.ts'
-
 import { lint } from './_helper.ts'
+
+import { noEmptyTableCell } from '#remark-lint/no-empty-table-cell.ts'
 
 describe('no-empty-table-cell', () => {
   test('allows filled cells', async () => {

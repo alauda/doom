@@ -1,8 +1,8 @@
 import { describe, expect, test } from '@rstest/core'
 
-import { noHeadingSupSub } from '../../src/remark-lint/no-heading-sup-sub.ts'
-
 import { lint } from './_helper.ts'
+
+import { noHeadingSupSub } from '#remark-lint/no-heading-sup-sub.ts'
 
 describe('no-heading-sup-sub', () => {
   test('allows plain headings', async () => {

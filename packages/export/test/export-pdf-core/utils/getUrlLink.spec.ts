@@ -1,6 +1,6 @@
 import { describe, test, expect } from '@rstest/core'
 
-import { getUrlLink } from '../../../src/export-pdf-core/utils/getUrlLink.ts'
+import { getUrlLink } from '#export-pdf-core/utils/getUrlLink.ts'
 
 describe('getUrlLink', () => {
   test('extracts link and hash from URL with hash', () => {

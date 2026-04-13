@@ -1,8 +1,8 @@
 import { describe, expect, test } from '@rstest/core'
 
-import { listItemPunctuation } from '../../src/remark-lint/list-item-punctuation.ts'
-
 import { lint } from './_helper.ts'
+
+import { listItemPunctuation } from '#remark-lint/list-item-punctuation.ts'
 
 describe('list-item-punctuation', () => {
   test('allows consistent punctuation', async () => {

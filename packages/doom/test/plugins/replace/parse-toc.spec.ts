@@ -4,7 +4,7 @@ import remarkGfm from 'remark-gfm'
 import remarkParse from 'remark-parse'
 import { unified } from 'unified'
 
-import { parseToc } from '../../../src/plugins/replace/parse-toc.ts'
+import { parseToc } from '#plugins/replace/parse-toc.ts'
 
 const parser = unified().use(remarkParse).use(remarkGfm)
 

@@ -1,6 +1,6 @@
 import { describe, test, expect } from '@rstest/core'
 
-import { convertPathToPosix } from '../../../src/export-pdf-core/utils/convertPathToPosix.ts'
+import { convertPathToPosix } from '#export-pdf-core/utils/convertPathToPosix.ts'
 
 describe('convertPathToPosix', () => {
   test('returns path unchanged on non-Windows platform', () => {

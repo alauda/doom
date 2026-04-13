@@ -13,6 +13,9 @@
   "engines": {
     "node": ">=20.19.0"
   },
+  "imports": {
+    "#*": "./src/*"
+  },
   "exports": {
     ".": "./lib/index.js",
     "./package.json": "./package.json"

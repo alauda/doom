@@ -1,8 +1,8 @@
 import { describe, expect, test } from '@rstest/core'
 
-import { noHeadingSpecialCharacters } from '../../src/remark-lint/no-heading-special-characters.ts'
-
 import { lint } from './_helper.ts'
+
+import { noHeadingSpecialCharacters } from '#remark-lint/no-heading-special-characters.ts'
 
 describe('no-heading-special-characters', () => {
   test('allows normal heading', async () => {

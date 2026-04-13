@@ -1,8 +1,8 @@
 import { describe, expect, test } from '@rstest/core'
 
-import { noDeepHeading } from '../../src/remark-lint/no-deep-heading.ts'
-
 import { lint } from './_helper.ts'
+
+import { noDeepHeading } from '#remark-lint/no-deep-heading.ts'
 
 describe('no-deep-heading', () => {
   test('allows h1-h5', async () => {

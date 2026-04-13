@@ -1,8 +1,8 @@
 import { describe, expect, test } from '@rstest/core'
 
-import { noDeepList } from '../../src/remark-lint/no-deep-list.ts'
-
 import { lint } from './_helper.ts'
+
+import { noDeepList } from '#remark-lint/no-deep-list.ts'
 
 describe('no-deep-list', () => {
   test('allows depth 4', async () => {

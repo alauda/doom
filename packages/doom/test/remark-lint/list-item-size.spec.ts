@@ -1,8 +1,8 @@
 import { describe, expect, test } from '@rstest/core'
 
-import { listItemSize } from '../../src/remark-lint/list-item-size.ts'
-
 import { lint } from './_helper.ts'
+
+import { listItemSize } from '#remark-lint/list-item-size.ts'
 
 describe('list-item-size', () => {
   test('allows 10 items', async () => {

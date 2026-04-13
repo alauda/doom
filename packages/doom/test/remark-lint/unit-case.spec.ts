@@ -1,8 +1,8 @@
 import { describe, expect, test } from '@rstest/core'
 
-import { unitCase } from '../../src/remark-lint/unit-case.ts'
-
 import { lint } from './_helper.ts'
+
+import { unitCase } from '#remark-lint/unit-case.ts'
 
 describe('unit-case', () => {
   test('allows correct unit casing', async () => {

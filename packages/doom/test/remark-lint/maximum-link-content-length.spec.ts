@@ -1,8 +1,8 @@
 import { describe, expect, test } from '@rstest/core'
 
-import { maximumLinkContentLength } from '../../src/remark-lint/maximum-link-content-length.ts'
-
 import { lint } from './_helper.ts'
+
+import { maximumLinkContentLength } from '#remark-lint/maximum-link-content-length.ts'
 
 describe('maximum-link-content-length', () => {
   test('allows short link text', async () => {

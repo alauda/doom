@@ -1,4 +1,4 @@
-import { Root } from 'mdast'
+import type { Root } from 'mdast'
 import remarkFrontmatter from 'remark-frontmatter'
 import remarkGfm from 'remark-gfm'
 import remarkMdx from 'remark-mdx'
