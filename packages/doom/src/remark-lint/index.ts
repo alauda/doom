@@ -18,6 +18,7 @@ export * from './no-paragraph-indent.ts'
 export * from './no-unmatched-anchor.ts'
 export * from './site.ts'
 export * from './table-size.ts'
+export * from './title-required.ts'
 export * from './unit-case.ts'
 
 const doomLint: Plugin<[], Root> = function () {
