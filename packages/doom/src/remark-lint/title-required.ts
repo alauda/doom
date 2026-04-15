@@ -34,9 +34,10 @@ export const titleRequired = lintRule<Root>(
           checkHeadingTitle(toString(node))
         }
       } else if (node.type === 'html') {
-        const match = node.value.match(/<h1[^>]*>(.*?)<\/h1>/i)
-        if (match) {
-          checkHeadingTitle(match[1])
+        for (const [, title] of node.value.matchAll(
+          /<h1[^>]*>([\s\S]*?)<\/h1>/gi,
+        )) {
+          checkHeadingTitle(title)
         }
       } else if (
         node.type === 'mdxJsxFlowElement' ||
