@@ -11,7 +11,8 @@ export const titleRequired = lintRule<Root>(
     let headingTitle: string | undefined
     visitParents(root, (node, parents) => {
       if (node.type === 'yaml') {
-        frontmatterTitle = (parse(node.value) as { title?: string }).title
+        frontmatterTitle = (parse(node.value) as { title?: string } | null)
+          ?.title
       }
 
       function checkHeadingTitle(title: string) {
