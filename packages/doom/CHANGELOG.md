@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 2.2.0
+
+### Minor Changes
+
+- [#312](https://github.com/alauda/doom/pull/312) [`ffc03d0`](https://github.com/alauda/doom/commit/ffc03d070b93f7bdbb72f7faf86160c03d10593a) Thanks [@JounQin](https://github.com/JounQin)! - feat(remark-lint): add title-required rule
+
 ## 2.1.0
 
 ### Minor Changes
