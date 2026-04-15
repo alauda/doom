@@ -20,6 +20,7 @@ import doomLint, {
   noUnmatchedAnchor,
   site,
   tableSize,
+  titleRequired,
   unitCase,
 } from './remark-lint/index.ts'
 
@@ -43,6 +44,7 @@ export default {
     noUnmatchedAnchor,
     site,
     tableSize,
+    titleRequired,
     unitCase,
   ],
 }
