@@ -92,11 +92,6 @@ You are a professional technical documentation engineer, skilled in writing high
 <% if (terms) { %>
 <%- terms %>
 <% } %>
-<% if (isChunk) { %>
-## Chunk Translation Notice
-This is part of a larger document that has been split into smaller chunks for translation. Please translate this chunk as if it's part of a continuous document, maintaining consistency with the overall document style and context.
-<% } %>
-
 <% if (userPrompt || additionalPrompts) { %>
 ## Additional Requirements
 These are additional requirements for the translation. They should be met along with the baseline requirements, and in case of any conflict, the baseline requirements should take precedence.
@@ -122,7 +117,6 @@ export interface InternalTranslateOptions extends TranslateOptions {
   sourceContent: string
   target: Language
   additionalPrompts?: string
-  isChunk?: boolean
 }
 
 const resolveTerms = async (
@@ -226,75 +220,6 @@ function getTitleTranslation(
   return null
 }
 
-function splitContentIntoChunks(
-  content: string,
-  maxChunkSize: number,
-): string[] {
-  const lines = content.split('\n')
-  const chunks: string[] = []
-  let currentChunk: string[] = []
-  let currentSize = 0
-
-  for (const line of lines) {
-    const lineSize = Buffer.byteLength(line + '\n', 'utf8')
-
-    // If adding this line would exceed the chunk size, and we have content in current chunk
-    if (currentSize + lineSize > maxChunkSize && currentChunk.length > 0) {
-      chunks.push(currentChunk.join('\n'))
-      currentChunk = [line]
-      currentSize = lineSize
-    } else {
-      currentChunk.push(line)
-      currentSize += lineSize
-    }
-  }
-
-  // Add the last chunk if it has content
-  if (currentChunk.length > 0) {
-    chunks.push(currentChunk.join('\n'))
-  }
-
-  return chunks
-}
-
-export const translateWithChunks = async (
-  options: InternalTranslateOptions,
-): Promise<string> => {
-  const { sourceContent } = options
-  const maxChunkSize = 60 * 1024
-
-  const contentSize = Buffer.byteLength(sourceContent, 'utf8')
-  if (contentSize <= maxChunkSize) {
-    return translate(options)
-  }
-
-  logger.info(
-    `Content size (${Math.round(contentSize / 1024)}KB) exceeds limit, splitting into chunks...`,
-  )
-
-  const chunks = splitContentIntoChunks(sourceContent, maxChunkSize)
-  logger.info(`Split content into ${chunks.length} chunks`)
-
-  const translatedChunks: string[] = []
-
-  for (let i = 0; i < chunks.length; i++) {
-    logger.info(`Translating chunk ${i + 1}/${chunks.length}...`)
-
-    const translatedChunk = await translate({
-      ...options,
-      sourceContent: chunks[i],
-      isChunk: true,
-    })
-
-    translatedChunks.push(translatedChunk)
-  }
-
-  const result = translatedChunks.join('\n')
-  logger.info(`Successfully translated ${chunks.length} chunks`)
-
-  return result
-}
-
 export const translate = async ({
   source,
   sourceContent,
@@ -302,7 +227,6 @@ export const translate = async ({
   systemPrompt,
   userPrompt = '',
   additionalPrompts = '',
-  isChunk = false,
 }: InternalTranslateOptions) => {
   if (!openai) {
     openai = new OpenAI({
@@ -348,7 +272,6 @@ export const translate = async ({
       additionalPrompts: additionalPrompts,
       terms,
       titleTranslationPrompt,
-      isChunk,
     },
     { async: true },
   )
@@ -621,7 +544,7 @@ export const translateCommand = new Command('translate')
                 ),
               })
 
-              targetContent = await translateWithChunks({
+              targetContent = await translate({
                 ...config.translate,
                 source,
                 sourceContent: normalizedSourceContent,
