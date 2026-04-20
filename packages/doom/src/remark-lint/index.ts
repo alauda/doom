@@ -3,6 +3,7 @@ import remarkMessageControl from 'remark-message-control'
 import type { Plugin } from 'unified'
 
 export * from './check-dead-links.ts'
+export * from './file-naming.ts'
 export * from './list-item-punctuation.ts'
 export * from './list-item-size.ts'
 export * from './list-table-introduction.ts'
