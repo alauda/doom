@@ -92,11 +92,6 @@ You are a professional technical documentation engineer, skilled in writing high
 <% if (terms) { %>
 <%- terms %>
 <% } %>
-<% if (isChunk) { %>
-## Chunk Translation Notice
-This is part of a larger document that has been split into smaller chunks for translation. Please translate this chunk as if it's part of a continuous document, maintaining consistency with the overall document style and context.
-<% } %>
-
 <% if (userPrompt || additionalPrompts) { %>
 ## Additional Requirements
 These are additional requirements for the translation. They should be met along with the baseline requirements, and in case of any conflict, the baseline requirements should take precedence.
@@ -122,7 +117,6 @@ export interface InternalTranslateOptions extends TranslateOptions {
   sourceContent: string
   target: Language
   additionalPrompts?: string
-  isChunk?: boolean
 }
 
 const resolveTerms = async (
@@ -233,7 +227,6 @@ export const translate = async ({
   systemPrompt,
   userPrompt = '',
   additionalPrompts = '',
-  isChunk = false,
 }: InternalTranslateOptions) => {
   if (!openai) {
     openai = new OpenAI({
@@ -279,7 +272,6 @@ export const translate = async ({
       additionalPrompts: additionalPrompts,
       terms,
       titleTranslationPrompt,
-      isChunk,
     },
     { async: true },
   )
