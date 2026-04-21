@@ -17,7 +17,11 @@ import { Preamble } from './Preamble/index.tsx'
 import { ResizableUserInput } from './ResizableUserInput/index.tsx'
 import { Thinking } from './Thinking.tsx'
 import type { ChatMessage } from './types.ts'
-import { parseStreamContent } from './utils.ts'
+import {
+  consumeSSEEvents,
+  getAnswerDelta,
+  parseStreamContent,
+} from './utils.ts'
 
 import CloseIcon from '@alauda/doom/assets/close.svg?react'
 import LogoutIcon from '@alauda/doom/assets/logout.svg?react'
@@ -30,8 +34,6 @@ export interface AIAssistantProps {
   onOpenChange: (open: boolean) => void
   onCleanup?: () => void
 }
-
-let textDecoder: TextDecoder | undefined
 
 export const AIAssistant = ({ open, onOpenChange }: AIAssistantProps) => {
   const t = useTranslation()
@@ -132,7 +134,7 @@ export const AIAssistant = ({ open, onOpenChange }: AIAssistantProps) => {
 
     const sessionId = sessionIdRef.current
 
-    const res = await xfetch('/smart/api/smart_answer', {
+    const res = await xfetch('/smart/api/smart_answer_with_search', {
       type: null,
       method: ApiMethod.POST,
       body: {
@@ -141,32 +143,41 @@ export const AIAssistant = ({ open, onOpenChange }: AIAssistantProps) => {
       },
     })
 
-    textDecoder ??= new TextDecoder()
+    const textDecoder = new TextDecoder()
 
     let text = ''
+    let sseBuffer = ''
+    let sseEvent: string | undefined
 
     for await (const chunk_ of res.body! as unknown as AsyncIterable<Uint8Array>) {
       if (sessionId !== sessionIdRef.current) {
         break
       }
 
-      const chunk = textDecoder.decode(chunk_)
+      sseBuffer += textDecoder.decode(chunk_, { stream: true })
 
-      text += chunk
-        .replace(/data: (?:\n\n)?/g, '')
-        .replace(/(?<!\n)\n\n(?!\n)/g, '')
-        .replace(/(?<!\n)\n\n\n\n(?!\n)/g, '\n')
-        .replace(/\n{2,}/g, '\n')
+      const result = consumeSSEEvents(sseBuffer, sseEvent)
+      const { events, remainder } = result
+      sseBuffer = remainder
+      sseEvent = result.event
 
-      const parsed = parseStreamContent(text)
+      let updated = false
 
-      if (
-        !parsed.refDocs.length &&
-        !parsed.thinkingProcess &&
-        !parsed.content
-      ) {
+      for (const event of events) {
+        const delta = getAnswerDelta(event)
+        if (!delta) {
+          continue
+        }
+
+        text += delta
+        updated = true
+      }
+
+      if (!updated) {
         continue
       }
+
+      const parsed = parseStreamContent(text)
 
       flushMessages((messages) => [
         ...messages.slice(0, index),
@@ -174,6 +185,38 @@ export const AIAssistant = ({ open, onOpenChange }: AIAssistantProps) => {
         ...messages.slice(index + 1),
       ])
     }
+
+    if (sessionId !== sessionIdRef.current) {
+      return
+    }
+
+    sseBuffer += textDecoder.decode()
+
+    const { events } = consumeSSEEvents(`${sseBuffer}\n`, sseEvent)
+
+    let updated = false
+
+    for (const event of events) {
+      const delta = getAnswerDelta(event)
+      if (!delta) {
+        continue
+      }
+
+      text += delta
+      updated = true
+    }
+
+    if (!updated) {
+      return
+    }
+
+    const parsed = parseStreamContent(text)
+
+    flushMessages((messages) => [
+      ...messages.slice(0, index),
+      { ...messages[index], ...parsed },
+      ...messages.slice(index + 1),
+    ])
   }
 
   const [loading, setLoading] = useState(false)
