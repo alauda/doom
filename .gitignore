@@ -14,3 +14,20 @@ node_modules
 /test.*
 *.log
 *.tsbuildinfo
+
+# Local AI code agent configs
+.codex
+.codex/
+.claude
+.claude/
+.continue
+.continue/
+.cursor
+.cursor/
+.gemini
+.gemini/
+.roo
+.roo/
+.windsurf
+.windsurf/
+.aider*
