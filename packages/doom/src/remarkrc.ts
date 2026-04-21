@@ -13,7 +13,7 @@ import remarkLintNoHiddenTableCell from 'remark-lint-no-hidden-table-cell'
 
 import doomLint, {
   checkDeadLinks,
-  fileNaming,
+  headingAnchorFormat,
   noDeepHeading,
   noDeepList,
   noMultiOpenAPIPaths,
@@ -38,7 +38,7 @@ export default {
     remarkLintNoHiddenTableCell,
     doomLint,
     checkDeadLinks,
-    fileNaming,
+    headingAnchorFormat,
     noDeepHeading,
     noDeepList,
     noMultiOpenAPIPaths,
