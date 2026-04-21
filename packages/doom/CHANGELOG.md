@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 2.3.1
+
+### Patch Changes
+
+- [#319](https://github.com/alauda/doom/pull/319) [`c99c3ad`](https://github.com/alauda/doom/commit/c99c3ad2aebe66405136d7682913bc0ace404215) Thanks [@yangxiaolang](https://github.com/yangxiaolang)! - fix: adapt AI assistant streaming answer parsing
+
 ## 2.3.0
 
 ### Minor Changes
