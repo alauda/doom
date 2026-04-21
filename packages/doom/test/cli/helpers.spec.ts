@@ -1,8 +1,13 @@
-import { describe, expect, test } from '@rstest/core'
+import fs from 'node:fs/promises'
+import os from 'node:os'
+import path from 'node:path'
+
+import { afterEach, beforeEach, describe, expect, test } from '@rstest/core'
 
 import {
   defaultGitHubUrl,
   escapeMarkdownHeadingIds,
+  getMatchedDocFilePaths,
   isDoc,
   parseBoolean,
   parseBooleanOrString,
@@ -159,5 +164,50 @@ describe('defaultGitHubUrl', () => {
     expect(defaultGitHubUrl('/github.com/user/repo')).toBe(
       'https://github.com/user/repo',
     )
+  })
+})
+
+describe('getMatchedDocFilePaths', () => {
+  let tempDir: string
+
+  beforeEach(async () => {
+    tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'doom-cli-test-'))
+  })
+
+  afterEach(async () => {
+    await fs.rm(tempDir, { recursive: true, force: true })
+  })
+
+  test('returns markdown file path when matched item is a doc file', async () => {
+    const docPath = path.join(tempDir, 'readme.md')
+    await fs.writeFile(docPath, '# title')
+
+    const result = await getMatchedDocFilePaths([docPath])
+
+    expect(result).toEqual([docPath])
+  })
+
+  test('returns empty array when matched item is a non-doc file', async () => {
+    const filePath = path.join(tempDir, 'script.ts')
+    await fs.writeFile(filePath, 'export {}')
+
+    const result = await getMatchedDocFilePaths([filePath])
+
+    expect(result).toEqual([[]])
+  })
+
+  test('expands directory to absolute markdown and mdx paths', async () => {
+    const nestedDir = path.join(tempDir, 'docs', 'guide')
+    await fs.mkdir(nestedDir, { recursive: true })
+    const mdFile = path.join(tempDir, 'docs', 'index.md')
+    const mdxFile = path.join(nestedDir, 'intro.mdx')
+    const ignoredFile = path.join(nestedDir, 'config.json')
+    await fs.writeFile(mdFile, '# index')
+    await fs.writeFile(mdxFile, '# intro')
+    await fs.writeFile(ignoredFile, '{}')
+
+    const result = await getMatchedDocFilePaths([path.join(tempDir, 'docs')])
+
+    expect((result[0] as string[]).sort()).toEqual([mdFile, mdxFile].sort())
   })
 })
