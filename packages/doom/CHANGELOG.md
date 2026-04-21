@@ -1,5 +1,15 @@
 # @alauda/doom
 
+## 2.3.0
+
+### Minor Changes
+
+- [#318](https://github.com/alauda/doom/pull/318) [`f0f8b91`](https://github.com/alauda/doom/commit/f0f8b912d14799e738e1afbd4414ae22c3a7a456) Thanks [@JounQin](https://github.com/JounQin)! - feat: add heading anchor format lint rule
+
+- [#317](https://github.com/alauda/doom/pull/317) [`652abba`](https://github.com/alauda/doom/commit/652abba1c9505b0822decf2513c510804e39e137) Thanks [@JounQin](https://github.com/JounQin)! - feat(remark-lint): add file-naming rule
+
+- [#315](https://github.com/alauda/doom/pull/315) [`ada62f7`](https://github.com/alauda/doom/commit/ada62f758fbd14e129c60837ca6e43935c832e90) Thanks [@JounQin](https://github.com/JounQin)! - refactor: remove translate chunks in favor of streaming
+
 ## 2.2.0
 
 ### Minor Changes
