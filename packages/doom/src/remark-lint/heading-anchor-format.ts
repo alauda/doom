@@ -14,27 +14,11 @@ type IdBearingElement = {
 }
 
 const getHtmlId = (value: string) => {
-  const idIndex = value.search(/\sid\s*=/iu)
-  if (idIndex < 0) {
+  const match = /\sid\s*=\s*(["'])(.*?)\1/iu.exec(value)
+  if (!match) {
     return
   }
-
-  const equalsIndex = value.indexOf('=', idIndex)
-  if (equalsIndex < 0) {
-    return
-  }
-
-  const quote = value[equalsIndex + 1]
-  if (quote !== '"' && quote !== "'") {
-    return
-  }
-
-  const idEndIndex = value.indexOf(quote, equalsIndex + 2)
-  if (idEndIndex < 0) {
-    return
-  }
-
-  return value.slice(equalsIndex + 2, idEndIndex)
+  return match[2]
 }
 
 const getHtmlIdBearingElement = (
