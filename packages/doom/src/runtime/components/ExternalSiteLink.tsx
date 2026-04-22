@@ -1,4 +1,4 @@
-import { useLang, useSite } from '@rspress/core/runtime'
+import { useSite } from '@rspress/core/runtime'
 import {
   addTrailingSlash,
   isExternalUrl,
@@ -13,6 +13,8 @@ import { type AnchorHTMLAttributes, type ReactNode, useMemo } from 'react'
 
 import { isUnversioned } from '../../shared/helpers.js'
 import { useIsPrint } from '../hooks/index.js'
+
+import { useLang } from '@alauda/doom/runtime'
 
 export interface ExternalSiteLinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
   name: string
@@ -65,7 +67,7 @@ const ExternalSiteLink_ = ({
         (isUnversioned(virtual.version)
           ? site.base
           : addTrailingSlash(site.base + site.version)) +
-        (lang && lang !== siteData.lang ? addTrailingSlash(lang) : '') +
+        (lang !== siteData.lang ? addTrailingSlash(lang) : '') +
         (hash ? `${url}#${hash}` : url)
       }
       target="_blank"

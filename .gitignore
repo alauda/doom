@@ -14,6 +14,7 @@ node_modules
 /test.*
 *.log
 *.tsbuildinfo
+build-info.yaml
 
 # Local AI code agent configs
 .codex

@@ -1,16 +1,7 @@
-body:has(.container) :global {
-  #search-container,
-  .rspress-nav-search-button,
-  .rspress-sidebar-menu-container,
-  aside,
-  .rspress-doc-footer,
-  [class^='aside-container'] {
-    display: none;
-  }
+@use 'mixins';
 
-  .rspress-doc {
-    max-width: 1440px;
-  }
+body:has(.container) :global {
+  @include mixins.special;
 }
 
 .container {

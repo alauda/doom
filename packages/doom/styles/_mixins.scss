@@ -1,0 +1,19 @@
+@mixin special {
+  .rp-search-button,
+  .rp-doc-layout__menu,
+  .rp-sidebar-menu-container,
+  .rp-nav-menu__divider,
+  .rp-nav-screen-divider,
+  aside,
+  .rp-doc-footer {
+    display: none;
+  }
+
+  .rp-doc-layout__container {
+    justify-content: center;
+  }
+
+  .rp-doc-layout__doc {
+    max-width: 1440px;
+  }
+}

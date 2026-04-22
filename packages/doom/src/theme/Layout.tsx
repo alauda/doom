@@ -1,9 +1,5 @@
 import { useLang, useSite } from '@rspress/core/runtime'
-import {
-  Link,
-  Layout as OriginalLayout,
-  getCustomMDXComponent,
-} from '@rspress/core/theme-original'
+import { Link, Layout as OriginalLayout } from '@rspress/core/theme-original'
 import virtual from 'doom-@global-virtual'
 import { useCallback, useMemo, useState } from 'react'
 import { useLocation } from 'react-router'
@@ -13,13 +9,15 @@ import type {
   DoomSidebarGroup,
   DoomSidebarItem,
 } from '../plugins/index.ts'
+import type { BuildInfoGroup } from '../products/index.tsx'
 import { useTranslation } from '../runtime/index.ts'
+import { BuildInfoContext } from '../shared/context.ts'
 import type { ExportItem } from '../types.ts'
 
+import { BreadCrumb } from './Breadcrumb/index.tsx'
 import { ForceRenderContext } from './VersionsNav/context.tsx'
 import { VersionsNav } from './VersionsNav/index.tsx'
-
-const X = getCustomMDXComponent()
+import { X } from './_X.ts'
 
 export interface MatchedSidebar {
   sidebar: DoomSidebarGroup | DoomSidebarItem
@@ -140,6 +138,8 @@ export const Layout = () => {
     setRender((v) => !v)
   }, [])
 
+  const [buildInfoGroups, setBuildInfoGroups] = useState<BuildInfoGroup[]>([])
+
   return (
     <ForceRenderContext
       value={useMemo(
@@ -148,17 +148,25 @@ export const Layout = () => {
       )}
     >
       <VersionsNav />
-      <OriginalLayout
-        beforeOutline={
-          pdfLink && (
-            <X.p className="rp-doc" style={{ marginBottom: 16 }}>
-              <Link href={pdfLink} target="_blank" rel="noopener noreferrer">
-                {t('view_docs_as_pdf')}
-              </Link>
-            </X.p>
-          )
-        }
-      />
+      <BuildInfoContext
+        value={useMemo(
+          () => ({ groups: buildInfoGroups, setGroups: setBuildInfoGroups }),
+          [buildInfoGroups, setBuildInfoGroups],
+        )}
+      >
+        <OriginalLayout
+          afterNav={<BreadCrumb />}
+          beforeOutline={
+            pdfLink && (
+              <X.p className="rp-doc" style={{ marginBottom: 16 }}>
+                <Link href={pdfLink} target="_blank" rel="noopener noreferrer">
+                  {t('view_docs_as_pdf')}
+                </Link>
+              </X.p>
+            )
+          }
+        />
+      </BuildInfoContext>
     </ForceRenderContext>
   )
 }

@@ -1,0 +1,45 @@
+@use 'mixins';
+
+body:has(.container) :global {
+  @include mixins.special;
+}
+
+.container {
+  column-count: 5;
+  column-gap: 1lh;
+
+  @media (max-width: 1366px) {
+    column-count: 4;
+  }
+
+  @media (max-width: 1024px) {
+    column-count: 3;
+  }
+
+  @media (max-width: 768px) {
+    column-count: 2;
+  }
+
+  h2 {
+    margin-top: 0;
+
+    &:before {
+      display: none;
+    }
+  }
+
+  ul {
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-left: 0;
+  }
+
+  li {
+    list-style: none;
+  }
+}
+
+.group {
+  margin-bottom: 1lh;
+  break-inside: avoid;
+}

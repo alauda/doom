@@ -2,6 +2,7 @@ import { isProduction, withBase } from '@rspress/core/runtime'
 import virtual from 'doom-@global-virtual'
 import { merge } from 'es-toolkit/compat'
 import { useEffect, useMemo, useState } from 'react'
+import { xfetch } from 'x-fetch'
 import { parse } from 'yaml'
 
 import { isUnversioned, type Language } from '../../shared/index.js'
@@ -73,12 +74,8 @@ const fetchSiteOverrides = async (
       if (!url) {
         return
       }
-      const res = await fetch(url)
-      if (!res.ok) {
-        return
-      }
       try {
-        return parse(await res.text()) as SiteOverrides
+        return parse(await xfetch(url, { type: 'text' })) as SiteOverrides
       } catch {
         //
       }
