@@ -38,3 +38,4 @@
 - [权限说明文档](/usage/permission.md)
 - [引用文档](/usage/reference.md): 在 Markdown 文件中： 在 MDX 文件中： 上述 name 为引用文档的名称，参考引用文档配置，如果引用的文档内容使用了远程仓库图片静态资源，相关静态资源将自动存储在本地 <root>/public/_remotes/<name> 目录下。 以下为使用 <!-- reference-start#ref --> 的实例：
 - [](/login.md)
+- [](/products.md)

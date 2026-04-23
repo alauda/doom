@@ -38,3 +38,4 @@
 - [Permission Description Document](/en/usage/permission.md)
 - [Referencing Documents](/en/usage/reference.md): In Markdown files: In MDX files: The name above refers to the name of the referenced document. For more information, please refer to Document Reference Configuration. If the referenced document content uses static resources from a remote repository, the related static resources will be automatically stored locally in the <root>/public/_remotes/<name> directory. Here is an example using <!-- reference-start#ref -->:
 - [](/en/login.md)
+- [](/en/products.md)
