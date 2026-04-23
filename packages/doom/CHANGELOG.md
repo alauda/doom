@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 2.4.0
+
+### Minor Changes
+
+- [#321](https://github.com/alauda/doom/pull/321) [`e7f1157`](https://github.com/alauda/doom/commit/e7f115796882a9ecd4e329605942825d5959ced0) Thanks [@JounQin](https://github.com/JounQin)! - feat: add products and breadcrumb support
+
 ## 2.3.1
 
 ### Patch Changes
