@@ -74,10 +74,12 @@ export const globalPlugin = ({
       }
     },
     addPages(config) {
-      let loginPath: string
+      let loginPath: string | undefined
+      let productsPath: string | undefined
       for (const ext of ['.js', '.tsx']) {
         loginPath = baseResolve(`login/index${ext}`)
-        if (fs.existsSync(loginPath)) {
+        productsPath = baseResolve(`products/index${ext}`)
+        if (fs.existsSync(loginPath) && fs.existsSync(productsPath)) {
           break
         }
       }
@@ -85,15 +87,28 @@ export const globalPlugin = ({
         return [
           {
             routePath: '/login',
-            filepath: loginPath!,
+            filepath: loginPath,
+          },
+          {
+            routePath: '/products',
+            filepath: productsPath,
           },
         ]
       }
       const lang = config.lang
-      return config.themeConfig!.locales!.map((l) => ({
-        routePath: l.lang && l.lang !== lang ? `/${l.lang}/login` : '/login',
-        filepath: loginPath,
-      }))
+      return config.themeConfig!.locales!.flatMap((l) => {
+        const prefix = l.lang && l.lang !== lang ? `/${l.lang}` : ''
+        return [
+          {
+            routePath: `${prefix}/login`,
+            filepath: loginPath,
+          },
+          {
+            routePath: `${prefix}/products`,
+            filepath: productsPath,
+          },
+        ]
+      })
     },
   }
 }

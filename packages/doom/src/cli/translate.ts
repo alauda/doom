@@ -269,7 +269,7 @@ export const translate = async ({
       sourceLang,
       targetLang,
       userPrompt,
-      additionalPrompts: additionalPrompts,
+      additionalPrompts,
       terms,
       titleTranslationPrompt,
     },

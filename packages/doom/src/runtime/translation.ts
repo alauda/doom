@@ -60,6 +60,9 @@ const en = {
   new_chat: 'New Chat',
   show_more: 'Show more',
   show_less: 'Show less',
+  products: 'Products',
+  all_product_documentation: 'All Product Documentation',
+  explore_doc_all_products: 'Explore and find documentation for all products',
 }
 
 export type Translation = typeof en
@@ -121,6 +124,9 @@ const zh: Translation = {
   new_chat: '新会话',
   show_more: '显示更多',
   show_less: '显示更少',
+  products: '产品',
+  all_product_documentation: '所有产品文档',
+  explore_doc_all_products: '探索并查找所有产品的文档',
 }
 
 const ru: Translation = {
@@ -185,6 +191,10 @@ const ru: Translation = {
   new_chat: 'Новый чат',
   show_more: 'Показать больше',
   show_less: 'Показать меньше',
+  products: 'Продукты',
+  all_product_documentation: 'Документация по всем продуктам',
+  explore_doc_all_products:
+    'Исследуйте и найдите документацию для всех продуктов',
 }
 
 export const TRANSLATIONS = { en, zh, ru }

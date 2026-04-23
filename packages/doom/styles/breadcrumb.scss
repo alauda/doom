@@ -1,0 +1,42 @@
+:root:has(.breadcrumb-container) {
+  --rp-banner-height: 50px;
+
+  .rp-nav {
+    top: 0;
+  }
+}
+
+.breadcrumb {
+  &-container {
+    position: sticky;
+    top: var(--rp-nav-height);
+    z-index: calc(var(--rp-z-index-nav) - 1);
+    height: var(--rp-banner-height);
+    border-bottom: 1px solid var(--rp-c-divider-light);
+    padding: 0 20px;
+    background-color: var(--rp-c-bg);
+  }
+
+  &-content {
+    white-space: nowrap;
+    overflow-x: auto;
+    display: flex;
+    align-items: center;
+    height: 100%;
+
+    @media (min-width: 1280px) {
+      margin-left: calc(var(--rp-sidebar-margin-left));
+    }
+  }
+
+  &-item {
+    display: inline-flex;
+    align-items: center;
+    margin-top: 0;
+
+    .rp-link,
+    &-text {
+      margin: 0 8px;
+    }
+  }
+}
