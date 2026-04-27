@@ -5,6 +5,13 @@ __metadata:
   version: 8
   cacheKey: 10c0
 
+"@alauda/doc-stream-sdk@npm:0.1.0":
+  version: 0.1.0
+  resolution: "@alauda/doc-stream-sdk@npm:0.1.0"
+  checksum: 10c0/7626402b509a94d349d6833821649ea7b5ff05da6dc8ad8a30be123806be10b75ef6aa7c8d01c7fc0aad8ec4db31af965f247639a6150c169a991db16fe33d26
+  languageName: node
+  linkType: hard
+
 "@alauda/doom-export@npm:^0.4.1, @alauda/doom-export@workspace:packages/export":
   version: 0.0.0-use.local
   resolution: "@alauda/doom-export@workspace:packages/export"
@@ -23,6 +30,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@alauda/doom@workspace:packages/doom"
   dependencies:
+    "@alauda/doc-stream-sdk": "npm:0.1.0"
     "@alauda/doom-export": "npm:^0.4.1"
     "@cspell/eslint-plugin": "npm:^10.0.0"
     "@eslint-react/eslint-plugin": "npm:^4.2.3"
@@ -40,7 +48,6 @@ __metadata:
     "@shikijs/transformers": "npm:^4.0.2"
     "@total-typescript/ts-reset": "npm:^0.6.1"
     "@types/react": "npm:^19.2.14"
-    "@yangxiaolang/smart-doc-sse-parser": "npm:0.5.2"
     ab64: "npm:^0.1.6"
     chokidar: "npm:^5.0.0"
     clsx: "npm:^2.1.1"
@@ -4409,13 +4416,6 @@ __metadata:
     d3-transition:
       optional: true
   checksum: 10c0/b12014d94708ab4df7f5a4b6205c6f23ff235cca2ffe91df3314862b109b826e52f9020c2a2f7527d3712d21c578d6db9cdb60ce46a528739cc18e58d111f724
-  languageName: node
-  linkType: hard
-
-"@yangxiaolang/smart-doc-sse-parser@npm:0.5.2":
-  version: 0.5.2
-  resolution: "@yangxiaolang/smart-doc-sse-parser@npm:0.5.2"
-  checksum: 10c0/a440e14766ca220028a8f7a4bd5c122bd47d225b7d9cee5be264dec21eba277ecdf48f42bc9c602b62f31d66e7f36300ff06cd493379741faf6aa29bdc001fdc
   languageName: node
   linkType: hard
 

@@ -1,4 +1,4 @@
-import { consumeSmartDocDisplayStream } from '@yangxiaolang/smart-doc-sse-parser'
+import { consumeSmartDocDisplayStream } from '@alauda/doc-stream-sdk'
 import { clsx } from 'clsx'
 import { useEffect, useRef, useState } from 'react'
 import { Tooltip } from 'react-tooltip'

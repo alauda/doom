@@ -1,4 +1,4 @@
-import type { SmartDocDisplayReferenceDoc } from '@yangxiaolang/smart-doc-sse-parser'
+import type { SmartDocDisplayReferenceDoc } from '@alauda/doc-stream-sdk'
 import type { ReactNode } from 'react'
 
 export interface ChatMessage {

@@ -43,6 +43,7 @@
     "rspress-plugins"
   ],
   "dependencies": {
+    "@alauda/doc-stream-sdk": "0.1.0",
     "@alauda/doom-export": "^0.4.1",
     "@cspell/eslint-plugin": "^10.0.0",
     "@eslint-react/eslint-plugin": "^4.2.3",
@@ -60,7 +61,6 @@
     "@shikijs/transformers": "^4.0.2",
     "@total-typescript/ts-reset": "^0.6.1",
     "@types/react": "^19.2.14",
-    "@yangxiaolang/smart-doc-sse-parser": "0.5.2",
     "ab64": "^0.1.6",
     "chokidar": "^5.0.0",
     "clsx": "^2.1.1",
