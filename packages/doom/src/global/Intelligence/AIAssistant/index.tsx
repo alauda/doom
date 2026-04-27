@@ -164,9 +164,7 @@ export const AIAssistant = ({ open, onOpenChange }: AIAssistantProps) => {
       res.body! as ReadableStream<Uint8Array | string>,
       {
         ignoreDocsBlocks: false,
-        onDisplayMessage(displayMessage) {
-          syncAssistantMessage(displayMessage)
-        },
+        onDisplayMessage: syncAssistantMessage,
       },
     )
   }
