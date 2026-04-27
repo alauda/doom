@@ -1,3 +1,4 @@
+import { consumeSmartDocDisplayStream } from '@yangxiaolang/smart-doc-sse-parser'
 import { clsx } from 'clsx'
 import { useEffect, useRef, useState } from 'react'
 import { Tooltip } from 'react-tooltip'
@@ -17,7 +18,6 @@ import { Preamble } from './Preamble/index.tsx'
 import { ResizableUserInput } from './ResizableUserInput/index.tsx'
 import { Thinking } from './Thinking.tsx'
 import type { ChatMessage } from './types.ts'
-import { parseStreamContent, SmartDocSseParser } from './utils.ts'
 
 import CloseIcon from '@alauda/doom/assets/close.svg?react'
 import LogoutIcon from '@alauda/doom/assets/logout.svg?react'
@@ -139,50 +139,36 @@ export const AIAssistant = ({ open, onOpenChange }: AIAssistantProps) => {
       },
     })
 
-    const textDecoder = new TextDecoder()
-
-    const parser = new SmartDocSseParser({
-      ignoreDocsBlocks: false,
-    })
-
-    let snapshot = ''
-
-    const syncAssistantMessage = (nextSnapshot: string) => {
-      if (!nextSnapshot || nextSnapshot === snapshot) {
+    const syncAssistantMessage = (nextMessage: {
+      content: string
+      thoughtProcess: string
+      refDocs: ChatMessage['refDocs']
+    }) => {
+      if (sessionId !== sessionIdRef.current) {
         return
       }
 
-      snapshot = nextSnapshot
-      const parsed = parseStreamContent(nextSnapshot)
-
       flushMessages((messages) => [
         ...messages.slice(0, index),
-        { ...messages[index], ...parsed },
+        {
+          ...messages[index],
+          content: nextMessage.content,
+          thoughtProcess: nextMessage.thoughtProcess || undefined,
+          refDocs: nextMessage.refDocs,
+        },
         ...messages.slice(index + 1),
       ])
     }
 
-    for await (const chunk_ of res.body! as unknown as AsyncIterable<Uint8Array>) {
-      if (sessionId !== sessionIdRef.current) {
-        break
-      }
-
-      const chunk = textDecoder.decode(chunk_, { stream: true })
-      const result = parser.push(chunk)
-      syncAssistantMessage(result.content)
-    }
-
-    if (sessionId !== sessionIdRef.current) {
-      return
-    }
-
-    const remainingText = textDecoder.decode()
-    if (remainingText) {
-      const result = parser.push(remainingText)
-      syncAssistantMessage(result.content)
-    }
-
-    syncAssistantMessage(parser.flush().content)
+    await consumeSmartDocDisplayStream(
+      res.body! as ReadableStream<Uint8Array | string>,
+      {
+        ignoreDocsBlocks: false,
+        onDisplayMessage(displayMessage) {
+          syncAssistantMessage(displayMessage)
+        },
+      },
+    )
   }
 
   const [loading, setLoading] = useState(false)

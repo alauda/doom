@@ -1,15 +1,15 @@
+import type { SmartDocDisplayReferenceDoc } from '@yangxiaolang/smart-doc-sse-parser'
 import { clsx } from 'clsx'
 import { useCallback, useMemo, useState } from 'react'
 
 import { X } from '../../../../../runtime/components/_X.tsx'
-import type { RefDoc } from '../../types.ts'
 
 import AngleDownIcon from '@alauda/doom/assets/angle-down.svg?react'
 import { useTranslation } from '@alauda/doom/runtime'
 import classes from '@alauda/doom/styles/chat-ref-docs.module.scss'
 
 export interface ChatRefDocsProps {
-  refDocs: RefDoc[]
+  refDocs: SmartDocDisplayReferenceDoc[]
 }
 
 export const ChatRefDocs = ({ refDocs }: ChatRefDocsProps) => {

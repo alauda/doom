@@ -40,7 +40,7 @@ __metadata:
     "@shikijs/transformers": "npm:^4.0.2"
     "@total-typescript/ts-reset": "npm:^0.6.1"
     "@types/react": "npm:^19.2.14"
-    "@yangxiaolang/smart-doc-sse-parser": "npm:0.3.0"
+    "@yangxiaolang/smart-doc-sse-parser": "npm:0.5.2"
     ab64: "npm:^0.1.6"
     chokidar: "npm:^5.0.0"
     clsx: "npm:^2.1.1"
@@ -4412,10 +4412,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@yangxiaolang/smart-doc-sse-parser@npm:0.3.0":
-  version: 0.3.0
-  resolution: "@yangxiaolang/smart-doc-sse-parser@npm:0.3.0"
-  checksum: 10c0/3e5a692a78401418c6436f5adf59c9a2d5fe84518067511e8bc8de5dec61b376ee3863b3eef291c0ae06a02d86427da5cf27157541e089abc82e725bca1359ed
+"@yangxiaolang/smart-doc-sse-parser@npm:0.5.2":
+  version: 0.5.2
+  resolution: "@yangxiaolang/smart-doc-sse-parser@npm:0.5.2"
+  checksum: 10c0/a440e14766ca220028a8f7a4bd5c122bd47d225b7d9cee5be264dec21eba277ecdf48f42bc9c602b62f31d66e7f36300ff06cd493379741faf6aa29bdc001fdc
   languageName: node
   linkType: hard
 

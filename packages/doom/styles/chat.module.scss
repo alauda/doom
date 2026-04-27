@@ -17,12 +17,6 @@
   font-size: 14px;
   width: calc(100% - 36px);
 
-  h2 {
-    margin-bottom: 0;
-    padding-top: 0;
-    border: 0;
-  }
-
   &,
   p {
     line-height: calc(20 / 14);
@@ -48,6 +42,91 @@
       margin-bottom: 0;
       padding-bottom: 0;
       border-bottom: 0;
+    }
+  }
+}
+
+.markdown {
+  &:global(.rp-doc) {
+    > :first-child {
+      margin-top: 0;
+      padding-top: 0;
+      border-top: 0;
+    }
+
+    > :last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: 0;
+    }
+
+    p {
+      margin-top: 0.75rem;
+      margin-bottom: 0.75rem;
+      line-height: calc(20 / 14);
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      line-height: 1.4;
+    }
+
+    h1 {
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+    }
+
+    h2 {
+      margin-top: 1.25rem;
+      margin-bottom: 0.5rem;
+      padding-top: 0;
+      border: 0;
+      font-size: 1.25rem;
+
+      &:first-of-type:before {
+        display: none;
+      }
+    }
+
+    h3 {
+      margin-top: 1rem;
+      margin-bottom: 0.5rem;
+      font-size: 1.125rem;
+    }
+
+    h4,
+    h5,
+    h6 {
+      margin-top: 0.75rem;
+      margin-bottom: 0.375rem;
+      font-size: 1rem;
+    }
+
+    ul,
+    ol {
+      margin-top: 0.75rem;
+      margin-bottom: 0.75rem;
+      padding-left: 1.125rem;
+      line-height: calc(20 / 14);
+    }
+
+    ul li:not(:first-child),
+    ol li:not(:first-child) {
+      margin-top: 0.25rem;
+    }
+
+    blockquote {
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+      padding-left: 0.75rem;
+    }
+
+    hr {
+      margin: 1.5rem 0;
     }
   }
 }
