@@ -1,5 +1,5 @@
+import Slugger from '@rspress/shared/github-slugger'
 import { extractTextAndId } from '@rspress/shared/node-utils'
-import Slugger from 'github-slugger'
 import type { Root } from 'mdast'
 import { visitChildren } from 'unist-util-visit-children'
 

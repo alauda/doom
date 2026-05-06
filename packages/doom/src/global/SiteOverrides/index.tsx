@@ -54,16 +54,13 @@ export const SiteOverrides = () => {
     site.originalTitle ??= site.title
     site.title = title
 
-    let newTitle = (frontmatter.title as string) || articleTitle
+    let newTitle = frontmatter.title || articleTitle
 
     if (newTitle && pageType === 'doc') {
       // append main title as a suffix
-      newTitle = concatTitle(
-        newTitle,
-        (frontmatter.titleSuffix as string) || title,
-      )
+      newTitle = concatTitle(newTitle, frontmatter.titleSuffix || title)
     } else if (pageType === 'home') {
-      newTitle = concatTitle(title, frontmatter.titleSuffix as string)
+      newTitle = concatTitle(title, frontmatter.titleSuffix)
     } else if (pageType === '404') {
       newTitle = concatTitle('404', title)
     } else {

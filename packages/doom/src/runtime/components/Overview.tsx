@@ -110,7 +110,7 @@ export function Overview(props: {
         | NormalizedSidebarGroup,
       sidebarGroup?: NormalizedSidebarGroup,
       frontmatter?: Record<string, unknown>,
-    ) => {
+    ): false | GroupItem => {
       if (isSidebarDivider(item) || isSidebarSectionHeader(item)) {
         return false
       }
@@ -138,7 +138,7 @@ export function Overview(props: {
           pageModule?.toc.filter((header) =>
             overviewHeaders.some((depth) => header.depth === depth),
           ) || [],
-      } as GroupItem
+      }
     },
     [overviewModules, props.overviewHeaders, routePath],
   )
@@ -151,7 +151,7 @@ export function Overview(props: {
         | SidebarItem
         | SidebarDivider
       )[],
-    ) => {
+    ): Group[] => {
       const group = sidebarGroups
         .filter((sidebarGroup) => {
           if ('items' in sidebarGroup) {
@@ -195,7 +195,7 @@ export function Overview(props: {
             name: ('text' in sidebarGroup && sidebarGroup.text) || '',
             items,
           }
-        }) as Group[]
+        })
       return group
     },
     [frontmatter, normalizeSidebarItem, subFilter],

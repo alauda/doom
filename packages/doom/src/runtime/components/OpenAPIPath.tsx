@@ -1,8 +1,8 @@
 import { usePage } from '@rspress/core/runtime'
 import { Badge } from '@rspress/core/theme-original'
+import BananaSlug from '@rspress/shared/github-slugger'
 import openapisMap from 'doom-@api-openapisMap'
 import virtual from 'doom-@api-virtual'
-import BananaSlug from 'github-slugger'
 import { OpenAPIV3, type OpenAPIV3_1 } from 'openapi-types'
 import { Fragment, useMemo, type ReactNode } from 'react'
 

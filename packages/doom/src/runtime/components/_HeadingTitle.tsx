@@ -1,4 +1,4 @@
-import BananaSlug from 'github-slugger'
+import BananaSlug from '@rspress/shared/github-slugger'
 import { Children, type ReactNode, useMemo } from 'react'
 
 import { X } from './_X.js'

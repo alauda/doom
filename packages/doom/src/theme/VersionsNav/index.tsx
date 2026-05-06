@@ -4,7 +4,7 @@ import {
   useLocaleSiteData,
   useSite,
 } from '@rspress/core/runtime'
-import { type NavItem, type NavItemWithLink } from '@rspress/shared'
+import { type NavItem } from '@rspress/shared'
 import virtual from 'doom-@global-virtual'
 import { noop } from 'es-toolkit'
 import { useEffect, useMemo, useState } from 'react'
@@ -134,7 +134,7 @@ const VersionsNav_ = () => {
       }
       navList.push({
         text: version,
-        items: versionItems as NavItemWithLink[],
+        items: versionItems,
         _hacked: true,
       })
     }

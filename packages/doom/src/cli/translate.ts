@@ -6,12 +6,13 @@ import { isDeepStrictEqual } from 'node:util'
 
 import { logger } from '@rspress/core'
 import { removeLeadingSlash } from '@rspress/shared'
+import matter from '@rspress/shared/gray-matter'
 import { Command } from 'commander'
 import ejs from 'ejs'
-import matter from 'gray-matter'
 import { OpenAI, RateLimitError } from 'openai'
 import { pRateLimit } from 'p-ratelimit'
 import { glob } from 'tinyglobby'
+import { stringify } from 'yaml'
 import { cyan, red } from 'yoctocolors'
 
 import {
@@ -479,7 +480,7 @@ export const translateCommand = new Command('translate')
           if (await pathExists(targetFilePath, 'file')) {
             targetContent = await fs.readFile(targetFilePath, 'utf-8')
 
-            targetFrontmatter = matter(targetContent).data as I18nFrontmatter
+            targetFrontmatter = matter(targetContent).data
 
             if (!force && targetFrontmatter.sourceSHA === sourceSHA) {
               allSourceFilePaths.delete(sourceFilePath)
@@ -504,10 +505,9 @@ export const translateCommand = new Command('translate')
 
               const { content } = matter(sourceContent)
 
-              targetContent = matter.stringify(
-                content.startsWith('\n') ? content : '\n' + content,
-                newFrontmatter,
-              )
+              targetContent =
+                stringify(newFrontmatter) +
+                (content.startsWith('\n') ? content : '\n' + content)
 
               const targetBase = path.dirname(targetFilePath)
               await fs.mkdir(targetBase, { recursive: true })
@@ -589,10 +589,9 @@ export const translateCommand = new Command('translate')
                 delete newFrontmatter.title
               }
 
-              targetContent = matter.stringify(
-                content.startsWith('\n') ? content : '\n' + content,
-                newFrontmatter,
-              )
+              targetContent =
+                stringify(newFrontmatter) +
+                (content.startsWith('\n') ? content : '\n' + content)
 
               await fs.mkdir(targetBase, { recursive: true })
 
