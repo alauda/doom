@@ -17,16 +17,23 @@ export interface ChatProps {
 
 export const Chat = ({ ref, messages }: ChatProps) => (
   <ul ref={ref} className={classes.container}>
-    {messages.map(({ id, role, content, thinkingProcess, refDocs }) => (
+    {messages.map(({ id, role, content, thoughtProcess, refDocs }) => (
       <li key={`${role}-${id}`} className={clsx(classes.chat, classes[role])}>
         {role === 'assistant' && <AssistantIcon className={classes.icon} />}
         <div className={classes.content}>
-          {thinkingProcess && (
-            <ThinkingProcess>{thinkingProcess}</ThinkingProcess>
+          {thoughtProcess && (
+            <ThinkingProcess>{thoughtProcess}</ThinkingProcess>
           )}
           {refDocs?.length ? <ChatRefDocs refDocs={refDocs} /> : null}
           {typeof content === 'string' ? (
-            <Markdown>{content}</Markdown>
+            <div
+              className={clsx(
+                classes.markdown,
+                role === 'assistant' && 'rp-doc',
+              )}
+            >
+              <Markdown>{content}</Markdown>
+            </div>
           ) : (
             content
           )}

@@ -1,3 +1,4 @@
+import { consumeSmartDocDisplayStream } from '@alauda/doc-stream-sdk'
 import { clsx } from 'clsx'
 import { useEffect, useRef, useState } from 'react'
 import { Tooltip } from 'react-tooltip'
@@ -17,11 +18,6 @@ import { Preamble } from './Preamble/index.tsx'
 import { ResizableUserInput } from './ResizableUserInput/index.tsx'
 import { Thinking } from './Thinking.tsx'
 import type { ChatMessage } from './types.ts'
-import {
-  consumeSSEEvents,
-  getAnswerDelta,
-  parseStreamContent,
-} from './utils.ts'
 
 import CloseIcon from '@alauda/doom/assets/close.svg?react'
 import LogoutIcon from '@alauda/doom/assets/logout.svg?react'
@@ -143,80 +139,34 @@ export const AIAssistant = ({ open, onOpenChange }: AIAssistantProps) => {
       },
     })
 
-    const textDecoder = new TextDecoder()
-
-    let text = ''
-    let sseBuffer = ''
-    let sseEvent: string | undefined
-
-    for await (const chunk_ of res.body! as unknown as AsyncIterable<Uint8Array>) {
+    const syncAssistantMessage = (nextMessage: {
+      content: string
+      thoughtProcess: string
+      refDocs: ChatMessage['refDocs']
+    }) => {
       if (sessionId !== sessionIdRef.current) {
-        break
+        return
       }
-
-      sseBuffer += textDecoder.decode(chunk_, { stream: true })
-
-      const result = consumeSSEEvents(sseBuffer, sseEvent)
-      const { events, remainder } = result
-      sseBuffer = remainder
-      sseEvent = result.event
-
-      let updated = false
-
-      for (const event of events) {
-        const delta = getAnswerDelta(event)
-        if (!delta) {
-          continue
-        }
-
-        text += delta
-        updated = true
-      }
-
-      if (!updated) {
-        continue
-      }
-
-      const parsed = parseStreamContent(text)
 
       flushMessages((messages) => [
         ...messages.slice(0, index),
-        { ...messages[index], ...parsed },
+        {
+          ...messages[index],
+          content: nextMessage.content,
+          thoughtProcess: nextMessage.thoughtProcess || undefined,
+          refDocs: nextMessage.refDocs,
+        },
         ...messages.slice(index + 1),
       ])
     }
 
-    if (sessionId !== sessionIdRef.current) {
-      return
-    }
-
-    sseBuffer += textDecoder.decode()
-
-    const { events } = consumeSSEEvents(`${sseBuffer}\n`, sseEvent)
-
-    let updated = false
-
-    for (const event of events) {
-      const delta = getAnswerDelta(event)
-      if (!delta) {
-        continue
-      }
-
-      text += delta
-      updated = true
-    }
-
-    if (!updated) {
-      return
-    }
-
-    const parsed = parseStreamContent(text)
-
-    flushMessages((messages) => [
-      ...messages.slice(0, index),
-      { ...messages[index], ...parsed },
-      ...messages.slice(index + 1),
-    ])
+    await consumeSmartDocDisplayStream(
+      res.body! as ReadableStream<Uint8Array | string>,
+      {
+        ignoreDocsBlocks: false,
+        onDisplayMessage: syncAssistantMessage,
+      },
+    )
   }
 
   const [loading, setLoading] = useState(false)

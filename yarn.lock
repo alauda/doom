@@ -5,6 +5,13 @@ __metadata:
   version: 8
   cacheKey: 10c0
 
+"@alauda/doc-stream-sdk@npm:0.1.0":
+  version: 0.1.0
+  resolution: "@alauda/doc-stream-sdk@npm:0.1.0"
+  checksum: 10c0/7626402b509a94d349d6833821649ea7b5ff05da6dc8ad8a30be123806be10b75ef6aa7c8d01c7fc0aad8ec4db31af965f247639a6150c169a991db16fe33d26
+  languageName: node
+  linkType: hard
+
 "@alauda/doom-export@npm:^0.4.1, @alauda/doom-export@workspace:packages/export":
   version: 0.0.0-use.local
   resolution: "@alauda/doom-export@workspace:packages/export"
@@ -23,6 +30,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@alauda/doom@workspace:packages/doom"
   dependencies:
+    "@alauda/doc-stream-sdk": "npm:0.1.0"
     "@alauda/doom-export": "npm:^0.4.1"
     "@cspell/eslint-plugin": "npm:^10.0.0"
     "@eslint-react/eslint-plugin": "npm:^4.2.3"
