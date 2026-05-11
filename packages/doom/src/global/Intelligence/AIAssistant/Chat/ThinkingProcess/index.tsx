@@ -1,5 +1,3 @@
-import { clsx } from 'clsx'
-
 import { Markdown, useTranslation } from '@alauda/doom/runtime'
 import classes from '@alauda/doom/styles/chat.module.scss'
 
@@ -12,7 +10,7 @@ export const ThinkingProcess = ({ children }: ThinkingProcessProps) => {
   return (
     <div>
       <div>{t('thinking_process')}</div>
-      <div className={clsx(classes.markdown, 'rp-doc')}>
+      <div className={classes.markdown}>
         <Markdown>{children}</Markdown>
       </div>
     </div>

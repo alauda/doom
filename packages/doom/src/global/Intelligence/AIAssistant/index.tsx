@@ -193,9 +193,7 @@ export const AIAssistant = ({ open, onOpenChange }: AIAssistantProps) => {
   })
 
   return (
-    <div
-      className={clsx(classes.container, 'rspress-doc', open && classes.open)}
-    >
+    <div className={clsx(classes.container, 'rp-doc', open && classes.open)}>
       <div className={classes.header}>
         <div className={classes.title}>
           {t('ai_assistant')}

@@ -1,9 +1,6 @@
-import { isProduction, NoSSR, useLang } from '@rspress/core/runtime'
-import virtual from 'doom-@global-virtual'
+import { isProduction, NoSSR } from '@rspress/core/runtime'
 import { useState } from 'react'
 import { Tooltip } from 'react-tooltip'
-
-import { ACP_BASE } from '../../shared/index.ts'
 
 import { AIAssistant } from './AIAssistant/index.tsx'
 
@@ -49,13 +46,7 @@ const Intelligence_ = () => {
 }
 
 const Intelligence = () => {
-  const lang = useLang()
-
-  if (
-    lang !== 'en' ||
-    !ALLOWED_DOMAINS.has(location.hostname) ||
-    virtual.userBase !== ACP_BASE
-  ) {
+  if (!ALLOWED_DOMAINS.has(location.hostname)) {
     return
   }
 

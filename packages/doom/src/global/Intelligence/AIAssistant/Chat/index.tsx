@@ -26,12 +26,7 @@ export const Chat = ({ ref, messages }: ChatProps) => (
           )}
           {refDocs?.length ? <ChatRefDocs refDocs={refDocs} /> : null}
           {typeof content === 'string' ? (
-            <div
-              className={clsx(
-                classes.markdown,
-                role === 'assistant' && 'rp-doc',
-              )}
-            >
+            <div className={clsx(classes.markdown)}>
               <Markdown>{content}</Markdown>
             </div>
           ) : (

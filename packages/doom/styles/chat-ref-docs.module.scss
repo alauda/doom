@@ -37,6 +37,10 @@
 }
 
 .docs {
+  margin-bottom: 0;
+  padding-left: 0;
+  line-height: normal;
+
   &,
   .doc + .doc {
     margin-top: 8px;
