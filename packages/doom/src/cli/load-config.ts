@@ -316,7 +316,7 @@ const getCommonConfig = async ({
       server: {
         open,
         proxy: {
-          '/smart/api': 'https://docs-dev.alauda.cn',
+          '/smart/api': 'https://docs.alauda.cn',
         },
       },
       tools: {
