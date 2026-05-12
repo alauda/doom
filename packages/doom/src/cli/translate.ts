@@ -53,7 +53,9 @@ export const TERMS_SUPPORTED_LANGUAGES: Language[] = ['en', 'zh', 'ru']
 // Directories that should be copied instead of translated
 const COPY_ONLY_DIRECTORIES = [
   'apis/advanced_apis/**',
+  'apis/crds/**',
   'apis/kubernetes_apis/**',
+  'apis/references/**',
 ]
 
 const DEFAULT_SYSTEM_PROMPT = `
@@ -63,16 +65,16 @@ You are a professional technical documentation engineer, skilled in writing high
 - Sentences should be fluent and conform to the expression habits of the <%= targetLang %> language.
 - Input format is MDX; output format must also retain the original MDX format. Do not translate the names of jsx components such as <Overview />, and do not wrap output in unnecessary code blocks.
 - **CRITICAL**: Do not translate or modify ANY link content in the document. This includes:
-  - URLs in markdown links: [text](URL) - keep URL exactly as is
+  - URLs in markdown links: [text](URL) - keep URL exactly as is but translate the text
   - Reference-style links: [text][ref] and [ref]: URL - keep both ref and URL unchanged
   - Inline URLs: https://example.com - keep completely unchanged
-  - Image links: ![alt](src) - keep src unchanged, but alt text can be translated
+  - Image links: ![alt](src) - keep src unchanged, but alt text should be translated
   - Anchor links: [text](#anchor) - keep #anchor unchanged
+  - Custom anchors in headings: # Heading \\{#custom-anchor} - keep \\{#custom-anchor} unchanged and translate "Heading"
   - Any href attributes in HTML tags - keep unchanged
 - Do not translate professional technical terms and proper nouns, including but not limited to: Kubernetes, Docker, CLI, API, REST, GraphQL, JSON, YAML, Git, GitHub, GitLab, AWS, Azure, GCP, Linux, Windows, macOS, Node.js, React, Vue, Angular, TypeScript, JavaScript, Python, Java, Go, Rust, etc. Keep these terms in their original form.
 - The title field and description field in frontmatter should be translated, other frontmatter fields should retain and do not translate.
 - Content within MDX components needs to be translated, whereas MDX component names and parameter keys do not.
-- Do not modify or translate any placeholders in the format of __ANCHOR_N__ (where N is a number). These placeholders must be kept exactly as they appear in the source text.
 - Keep original escape characters like backslash, angle brackets, etc. unchanged during translation.
 - Do not add any escape characters to special characters like [], (), {}, etc. unless they were explicitly present in the source text. For example:
   - If source has "Architecture [Optional]", keep it as "Architecture [Optional]" (not "Architecture \\[Optional]")
@@ -164,40 +166,6 @@ const resolveTerms = async (
   return terms
 }
 
-const ANCHOR_REGEX = /\\\\?\{#[\w-]+\}/g
-
-function replaceAnchorsWithPlaceholders(content: string): {
-  content: string
-  anchors: string[]
-} {
-  // Handle escaped underscores in anchor IDs (e.g., \{#independent\_doc\_site} -> \{#independent_doc_site})
-  // This is necessary because MDX processor automatically escapes underscores in heading IDs
-  // to ensure proper Markdown parsing, but we need the original unescaped form for anchor matching
-  const unescapedContent = content.replace(/\\_/g, '_')
-
-  const anchors: string[] = []
-  const contentWithPlaceholders = unescapedContent.replace(
-    ANCHOR_REGEX,
-    (match) => {
-      anchors.push(match)
-      return `__ANCHOR_${anchors.length - 1}__`
-    },
-  )
-
-  return { content: contentWithPlaceholders, anchors }
-}
-
-function restoreAnchors(content: string, anchors: string[]): string {
-  return content.replace(/__ANCHOR_(\d+)__/g, (_, index: string) => {
-    const numIndex: number = parseInt(index, 10)
-    if (isNaN(numIndex) || numIndex < 0 || numIndex >= anchors.length) {
-      throw new Error(`Invalid anchor index: ${index}`)
-    }
-    const anchor: string = anchors[numIndex]
-    return anchor
-  })
-}
-
 function extractFirstLevelHeading(content: string): string | null {
   const lines = content.split('\n')
   for (const line of lines) {
@@ -262,9 +230,6 @@ export const translate = async ({
     }
   }
 
-  const { content: contentWithPlaceholders, anchors } =
-    replaceAnchorsWithPlaceholders(sourceContent)
-
   const finalSystemPrompt = await ejs.render(
     systemPrompt?.trim() || DEFAULT_SYSTEM_PROMPT,
     {
@@ -287,7 +252,7 @@ export const translate = async ({
       },
       {
         role: 'user',
-        content: contentWithPlaceholders,
+        content: sourceContent,
       },
     ],
     model: openaiModel,
@@ -301,7 +266,7 @@ export const translate = async ({
     content += chunk.choices[0]?.delta.content ?? ''
   }
 
-  return restoreAnchors(content, anchors)
+  return content
 }
 
 const limit = pRateLimit({
