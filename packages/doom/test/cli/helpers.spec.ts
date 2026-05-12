@@ -251,6 +251,22 @@ describe('translateCodeFile', () => {
     )
   })
 
+  test('leaves bare file tokens untouched', () => {
+    const content: Code = {
+      type: 'code',
+      lang: 'md',
+      meta: 'file title="Example"',
+      value: '<Overview />',
+    }
+
+    translateCodeFile(content, {
+      sourceBase: '/source/docs',
+      targetBase: '/target/docs',
+    })
+
+    expect(content.meta).toBe('file title="Example"')
+  })
+
   test('keeps absolute file meta paths unchanged', () => {
     const content: Code = {
       type: 'code',

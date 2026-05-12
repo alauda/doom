@@ -87,7 +87,7 @@ export const translateCodeFile = (
     let changed = false
     for (const [index, item] of list.entries()) {
       let [key, value] = item.split('=')
-      if (key !== 'file') {
+      if (key !== 'file' || !value) {
         continue
       }
       let activeQuote = ''
