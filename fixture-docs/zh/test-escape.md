@@ -1,5 +1,5 @@
 ---
-sourceSHA: dc42794b274356a0b5348ccbceea004a4d4afe5e70d12ab6fb74c48dcab3afcf
+sourceSHA: 6fd96fdd3986313a2106f42d35aad029468113d3d317b52ec7113d9f9eeacf12
 ---
 
-# 测试 \[Escape] {#prod_intro_i18n}
+# 测试 \[转义] {#prod_intro_i18n}

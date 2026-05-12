@@ -1,27 +1,47 @@
 ---
-sourceSHA: 7f15c9e90978c98f9621efe840a5f243bd12b7c53b495af9b5a0c03fdd349e91
+sourceSHA: bcc8fecafbaf1aae1ee1e617fe3c67b23e353c123ce2954321e1401ed7356199
 ---
 
 import { useI18n } from '@rspress/core/runtime'
 
 # {useI18n()('prod_intro')} \{#prod_intro_i18n}
 
-<Term name="company" />
+## <Term name="company" /> <Term name="product" /> <Term name="productShort" />
 
-<Term name="product" />
+国际化翻译过程中必须遵循以下规范：
 
-<Term name="productShort" />
+```mdx
+- The directory structure of multilingual documents (`doc/en`) needs to be exactly the same as the documents under the `doc/zh` directory to ensure that the links in multilingual documents are identical except for the language identifier.
 
-在国际化翻译过程中，必须遵循以下规范：
+  <Directive type="danger" title="Note">
+    If you are using automated translation tools, you do not need to worry about
+    this issue. The automated translation tools will automatically generate the
+    target language document directory structure based on `doc/zh`.
+  </Directive>
 
-- 多语言文档的目录结构（`doc/en`）必须与`doc/zh`目录下的文档完全一致，确保多语言文档的链接除了语言标识外完全相同。
+- The directory structure of multilingual documents (`doc/en`) needs to be exactly the same as the documents under the `doc/zh` directory to ensure that the links in multilingual documents are identical except for the language identifier.
 
-  ::: danger
-  如果使用自动翻译工具进行翻译，则无需担心此问题，因为自动翻译工具会根据`doc/zh`自动生成目标语言文档的目录结构。
-  :::
+  <Directive type="danger" title="Note">
+    If you are using automated translation tools, you do not need to worry about
+    this issue. The automated translation tools will automatically generate the
+    target language document directory structure based on `doc/zh`.
+  </Directive>
+
+- The directory structure of multilingual documents (`doc/en`) needs to be exactly the same as the documents under the `doc/zh` directory to ensure that the links in multilingual documents are identical except for the language identifier.
+
+  <Directive type="danger" title="Note">
+    If you are using automated translation tools, you do not need to worry about
+    this issue. The automated translation tools will automatically generate the
+    target language document directory structure based on `doc/zh`.
+  </Directive>
+```
 
 <Tabs>
-  <Tab label="label1">
+  <Tab label="标签1">
+    - RHEL 7.8: `3.10.0-1127.el7.x86_64`
+    - RHEL 8.0: `4.18.0-80.el8.x86_64`
+    - RHEL 8.6: `4.18.0-372.9.1.el8.x86_64`
+
     ```mdx title="AcpApisOverview"
     <AcpApisOverview />
     ```
@@ -30,10 +50,18 @@ import { useI18n } from '@rspress/core/runtime'
 
   </Tab>
 
-  <Tab label="label2">
+  <Tab label="标签2">
     <AcpApisOverview />
   </Tab>
 </Tabs>
+
+- RHEL 7.8: `3.10.0-1127.el7.x86_64`
+- RHEL 8.0: `4.18.0-80.el8.x86_64`
+- RHEL 8.6: `4.18.0-372.9.1.el8.x86_64`
+
+```mdx title="AcpApisOverview"
+<AcpApisOverview />
+```
 
 <AcpApisOverview />
 
@@ -41,120 +69,147 @@ import { useI18n } from '@rspress/core/runtime'
 
 <Tabs>
   <Tab label="CentOS / RedHat">
-  **Check:**
-  ```bash
-  for x in \
-      docker docker-client docker-common docker-latest \
-      podman-docker podman \
-      runc \
-      containernetworking-plugins \
-      apptainer \
-      kubernetes kubernetes-master kubernetes-node kubernetes-client \
-      ; do
-      rpm -qa | grep -F "$x"
-  done
-  ```
+    **检查：**
 
-**Uninstall:**
+    ```bash
+    for x in \
+        docker docker-client docker-common docker-latest \
+        podman-docker podman \
+        runc \
+        containernetworking-plugins \
+        apptainer \
+        kubernetes kubernetes-master kubernetes-node kubernetes-client \
+        ; do
+        rpm -qa | grep -F "$x"
+    done
+    ```
 
-```bash
-for x in \
-    docker docker-client docker-common docker-latest \
-    podman-docker podman \
-    runc \
-    containernetworking-plugins \
-    apptainer \
-    kubernetes kubernetes-master kubernetes-node kubernetes-client \
-    ; do
-    yum remove "$x"
-done
-```
+    **卸载：**
+
+    ```bash
+    for x in \
+        docker docker-client docker-common docker-latest \
+        podman-docker podman \
+        runc \
+        containernetworking-plugins \
+        apptainer \
+        kubernetes kubernetes-master kubernetes-node kubernetes-client \
+        ; do
+        yum remove "$x"
+    done
+    ```
 
   </Tab>
 
   <Tab label="Ubuntu">
-  **Check:**
-  ```bash
-  for x in \
-      docker.io \
-      podman-docker \
-      containerd \
-      rootlesskit \
-      rkt \
-      containernetworking-plugins \
-      kubernetes \
-      ; do
-      dpkg-query -l | grep -F "$x"
-  done
+    **检查：**
 
-for x in \
- kubernetes-worker \
- kubectl kube-proxy kube-scheduler kube-controller-manager kube-apiserver \
- k8s microk8s \
- kubeadm kubelet \
- ; do
-snap list | grep -F "$x"
-done
+    ```bash
+    for x in \
+        docker.io \
+        podman-docker \
+        containerd \
+        rootlesskit \
+        rkt \
+        containernetworking-plugins \
+        kubernetes \
+        ; do
+        dpkg-query -l | grep -F "$x"
+    done
 
-````
-
-**Uninstall:**
-```bash
-for x in \
-    docker.io \
-    podman-docker \
-    containerd \
-    rootlesskit \
-    rkt \
-    containernetworking-plugins \
-    kubernetes \
-    ; do
-    apt-get purge "$x"
-done
-
-for x in \
+    for x in \
     kubernetes-worker \
     kubectl kube-proxy kube-scheduler kube-controller-manager kube-apiserver \
     k8s microk8s \
     kubeadm kubelet \
     ; do
-    snap remove --purge "$x"
-done
-````
+    snap list | grep -F "$x"
+    done
+
+    ```
+
+    **卸载：**
+
+    ```bash
+    for x in \
+        docker.io \
+        podman-docker \
+        containerd \
+        rootlesskit \
+        rkt \
+        containernetworking-plugins \
+        kubernetes \
+        ; do
+        apt-get purge "$x"
+    done
+
+    for x in \
+        kubernetes-worker \
+        kubectl kube-proxy kube-scheduler kube-controller-manager kube-apiserver \
+        k8s microk8s \
+        kubeadm kubelet \
+        ; do
+        snap remove --purge "$x"
+    done
+    ```
 
   </Tab>
 
   <Tab label="Kylin">
-  **Check:**
-  ```bash
-  for x in \
-      docker docker-client docker-common \
-      docker-engine docker-proxy docker-runc \
-      podman-docker podman \
-      containernetworking-plugins \
-      apptainer \
-      containerd \
-      kubernetes kubernetes-master kubernetes-node kubernetes-client kubernetes-kubeadm \
-      ; do
-      rpm -qa | grep -F "$x"
-  done
-  ```
+    **检查：**
 
-**Uninstall:**
+    ```bash
+    for x in \
+        docker docker-client docker-common \
+        docker-engine docker-proxy docker-runc \
+        podman-docker podman \
+        containernetworking-plugins \
+        apptainer \
+        containerd \
+        kubernetes kubernetes-master kubernetes-node kubernetes-client kubernetes-kubeadm \
+        ; do
+        rpm -qa | grep -F "$x"
+    done
+    ```
 
-```bash
-for x in \
-    docker docker-client docker-common \
-    docker-engine docker-proxy docker-runc \
-    podman-docker podman \
-    containernetworking-plugins \
-    apptainer \
-    containerd \
-    kubernetes kubernetes-master kubernetes-node kubernetes-client kubernetes-kubeadm \
-    ; do
-    yum remove "$x"
-done
-```
+    **卸载：**
+
+    ```bash
+    for x in \
+        docker docker-client docker-common \
+        docker-engine docker-proxy docker-runc \
+        podman-docker podman \
+        containernetworking-plugins \
+        apptainer \
+        containerd \
+        kubernetes kubernetes-master kubernetes-node kubernetes-client kubernetes-kubeadm \
+        ; do
+        yum remove "$x"
+    done
+    ```
 
   </Tab>
 </Tabs>
+
+:::info
+
+```yaml
+apiVersion: v1
+data:
+  authUser: <base64-encoded-auth-user>
+  authKey: <base64-encoded-auth-key>
+  endpoint: <base64-encoded-endpoint>
+kind: Secret
+metadata:
+  name: <auth-secret-name>
+  namespace: cpaas-system
+type: Opaque
+```
+
+:::
+
+| 参数           | 描述                                                                                                                                                                |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| .data.authUser | DCS 平台 API 用户登录名（base64 编码）                                                                                                                              |
+| .data.authKey  | DCS 平台 API 用户登录密码（base64 编码）                                                                                                                            |
+| .data.endpoint | 带有 http 或 https 协议的 DCS 平台 API 地址（base64 编码）。**注意**：DCS 平台的默认 API 端口为 7443（不是常见的 8443）。如果你的环境使用自定义端口，请咨询管理员。 |
