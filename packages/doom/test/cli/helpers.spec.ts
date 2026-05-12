@@ -3,6 +3,7 @@ import os from 'node:os'
 import path from 'node:path'
 
 import { afterEach, beforeEach, describe, expect, test } from '@rstest/core'
+import type { Code } from 'mdast'
 
 import {
   defaultGitHubUrl,
@@ -11,6 +12,7 @@ import {
   isDoc,
   parseBoolean,
   parseBooleanOrString,
+  translateCodeFile,
 } from '#cli/helpers.ts'
 
 describe('parseBoolean', () => {
@@ -209,5 +211,75 @@ describe('getMatchedDocFilePaths', () => {
     const result = await getMatchedDocFilePaths([path.join(tempDir, 'docs')])
 
     expect((result[0] as string[]).sort()).toEqual([mdFile, mdxFile].sort())
+  })
+})
+
+describe('translateCodeFile', () => {
+  test('rewrites relative file meta paths to the target base', () => {
+    const content: Code = {
+      type: 'code',
+      lang: 'md',
+      meta: 'file="./assets/demo.mdx" title="Example"',
+      value: '<Overview />',
+    }
+
+    translateCodeFile(content, {
+      sourceBase: '/source/docs',
+      targetBase: '/target/docs',
+    })
+
+    expect(content.meta).toBe(
+      'file="../../source/docs/assets/demo.mdx" title="Example"',
+    )
+  })
+
+  test('rewrites relative file meta paths with single quotes', () => {
+    const content: Code = {
+      type: 'code',
+      lang: 'md',
+      meta: "file='./assets/demo.mdx' title='Example'",
+      value: '<Overview />',
+    }
+
+    translateCodeFile(content, {
+      sourceBase: '/source/docs',
+      targetBase: '/target/docs',
+    })
+
+    expect(content.meta).toBe(
+      "file='../../source/docs/assets/demo.mdx' title='Example'",
+    )
+  })
+
+  test('keeps absolute file meta paths unchanged', () => {
+    const content: Code = {
+      type: 'code',
+      lang: 'mdx',
+      meta: 'file="/source/docs/assets/demo.mdx"',
+      value: '<Overview />',
+    }
+
+    translateCodeFile(content, {
+      sourceBase: '/source/docs',
+      targetBase: '/target/docs',
+    })
+
+    expect(content.meta).toBe('file="/source/docs/assets/demo.mdx"')
+  })
+
+  test('keeps absolute file meta paths with single quotes unchanged', () => {
+    const content: Code = {
+      type: 'code',
+      lang: 'mdx',
+      meta: "file='/source/docs/assets/demo.mdx'",
+      value: '<Overview />',
+    }
+
+    translateCodeFile(content, {
+      sourceBase: '/source/docs',
+      targetBase: '/target/docs',
+    })
+
+    expect(content.meta).toBe("file='/source/docs/assets/demo.mdx'")
   })
 })

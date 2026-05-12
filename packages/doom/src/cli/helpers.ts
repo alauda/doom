@@ -1,6 +1,9 @@
 import fs from 'node:fs/promises'
+import path from 'node:path'
 
+import type { RootContent } from 'mdast'
 import { glob } from 'tinyglobby'
+import { visit } from 'unist-util-visit'
 import { xfetch } from 'x-fetch'
 import { parse } from 'yaml'
 
@@ -68,3 +71,44 @@ const parseTerms_ = async () => {
 let parsedTermsCache: Promise<NormalizedTermItem[]> | undefined
 
 export const parseTerms = () => (parsedTermsCache ??= parseTerms_())
+
+const QUOTES = ['"', "'", '`']
+
+export const translateCodeFile = (
+  content: RootContent,
+  { sourceBase, targetBase }: { sourceBase: string; targetBase: string },
+) => {
+  visit(content, 'code', (code) => {
+    const meta = code.meta?.trim()
+    if (!meta) {
+      return
+    }
+    const list = meta.split(/\s+/)
+    let changed = false
+    for (const [index, item] of list.entries()) {
+      let [key, value] = item.split('=')
+      if (key !== 'file') {
+        continue
+      }
+      let activeQuote = ''
+      for (const quote of QUOTES) {
+        if (value.startsWith(quote) && value.endsWith(quote)) {
+          activeQuote = quote
+          value = value.slice(1, -1)
+          break
+        }
+      }
+      // only translate relative paths, absolute paths should be kept unchanged
+      if (!value.startsWith('./')) {
+        break
+      }
+      list[index] =
+        `file=${activeQuote}${path.relative(targetBase, path.resolve(sourceBase, value))}${activeQuote}`
+      changed = true
+    }
+    if (changed) {
+      code.meta = list.join(' ')
+    }
+  })
+  return content
+}
