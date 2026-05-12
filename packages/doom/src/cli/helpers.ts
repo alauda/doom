@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 
-import type { RootContent } from 'mdast'
+import type { Code, Root, RootContent } from 'mdast'
 import { glob } from 'tinyglobby'
 import { visit } from 'unist-util-visit'
 import { xfetch } from 'x-fetch'
@@ -102,5 +102,69 @@ export const translateCodeFile = (
       code.meta = nextMeta
     }
   })
+  return content
+}
+
+export interface CodeBlockPlaceholder {
+  node: Code
+  placeholder: string
+}
+
+const CODE_BLOCK_PLACEHOLDER_PREFIX = '__DOOM_TRANSLATE_CODE_BLOCK_'
+const CODE_BLOCK_PLACEHOLDER_PATTERN = new RegExp(
+  `^${CODE_BLOCK_PLACEHOLDER_PREFIX}(\\d+)__$`,
+)
+
+const getCodeBlockPlaceholderIndex = (value: string) => {
+  const match = CODE_BLOCK_PLACEHOLDER_PATTERN.exec(value)
+  if (!match) {
+    return
+  }
+  return +match[1]
+}
+
+export const replaceCodeBlocksWithPlaceholders = (
+  content: Root | RootContent,
+) => {
+  const placeholders: CodeBlockPlaceholder[] = []
+
+  visit(content, 'code', (code) => {
+    if (code.value.length <= 50) {
+      return
+    }
+
+    const placeholder = `${CODE_BLOCK_PLACEHOLDER_PREFIX}${placeholders.length}__`
+    placeholders.push({
+      node: { ...code },
+      placeholder,
+    })
+
+    code.value = placeholder
+    delete code.lang
+    delete code.meta
+  })
+
+  return placeholders
+}
+
+export const restoreCodeBlockPlaceholders = (
+  content: Root | RootContent,
+  placeholders: readonly CodeBlockPlaceholder[],
+) => {
+  visit(content, 'code', (code) => {
+    const value = code.value.trim()
+    const index = getCodeBlockPlaceholderIndex(value)
+    if (index == null) {
+      return
+    }
+
+    const placeholder = placeholders.at(index)
+    if (!placeholder || placeholder.placeholder !== value) {
+      throw new Error(`Unmatched code block placeholder: ${value}`)
+    }
+
+    Object.assign(code, placeholder.node)
+  })
+
   return content
 }
