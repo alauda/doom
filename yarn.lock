@@ -33,7 +33,7 @@ __metadata:
     "@alauda/doc-stream-sdk": "npm:0.1.0"
     "@alauda/doom-export": "npm:^0.4.1"
     "@cspell/eslint-plugin": "npm:^10.0.0"
-    "@eslint-react/eslint-plugin": "npm:^5.0.0"
+    "@eslint-react/eslint-plugin": "npm:^5.7.6"
     "@eslint/js": "npm:^10.0.1"
     "@inquirer/prompts": "npm:^8.4.3"
     "@openapi-contrib/openapi-schema-to-json-schema": "npm:^5.1.0"
@@ -1323,7 +1323,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@eslint-react/eslint-plugin@npm:^5.0.0":
+"@eslint-react/eslint-plugin@npm:^5.7.6":
   version: 5.7.6
   resolution: "@eslint-react/eslint-plugin@npm:5.7.6"
   dependencies:

@@ -34,7 +34,6 @@ export const AutoExpandable = ({
 
     const calculate = () => {
       if (containerEl.scrollHeight > threshold) {
-        // eslint-disable-next-line @eslint-react/set-state-in-effect
         setExpandable(true)
       }
       observer?.disconnect()
