@@ -31,7 +31,9 @@ jobs:
           cache: yarn
 
       - name: Install Dependencies
-        run: yarn --immutable
+        run: |
+          yarn --immutable
+          yarn workspace @alauda/doom-export playwright install
 
       - name: Build and Export
         run: |
