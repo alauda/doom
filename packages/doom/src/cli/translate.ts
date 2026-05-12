@@ -12,7 +12,6 @@ import ejs from 'ejs'
 import { OpenAI, RateLimitError } from 'openai'
 import { pRateLimit } from 'p-ratelimit'
 import { glob } from 'tinyglobby'
-import { stringify } from 'yaml'
 import { cyan, red } from 'yoctocolors'
 
 import {
@@ -34,6 +33,7 @@ import {
   getMatchedDocFilePaths,
   parseBoolean,
   parseTerms,
+  stringifyMatter,
   translateCodeFile,
 } from './helpers.js'
 import { loadConfig } from './load-config.js'
@@ -505,9 +505,7 @@ export const translateCommand = new Command('translate')
 
               const { content } = matter(sourceContent)
 
-              targetContent =
-                stringify(newFrontmatter) +
-                (content.startsWith('\n') ? content : '\n' + content)
+              targetContent = stringifyMatter(newFrontmatter, content)
 
               const targetBase = path.dirname(targetFilePath)
               await fs.mkdir(targetBase, { recursive: true })
@@ -589,9 +587,7 @@ export const translateCommand = new Command('translate')
                 delete newFrontmatter.title
               }
 
-              targetContent =
-                stringify(newFrontmatter) +
-                (content.startsWith('\n') ? content : '\n' + content)
+              targetContent = stringifyMatter(newFrontmatter, content)
 
               await fs.mkdir(targetBase, { recursive: true })
 
