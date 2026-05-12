@@ -1,5 +1,26 @@
 # @alauda/doom
 
+## 2.5.0
+
+### Minor Changes
+
+- [#327](https://github.com/alauda/doom/pull/327) [`ace4972`](https://github.com/alauda/doom/commit/ace4972a1b4b20504bf9c2d8d6414313df90ca72) Thanks [@JounQin](https://github.com/JounQin)! - chore: update dependencies and compatibility fixes
+  - Update Rspress, Mermaid, OpenAI, YAML, and related dependencies.
+  - Use Rspress shared helpers for gray matter and GitHub slug generation.
+  - Adapt runtime component typings for updated dependencies.
+  - Handle assistant responses without a readable stream body.
+  - Check image links during dead-link linting.
+
+- [#329](https://github.com/alauda/doom/pull/329) [`f665df4`](https://github.com/alauda/doom/commit/f665df4fe196557a59376bb331c3d18457448028) Thanks [@JounQin](https://github.com/JounQin)! - refactor: use smart doc sse parser - [#323](https://github.com/alauda/doom/pull/323)
+
+- [#329](https://github.com/alauda/doom/pull/329) [`f665df4`](https://github.com/alauda/doom/commit/f665df4fe196557a59376bb331c3d18457448028) Thanks [@JounQin](https://github.com/JounQin)! - refactor: improve assistant style
+
+### Patch Changes
+
+- [#333](https://github.com/alauda/doom/pull/333) [`2e10478`](https://github.com/alauda/doom/commit/2e10478b2f8887a90252cf0fbd1af23382c40a3c) Thanks [@JounQin](https://github.com/JounQin)! - refactor(cli): improve code block handling during translation
+
+- [#332](https://github.com/alauda/doom/pull/332) [`d3e9231`](https://github.com/alauda/doom/commit/d3e9231968d39bd33ba6ce6a9cdd997afbc82090) Thanks [@JounQin](https://github.com/JounQin)! - fix(cli): support relative file meta paths in translated code blocks
+
 ## 2.4.0
 
 ### Minor Changes
