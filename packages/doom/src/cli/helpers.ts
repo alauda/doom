@@ -72,42 +72,28 @@ let parsedTermsCache: Promise<NormalizedTermItem[]> | undefined
 
 export const parseTerms = () => (parsedTermsCache ??= parseTerms_())
 
-const QUOTES = ['"', "'", '`']
+const RELATIVE_FILE_META_REGEX =
+  /(^|\s)(file)(\s*=\s*)(['"`]?)(\.\.?\/[^\s'"`]+)\4/g
 
 export const translateCodeFile = (
   content: RootContent,
   { sourceBase, targetBase }: { sourceBase: string; targetBase: string },
 ) => {
   visit(content, 'code', (code) => {
-    const meta = code.meta?.trim()
-    if (!meta) {
-      return
-    }
-    const list = meta.split(/\s+/)
-    let changed = false
-    for (const [index, item] of list.entries()) {
-      let [key, value] = item.split('=')
-      if (key !== 'file' || !value) {
-        continue
-      }
-      let activeQuote = ''
-      for (const quote of QUOTES) {
-        if (value.startsWith(quote) && value.endsWith(quote)) {
-          activeQuote = quote
-          value = value.slice(1, -1)
-          break
-        }
-      }
-      // only translate relative paths, absolute paths should be kept unchanged
-      if (!value.startsWith('./')) {
-        break
-      }
-      list[index] =
-        `file=${activeQuote}${path.relative(targetBase, path.resolve(sourceBase, value))}${activeQuote}`
-      changed = true
-    }
-    if (changed) {
-      code.meta = list.join(' ')
+    const nextMeta = code.meta?.replace(
+      RELATIVE_FILE_META_REGEX,
+      (
+        _match: string,
+        prefix: string,
+        key: string,
+        equals: string,
+        quote: string,
+        value: string,
+      ) =>
+        `${prefix}${key}${equals}${quote}${path.relative(targetBase, path.resolve(sourceBase, value))}${quote}`,
+    )
+    if (nextMeta !== code.meta) {
+      code.meta = nextMeta
     }
   })
   return content

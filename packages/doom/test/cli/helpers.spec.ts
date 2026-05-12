@@ -251,6 +251,58 @@ describe('translateCodeFile', () => {
     )
   })
 
+  test('rewrites relative file meta paths with spaced equals', () => {
+    const content: Code = {
+      type: 'code',
+      lang: 'md',
+      meta: 'file = "./assets/demo.mdx" title = "Long      Code     Block"',
+      value: '<Overview />',
+    }
+
+    translateCodeFile(content, {
+      sourceBase: '/source/docs',
+      targetBase: '/target/docs',
+    })
+
+    expect(content.meta).toBe(
+      'file = "../../source/docs/assets/demo.mdx" title = "Long      Code     Block"',
+    )
+  })
+
+  test('rewrites deeper relative file paths', () => {
+    const content: Code = {
+      type: 'code',
+      lang: 'md',
+      meta: 'file="../../assets/xyz.sh" title="Script"',
+      value: '<Overview />',
+    }
+
+    translateCodeFile(content, {
+      sourceBase: '/source/docs',
+      targetBase: '/target/docs',
+    })
+
+    expect(content.meta).toBe('file="../../assets/xyz.sh" title="Script"')
+  })
+
+  test('preserves quoted titles with whitespace', () => {
+    const content: Code = {
+      type: 'code',
+      lang: 'md',
+      meta: 'file="./assets/demo.mdx" title="Long      Code     Block"',
+      value: '<Overview />',
+    }
+
+    translateCodeFile(content, {
+      sourceBase: '/source/docs',
+      targetBase: '/target/docs',
+    })
+
+    expect(content.meta).toBe(
+      'file="../../source/docs/assets/demo.mdx" title="Long      Code     Block"',
+    )
+  })
+
   test('leaves bare file tokens untouched', () => {
     const content: Code = {
       type: 'code',
