@@ -1,6 +1,9 @@
 import fs from 'node:fs/promises'
+import path from 'node:path'
 
+import type { RootContent } from 'mdast'
 import { glob } from 'tinyglobby'
+import { visit } from 'unist-util-visit'
 import { xfetch } from 'x-fetch'
 import { parse } from 'yaml'
 
@@ -68,3 +71,30 @@ const parseTerms_ = async () => {
 let parsedTermsCache: Promise<NormalizedTermItem[]> | undefined
 
 export const parseTerms = () => (parsedTermsCache ??= parseTerms_())
+
+const RELATIVE_FILE_META_REGEX =
+  /(^|\s)(file)(\s*=\s*)(['"`]?)(\.\.?\/[^\s'"`]+)\4/g
+
+export const translateCodeFile = (
+  content: RootContent,
+  { sourceBase, targetBase }: { sourceBase: string; targetBase: string },
+) => {
+  visit(content, 'code', (code) => {
+    const nextMeta = code.meta?.replace(
+      RELATIVE_FILE_META_REGEX,
+      (
+        _match: string,
+        prefix: string,
+        key: string,
+        equals: string,
+        quote: string,
+        value: string,
+      ) =>
+        `${prefix}${key}${equals}${quote}${path.relative(targetBase, path.resolve(sourceBase, value))}${quote}`,
+    )
+    if (nextMeta !== code.meta) {
+      code.meta = nextMeta
+    }
+  })
+  return content
+}

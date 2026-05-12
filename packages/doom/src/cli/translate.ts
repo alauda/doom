@@ -33,6 +33,7 @@ import {
   getMatchedDocFilePaths,
   parseBoolean,
   parseTerms,
+  translateCodeFile,
 } from './helpers.js'
 import { loadConfig } from './load-config.js'
 
@@ -528,19 +529,24 @@ export const translateCommand = new Command('translate')
                 escapeMarkdownHeadingIds(sourceContent),
               )
 
+              const sourceBase = path.dirname(sourceFilePath)
               const targetBase = path.dirname(targetFilePath)
 
+              const normalizeOptions = { sourceBase, targetBase }
+
               const normalizeImgSrcOptions: NormalizeImgSrcOptions = {
+                ...normalizeOptions,
                 localPublicBase: path.resolve(docsDir, 'public'),
-                sourceBase: path.dirname(sourceFilePath),
-                targetBase,
                 translating: { source, target, copy },
               }
 
               const normalizedSourceContent = processor.stringify({
                 ...ast,
                 children: ast.children.map((it) =>
-                  normalizeImgSrc(it, normalizeImgSrcOptions),
+                  translateCodeFile(
+                    normalizeImgSrc(it, normalizeImgSrcOptions),
+                    normalizeOptions,
+                  ),
                 ),
               })
 
