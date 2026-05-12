@@ -224,12 +224,12 @@ describe('translateCodeFile', () => {
     }
 
     translateCodeFile(content, {
-      sourceBase: '/source/docs',
-      targetBase: '/target/docs',
+      sourceBase: '/docs/source',
+      targetBase: '/docs/target',
     })
 
     expect(content.meta).toBe(
-      'file="../../source/docs/assets/demo.mdx" title="Example"',
+      'file="../source/assets/demo.mdx" title="Example"',
     )
   })
 
@@ -242,12 +242,12 @@ describe('translateCodeFile', () => {
     }
 
     translateCodeFile(content, {
-      sourceBase: '/source/docs',
-      targetBase: '/target/docs',
+      sourceBase: '/docs/source',
+      targetBase: '/docs/target',
     })
 
     expect(content.meta).toBe(
-      "file='../../source/docs/assets/demo.mdx' title='Example'",
+      "file='../source/assets/demo.mdx' title='Example'",
     )
   })
 
@@ -260,12 +260,12 @@ describe('translateCodeFile', () => {
     }
 
     translateCodeFile(content, {
-      sourceBase: '/source/docs',
-      targetBase: '/target/docs',
+      sourceBase: '/docs/source',
+      targetBase: '/docs/target',
     })
 
     expect(content.meta).toBe(
-      'file = "../../source/docs/assets/demo.mdx" title = "Long      Code     Block"',
+      'file = "../source/assets/demo.mdx" title = "Long      Code     Block"',
     )
   })
 
@@ -278,8 +278,8 @@ describe('translateCodeFile', () => {
     }
 
     translateCodeFile(content, {
-      sourceBase: '/source/docs',
-      targetBase: '/target/docs',
+      sourceBase: '/docs/source',
+      targetBase: '/docs/target',
     })
 
     expect(content.meta).toBe('file="../../assets/xyz.sh" title="Script"')
@@ -294,12 +294,12 @@ describe('translateCodeFile', () => {
     }
 
     translateCodeFile(content, {
-      sourceBase: '/source/docs',
-      targetBase: '/target/docs',
+      sourceBase: '/docs/source',
+      targetBase: '/docs/target',
     })
 
     expect(content.meta).toBe(
-      'file="../../source/docs/assets/demo.mdx" title="Long      Code     Block"',
+      'file="../source/assets/demo.mdx" title="Long      Code     Block"',
     )
   })
 
@@ -312,8 +312,8 @@ describe('translateCodeFile', () => {
     }
 
     translateCodeFile(content, {
-      sourceBase: '/source/docs',
-      targetBase: '/target/docs',
+      sourceBase: '/docs/source',
+      targetBase: '/docs/target',
     })
 
     expect(content.meta).toBe('file title="Example"')
@@ -328,8 +328,8 @@ describe('translateCodeFile', () => {
     }
 
     translateCodeFile(content, {
-      sourceBase: '/source/docs',
-      targetBase: '/target/docs',
+      sourceBase: '/docs/source',
+      targetBase: '/docs/target',
     })
 
     expect(content.meta).toBe('file="/source/docs/assets/demo.mdx"')
@@ -344,8 +344,8 @@ describe('translateCodeFile', () => {
     }
 
     translateCodeFile(content, {
-      sourceBase: '/source/docs',
-      targetBase: '/target/docs',
+      sourceBase: '/docs/source',
+      targetBase: '/docs/target',
     })
 
     expect(content.meta).toBe("file='/source/docs/assets/demo.mdx'")
