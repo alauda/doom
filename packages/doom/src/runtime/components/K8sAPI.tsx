@@ -1,6 +1,5 @@
 import crdsMap from 'doom-@api-crdsMap'
 import openapisMap from 'doom-@api-openapisMap'
-import type { OpenAPIV3_1 } from 'openapi-types'
 import { useMemo } from 'react'
 
 import { resolveRef } from '../utils.js'
@@ -69,7 +68,7 @@ export const K8sAPI = ({
       )
       return
     }
-    return versionDef.schema.openAPIV3Schema as OpenAPIV3_1.SchemaObject
+    return versionDef.schema.openAPIV3Schema
   }, [apiVersion, crd, name, openapi])
 
   const k8sApiDef = useMemo(() => {
@@ -89,7 +88,7 @@ export const K8sAPI = ({
         group: crd.spec.group,
         version: crd.spec.versions[0].name,
         kind: crd.spec.names.kind,
-      } as K8sAPIDefinition
+      }
     }
   }, [crd, schema])
 

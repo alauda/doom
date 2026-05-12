@@ -12,6 +12,7 @@ import {
   isDoc,
   parseBoolean,
   parseBooleanOrString,
+  stringifyMatter,
   translateCodeFile,
 } from '#cli/helpers.ts'
 
@@ -211,6 +212,26 @@ describe('getMatchedDocFilePaths', () => {
     const result = await getMatchedDocFilePaths([path.join(tempDir, 'docs')])
 
     expect((result[0] as string[]).sort()).toEqual([mdFile, mdxFile].sort())
+  })
+})
+
+describe('stringifyMatter', () => {
+  test('wraps YAML frontmatter with delimiters', () => {
+    expect(
+      stringifyMatter(
+        {
+          title: 'Hello',
+          sourceSHA: 'abc123',
+        },
+        '# Heading',
+      ),
+    ).toBe('---\ntitle: Hello\nsourceSHA: abc123\n---\n\n# Heading')
+  })
+
+  test('does not add an extra newline when content already starts with one', () => {
+    expect(stringifyMatter({ title: 'Hello' }, '\n# Heading')).toBe(
+      '---\ntitle: Hello\n---\n\n# Heading',
+    )
   })
 })
 

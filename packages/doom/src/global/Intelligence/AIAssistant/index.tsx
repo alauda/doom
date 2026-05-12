@@ -139,34 +139,29 @@ export const AIAssistant = ({ open, onOpenChange }: AIAssistantProps) => {
       },
     })
 
-    const syncAssistantMessage = (nextMessage: {
-      content: string
-      thoughtProcess: string
-      refDocs: ChatMessage['refDocs']
-    }) => {
-      if (sessionId !== sessionIdRef.current) {
-        return
-      }
-
-      flushMessages((messages) => [
-        ...messages.slice(0, index),
-        {
-          ...messages[index],
-          content: nextMessage.content,
-          thoughtProcess: nextMessage.thoughtProcess || undefined,
-          refDocs: nextMessage.refDocs,
-        },
-        ...messages.slice(index + 1),
-      ])
+    if (!res.body) {
+      return
     }
 
-    await consumeSmartDocDisplayStream(
-      res.body! as ReadableStream<Uint8Array | string>,
-      {
-        ignoreDocsBlocks: false,
-        onDisplayMessage: syncAssistantMessage,
+    await consumeSmartDocDisplayStream(res.body, {
+      ignoreDocsBlocks: false,
+      onDisplayMessage(nextMessage) {
+        if (sessionId !== sessionIdRef.current) {
+          return
+        }
+
+        flushMessages((messages) => [
+          ...messages.slice(0, index),
+          {
+            ...messages[index],
+            content: nextMessage.content,
+            thoughtProcess: nextMessage.thoughtProcess || undefined,
+            refDocs: nextMessage.refDocs,
+          },
+          ...messages.slice(index + 1),
+        ])
       },
-    )
+    })
   }
 
   const [loading, setLoading] = useState(false)

@@ -5,7 +5,7 @@ import type { RootContent } from 'mdast'
 import { glob } from 'tinyglobby'
 import { visit } from 'unist-util-visit'
 import { xfetch } from 'x-fetch'
-import { parse } from 'yaml'
+import { parse, stringify } from 'yaml'
 
 import { FALSY_VALUES, TRUTHY_VALUES } from '../shared/index.ts'
 import type { NormalizedTermItem } from '../terms.ts'
@@ -38,6 +38,12 @@ export const getMatchedDocFilePaths = (matched: string[]) =>
       return []
     }),
   )
+
+export const stringifyMatter = (frontmatter: object, content: string) =>
+  '---\n' +
+  stringify(frontmatter) +
+  '---\n' +
+  (content.startsWith('\n') ? content : '\n' + content)
 
 /**
  * Support custom id like `#hello world {#custom-id}`

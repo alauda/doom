@@ -1,5 +1,4 @@
 import type { Root } from 'hast'
-import { type ElementType } from 'react'
 import ReactMarkdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
 import rehypeSanitize from 'rehype-sanitize'
@@ -34,7 +33,7 @@ export const Markdown = ({
     <ReactMarkdown
       remarkPlugins={remarkPlugins}
       rehypePlugins={inline ? inlineRehypePlugins : rehypePlugins}
-      components={X as Record<string, ElementType>}
+      components={X}
     >
       {children}
     </ReactMarkdown>
