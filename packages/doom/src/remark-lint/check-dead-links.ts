@@ -1,6 +1,11 @@
 import path from 'node:path'
 
-import { PluginDriver, RouteService, remarkLink } from '@rspress/core'
+import {
+  PluginDriver,
+  RouteService,
+  remarkImage,
+  remarkLink,
+} from '@rspress/core'
 import { isProduction } from '@rspress/shared'
 import type { Root } from 'mdast'
 import { lintRule } from 'unified-lint-rule'
@@ -39,6 +44,12 @@ export const checkDeadLinks = lintRule<Root>(
       cleanUrls: false,
       routeService,
       remarkLinkOptions: config.markdown?.link,
+      lint: true,
+    })(tree, vfile)
+
+    remarkImage({
+      docDirectory: config.root!,
+      remarkImageOptions: config.markdown?.image,
       lint: true,
     })(tree, vfile)
   },
