@@ -96,22 +96,28 @@ export const BreadCrumb = () => {
 
       const buildInfoGroups: BuildInfoGroup[] = []
       for (const [base, items] of Object.entries(rawBuildInfo)) {
-        const id = base
-          .replace('alauda-build-of-', '')
-          .replace('alauda-', '')[0]
+        let buildInfo: BuildInfoItem | undefined
+        if (isBuildInfoItem(items)) {
+          buildInfo = items
+        } else {
+          const latest = Object.values(items).at(-1)
+          if (latest) {
+            buildInfo = latest
+          }
+        }
+        if (!buildInfo) {
+          continue
+        }
+        const id = (buildInfo.displayName?.en || base)
+          .toLowerCase()
+          .replace(/^alauda[\s-]+/, '')
+          .replace(/^build[\s-]+of[\s-]+/, '')[0]
         let group = buildInfoGroups.find((g) => g.id === id)
         if (!group) {
           group = { id, items: [] }
           buildInfoGroups.push(group)
         }
-        if (isBuildInfoItem(items)) {
-          group.items.push(items)
-        } else {
-          const latest = Object.values(items).at(-1)
-          if (latest) {
-            group.items.push(latest)
-          }
-        }
+        group.items.push(buildInfo)
       }
       setBuildInfoGroups(
         buildInfoGroups.sort((a, b) => a.id.localeCompare(b.id)),
