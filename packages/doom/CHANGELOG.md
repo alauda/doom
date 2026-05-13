@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 2.5.1
+
+### Patch Changes
+
+- [#334](https://github.com/alauda/doom/pull/334) [`b00b41b`](https://github.com/alauda/doom/commit/b00b41bd55f458c11a6fce5abfe817a17197f74e) Thanks [@JounQin](https://github.com/JounQin)! - fix: sort products by displayName
+
 ## 2.5.0
 
 ### Minor Changes
