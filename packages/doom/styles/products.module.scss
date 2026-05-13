@@ -5,19 +5,15 @@ body:has(.container) :global {
 }
 
 .container {
-  column-count: 5;
+  column-count: 3;
   column-gap: 1lh;
 
-  @media (max-width: 1366px) {
-    column-count: 4;
-  }
-
   @media (max-width: 1024px) {
-    column-count: 3;
+    column-count: 2;
   }
 
   @media (max-width: 768px) {
-    column-count: 2;
+    column-count: 1;
   }
 
   h2 {
