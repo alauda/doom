@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 2.5.2
+
+### Patch Changes
+
+- [#336](https://github.com/alauda/doom/pull/336) [`6eb862c`](https://github.com/alauda/doom/commit/6eb862c19a8fb9ea73988d350e039c8072dd1c4c) Thanks [@JounQin](https://github.com/JounQin)! - chore: bump dependencies
+
 ## 2.5.1
 
 ### Patch Changes
