@@ -38,6 +38,7 @@ doom/
 - **TypeScript 6** with `strict: true`, `NodeNext` module resolution, `rewriteRelativeImportExtensions`
 - **100% type coverage** — enforced via `type-coverage` (`atLeast: 100`, `strict: true`)
 - **Conventional Commits** — changesets for versioning/release
+- **Published docs dependency** — downstream docs consume published `@alauda/doom`; add a changeset for user-facing fixes that must reach those docs
 - **Yarn 4 Berry** — `nodeLinker: node-modules`, strict `--immutable` in CI
 - **Node ≥22.18.0** for `@alauda/doom`, ≥20.19.0 for `@alauda/doom-export`
 
