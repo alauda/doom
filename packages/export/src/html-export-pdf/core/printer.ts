@@ -18,7 +18,7 @@ export type PDFOptions = Exclude<Parameters<Page['pdf']>[0], undefined>
 
 export type { Browser, LaunchOptions, Page }
 
-export type PageInitScriptFn = Page['addInitScript']
+export type PageInitScript = Parameters<BrowserContext['addInitScript']>[0]
 
 export interface PrinterOptions {
   debug?: boolean
@@ -26,7 +26,7 @@ export interface PrinterOptions {
   allowLocal?: boolean
   allowRemote?: boolean
   outlineTags?: string[]
-  initScripts?: PageInitScriptFn[]
+  initScripts?: PageInitScript[]
   additionalScripts?: string[]
   additionalStyles?: string[]
   allowedPaths?: string[]
@@ -47,7 +47,7 @@ export class Printer extends EventEmitter {
   private allowLocal: boolean
   private outlineTags: string[]
   private allowRemote: boolean
-  private initScripts: PageInitScriptFn[]
+  private initScripts: PageInitScript[]
   private additionalScripts: string[]
   private additionalStyles: string[]
   private allowedPaths: string[]
