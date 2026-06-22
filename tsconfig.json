@@ -17,6 +17,7 @@
       "path": "./packages/doom"
     }
   ],
+  "exclude": ["vendor"],
   "mdx": {
     "checkMdx": true
   }

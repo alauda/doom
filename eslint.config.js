@@ -15,6 +15,7 @@ export default defineConfig(
   {
     ignores: [
       'dist',
+      'vendor',
       '**/lib',
       '**/pyodide',
       // main language is en which is different with docs
