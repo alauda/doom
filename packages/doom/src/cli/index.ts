@@ -9,7 +9,7 @@ import path from 'node:path'
 
 import { logger } from '@rsbuild/core'
 import { build, dev, serve } from '@rspress/core'
-import { type FSWatcher, watch } from 'chokidar'
+import { type FSWatcher, type FSWatcherEventMap, watch } from 'chokidar'
 import { type Command, program } from 'commander'
 import { green } from 'yoctocolors'
 
@@ -170,31 +170,34 @@ program
 
       let isRestarting = false
 
-      cliWatcher.on('all', async (eventName, filepath) => {
-        console.log(eventName, filepath)
-        if (
-          eventName === 'add' ||
-          eventName === 'unlink' ||
-          (eventName === 'change' &&
-            (CONFIG_FILES.includes(path.basename(filepath)) ||
-              path.basename(filepath) === META_FILE))
-        ) {
-          if (isRestarting) {
-            return
-          }
+      cliWatcher.on(
+        'all',
+        async (...[eventName, filepath]: FSWatcherEventMap['all']) => {
+          console.log(eventName, filepath)
+          if (
+            eventName === 'add' ||
+            eventName === 'unlink' ||
+            (eventName === 'change' &&
+              (CONFIG_FILES.includes(path.basename(filepath)) ||
+                path.basename(filepath) === META_FILE))
+          ) {
+            if (isRestarting) {
+              return
+            }
 
-          isRestarting = true
-          console.log(
-            `\n✨ ${eventName} ${green(
-              path.relative(CWD, filepath),
-            )}, dev server will restart...\n`,
-          )
-          await devServer?.close()
-          await cliWatcher.close()
-          await startDevServer()
-          isRestarting = false
-        }
-      })
+            isRestarting = true
+            console.log(
+              `\n✨ ${eventName} ${green(
+                path.relative(CWD, filepath),
+              )}, dev server will restart...\n`,
+            )
+            await devServer?.close()
+            await cliWatcher.close()
+            await startDevServer()
+            isRestarting = false
+          }
+        },
+      )
     }
 
     await startDevServer()
