@@ -1,4 +1,5 @@
 .yarn
+vendor
 **/pyodide
 # too big
 fixture-docs/shared/crds/operator.tekton.dev_*.yaml
