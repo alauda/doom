@@ -1,5 +1,11 @@
 # @alauda/doom-export
 
+## 0.4.2
+
+### Patch Changes
+
+- [#340](https://github.com/alauda/doom/pull/340) [`ad8af04`](https://github.com/alauda/doom/commit/ad8af04a8e33bb6a6dc3742456d1a23127472e88) Thanks [@youyongsong](https://github.com/youyongsong)! - Update Playwright to avoid browser installation hangs on Node.js 24.
+
 ## 0.4.1
 
 ### Patch Changes
