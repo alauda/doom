@@ -16,12 +16,12 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@alauda/doom-export@workspace:packages/export"
   dependencies:
-    "@playwright/browser-chromium": "npm:1.57.0"
+    "@playwright/browser-chromium": "npm:1.61.0"
     cli-progress: "npm:^3.12.0"
     html-entities: "npm:^2.6.0"
     pdf-lib: "npm:^1.17.1"
     pdf-merger-js: "npm:^5.1.2"
-    playwright: "npm:1.57.0"
+    playwright: "npm:1.61.0"
     yoctocolors: "npm:^2.1.2"
   languageName: unknown
   linkType: soft
@@ -2454,12 +2454,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@playwright/browser-chromium@npm:1.57.0":
-  version: 1.57.0
-  resolution: "@playwright/browser-chromium@npm:1.57.0"
+"@playwright/browser-chromium@npm:1.61.0":
+  version: 1.61.0
+  resolution: "@playwright/browser-chromium@npm:1.61.0"
   dependencies:
-    playwright-core: "npm:1.57.0"
-  checksum: 10c0/a997fb094279b26ff954cb1099ad28c32853e0259b129dc040af75f1eebf1b9aa25957b27e5c7b1f52a70c791944024bcb95139729ac3b9e4a9a033f6420e1ab
+    playwright-core: "npm:1.61.0"
+  checksum: 10c0/d2d15cfef07cbd09ffcb93cf03d99939ee8ad3e34cd24cc40e26e637df18f30a8324b0fbb9b8f83741296c5e34dc42ed5bb87fe23f3e23110388b9e2b5a83a16
   languageName: node
   linkType: hard
 
@@ -9549,27 +9549,27 @@ __metadata:
   languageName: node
   linkType: hard
 
-"playwright-core@npm:1.57.0":
-  version: 1.57.0
-  resolution: "playwright-core@npm:1.57.0"
+"playwright-core@npm:1.61.0":
+  version: 1.61.0
+  resolution: "playwright-core@npm:1.61.0"
   bin:
     playwright-core: cli.js
-  checksum: 10c0/798e35d83bf48419a8c73de20bb94d68be5dde68de23f95d80a0ebe401e3b83e29e3e84aea7894d67fa6c79d2d3d40cc5bcde3e166f657ce50987aaa2421b6a9
+  checksum: 10c0/64cbf5e9f4ad81cbb005d59417e96435e324a6e3801f1c79b36850ad99f6bb90853c4b569a32c49b9eca1e07925bbb2a5a864babdba2178c3c395e0c589d5941
   languageName: node
   linkType: hard
 
-"playwright@npm:1.57.0":
-  version: 1.57.0
-  resolution: "playwright@npm:1.57.0"
+"playwright@npm:1.61.0":
+  version: 1.61.0
+  resolution: "playwright@npm:1.61.0"
   dependencies:
     fsevents: "npm:2.3.2"
-    playwright-core: "npm:1.57.0"
+    playwright-core: "npm:1.61.0"
   dependenciesMeta:
     fsevents:
       optional: true
   bin:
     playwright: cli.js
-  checksum: 10c0/ab03c99a67b835bdea9059f516ad3b6e42c21025f9adaa161a4ef6bc7ca716dcba476d287140bb240d06126eb23f889a8933b8f5f1f1a56b80659d92d1358899
+  checksum: 10c0/079dceebe8b745fa6062a3af928024d0c508177fbf15d61dba09ba173f277465ad3746fdc1b31788ade65428f4d3f92fc8083b44c07381b088721eaa2ea06513
   languageName: node
   linkType: hard
 
