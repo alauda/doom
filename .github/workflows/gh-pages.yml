@@ -31,9 +31,22 @@ jobs:
           cache: yarn
 
       - name: Install Dependencies
-        run: |
-          yarn --immutable
-          yarn workspace @alauda/doom-export playwright install
+        run: yarn --immutable
+
+      # Playwright browser extraction can hang under Node.js 24.
+      - name: Setup Node.js 22 for Playwright Browser Install
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 22
+
+      - name: Install Playwright Browsers with Node.js 22
+        timeout-minutes: 10
+        run: yarn workspace @alauda/doom-export playwright install
+
+      - name: Restore Node.js LTS
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: lts/*
 
       - name: Build and Export
         run: |
