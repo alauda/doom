@@ -12,7 +12,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@alauda/doom-export@npm:^0.4.1, @alauda/doom-export@workspace:packages/export":
+"@alauda/doom-export@npm:^0.4.2, @alauda/doom-export@workspace:packages/export":
   version: 0.0.0-use.local
   resolution: "@alauda/doom-export@workspace:packages/export"
   dependencies:
@@ -31,7 +31,7 @@ __metadata:
   resolution: "@alauda/doom@workspace:packages/doom"
   dependencies:
     "@alauda/doc-stream-sdk": "npm:0.1.0"
-    "@alauda/doom-export": "npm:^0.4.1"
+    "@alauda/doom-export": "npm:^0.4.2"
     "@cspell/eslint-plugin": "npm:^10.0.0"
     "@eslint-react/eslint-plugin": "npm:^5.8.3"
     "@eslint/js": "npm:^10.0.1"

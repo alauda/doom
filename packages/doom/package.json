@@ -1,6 +1,6 @@
 {
   "name": "@alauda/doom",
-  "version": "2.5.2",
+  "version": "2.5.3",
   "type": "module",
   "description": "Doctor Doom making docs.",
   "repository": {
@@ -44,7 +44,7 @@
   ],
   "dependencies": {
     "@alauda/doc-stream-sdk": "0.1.0",
-    "@alauda/doom-export": "^0.4.1",
+    "@alauda/doom-export": "^0.4.2",
     "@cspell/eslint-plugin": "^10.0.0",
     "@eslint-react/eslint-plugin": "^5.8.3",
     "@eslint/js": "^10.0.1",

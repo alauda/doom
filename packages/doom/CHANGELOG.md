@@ -1,5 +1,16 @@
 # @alauda/doom
 
+## 2.5.3
+
+### Patch Changes
+
+- [#341](https://github.com/alauda/doom/pull/341) [`3d09242`](https://github.com/alauda/doom/commit/3d0924283d7da984352e6c87b40853b691f068ec) Thanks [@youyongsong](https://github.com/youyongsong)! - Add a lint rule that flags legacy MicroOS and KubeOS names in documentation.
+
+- [#340](https://github.com/alauda/doom/pull/340) [`ad8af04`](https://github.com/alauda/doom/commit/ad8af04a8e33bb6a6dc3742456d1a23127472e88) Thanks [@youyongsong](https://github.com/youyongsong)! - Fix code block copying inside ordered lists so list markers are not included.
+
+- Updated dependencies [[`ad8af04`](https://github.com/alauda/doom/commit/ad8af04a8e33bb6a6dc3742456d1a23127472e88)]:
+  - @alauda/doom-export@0.4.2
+
 ## 2.5.2
 
 ### Patch Changes
