@@ -8,8 +8,9 @@ import { ACP_BASE, type DoomSite } from '../../shared/index.ts'
 import type { ExportItem } from '../../types.ts'
 import { baseResolve, pkgResolve } from '../../utils/index.ts'
 
+import { getGlobalComponentFiles } from './components.ts'
+
 const globalComponentsDir = baseResolve('global')
-const componentsDir = baseResolve('runtime/components')
 
 export interface GlobalPluginOptions {
   version?: string
@@ -39,17 +40,7 @@ export const globalPlugin = ({
       .readdirSync(globalComponentsDir, 'utf8')
       .map((component) => path.resolve(globalComponentsDir, component)),
     markdown: {
-      globalComponents: fs
-        .readdirSync(componentsDir)
-        .filter((file) => {
-          const basename = path.basename(file, path.extname(file))
-          return (
-            !basename.startsWith('_') &&
-            !basename.endsWith('.d') &&
-            basename !== 'index'
-          )
-        })
-        .map((file) => path.resolve(componentsDir, file)),
+      globalComponents: getGlobalComponentFiles(),
     },
     addRuntimeModules(config, isProd) {
       return {
