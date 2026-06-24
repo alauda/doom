@@ -1,4 +1,6 @@
+import fs from 'node:fs'
 import { createRequire } from 'node:module'
+import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import type { Options } from '@cspell/eslint-plugin'
@@ -13,16 +15,42 @@ import globals from 'globals'
 import tseslint from 'typescript-eslint'
 
 import { loadConfig } from './cli/load-config.js'
+import { getGlobalComponentNames } from './plugins/global/components.js'
+import { pkgResolve } from './utils/index.js'
 
 const cjsRequire = createRequire(import.meta.url)
 
-let remarkConfigPath: string
+let remarkConfigPath: string | undefined
+
+const isLoadableRemarkConfigPath = (filepath: string) =>
+  ['.cjs', '.js', '.mjs'].includes(path.extname(filepath))
 
 try {
-  remarkConfigPath = fileURLToPath(import.meta.resolve('./remarkrc.js'))
+  const resolvedRemarkConfigPath = fileURLToPath(
+    import.meta.resolve('./remarkrc.js'),
+  )
+  if (isLoadableRemarkConfigPath(resolvedRemarkConfigPath)) {
+    remarkConfigPath = resolvedRemarkConfigPath
+  }
 } catch {
-  remarkConfigPath = cjsRequire.resolve('./remarkrc.js')
+  try {
+    const resolvedRemarkConfigPath = cjsRequire.resolve('./remarkrc.js')
+    if (isLoadableRemarkConfigPath(resolvedRemarkConfigPath)) {
+      remarkConfigPath = resolvedRemarkConfigPath
+    }
+  } catch {
+    remarkConfigPath = undefined
+  }
 }
+
+const builtRemarkConfigPath = pkgResolve('lib/remarkrc.js')
+if (!remarkConfigPath && fs.existsSync(builtRemarkConfigPath)) {
+  remarkConfigPath = builtRemarkConfigPath
+}
+
+const globalComponentGlobals = Object.fromEntries(
+  getGlobalComponentNames().map((name) => [name, 'readonly']),
+) as Record<string, 'readonly'>
 
 async function doom(
   userConfig?: UserConfig | null,
@@ -64,7 +92,7 @@ async function doom(userConfigOrRoot?: UserConfig | string | null | URL) {
       languageOptions: {
         globals: globals.browser,
         parserOptions: {
-          remarkConfigPath,
+          ...(remarkConfigPath && { remarkConfigPath }),
         },
       },
       rules: cspellEnabled
@@ -81,6 +109,9 @@ async function doom(userConfigOrRoot?: UserConfig | string | null | URL) {
     },
     {
       files: ['**/*.mdx'],
+      languageOptions: {
+        globals: globalComponentGlobals,
+      },
       rules: {
         '@eslint-react/jsx-no-children-prop': 'off',
         '@eslint-react/rules-of-hooks': 'off',
