@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 2.5.4
+
+### Patch Changes
+
+- [#343](https://github.com/alauda/doom/pull/343) [`935b096`](https://github.com/alauda/doom/commit/935b09662b6b8a05ae9d87b73c46e9766a263a27) Thanks [@youyongsong](https://github.com/youyongsong)! - Declare Doom's MDX global components in the built-in ESLint config so `doom lint` does not report them as undefined JSX identifiers.
+
 ## 2.5.3
 
 ### Patch Changes
