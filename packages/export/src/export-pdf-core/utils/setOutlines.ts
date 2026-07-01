@@ -4,8 +4,7 @@ import { PDFHexString } from 'pdf-lib'
 // --- Outline ---
 
 type PDFOutlineTo =
-  | number
-  | [pageIndex: number, xPercentage: number, yPercentage: number]
+  number | [pageIndex: number, xPercentage: number, yPercentage: number]
 
 export interface PDFOutlineItem {
   title: string

@@ -44,10 +44,7 @@ export const isSingleFile = (
  */
 export function findItemByRoutePath(
   items: (
-    | SidebarItem
-    | SidebarSectionHeader
-    | NormalizedSidebarGroup
-    | SidebarDivider
+    SidebarItem | SidebarSectionHeader | NormalizedSidebarGroup | SidebarDivider
   )[],
   routePath: string,
 ): (SidebarItem | NormalizedSidebarGroup)[] {
@@ -85,8 +82,7 @@ export function findItemByRoutePath(
   }
 
   const matchRoutePathItem = items[matchRoutePathItemIndex] as
-    | SidebarItem
-    | NormalizedSidebarGroup
+    SidebarItem | NormalizedSidebarGroup
 
   const isArray = (i: unknown): i is Array<unknown> =>
     Array.isArray(i) && i.length >= 1
@@ -109,8 +105,7 @@ export function findItemByRoutePath(
     result.splice(matchRoutePathItemIndex, 1)
   }
   const res = result.filter((item) => !isSidebarDivider(item)) as (
-    | SidebarItem
-    | NormalizedSidebarGroup
+    SidebarItem | NormalizedSidebarGroup
   )[]
 
   return res

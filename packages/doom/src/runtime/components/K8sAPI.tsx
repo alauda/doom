@@ -78,8 +78,7 @@ export const K8sAPI = ({
 
     if ('x-kubernetes-group-version-kind' in schema) {
       const def = schema['x-kubernetes-group-version-kind'] as
-        | K8sAPIDefinition
-        | K8sAPIDefinition[]
+        K8sAPIDefinition | K8sAPIDefinition[]
       return Array.isArray(def) ? def[0] : def
     }
 
