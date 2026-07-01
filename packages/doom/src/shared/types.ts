@@ -27,5 +27,4 @@ export interface K8sTypeList<T extends K8sTypeMeta> extends K8sTypeMeta {
 }
 
 export type UnversionedVersion =
-  | typeof UNVERSIONED
-  | `${typeof UNVERSIONED}-${string}`
+  typeof UNVERSIONED | `${typeof UNVERSIONED}-${string}`

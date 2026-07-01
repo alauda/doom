@@ -29,10 +29,7 @@ export interface DoomSidebarItem extends SidebarItem {
 }
 
 export type DoomSidebar =
-  | DoomSidebarGroup
-  | DoomSidebarItem
-  | SidebarDivider
-  | SidebarSectionHeader
+  DoomSidebarGroup | DoomSidebarItem | SidebarDivider | SidebarSectionHeader
 
 export interface DoomSidebarGroup extends Omit<SidebarGroup, 'items'> {
   items: DoomSidebar[]
