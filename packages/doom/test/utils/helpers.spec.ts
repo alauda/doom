@@ -1,8 +1,14 @@
+import fs from 'node:fs'
+import os from 'node:os'
 import path from 'node:path'
 
-import { describe, expect, test } from '@rstest/core'
+import { afterAll, beforeAll, describe, expect, test } from '@rstest/core'
 
-import { baseResolve, pkgResolve } from '#utils/helpers.ts'
+import {
+  baseResolve,
+  generateRuntimeModule,
+  pkgResolve,
+} from '#utils/helpers.ts'
 
 describe('baseResolve', () => {
   test('resolves path relative to BASE_DIR', () => {
@@ -94,5 +100,72 @@ describe('pkgResolve', () => {
     const base = baseResolve()
 
     expect(pkg).toBe(path.dirname(base))
+  })
+})
+
+describe('generateRuntimeModule', () => {
+  let dir: string
+
+  const mapKeys = (mods: Record<string, string>) =>
+    [...mods['doom-@testMap'].matchAll(/'([^']+)':_\d+/g)].map((m) => m[1])
+
+  beforeAll(() => {
+    dir = fs.mkdtempSync(path.join(os.tmpdir(), 'doom-grm-'))
+    // Written out of alphabetical order on purpose.
+    fs.writeFileSync(path.join(dir, 'c.json'), JSON.stringify({ n: 'c' }))
+    fs.writeFileSync(path.join(dir, 'a.json'), JSON.stringify({ n: 'a' }))
+    fs.writeFileSync(path.join(dir, 'b.json'), JSON.stringify({ n: 'b' }))
+  })
+
+  afterAll(() => {
+    fs.rmSync(dir, { recursive: true, force: true })
+  })
+
+  test('map keys are deterministically sorted', async () => {
+    const mods = await generateRuntimeModule(['*.json'], 'test', dir, dir, true)
+
+    expect(mapKeys(mods)).toEqual(['a.json', 'b.json', 'c.json'])
+  })
+
+  test('map key is relative to root, independent of process.cwd()', async () => {
+    // `root === cwd === dir`, but `process.cwd()` is the repo root. The buggy
+    // `path.relative(root, file)` would measure the relative file from
+    // `process.cwd()` and produce a `../…` path; the key must stay `a.json`.
+    const mods = await generateRuntimeModule(['a.json'], 'test', dir, dir, true)
+
+    expect(mapKeys(mods)).toEqual(['a.json'])
+    expect(mods['doom-@testMap']).not.toContain('..')
+  })
+
+  test('key stays relative to root when root is a parent of cwd', async () => {
+    const parent = path.dirname(dir)
+    const mods = await generateRuntimeModule(
+      ['a.json'],
+      'test',
+      parent,
+      dir,
+      true,
+    )
+
+    expect(mapKeys(mods)).toEqual([path.join(path.basename(dir), 'a.json')])
+  })
+
+  test('empty patterns produce an empty map', async () => {
+    const mods = await generateRuntimeModule([], 'test', dir, dir, true)
+
+    expect(mods['doom-@testMap']).toBe('\nexport default {}')
+  })
+
+  test('mapper transforms each entry', async () => {
+    const mods = await generateRuntimeModule<{ n: string }, { upper: string }>(
+      ['a.json'],
+      'test',
+      dir,
+      dir,
+      true,
+      (input) => ({ upper: input.n.toUpperCase() }),
+    )
+
+    expect(mods['doom-@test/a.json.mjs']).toContain('"upper":"A"')
   })
 })
