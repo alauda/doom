@@ -98,13 +98,15 @@ const allFunctionResources = Object.values(functionResourcesMap).reduce<
 export const K8sPermissionTable = ({ functions }: K8sPermissionTableProps) => {
   const functionResources = useMemo(
     () =>
-      functions.flatMap((name) => {
+      functions.map((name) => {
         const matched = allFunctionResources[name]
         if (!matched) {
+          // Do NOT drop the row: a missing FunctionResource used to vanish
+          // silently, leaving a complete-looking table with a build exit 0.
+          // Keep it visible and log for the build-integrity summary.
           console.error(`FunctionResource \`${name}\` not found!\n`)
-          return []
         }
-        return matched
+        return { name, resource: matched }
       }),
     // eslint-disable-next-line @eslint-react/exhaustive-deps
     functions,
@@ -140,9 +142,21 @@ export const K8sPermissionTable = ({ functions }: K8sPermissionTableProps) => {
         </X.tr>
       </thead>
       <tbody>
-        {functionResources.map((fr) => {
+        {functionResources.map(({ name, resource: fr }) => {
+          if (!fr) {
+            return (
+              <X.tr key={name}>
+                <X.td style={TEXT_CENTER_STYLE}>
+                  <code>{name}</code>
+                </X.td>
+                <X.td colSpan={1 + roleTemplates.length}>
+                  <code>FunctionResource</code> <code>{name}</code> not found
+                </X.td>
+              </X.tr>
+            )
+          }
           const {
-            metadata: { annotations, name },
+            metadata: { annotations },
           } = fr
           return (
             <Fragment key={name}>

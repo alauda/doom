@@ -6,6 +6,7 @@ import virtual from 'doom-@api-virtual'
 import { OpenAPIV3, type OpenAPIV3_1 } from 'openapi-types'
 import { Fragment, useMemo, type ReactNode } from 'react'
 
+import { useTranslation } from '../hooks/index.js'
 import { omitRoutePathRefs, resolveRef } from '../utils.js'
 
 import { Markdown } from './Markdown.js'
@@ -188,6 +189,8 @@ const OpenAPIPathBase = ({
   pathPrefix: pathPrefix_,
   slugger,
 }: OpenAPIPathBaseProps) => {
+  const t = useTranslation()
+
   const pathPrefix = pathPrefix_ ?? (virtual.pathPrefix || '')
 
   if (!pathItem || !openapi) {
@@ -205,7 +208,7 @@ const OpenAPIPathBase = ({
       {pathItem.parameters && (
         <>
           <HeadingTitle slugger={slugger} level={3}>
-            Common Parameters
+            {t('common_parameters')}
           </HeadingTitle>
           <OpenAPIParameters
             parameters={pathItem.parameters}
@@ -240,6 +243,20 @@ const OpenAPIPathBase = ({
           ? resolveRef(openapi, requestBodyRef)
           : undefined
 
+        // Whether the request body itself is required — the boolean on the
+        // RequestBodyObject. NOT `requestBodySchema.required`, which is the
+        // list of required *properties* of the body schema (truthy whenever the
+        // body has any required field, which is unrelated).
+        const requestBodyObj =
+          requestBody &&
+          ('$ref' in requestBody
+            ? resolveRef<OpenAPIV3_1.RequestBodyObject>(
+                openapi,
+                requestBody.$ref,
+              )
+            : requestBody)
+        const requestBodyRequired = !!requestBodyObj?.required
+
         return (
           <Fragment key={method}>
             <HeadingTitle slugger={slugger} level={3}>
@@ -249,7 +266,7 @@ const OpenAPIPathBase = ({
             {parameters && (
               <>
                 <HeadingTitle slugger={slugger} level={4}>
-                  Parameters
+                  {t('parameters')}
                 </HeadingTitle>
                 <OpenAPIParameters parameters={parameters} openapi={openapi} />
               </>
@@ -257,11 +274,11 @@ const OpenAPIPathBase = ({
             {requestBodySchema && (
               <>
                 <HeadingTitle slugger={slugger} level={4}>
-                  Request Body
+                  {t('request_body')}
                 </HeadingTitle>
                 <X.p>
                   <RefLink $ref={requestBodyRef} />
-                  {requestBodySchema.required && <Badge>required</Badge>}
+                  {requestBodyRequired && <Badge>required</Badge>}
                 </X.p>
               </>
             )}
@@ -269,7 +286,7 @@ const OpenAPIPathBase = ({
             {responses && (
               <>
                 <HeadingTitle slugger={slugger} level={4}>
-                  Response
+                  {t('response')}
                 </HeadingTitle>
                 <OpenAPIResponses responses={responses} openapi={openapi} />
               </>
@@ -305,6 +322,12 @@ export const OpenAPIPath = ({
         continue
       }
       for (const path of paths) {
+        // First matched file wins, consistent with `K8sAPI`/`OpenAPIRef` and
+        // this component's own JSDoc. Files are sorted (see
+        // `generateRuntimeModule`), so "first" is deterministic.
+        if (pathMap.has(path)) {
+          continue
+        }
         const pathItem = openapi.paths?.[path]
         if (pathItem) {
           pathMap.set(path, {

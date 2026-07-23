@@ -21,7 +21,10 @@ declare module 'doom-@api-openapisMap' {
 
 // @internal
 declare module 'doom-@api-virtual' {
-  const virtual: Pick<ApiPluginOptions, 'references' | 'pathPrefix'>
+  const virtual: Pick<
+    ApiPluginOptions,
+    'references' | 'pathPrefix' | 'crdVersion'
+  >
 }
 
 export const apiPlugin = ({
@@ -31,7 +34,7 @@ export const apiPlugin = ({
     name: 'doom-api',
     async addRuntimeModules(config, isProd) {
       return {
-        'doom-@api-virtual': `export default ${JSON.stringify({ references: config.api?.references, pathPrefix: config.api?.pathPrefix }, null, isProd ? 0 : 2)}`,
+        'doom-@api-virtual': `export default ${JSON.stringify({ references: config.api?.references, pathPrefix: config.api?.pathPrefix, crdVersion: config.api?.crdVersion }, null, isProd ? 0 : 2)}`,
         ...(await generateRuntimeModule(
           config.api?.crds,
           'api-crds',

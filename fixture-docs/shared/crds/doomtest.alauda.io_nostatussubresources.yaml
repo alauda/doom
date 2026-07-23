@@ -1,0 +1,31 @@
+# FIXTURE for DOOM-10 —— schema 里有 status 属性，但 CRD 没有声明 subresources.status
+# doom 今天渲染 /nostatussubresources/{name}/status  ← 该端点在真实集群上 404
+# 修复后不应渲染任何 /status 端点
+# （注：doom 现有的 8 个 tekton fixture 已经是这个形状，本文件只是把它显式化）
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: nostatussubresources.doomtest.alauda.io
+spec:
+  group: doomtest.alauda.io
+  scope: Namespaced
+  names:
+    kind: NoStatusSubresource
+    listKind: NoStatusSubresourceList
+    plural: nostatussubresources
+    singular: nostatussubresource
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          description: Has a status property but no status subresource.
+          properties:
+            spec:
+              type: object
+              description: Desired state.
+            status:
+              type: object
+              description: Observed state, reconciled via the main resource (no subresource).

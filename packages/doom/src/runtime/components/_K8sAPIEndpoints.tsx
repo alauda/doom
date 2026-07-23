@@ -1,6 +1,8 @@
 import { FallbackHeading } from '@rspress/core/theme'
 import virtual from 'doom-@api-virtual'
-import { plural } from 'pluralize'
+import { plural as pluralize } from 'pluralize'
+
+import { useTranslation } from '../hooks/index.js'
 
 import { APIReferenceLink } from './_APIReferenceLink.js'
 import { X } from './_X.js'
@@ -14,6 +16,13 @@ export interface K8sAPIDefinition {
 export interface K8sAPIEndpointsProps extends K8sAPIDefinition {
   namespaced?: boolean
   hasStatus?: boolean
+  hasScale?: boolean
+  /**
+   * The resource's plural name. When provided (e.g. read from a CRD's
+   * `spec.names.plural`) it is used verbatim; otherwise it is guessed with the
+   * `pluralize` package, which is wrong for irregular or hyphenated plurals.
+   */
+  plural?: string
   pathPrefix?: string
 }
 
@@ -22,17 +31,18 @@ const QueryParameters = ({
 }: {
   fieldValidation?: boolean
 }) => {
+  const t = useTranslation()
   return (
     <>
       <dl>
-        <dt>Query parameters</dt>
+        <dt>{t('query_parameters')}</dt>
       </dl>
       <X.table>
         <thead>
           <tr>
-            <th>Parameter</th>
-            <th>Type</th>
-            <th>Description</th>
+            <th>{t('parameter')}</th>
+            <th>{t('type')}</th>
+            <th>{t('description')}</th>
           </tr>
         </thead>
         <tbody>
@@ -85,17 +95,18 @@ const QueryParameters = ({
 }
 
 const BodyParameters = ({ kind }: { kind: string }) => {
+  const t = useTranslation()
   return (
     <>
       <dl>
-        <dt>Body parameters</dt>
+        <dt>{t('body_parameters')}</dt>
       </dl>
       <X.table>
         <thead>
           <tr>
-            <th>Parameter</th>
-            <th>Type</th>
-            <th>Description</th>
+            <th>{t('parameter')}</th>
+            <th>{t('type')}</th>
+            <th>{t('description')}</th>
           </tr>
         </thead>
         <tbody>
@@ -120,389 +131,463 @@ interface K8sAPIEndpointProps {
   kind: string
 }
 
-const K8sAPIListEndpoint = ({ kind }: K8sAPIEndpointProps) => (
-  <>
-    <dl>
-      <dt>HTTP method</dt>
-      <dd>
-        <code>DELETE</code>
-      </dd>
-      <dt>Description</dt>
-      <dd>delete collection of {kind}</dd>
-      <dt>HTTP responses</dt>
-    </dl>
-    <X.table>
-      <thead>
-        <tr>
-          <th>HTTP code</th>
-          <th>Response body</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>200 - OK</td>
-          <td>
-            <code>
-              <APIReferenceLink name="Status" />
-            </code>{' '}
-            schema
-          </td>
-        </tr>
-        <tr>
-          <td>401 - Unauthorized</td>
-          <td>Empty</td>
-        </tr>
-      </tbody>
-    </X.table>
-    <dl>
-      <dt>HTTP method</dt>
-      <dd>
-        <code>GET</code>
-      </dd>
-      <dt>Description</dt>
-      <dd>list objects of kind {kind}</dd>
-      <dt>HTTP responses</dt>
-    </dl>
-    <X.table>
-      <thead>
-        <tr>
-          <th>HTTP code</th>
-          <th>Response body</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>200 - OK</td>
-          <td>
-            <code>{kind}List</code> schema
-          </td>
-        </tr>
-        <tr>
-          <td>401 - Unauthorized</td>
-          <td>Empty</td>
-        </tr>
-      </tbody>
-    </X.table>
-    <dl>
-      <dt>HTTP method</dt>
-      <dd>
-        <code>POST</code>
-      </dd>
-      <dt>Description</dt>
-      <dd>create a new {kind}</dd>
-    </dl>
-    <QueryParameters />
-    <BodyParameters kind={kind} />
-    <dl>
-      <dt>HTTP responses</dt>
-    </dl>
-    <X.table>
-      <thead>
-        <tr>
-          <th>HTTP code</th>
-          <th>Response body</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>200 - OK</td>
-          <td>
-            <code>{kind}</code> schema
-          </td>
-        </tr>
-        <tr>
-          <td>201 - Created</td>
-          <td>
-            <code>{kind}</code> schema
-          </td>
-        </tr>
-        <tr>
-          <td>202 - Accepted</td>
-          <td>
-            <code>{kind}</code> schema
-          </td>
-        </tr>
-        <tr>
-          <td>401 - Unauthorized</td>
-          <td>Empty</td>
-        </tr>
-      </tbody>
-    </X.table>
-  </>
-)
+const K8sAPIListEndpoint = ({ kind }: K8sAPIEndpointProps) => {
+  const t = useTranslation()
+  return (
+    <>
+      <dl>
+        <dt>{t('http_method')}</dt>
+        <dd>
+          <code>DELETE</code>
+        </dd>
+        <dt>{t('description')}</dt>
+        <dd>delete collection of {kind}</dd>
+        <dt>{t('http_responses')}</dt>
+      </dl>
+      <X.table>
+        <thead>
+          <tr>
+            <th>{t('http_code')}</th>
+            <th>{t('response_body')}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>200 - OK</td>
+            <td>
+              <code>
+                <APIReferenceLink name="Status" />
+              </code>{' '}
+              schema
+            </td>
+          </tr>
+          <tr>
+            <td>401 - Unauthorized</td>
+            <td>Empty</td>
+          </tr>
+        </tbody>
+      </X.table>
+      <dl>
+        <dt>{t('http_method')}</dt>
+        <dd>
+          <code>GET</code>
+        </dd>
+        <dt>{t('description')}</dt>
+        <dd>list objects of kind {kind}</dd>
+        <dt>{t('http_responses')}</dt>
+      </dl>
+      <X.table>
+        <thead>
+          <tr>
+            <th>{t('http_code')}</th>
+            <th>{t('response_body')}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>200 - OK</td>
+            <td>
+              <code>{kind}List</code> schema
+            </td>
+          </tr>
+          <tr>
+            <td>401 - Unauthorized</td>
+            <td>Empty</td>
+          </tr>
+        </tbody>
+      </X.table>
+      <dl>
+        <dt>{t('http_method')}</dt>
+        <dd>
+          <code>POST</code>
+        </dd>
+        <dt>{t('description')}</dt>
+        <dd>create a new {kind}</dd>
+      </dl>
+      <QueryParameters />
+      <BodyParameters kind={kind} />
+      <dl>
+        <dt>{t('http_responses')}</dt>
+      </dl>
+      <X.table>
+        <thead>
+          <tr>
+            <th>{t('http_code')}</th>
+            <th>{t('response_body')}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>200 - OK</td>
+            <td>
+              <code>{kind}</code> schema
+            </td>
+          </tr>
+          <tr>
+            <td>201 - Created</td>
+            <td>
+              <code>{kind}</code> schema
+            </td>
+          </tr>
+          <tr>
+            <td>202 - Accepted</td>
+            <td>
+              <code>{kind}</code> schema
+            </td>
+          </tr>
+          <tr>
+            <td>401 - Unauthorized</td>
+            <td>Empty</td>
+          </tr>
+        </tbody>
+      </X.table>
+    </>
+  )
+}
 
-const K8sAPIItemEndpoint = ({ kind }: K8sAPIEndpointProps) => (
-  <>
-    <dl>
-      <dt>HTTP method</dt>
-      <dd>
-        <code>DELETE</code>
-      </dd>
-      <dt>Description</dt>
-      <dd>delete the specified {kind}</dd>
-    </dl>
-    <QueryParameters fieldValidation={false} />
-    <dl>
-      <dt>HTTP responses</dt>
-    </dl>
-    <X.table>
-      <thead>
-        <tr>
-          <th>HTTP code</th>
-          <th>Response body</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>200 - OK</td>
-          <td>
-            <code>
-              <APIReferenceLink name="Status" />
-            </code>{' '}
-            schema
-          </td>
-        </tr>
-        <tr>
-          <td>202 - Accepted</td>
-          <td>
-            <code>
-              <APIReferenceLink name="Status" />
-            </code>{' '}
-            schema
-          </td>
-        </tr>
-        <tr>
-          <td>401 - Unauthorized</td>
-          <td>Empty</td>
-        </tr>
-      </tbody>
-    </X.table>
-    <dl>
-      <dt>HTTP method</dt>
-      <dd>
-        <code>GET</code>
-      </dd>
-      <dt>Description</dt>
-      <dd>read the specified {kind}</dd>
-      <dt>HTTP responses</dt>
-    </dl>
-    <X.table>
-      <thead>
-        <tr>
-          <th>HTTP code</th>
-          <th>Response body</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>200 - OK</td>
-          <td>
-            <code>{kind}</code> schema
-          </td>
-        </tr>
-        <tr>
-          <td>401 - Unauthorized</td>
-          <td>Empty</td>
-        </tr>
-      </tbody>
-    </X.table>
-    <dl>
-      <dt>HTTP method</dt>
-      <dd>
-        <code>PATCH</code>
-      </dd>
-      <dt>Description</dt>
-      <dd>partially update the specified {kind}</dd>
-    </dl>
-    <QueryParameters />
-    <dl>
-      <dt>HTTP responses</dt>
-    </dl>
-    <X.table>
-      <thead>
-        <tr>
-          <th>HTTP code</th>
-          <th>Response body</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>200 - OK</td>
-          <td>
-            <code>{kind}</code> schema
-          </td>
-        </tr>
-        <tr>
-          <td>401 - Unauthorized</td>
-          <td>Empty</td>
-        </tr>
-      </tbody>
-    </X.table>
-    <dl>
-      <dt>HTTP method</dt>
-      <dd>
-        <code>PUT</code>
-      </dd>
-      <dt>Description</dt>
-      <dd>replace the specified {kind}</dd>
-    </dl>
-    <QueryParameters />
-    <BodyParameters kind={kind} />
-    <dl>
-      <dt>HTTP responses</dt>
-    </dl>
-    <X.table>
-      <thead>
-        <tr>
-          <th>HTTP code</th>
-          <th>Response body</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>200 - OK</td>
-          <td>
-            <code>{kind}</code> schema
-          </td>
-        </tr>
-        <tr>
-          <td>201 - Created</td>
-          <td>
-            <code>{kind}</code> schema
-          </td>
-        </tr>
-        <tr>
-          <td>401 - Unauthorized</td>
-          <td>Empty</td>
-        </tr>
-      </tbody>
-    </X.table>
-  </>
-)
+const K8sAPIItemEndpoint = ({ kind }: K8sAPIEndpointProps) => {
+  const t = useTranslation()
+  return (
+    <>
+      <dl>
+        <dt>{t('http_method')}</dt>
+        <dd>
+          <code>DELETE</code>
+        </dd>
+        <dt>{t('description')}</dt>
+        <dd>delete the specified {kind}</dd>
+      </dl>
+      <QueryParameters fieldValidation={false} />
+      <dl>
+        <dt>{t('http_responses')}</dt>
+      </dl>
+      <X.table>
+        <thead>
+          <tr>
+            <th>{t('http_code')}</th>
+            <th>{t('response_body')}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>200 - OK</td>
+            <td>
+              <code>
+                <APIReferenceLink name="Status" />
+              </code>{' '}
+              schema
+            </td>
+          </tr>
+          <tr>
+            <td>202 - Accepted</td>
+            <td>
+              <code>
+                <APIReferenceLink name="Status" />
+              </code>{' '}
+              schema
+            </td>
+          </tr>
+          <tr>
+            <td>401 - Unauthorized</td>
+            <td>Empty</td>
+          </tr>
+        </tbody>
+      </X.table>
+      <dl>
+        <dt>{t('http_method')}</dt>
+        <dd>
+          <code>GET</code>
+        </dd>
+        <dt>{t('description')}</dt>
+        <dd>read the specified {kind}</dd>
+        <dt>{t('http_responses')}</dt>
+      </dl>
+      <X.table>
+        <thead>
+          <tr>
+            <th>{t('http_code')}</th>
+            <th>{t('response_body')}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>200 - OK</td>
+            <td>
+              <code>{kind}</code> schema
+            </td>
+          </tr>
+          <tr>
+            <td>401 - Unauthorized</td>
+            <td>Empty</td>
+          </tr>
+        </tbody>
+      </X.table>
+      <dl>
+        <dt>{t('http_method')}</dt>
+        <dd>
+          <code>PATCH</code>
+        </dd>
+        <dt>{t('description')}</dt>
+        <dd>partially update the specified {kind}</dd>
+      </dl>
+      <QueryParameters />
+      <dl>
+        <dt>{t('http_responses')}</dt>
+      </dl>
+      <X.table>
+        <thead>
+          <tr>
+            <th>{t('http_code')}</th>
+            <th>{t('response_body')}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>200 - OK</td>
+            <td>
+              <code>{kind}</code> schema
+            </td>
+          </tr>
+          <tr>
+            <td>401 - Unauthorized</td>
+            <td>Empty</td>
+          </tr>
+        </tbody>
+      </X.table>
+      <dl>
+        <dt>{t('http_method')}</dt>
+        <dd>
+          <code>PUT</code>
+        </dd>
+        <dt>{t('description')}</dt>
+        <dd>replace the specified {kind}</dd>
+      </dl>
+      <QueryParameters />
+      <BodyParameters kind={kind} />
+      <dl>
+        <dt>{t('http_responses')}</dt>
+      </dl>
+      <X.table>
+        <thead>
+          <tr>
+            <th>{t('http_code')}</th>
+            <th>{t('response_body')}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>200 - OK</td>
+            <td>
+              <code>{kind}</code> schema
+            </td>
+          </tr>
+          <tr>
+            <td>201 - Created</td>
+            <td>
+              <code>{kind}</code> schema
+            </td>
+          </tr>
+          <tr>
+            <td>401 - Unauthorized</td>
+            <td>Empty</td>
+          </tr>
+        </tbody>
+      </X.table>
+    </>
+  )
+}
 
-const K8sAPIStatusEndpoint = ({ kind }: K8sAPIEndpointProps) => (
-  <>
-    <dl>
-      <dt>HTTP method</dt>
-      <dd>
-        <code>GET</code>
-      </dd>
-      <dt>Description</dt>
-      <dd>read status of the specified {kind}</dd>
-      <dt>HTTP responses</dt>
-    </dl>
-    <X.table>
-      <thead>
-        <tr>
-          <th>HTTP code</th>
-          <th>Response body</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>200 - OK</td>
-          <td>
-            <code>{kind}</code> schema
-          </td>
-        </tr>
-        <tr>
-          <td>401 - Unauthorized</td>
-          <td>Empty</td>
-        </tr>
-      </tbody>
-    </X.table>
-    <dl>
-      <dt>HTTP method</dt>
-      <dd>
-        <code>PATCH</code>
-      </dd>
-      <dt>Description</dt>
-      <dd>partially update status of the specified {kind}</dd>
-    </dl>
-    <QueryParameters />
-    <dl>
-      <dt>HTTP responses</dt>
-    </dl>
-    <X.table>
-      <thead>
-        <tr>
-          <th>HTTP code</th>
-          <th>Response body</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>200 - OK</td>
-          <td>
-            <code>{kind}</code> schema
-          </td>
-        </tr>
-        <tr>
-          <td>401 - Unauthorized</td>
-          <td>Empty</td>
-        </tr>
-      </tbody>
-    </X.table>
-    <dl>
-      <dt>HTTP method</dt>
-      <dd>
-        <code>PUT</code>
-      </dd>
-      <dt>Description</dt>
-      <dd>replace status of the specified {kind}</dd>
-    </dl>
-    <QueryParameters />
-    <BodyParameters kind={kind} />
-    <dl>
-      <dt>HTTP responses</dt>
-    </dl>
-    <X.table>
-      <thead>
-        <tr>
-          <th>HTTP code</th>
-          <th>Response body</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>200 - OK</td>
-          <td>
-            <code>{kind}</code> schema
-          </td>
-        </tr>
-        <tr>
-          <td>201 - Created</td>
-          <td>
-            <code>{kind}</code> schema
-          </td>
-        </tr>
-        <tr>
-          <td>401 - Unauthorized</td>
-          <td>Empty</td>
-        </tr>
-      </tbody>
-    </X.table>
-  </>
-)
+const K8sAPIStatusEndpoint = ({ kind }: K8sAPIEndpointProps) => {
+  const t = useTranslation()
+  return (
+    <>
+      <dl>
+        <dt>{t('http_method')}</dt>
+        <dd>
+          <code>GET</code>
+        </dd>
+        <dt>{t('description')}</dt>
+        <dd>read status of the specified {kind}</dd>
+        <dt>{t('http_responses')}</dt>
+      </dl>
+      <X.table>
+        <thead>
+          <tr>
+            <th>{t('http_code')}</th>
+            <th>{t('response_body')}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>200 - OK</td>
+            <td>
+              <code>{kind}</code> schema
+            </td>
+          </tr>
+          <tr>
+            <td>401 - Unauthorized</td>
+            <td>Empty</td>
+          </tr>
+        </tbody>
+      </X.table>
+      <dl>
+        <dt>{t('http_method')}</dt>
+        <dd>
+          <code>PATCH</code>
+        </dd>
+        <dt>{t('description')}</dt>
+        <dd>partially update status of the specified {kind}</dd>
+      </dl>
+      <QueryParameters />
+      <dl>
+        <dt>{t('http_responses')}</dt>
+      </dl>
+      <X.table>
+        <thead>
+          <tr>
+            <th>{t('http_code')}</th>
+            <th>{t('response_body')}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>200 - OK</td>
+            <td>
+              <code>{kind}</code> schema
+            </td>
+          </tr>
+          <tr>
+            <td>401 - Unauthorized</td>
+            <td>Empty</td>
+          </tr>
+        </tbody>
+      </X.table>
+      <dl>
+        <dt>{t('http_method')}</dt>
+        <dd>
+          <code>PUT</code>
+        </dd>
+        <dt>{t('description')}</dt>
+        <dd>replace status of the specified {kind}</dd>
+      </dl>
+      <QueryParameters />
+      <BodyParameters kind={kind} />
+      <dl>
+        <dt>{t('http_responses')}</dt>
+      </dl>
+      <X.table>
+        <thead>
+          <tr>
+            <th>{t('http_code')}</th>
+            <th>{t('response_body')}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>200 - OK</td>
+            <td>
+              <code>{kind}</code> schema
+            </td>
+          </tr>
+          <tr>
+            <td>201 - Created</td>
+            <td>
+              <code>{kind}</code> schema
+            </td>
+          </tr>
+          <tr>
+            <td>401 - Unauthorized</td>
+            <td>Empty</td>
+          </tr>
+        </tbody>
+      </X.table>
+    </>
+  )
+}
+
+const K8sAPIScaleEndpoint = ({ kind }: K8sAPIEndpointProps) => {
+  const t = useTranslation()
+  return (
+    <>
+      <dl>
+        <dt>{t('http_method')}</dt>
+        <dd>
+          <code>GET</code>
+        </dd>
+        <dt>{t('description')}</dt>
+        <dd>read scale of the specified {kind}</dd>
+        <dt>{t('http_responses')}</dt>
+      </dl>
+      <X.table>
+        <thead>
+          <tr>
+            <th>{t('http_code')}</th>
+            <th>{t('response_body')}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>200 - OK</td>
+            <td>
+              <code>
+                <APIReferenceLink name="Scale" />
+              </code>{' '}
+              schema
+            </td>
+          </tr>
+          <tr>
+            <td>401 - Unauthorized</td>
+            <td>Empty</td>
+          </tr>
+        </tbody>
+      </X.table>
+      <dl>
+        <dt>{t('http_method')}</dt>
+        <dd>
+          <code>PATCH</code>
+        </dd>
+        <dt>{t('description')}</dt>
+        <dd>partially update scale of the specified {kind}</dd>
+      </dl>
+      <QueryParameters />
+      <dl>
+        <dt>{t('http_method')}</dt>
+        <dd>
+          <code>PUT</code>
+        </dd>
+        <dt>{t('description')}</dt>
+        <dd>replace scale of the specified {kind}</dd>
+      </dl>
+      <QueryParameters />
+      <BodyParameters kind="Scale" />
+    </>
+  )
+}
 
 export const K8sAPIEndpoints = ({
   hasStatus,
+  hasScale,
   group,
   version,
   kind,
+  plural,
   pathPrefix: pathPrefix_,
   namespaced = true,
 }: K8sAPIEndpointsProps) => {
+  const t = useTranslation()
+
   const pathPrefix = pathPrefix_ ?? (virtual.pathPrefix || '')
+
+  const pluralName = plural ?? pluralize(kind).toLowerCase()
 
   const apiPath = `${
     pathPrefix
-  }/${group ? `apis/${group}` : 'api'}/${version}/${namespaced ? `namespaces/{namespace}/` : ''}${plural(kind).toLocaleLowerCase()}`
+  }/${group ? `apis/${group}` : 'api'}/${version}/${namespaced ? `namespaces/{namespace}/` : ''}${pluralName}`
 
   return (
     <>
-      <FallbackHeading level={2} title="API Endpoints" />
-      <X.p>The following API endpoints are available:</X.p>
+      <FallbackHeading level={2} title={t('api_endpoints')} />
+      <X.p>{t('available_api_endpoints')}</X.p>
       <X.ul>
         <X.li>
           <code>{apiPath}</code>
@@ -552,6 +637,23 @@ export const K8sAPIEndpoints = ({
             </X.ul>
           </X.li>
         )}
+        {hasScale && (
+          <X.li>
+            <code>{`${apiPath}/{name}/scale`}</code>
+            <X.ul>
+              <X.li>
+                <code>GET</code>: read scale of the specified {kind}
+              </X.li>
+              <X.li>
+                <code>PATCH</code>: partially update scale of the specified{' '}
+                {kind}
+              </X.li>
+              <X.li>
+                <code>PUT</code>: replace scale of the specified {kind}
+              </X.li>
+            </X.ul>
+          </X.li>
+        )}
       </X.ul>
 
       <div className="rp-toc-exclude">
@@ -570,6 +672,15 @@ export const K8sAPIEndpoints = ({
             <FallbackHeading level={3} title={`${apiPath}/{name}/status`} />
           </div>
           <K8sAPIStatusEndpoint kind={kind} />
+        </>
+      )}
+
+      {hasScale && (
+        <>
+          <div className="rp-toc-exclude">
+            <FallbackHeading level={3} title={`${apiPath}/{name}/scale`} />
+          </div>
+          <K8sAPIScaleEndpoint kind={kind} />
         </>
       )}
     </>

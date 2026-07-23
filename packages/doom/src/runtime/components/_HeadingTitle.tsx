@@ -1,5 +1,5 @@
 import BananaSlug from '@rspress/shared/github-slugger'
-import { Children, type ReactNode, useMemo } from 'react'
+import { isValidElement, type ReactNode, useMemo } from 'react'
 
 import { X } from './_X.js'
 
@@ -8,6 +8,29 @@ export interface HeadingTitleProps {
   slugger?: BananaSlug
   level: 1 | 2 | 3 | 4 | 5 | 6
   children: ReactNode
+}
+
+/**
+ * Flatten a React node tree to its visible text. Unlike a plain
+ * `Children.toArray().filter(string)`, this descends into element children, so
+ * a heading like `<code>{method}</code> {summary}` still yields `method` even
+ * when `summary` is `undefined` — instead of an empty slug that becomes
+ * `id="undefined"` / `href="#undefined"`.
+ */
+const extractText = (node: ReactNode): string => {
+  if (node == null || typeof node === 'boolean') {
+    return ''
+  }
+  if (typeof node === 'string' || typeof node === 'number') {
+    return String(node)
+  }
+  if (Array.isArray(node)) {
+    return (node as ReactNode[]).map(extractText).join('')
+  }
+  if (isValidElement(node)) {
+    return extractText((node.props as { children?: ReactNode }).children)
+  }
+  return ''
 }
 
 // TODO: use context to simplify the usage of `slugger`
@@ -22,11 +45,7 @@ export const HeadingTitle = ({
   }, [])
   const HeadingComponent = HeadingComponents[level]
   const slugFromChildren = useMemo(
-    () =>
-      // eslint-disable-next-line @eslint-react/no-children-to-array
-      Children.toArray(children)
-        .filter((it): it is string => typeof it === 'string' && !!it.trim())
-        .join(''),
+    () => extractText(children).trim(),
     [children],
   )
   const id = useMemo(
