@@ -16,6 +16,7 @@ import { green } from 'yoctocolors'
 import type { GlobalCliOptions, ServeOptions } from '../types.js'
 import { setNodeEnv } from '../utils/index.js'
 
+import { apiCommand } from './api.js'
 import { CWD, DEFAULT_CONFIGS, SITES_FILE } from './constants.js'
 import { exportCommand } from './export.js'
 import { parseBoolean, parseBooleanOrString } from './helpers.js'
@@ -267,6 +268,7 @@ program.addCommand(newCommand)
 program.addCommand(translateCommand)
 program.addCommand(exportCommand)
 program.addCommand(lintCommand)
+program.addCommand(apiCommand)
 
 program.parseAsync().catch((err: unknown) => {
   if (err instanceof Error && err.name === 'ExitPromptError') {

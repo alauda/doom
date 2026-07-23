@@ -38,6 +38,16 @@ export interface GlobalCliOptions {
 export interface TranslateOptions {
   systemPrompt?: string
   userPrompt?: string
+  /**
+   * Glob patterns (relative to each language directory) whose files are copied
+   * verbatim to the target language instead of being translated. Defaults to
+   * the generated API directories (`apis/advanced_apis/**`, `apis/crds/**`,
+   * `apis/kubernetes_apis/**`, `apis/references/**`) — override to change which
+   * content is copy-only. To keep a hand-maintained translation inside a
+   * copy-only directory, set `i18n.disableAutoTranslation: true` in that file's
+   * frontmatter.
+   */
+  copyOnlyDirectories?: string[]
 }
 
 export interface LintOptions {

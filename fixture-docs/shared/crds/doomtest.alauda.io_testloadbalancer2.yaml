@@ -1,0 +1,31 @@
+# FIXTURE for DOOM-3（第二形态）—— 不规则复数（ALB2 同款，作者连 apiKind 变通都用不了）
+# pluralize('TEST2') => 'test2s'            ← doom 今天渲染这个，错
+# spec.names.plural  => 'testloadbalancer2' ← 修复后应渲染这个
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: testloadbalancer2.doomtest.alauda.io
+spec:
+  group: doomtest.alauda.io
+  scope: Namespaced
+  names:
+    kind: TEST2
+    listKind: TEST2List
+    plural: testloadbalancer2
+    singular: testloadbalancer2
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          description: An irregular-plural fixture resource for doom API rendering tests.
+          properties:
+            spec:
+              type: object
+              description: Desired state.
+              properties:
+                address:
+                  type: string
+                  description: Load balancer address.

@@ -52,8 +52,9 @@ export interface I18nFrontmatter {
 
 export const TERMS_SUPPORTED_LANGUAGES: Language[] = ['en', 'zh', 'ru']
 
-// Directories that should be copied instead of translated
-const COPY_ONLY_DIRECTORIES = [
+// Directories that are copied instead of translated by default. Override with
+// `translate.copyOnlyDirectories` in the config.
+const DEFAULT_COPY_ONLY_DIRECTORIES = [
   'apis/advanced_apis/**',
   'apis/crds/**',
   'apis/kubernetes_apis/**',
@@ -364,10 +365,13 @@ export const translateCommand = new Command('translate')
     }
 
     // Get copy-only files using glob patterns
-    const copyOnlyFilePaths = await glob(COPY_ONLY_DIRECTORIES, {
-      absolute: true,
-      cwd: sourceDir,
-    })
+    const copyOnlyFilePaths = await glob(
+      config.translate?.copyOnlyDirectories ?? DEFAULT_COPY_ONLY_DIRECTORIES,
+      {
+        absolute: true,
+        cwd: sourceDir,
+      },
+    )
 
     const copyOnlyFilePathsSet = new Set(copyOnlyFilePaths)
 

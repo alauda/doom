@@ -44,7 +44,10 @@ export async function generateRuntimeModule<T, R = T>(
   mapper?: (input: T) => R | Promise<R>,
 ) {
   const runtimeModules: StringMapper = {}
-  const files = patterns.length ? await glob(patterns, { cwd }) : []
+  // `tinyglobby`/`fdir` return files in filesystem (readdir) order, which is
+  // not stable across machines. Sort so the map insertion order — and thus the
+  // "first matched wins" tie-break in the API components — is deterministic.
+  const files = (patterns.length ? await glob(patterns, { cwd }) : []).sort()
   for (const file of files) {
     const result = await resolveStaticConfig<T>(path.resolve(cwd, file))
     runtimeModules[`doom-@${kind}/${file}.mjs`] =
@@ -58,7 +61,10 @@ export async function generateRuntimeModule<T, R = T>(
     files
       .map((file, index) => `import _${index} from 'doom-@${kind}/${file}.mjs'`)
       .join('\n') +
-    `\nexport default {${files.map((file, index) => `'${path.relative(root, file)}':_${index}`).join(',')}}`
+    // `file` is relative to `cwd`; resolve it against `cwd` before making it
+    // relative to `root`, otherwise `path.relative` measures from
+    // `process.cwd()` and the key silently changes with the working directory.
+    `\nexport default {${files.map((file, index) => `'${path.relative(root, path.resolve(cwd, file))}':_${index}`).join(',')}}`
   return runtimeModules
 }
 

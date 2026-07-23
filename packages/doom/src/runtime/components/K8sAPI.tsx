@@ -1,8 +1,9 @@
 import crdsMap from 'doom-@api-crdsMap'
 import openapisMap from 'doom-@api-openapisMap'
+import virtual from 'doom-@api-virtual'
 import { useMemo } from 'react'
 
-import { resolveRef } from '../utils.js'
+import { resolveRef, selectCrdVersionName } from '../utils.js'
 
 import { K8sAPIEndpoints, type K8sAPIDefinition } from './_K8sAPIEndpoints.js'
 import { K8sAPISchema } from './_K8sAPISchema.js'
@@ -15,6 +16,12 @@ export interface K8sAPIProps {
   apiGroup?: string
   apiVersion?: string
   apiKind?: string
+  /**
+   * Override the resource's plural name in the endpoint paths. Only needed for
+   * OpenAPI-sourced resources whose plural cannot be read from a CRD; for CRD
+   * sources the plural comes from `spec.names.plural` automatically.
+   */
+  plural?: string
 }
 
 export const K8sAPI = ({
@@ -25,6 +32,7 @@ export const K8sAPI = ({
   apiGroup,
   apiVersion,
   apiKind,
+  plural,
 }: K8sAPIProps) => {
   const [, openapi] = useMemo(
     () =>
@@ -48,6 +56,24 @@ export const K8sAPI = ({
     [filepath, name],
   )
 
+  // The version this page renders: an explicit `apiVersion` prop wins,
+  // otherwise the version `kubectl` would resolve to (see `selectCrdVersionName`
+  // / `api.crdVersion`). Used consistently for the schema AND the endpoint
+  // paths so the two never disagree.
+  const resolvedVersion = useMemo(
+    () =>
+      crd
+        ? (apiVersion ??
+          selectCrdVersionName(crd.spec.versions, virtual.crdVersion))
+        : apiVersion,
+    [apiVersion, crd],
+  )
+
+  const versionDef = useMemo(
+    () => crd?.spec.versions.find((ver) => ver.name === resolvedVersion),
+    [crd, resolvedVersion],
+  )
+
   const schema = useMemo(() => {
     if (openapi) {
       return resolveRef(openapi, name)
@@ -57,19 +83,16 @@ export const K8sAPI = ({
       return
     }
 
-    const { versions } = crd.spec
-    const v = apiVersion ?? versions[0]?.name
-    const versionDef = versions.find((ver) => ver.name === v)
     if (!versionDef) {
       console.error(
-        `CRD ${name} does not have version ${v}, available versions: ${versions
+        `CRD ${name} does not have version ${resolvedVersion}, available versions: ${crd.spec.versions
           .map((ver) => ver.name)
           .join(', ')}`,
       )
       return
     }
     return versionDef.schema.openAPIV3Schema
-  }, [apiVersion, crd, name, openapi])
+  }, [crd, name, openapi, resolvedVersion, versionDef])
 
   const k8sApiDef = useMemo(() => {
     if (!schema) {
@@ -86,11 +109,11 @@ export const K8sAPI = ({
     if (crd) {
       return {
         group: crd.spec.group,
-        version: crd.spec.versions[0].name,
+        version: resolvedVersion ?? crd.spec.versions[0].name,
         kind: crd.spec.names.kind,
       }
     }
-  }, [crd, schema])
+  }, [crd, resolvedVersion, schema])
 
   if (!openapi && !crd) {
     console.error(
@@ -103,12 +126,18 @@ export const K8sAPI = ({
     <>
       <K8sAPISchema schema={schema} fullSchema={openapi} />
       <K8sAPIEndpoints
-        hasStatus={!!schema.properties?.status}
+        hasStatus={
+          crd ? !!versionDef?.subresources?.status : !!schema.properties?.status
+        }
+        hasScale={crd ? !!versionDef?.subresources?.scale : undefined}
         group={apiGroup ?? k8sApiDef?.group}
         version={apiVersion ?? k8sApiDef?.version ?? ''}
         kind={apiKind ?? k8sApiDef?.kind ?? ''}
+        plural={plural ?? crd?.spec.names.plural}
         pathPrefix={pathPrefix}
-        namespaced={namespaced}
+        namespaced={
+          namespaced ?? (crd ? crd.spec.scope === 'Namespaced' : undefined)
+        }
       />
     </>
   ) : null

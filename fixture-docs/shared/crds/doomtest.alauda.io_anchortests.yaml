@@ -1,0 +1,70 @@
+# FIXTURE for DOOM-11 (array `[]` anchor collides with parent property),
+#             DOOM-21 (x-kubernetes-int-or-string Type column is empty),
+#             DOOM-23 (`/scale` subresource endpoint never rendered).
+# Namespaced + pluralize-compatible + single served/storage version, so it does
+# NOT also trip DOOM-2/3/4 — it isolates the anchor / schema / scale defects.
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: anchortests.doomtest.alauda.io
+spec:
+  group: doomtest.alauda.io
+  scope: Namespaced
+  names:
+    kind: AnchorTest
+    listKind: AnchorTestList
+    plural: anchortests
+    singular: anchortest
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      subresources:
+        status: {}
+        scale:
+          specReplicasPath: .spec.replicas
+          statusReplicasPath: .status.replicas
+      schema:
+        openAPIV3Schema:
+          type: object
+          description: A fixture resource exercising anchors, IntOrString and scale.
+          properties:
+            spec:
+              type: object
+              description: Desired state.
+              properties:
+                replicas:
+                  type: integer
+                  description: Number of replicas.
+                port:
+                  x-kubernetes-int-or-string: true
+                  anyOf:
+                    - type: integer
+                    - type: string
+                  description: An IntOrString port (DOOM-21 — Type column must not be empty).
+                selector:
+                  type: object
+                  description: Label selector.
+                  properties:
+                    matchExpressions:
+                      type: array
+                      description: A list of selector requirements.
+                      items:
+                        type: object
+                        description: A single selector requirement.
+                        properties:
+                          key:
+                            type: string
+                            description: The label key.
+                          values:
+                            type: array
+                            description: An array of string values.
+                            items:
+                              type: string
+            status:
+              type: object
+              description: Observed state.
+              properties:
+                replicas:
+                  type: integer
+                  description: Observed replica count.

@@ -1,0 +1,64 @@
+{
+  "openapi": "3.0.0",
+  "info": { "title": "Doom API Fixture", "version": "1.0.0" },
+  "paths": {
+    "/test/foo": {
+      "get": {
+        "responses": { "200": { "description": "OK" } }
+      },
+      "post": {
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/WithReq" }
+            }
+          }
+        },
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
+    "/test/bar": {
+      "put": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/WithReq" }
+            }
+          }
+        },
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
+    "/test/baz": {
+      "post": {
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/NoReq" }
+            }
+          }
+        },
+        "responses": { "200": { "description": "OK" } }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "WithReq": {
+        "type": "object",
+        "required": ["bar"],
+        "properties": {
+          "bar": { "type": "string", "description": "A required property." }
+        }
+      },
+      "NoReq": {
+        "type": "object",
+        "properties": {
+          "baz": { "type": "string", "description": "An optional property." }
+        }
+      }
+    }
+  }
+}

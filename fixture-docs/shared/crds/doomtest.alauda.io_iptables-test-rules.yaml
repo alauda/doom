@@ -1,0 +1,31 @@
+# FIXTURE for DOOM-3 —— plural 无法由 pluralize(kind) 推导（连字符型，kube-ovn 同款）
+# pluralize('IptablesTestRule') => 'iptablestestrules'   ← doom 今天渲染这个，错
+# spec.names.plural              => 'iptables-test-rules' ← 修复后应渲染这个
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: iptables-test-rules.doomtest.alauda.io
+spec:
+  group: doomtest.alauda.io
+  scope: Namespaced
+  names:
+    kind: IptablesTestRule
+    listKind: IptablesTestRuleList
+    plural: iptables-test-rules
+    singular: iptables-test-rule
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          description: A hyphenated-plural fixture resource for doom API rendering tests.
+          properties:
+            spec:
+              type: object
+              description: Desired state.
+              properties:
+                rule:
+                  type: string
+                  description: The rule expression.
