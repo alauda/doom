@@ -64,7 +64,11 @@ lint:
     debugMode: true
     cspell:
       words:
+        - gvkless
+        - gvklessviews
         - openshiftpipelinesascodes
+        - statusful
+        - statusfulviews
         - tekton
         - tektonchains
         - tektonconfigs

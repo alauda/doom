@@ -43,12 +43,16 @@ Refer to [ArtifactCleanupRun](../apis/crds/ArtifactCleanupRun).
 ### `props`
 
 - `name`: Reference name under OpenAPI schema `definitions` (v2) or `components/schemas` (v3), or CRD `metadata.name`
-- `namespaced`: Indicates whether the resource is namespace-scoped; defaults to `true`, meaning the API Endpoints include the namespace path parameter `namespaces/{namespace}`
+- `namespaced`: Indicates whether the resource is namespace-scoped, i.e. whether the API Endpoints include the namespace path parameter `namespaces/{namespace}`. A CRD's `spec.scope` decides it when this is unset; OpenAPI sources do not carry a scope and default to `true`
 - `pathPrefix`: Can be used to override the global configuration `api.pathPrefix`
 - `filepath`: Similar to [specifying openapi path](#specified-openapi-path), used to specify a particular openapi or CRD file
 - `apiGroup`: Optional, specifies the API group; openapi will try to read the referenced `x-kubernetes-group-version-kind`, same below
-- `apiVersion`: Optional, specifies the API version; CRD defaults to using the first version in `spec.versions`
+- `apiVersion`: Optional, specifies the API version; a CRD defaults to the version `kubectl` resolves to — the highest-priority `served` version — which [`api.crdVersion`](./configuration#api) can change
 - `apiKind`: Optional, specifies the API resource kind
+- `plural`: Optional, the resource's plural name used in the endpoint paths. A CRD's `spec.names.plural` is read automatically; set this for OpenAPI sources whose plural is irregular, otherwise it is derived from the kind
+- `hasStatus`: Optional, whether the API server exposes a `status` subresource. A CRD's `subresources.status` decides it; for an OpenAPI source the routes listed in the document decide it. This prop overrides both
+
+An OpenAPI document that carries no `x-kubernetes-group-version-kind` — aggregation-layer documents routinely omit it — must have `apiVersion` and `apiKind` declared here, plus `apiGroup` outside the core group. Otherwise the group, version and kind cannot be derived: the API Endpoints section is omitted rather than built from empty path segments, and `doom lint` reports the page.
 
 ## Advanced API
 

@@ -1,8 +1,10 @@
 import crdsMap from 'doom-@api-crdsMap'
 import openapisMap from 'doom-@api-openapisMap'
 import virtual from 'doom-@api-virtual'
+import { plural as pluralize } from 'pluralize'
 import { useMemo } from 'react'
 
+import { declaresStatusSubresource } from '../api-paths.js'
 import { resolveRef, selectCrdVersionName } from '../utils.js'
 
 import { K8sAPIEndpoints, type K8sAPIDefinition } from './_K8sAPIEndpoints.js'
@@ -22,6 +24,13 @@ export interface K8sAPIProps {
    * sources the plural comes from `spec.names.plural` automatically.
    */
   plural?: string
+  /**
+   * Whether the API server exposes a `/status` subresource. Declared by the
+   * caller when the source cannot be trusted to answer — an aggregation-layer
+   * OpenAPI document may describe neither the subresource routes nor the
+   * resource's own routes.
+   */
+  hasStatus?: boolean
 }
 
 export const K8sAPI = ({
@@ -33,6 +42,7 @@ export const K8sAPI = ({
   apiVersion,
   apiKind,
   plural,
+  hasStatus,
 }: K8sAPIProps) => {
   const [, openapi] = useMemo(
     () =>
@@ -115,6 +125,39 @@ export const K8sAPI = ({
     }
   }, [crd, resolvedVersion, schema])
 
+  // The endpoint paths are built by concatenating group / version / plural. An
+  // unknown segment used to fall back to `''`, which concatenates into a
+  // silently broken path such as `/api//` — a guess dressed up as a fact. Merge
+  // the caller's props with whatever the fact sources yielded, then render the
+  // endpoints only if the result is actually complete.
+  const group = apiGroup ?? k8sApiDef?.group
+  const version = apiVersion ?? k8sApiDef?.version
+  const kind = apiKind ?? k8sApiDef?.kind
+
+  const pluralName =
+    plural ??
+    crd?.spec.names.plural ??
+    (kind ? pluralize(kind).toLowerCase() : undefined)
+
+  // `subresources.status` is the CRD's own declaration. An OpenAPI source has
+  // no such field, so the routes it lists are the next best fact; only when it
+  // lists none for this resource does the weaker "the schema has a `status`
+  // property" signal still apply (see `declaresStatusSubresource`).
+  const derivedHasStatus = useMemo(() => {
+    if (crd) {
+      return !!versionDef?.subresources?.status
+    }
+    if (!schema) {
+      return false
+    }
+    return (
+      declaresStatusSubresource(
+        Object.keys(openapi?.paths ?? {}),
+        pluralName,
+      ) ?? !!schema.properties?.status
+    )
+  }, [crd, openapi, pluralName, schema, versionDef])
+
   if (!openapi && !crd) {
     console.error(
       `No OpenAPI nor CustomResourceDefinition schema found for ${name}`,
@@ -122,23 +165,31 @@ export const K8sAPI = ({
     return null
   }
 
+  // `group` is legitimately absent for core-group resources (`/api/v1/...`);
+  // `version` and `kind` are not — without them there is no path to render.
+  const endpointDef = version && kind ? { group, version, kind } : undefined
+
+  if (schema && !endpointDef) {
+    console.error(
+      `Cannot resolve the group/version/kind of ${name}: its OpenAPI schema carries no \`x-kubernetes-group-version-kind\` extension and no CustomResourceDefinition defines it. Pass explicit \`apiVersion\` and \`apiKind\` props (plus \`apiGroup\` for non-core groups, and \`plural\` if the plural is irregular). Omitting the API endpoints section.`,
+    )
+  }
+
   return schema ? (
     <>
       <K8sAPISchema schema={schema} fullSchema={openapi} />
-      <K8sAPIEndpoints
-        hasStatus={
-          crd ? !!versionDef?.subresources?.status : !!schema.properties?.status
-        }
-        hasScale={crd ? !!versionDef?.subresources?.scale : undefined}
-        group={apiGroup ?? k8sApiDef?.group}
-        version={apiVersion ?? k8sApiDef?.version ?? ''}
-        kind={apiKind ?? k8sApiDef?.kind ?? ''}
-        plural={plural ?? crd?.spec.names.plural}
-        pathPrefix={pathPrefix}
-        namespaced={
-          namespaced ?? (crd ? crd.spec.scope === 'Namespaced' : undefined)
-        }
-      />
+      {endpointDef && (
+        <K8sAPIEndpoints
+          {...endpointDef}
+          hasStatus={hasStatus ?? derivedHasStatus}
+          hasScale={crd ? !!versionDef?.subresources?.scale : undefined}
+          plural={pluralName}
+          pathPrefix={pathPrefix}
+          namespaced={
+            namespaced ?? (crd ? crd.spec.scope === 'Namespaced' : undefined)
+          }
+        />
+      )}
     </>
   ) : null
 }
