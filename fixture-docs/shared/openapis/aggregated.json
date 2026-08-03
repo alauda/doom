@@ -1,0 +1,180 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Aggregated apiserver fixture",
+    "description": "Models an aggregation-layer OpenAPI document: schema keys are short names and no schema carries the group-version-kind extension, so a page has to declare the group, version and kind itself. GvklessView is routed without a status subresource; StatusfulView is routed with one. Both schemas carry a status property, which is state rather than an interface and therefore does not decide whether the subresource route exists.",
+    "version": "v1"
+  },
+  "paths": {
+    "/apis/doomtest.alauda.io/v1/namespaces/{namespace}/gvklessviews": {
+      "get": {
+        "operationId": "listGvklessView",
+        "summary": "List GvklessView objects",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/v1.GvklessView"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/apis/doomtest.alauda.io/v1/namespaces/{namespace}/gvklessviews/{name}": {
+      "get": {
+        "operationId": "readGvklessView",
+        "summary": "Read a GvklessView object",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/v1.GvklessView"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/apis/doomtest.alauda.io/v1/namespaces/{namespace}/statusfulviews": {
+      "get": {
+        "operationId": "listStatusfulView",
+        "summary": "List StatusfulView objects",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/v1.StatusfulView"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/apis/doomtest.alauda.io/v1/namespaces/{namespace}/statusfulviews/{name}": {
+      "get": {
+        "operationId": "readStatusfulView",
+        "summary": "Read a StatusfulView object",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/v1.StatusfulView"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/apis/doomtest.alauda.io/v1/namespaces/{namespace}/statusfulviews/{name}/status": {
+      "get": {
+        "operationId": "readStatusfulViewStatus",
+        "summary": "Read the status of a StatusfulView object",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/v1.StatusfulView"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "v1.GvklessView": {
+        "type": "object",
+        "description": "A resource served by an aggregated apiserver that publishes no group-version-kind extension.",
+        "properties": {
+          "apiVersion": {
+            "type": "string",
+            "description": "APIVersion defines the versioned schema of this representation of an object."
+          },
+          "kind": {
+            "type": "string",
+            "description": "Kind is a string value representing the REST resource this object represents."
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Standard object metadata."
+          },
+          "spec": {
+            "type": "object",
+            "description": "Spec defines the desired state of the view.",
+            "properties": {
+              "displayName": {
+                "type": "string",
+                "description": "DisplayName is the name shown in the console."
+              }
+            }
+          },
+          "status": {
+            "type": "object",
+            "description": "Status describes the observed state of the view. Its presence does not imply that a status subresource is routed.",
+            "properties": {
+              "phase": {
+                "type": "string",
+                "description": "Phase is the current lifecycle phase of the view."
+              }
+            }
+          }
+        }
+      },
+      "v1.StatusfulView": {
+        "type": "object",
+        "description": "A resource whose document routes a status subresource.",
+        "properties": {
+          "apiVersion": {
+            "type": "string",
+            "description": "APIVersion defines the versioned schema of this representation of an object."
+          },
+          "kind": {
+            "type": "string",
+            "description": "Kind is a string value representing the REST resource this object represents."
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Standard object metadata."
+          },
+          "spec": {
+            "type": "object",
+            "description": "Spec defines the desired state of the view.",
+            "properties": {
+              "displayName": {
+                "type": "string",
+                "description": "DisplayName is the name shown in the console."
+              }
+            }
+          },
+          "status": {
+            "type": "object",
+            "description": "Status describes the observed state of the view.",
+            "properties": {
+              "phase": {
+                "type": "string",
+                "description": "Phase is the current lifecycle phase of the view."
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

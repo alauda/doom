@@ -7,6 +7,7 @@ import type {
 } from 'mdast-util-mdx-jsx'
 import { glob } from 'tinyglobby'
 import { lintRule } from 'unified-lint-rule'
+import type { Node, Position } from 'unist'
 import { visitParents } from 'unist-util-visit-parents'
 
 import { resolveStaticConfig } from '../utils/helpers.ts'
@@ -24,12 +25,24 @@ import { getConfig } from './utils.ts'
  * lint time, before it ships silently.
  */
 
-interface ApiSources {
+export interface ApiSources {
   crdNames: Set<string>
   schemaNames: Set<string>
+  /**
+   * OpenAPI schema names that carry no `x-kubernetes-group-version-kind`
+   * extension. `<K8sAPI>` derives the endpoint paths' group/version/kind from
+   * that extension (or from a CRD); without either, the paths cannot be built
+   * from facts and the caller has to declare them via props.
+   */
+  schemaNamesWithoutGvk: Set<string>
   pathNames: Set<string>
   functionNames: Set<string>
 }
+
+const GVK_EXTENSION = 'x-kubernetes-group-version-kind'
+
+const hasGvk = (schema: unknown) =>
+  !!schema && typeof schema === 'object' && GVK_EXTENSION in schema
 
 let sourcesPromise: Promise<ApiSources> | undefined
 
@@ -56,6 +69,7 @@ const loadSources = async (): Promise<ApiSources> => {
 
   const crdNames = new Set<string>()
   const schemaNames = new Set<string>()
+  const schemaNamesWithGvk = new Set<string>()
   const pathNames = new Set<string>()
   const functionNames = new Set<string>()
 
@@ -79,14 +93,16 @@ const loadSources = async (): Promise<ApiSources> => {
     const components = doc.components as
       | { schemas?: Record<string, unknown> }
       | undefined
-    for (const key of Object.keys(components?.schemas ?? {})) {
-      schemaNames.add(key)
-    }
     // swagger 2.0 sources carry schemas under `definitions`.
-    for (const key of Object.keys(
-      (doc.definitions as Record<string, unknown> | undefined) ?? {},
-    )) {
+    const definitions = doc.definitions as Record<string, unknown> | undefined
+    for (const [key, schema] of [
+      ...Object.entries(components?.schemas ?? {}),
+      ...Object.entries(definitions ?? {}),
+    ]) {
       schemaNames.add(key)
+      if (hasGvk(schema)) {
+        schemaNamesWithGvk.add(key)
+      }
     }
     for (const key of Object.keys(
       (doc.paths as Record<string, unknown> | undefined) ?? {},
@@ -104,7 +120,20 @@ const loadSources = async (): Promise<ApiSources> => {
     }
   }
 
-  return { crdNames, schemaNames, pathNames, functionNames }
+  // A name defined in several sources counts as resolvable as long as *one* of
+  // them carries the extension — the runtime stops at the first source that
+  // resolves, so flagging the others would be a false positive.
+  const schemaNamesWithoutGvk = new Set(
+    [...schemaNames].filter((name) => !schemaNamesWithGvk.has(name)),
+  )
+
+  return {
+    crdNames,
+    schemaNames,
+    schemaNamesWithoutGvk,
+    pathNames,
+    functionNames,
+  }
 }
 
 /** Collect static string values from a JSX attribute (string, `{'x'}` or `{['a','b']}`). */
@@ -146,74 +175,121 @@ const attrOf = (
       attr.type === 'mdxJsxAttribute' && attr.name === name,
   )
 
+/**
+ * The rule's decision logic, separated from source loading so it can be
+ * exercised against hand-built {@link ApiSources} in tests.
+ */
+export const checkApiRefs = (
+  root: Root,
+  sources: ApiSources,
+  report: (
+    message: string,
+    place: Position | undefined,
+    ancestors: Node[],
+  ) => void,
+) => {
+  const {
+    crdNames,
+    schemaNames,
+    schemaNamesWithoutGvk,
+    pathNames,
+    functionNames,
+  } = sources
+
+  visitParents(
+    root,
+    ['mdxJsxFlowElement', 'mdxJsxTextElement'] as const,
+    (element, parents) => {
+      const reportAt = (message: string, attr?: MdxJsxAttribute) => {
+        report(message, (attr ?? element).position, [...parents, element])
+      }
+
+      switch (element.name) {
+        case 'K8sAPI':
+        case 'K8sCrd': {
+          const attr = attrOf(element, 'name')
+          const name = staticStrings(attr)[0]
+          if (!name) {
+            break
+          }
+          if (!crdNames.has(name) && !schemaNames.has(name)) {
+            reportAt(
+              `\`<${element.name}>\` references \`name="${name}"\`, which resolves to neither a CRD (\`api.crds\`) nor an OpenAPI schema (\`api.openapis\`). The page would render blank.`,
+              attr,
+            )
+            break
+          }
+          // The endpoint paths need a group/version/kind. It comes from the
+          // schema's `x-kubernetes-group-version-kind` extension, else from a
+          // CRD of the same name, else it has to be declared by the caller —
+          // aggregation-layer OpenAPI documents routinely ship without the
+          // extension. Without any of the three the endpoints section is
+          // dropped at render time, which a green build would otherwise hide.
+          if (
+            schemaNamesWithoutGvk.has(name) &&
+            !crdNames.has(name) &&
+            // A spread (`{...props}`) can carry the props unseen; do not guess.
+            !element.attributes.some(
+              (attribute) => attribute.type === 'mdxJsxExpressionAttribute',
+            ) &&
+            !(attrOf(element, 'apiVersion') && attrOf(element, 'apiKind'))
+          ) {
+            reportAt(
+              `\`<${element.name} name="${name}">\` resolves to an OpenAPI schema without the \`${GVK_EXTENSION}\` extension, and no CRD defines it, so its group/version/kind cannot be derived. Pass explicit \`apiVersion\` and \`apiKind\` props (plus \`apiGroup\` for non-core groups, and \`plural\` if the plural is irregular), or the API endpoints section is omitted.`,
+              attr,
+            )
+          }
+          break
+        }
+        case 'OpenAPIRef': {
+          const attr = attrOf(element, 'schema')
+          const name = staticStrings(attr)[0]
+          if (name && !schemaNames.has(name)) {
+            reportAt(
+              `\`<OpenAPIRef>\` references \`schema="${name}"\`, which is not defined in any \`api.openapis\` source.`,
+              attr,
+            )
+          }
+          break
+        }
+        case 'OpenAPIPath': {
+          const attr = attrOf(element, 'path')
+          for (const p of staticStrings(attr)) {
+            if (!pathNames.has(p)) {
+              reportAt(
+                `\`<OpenAPIPath>\` references \`path\` \`${p}\`, which is not defined in any \`api.openapis\` source.`,
+                attr,
+              )
+            }
+          }
+          break
+        }
+        case 'K8sPermissionTable': {
+          const attr = attrOf(element, 'functions')
+          for (const fn of staticStrings(attr)) {
+            if (!functionNames.has(fn)) {
+              reportAt(
+                `\`<K8sPermissionTable>\` references function \`${fn}\`, which is not a known FunctionResource (\`permission.functionresources\`). Its row would silently vanish.`,
+                attr,
+              )
+            }
+          }
+          break
+        }
+        default:
+          break
+      }
+    },
+  )
+}
+
 export const noUnresolvedApiRef = lintRule<Root>(
   'doom-lint:no-unresolved-api-ref',
   async (root, vfile) => {
-    const { crdNames, schemaNames, pathNames, functionNames } =
-      await (sourcesPromise ??= loadSources())
+    const sources = await (sourcesPromise ??= loadSources())
 
-    visitParents(
-      root,
-      ['mdxJsxFlowElement', 'mdxJsxTextElement'] as const,
-      (element, parents) => {
-        const report = (message: string, attr?: MdxJsxAttribute) =>
-          vfile.message(message, {
-            ancestors: [...parents, element],
-            place: (attr ?? element).position,
-          })
-
-        switch (element.name) {
-          case 'K8sAPI':
-          case 'K8sCrd': {
-            const attr = attrOf(element, 'name')
-            const name = staticStrings(attr)[0]
-            if (name && !crdNames.has(name) && !schemaNames.has(name)) {
-              report(
-                `\`<${element.name}>\` references \`name="${name}"\`, which resolves to neither a CRD (\`api.crds\`) nor an OpenAPI schema (\`api.openapis\`). The page would render blank.`,
-                attr,
-              )
-            }
-            break
-          }
-          case 'OpenAPIRef': {
-            const attr = attrOf(element, 'schema')
-            const name = staticStrings(attr)[0]
-            if (name && !schemaNames.has(name)) {
-              report(
-                `\`<OpenAPIRef>\` references \`schema="${name}"\`, which is not defined in any \`api.openapis\` source.`,
-                attr,
-              )
-            }
-            break
-          }
-          case 'OpenAPIPath': {
-            const attr = attrOf(element, 'path')
-            for (const p of staticStrings(attr)) {
-              if (!pathNames.has(p)) {
-                report(
-                  `\`<OpenAPIPath>\` references \`path\` \`${p}\`, which is not defined in any \`api.openapis\` source.`,
-                  attr,
-                )
-              }
-            }
-            break
-          }
-          case 'K8sPermissionTable': {
-            const attr = attrOf(element, 'functions')
-            for (const fn of staticStrings(attr)) {
-              if (!functionNames.has(fn)) {
-                report(
-                  `\`<K8sPermissionTable>\` references function \`${fn}\`, which is not a known FunctionResource (\`permission.functionresources\`). Its row would silently vanish.`,
-                  attr,
-                )
-              }
-            }
-            break
-          }
-          default:
-            break
-        }
-      },
+    checkApiRefs(root, sources, (message, place, ancestors) =>
+      vfile.message(message, { ancestors, place }),
     )
   },
 )

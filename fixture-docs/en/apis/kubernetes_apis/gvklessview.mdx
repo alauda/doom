@@ -1,0 +1,15 @@
+# GvklessView [doomtest.alauda.io/v1]
+
+The OpenAPI document behind this page carries no group-version-kind extension
+and no CRD defines the resource, so the group, version and kind cannot be
+derived — and this page declares none of them. The endpoints section is
+therefore expected to be absent rather than built out of empty path segments.
+Nothing below the schema should render.
+
+The `no-unresolved-api-ref` rule detects this (see its unit tests), but it is
+not reported when the component is the last node of the file, as it is here and
+on most real API pages: the eslint-mdx layer `doom lint` runs on drops messages
+anchored there. Keep the component last so this page keeps documenting the real
+shape.
+
+<K8sAPI name="v1.GvklessView" namespaced={false} />

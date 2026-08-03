@@ -43,6 +43,11 @@ api:
     v1alpha1.CodeQualityBranch: /apis/references/CodeQualityBranch#v1alpha1.CodeQualityBranch
   # 可选，API 文档路径前缀，如果当前业务使用 gateway 等代理服务，可以配置此项
   pathPrefix: /apis
+  # 可选，页面未传 `apiVersion` prop 时，多版本 CRD 默认渲染哪个版本
+  # `preferred`（默认）：`kubectl` 会解析到的版本，即 `served` 版本中优先级最高的那个
+  # `storage`：etcd 存储版本（`storage: true`）
+  # `first`：旧行为——`spec.versions[0]`，即使它没有 served
+  crdVersion: preferred
 ```
 
 文档编写参考 [API 文档](./api)

@@ -1,0 +1,19 @@
+# GvklessView, declared [doomtest.alauda.io/v1]
+
+The same schema, with the group, version and kind supplied by the page. The
+endpoints render from those props, and the props win over the document: the
+document routes the resource under a namespace, while this page declares the
+resource cluster-scoped.
+
+The status subresource is expected to be absent, because the document routes
+this resource but no status route for it — the schema's status property alone
+does not put one there.
+
+<K8sAPI
+  name="v1.GvklessView"
+  apiGroup="doomtest.alauda.io"
+  apiVersion="v1"
+  apiKind="GvklessView"
+  plural="gvklessviews"
+  namespaced={false}
+/>
