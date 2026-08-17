@@ -2,7 +2,7 @@
 
 ## [#](#pluginsv1alpha1templateprojects)/plugins/v1alpha1/template/projects
 
-### [#](#listprojects)`get` ListProjects
+### [#](#get-listprojects)`get` ListProjects
 
 #### [#](#parameters)Parameters
 
@@ -17,7 +17,7 @@
 
 - `200` [ProjectList](#v1alpha1.ProjectList): OK
 
-### [#](#createproject)`post` CreateProject
+### [#](#post-createproject)`post` CreateProject
 
 #### [#](#request-body)Request Body
 

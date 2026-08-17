@@ -2,7 +2,7 @@
 
 ## [#](#platformloggingalaudaiov2logsaggregation)/platform/logging.alauda.io/v2/logs/aggregation
 
-### [#](#log-aggregation)`get` Log Aggregation
+### [#](#get-log-aggregation)`get` Log Aggregation
 
 Aggregate logs into buckets for chart display with authentication.
 
@@ -62,7 +62,7 @@ Aggregate logs into buckets for chart display with authentication.
 
 ## [#](#platformloggingalaudaiov2clustersclusterlogsaggregation)/platform/logging.alauda.io/v2/clusters/{cluster}/logs/aggregation
 
-### [#](#log-aggregation-by-cluster)`get` Log Aggregation by Cluster
+### [#](#get-log-aggregation-by-cluster)`get` Log Aggregation by Cluster
 
 Aggregate logs by cluster into buckets with authentication.
 
@@ -122,7 +122,7 @@ Aggregate logs by cluster into buckets with authentication.
 
 ## [#](#platformloggingalaudaiov2projectsprojectclustersclusternamespacesnamespacelogsaggregation)/platform/logging.alauda.io/v2/projects/{project}/clusters/{cluster}/namespaces/{namespace}/logs/aggregation
 
-### [#](#log-aggregation-by-project-cluster-and-namespace)`get` Log Aggregation by Project, Cluster and Namespace
+### [#](#get-log-aggregation-by-project-cluster-and-namespace)`get` Log Aggregation by Project, Cluster and Namespace
 
 Aggregate logs within a specific project, cluster, and namespace into buckets with authentication.
 

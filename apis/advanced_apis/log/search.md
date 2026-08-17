@@ -2,11 +2,11 @@
 
 ## [#](#platformloggingalaudaiov2logssearch)/platform/logging.alauda.io/v2/logs/search
 
-### [#](#log-search)`get` Log Search
+### [#](#get-log-search)`get` Log Search
 
 Search logs with authentication.
 
-#### [#](#parameters)Parameters
+#### [#](#参数)参数
 
 - `start` (*in query*): `number` required Start time of the time range.
 
@@ -60,7 +60,7 @@ Search logs with authentication.
 
 
 
-#### [#](#response)Response
+#### [#](#响应)响应
 
 - `200` `object`: Successful log search response*Properties:*- `items`: `[][LogEntry](#LogEntry)`
 
@@ -68,11 +68,11 @@ Search logs with authentication.
 
 ## [#](#platformloggingalaudaiov2clustersclusterlogssearch)/platform/logging.alauda.io/v2/clusters/{cluster}/logs/search
 
-### [#](#log-search-by-cluster)`get` Log Search by Cluster
+### [#](#get-log-search-by-cluster)`get` Log Search by Cluster
 
 Search logs by cluster with authentication.
 
-#### [#](#parameters-1)Parameters
+#### [#](#参数-1)参数
 
 - `cluster` (*in path*): `string` required Name of the cluster.
 
@@ -126,7 +126,7 @@ Search logs by cluster with authentication.
 
 
 
-#### [#](#response-1)Response
+#### [#](#响应-1)响应
 
 - `200` `object`: Successful log search response*Properties:*- `items`: `[][LogEntry](#LogEntry)`
 
@@ -134,11 +134,11 @@ Search logs by cluster with authentication.
 
 ## [#](#platformloggingalaudaiov2projectsprojectclustersclusternamespacesnamespacelogssearch)/platform/logging.alauda.io/v2/projects/{project}/clusters/{cluster}/namespaces/{namespace}/logs/search
 
-### [#](#log-search-by-project-cluster-and-namespace)`get` Log Search by Project, Cluster and Namespace
+### [#](#get-log-search-by-project-cluster-and-namespace)`get` Log Search by Project, Cluster and Namespace
 
 Search logs within a specific project, cluster, and namespace with authentication.
 
-#### [#](#parameters-2)Parameters
+#### [#](#参数-2)参数
 
 - `project` (*in path*): `string` required Name of the project.
 
@@ -198,7 +198,7 @@ Search logs within a specific project, cluster, and namespace with authenticatio
 
 
 
-#### [#](#response-2)Response
+#### [#](#响应-2)响应
 
 - `200` `object`: Successful log search response*Properties:*- `items`: `[][LogEntry](#LogEntry)`
 

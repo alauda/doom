@@ -2,7 +2,7 @@
 
 ## [#](#gitopsv1projectprojectapplicationsets)/gitops/v1/project/{project}/applicationsets
 
-### [#](#list-applicationsets-in-a-project)`get` List applicationsets in a project
+### [#](#get-list-applicationsets-in-a-project)`get` List applicationsets in a project
 
 #### [#](#parameters)Parameters
 
@@ -26,7 +26,7 @@
 
 - `200` [ApplicationSetList](#v1alpha1.ApplicationSetList): success
 
-### [#](#create-an-applicationset-in-a-project)`post` Create an applicationset in a project
+### [#](#post-create-an-applicationset-in-a-project)`post` Create an applicationset in a project
 
 #### [#](#parameters-1)Parameters
 
@@ -47,7 +47,7 @@
 
 ## [#](#gitopsv1projectprojectapplicationsetsname)/gitops/v1/project/{project}/applicationsets/{name}
 
-### [#](#get-an-applicationset-in-a-project)`get` Get an applicationset in a project
+### [#](#get-get-an-applicationset-in-a-project)`get` Get an applicationset in a project
 
 #### [#](#parameters-2)Parameters
 
@@ -65,7 +65,7 @@
 
 - `200` [ApplicationSet](#v1alpha1.ApplicationSet): success
 
-### [#](#update-an-applicationset-in-a-project)`put` Update an applicationset in a project
+### [#](#put-update-an-applicationset-in-a-project)`put` Update an applicationset in a project
 
 #### [#](#parameters-3)Parameters
 
@@ -87,7 +87,7 @@
 
 - `200` [ApplicationSet](#v1alpha1.ApplicationSet): success
 
-### [#](#delete-an-applicationset-in-a-project)`delete` Delete an applicationset in a project
+### [#](#delete-delete-an-applicationset-in-a-project)`delete` Delete an applicationset in a project
 
 #### [#](#parameters-4)Parameters
 
@@ -107,7 +107,7 @@
 
 ## [#](#gitopsv1projectprojectapplicationsetsnameapplications)/gitops/v1/project/{project}/applicationsets/{name}/applications
 
-### [#](#list-applications-in-an-applicationset)`get` List applications in an applicationset
+### [#](#get-list-applications-in-an-applicationset)`get` List applications in an applicationset
 
 #### [#](#parameters-5)Parameters
 
@@ -127,7 +127,7 @@
 
 ## [#](#gitopsv1projectprojectapplicationsetsnameapplicationsapp_name)/gitops/v1/project/{project}/applicationsets/{name}/applications/{app_name}
 
-### [#](#get-an-application-in-an-applicationset)`get` Get an application in an applicationset
+### [#](#get-get-an-application-in-an-applicationset)`get` Get an application in an applicationset
 
 #### [#](#parameters-6)Parameters
 
@@ -148,7 +148,7 @@
 
 - `200` [Application](#v1alpha1.Application): success
 
-### [#](#delete-an-application-in-an-applicationset)`delete` Delete an application in an applicationset
+### [#](#delete-delete-an-application-in-an-applicationset)`delete` Delete an application in an applicationset
 
 #### [#](#parameters-7)Parameters
 
@@ -171,7 +171,7 @@
 
 ## [#](#gitopsv1projectprojectapplicationsetsnameapplicationsapp_namesync)/gitops/v1/project/{project}/applicationsets/{name}/applications/{app_name}/sync
 
-### [#](#sync-resources-of-application-in-an-applicationset)`post` Sync resources of application in an applicationset
+### [#](#post-sync-resources-of-application-in-an-applicationset)`post` Sync resources of application in an applicationset
 
 #### [#](#parameters-8)Parameters
 
@@ -194,7 +194,7 @@
 
 ## [#](#gitopsv1projectprojectapplicationsetsnameevents)/gitops/v1/project/{project}/applicationsets/{name}/events
 
-### [#](#query-events-of-an-applicationset-and-its-applications)`get` Query events of an applicationset and its applications
+### [#](#get-query-events-of-an-applicationset-and-its-applications)`get` Query events of an applicationset and its applications
 
 #### [#](#parameters-9)Parameters
 
@@ -238,7 +238,7 @@
 
 ## [#](#gitopsv1projectprojectapplicationsetsnameprometheusrules)/gitops/v1/project/{project}/applicationsets/{name}/prometheusrules
 
-### [#](#list-prometheus-rules-of-an-applicationset)`get` List prometheus rules of an applicationset
+### [#](#get-list-prometheus-rules-of-an-applicationset)`get` List prometheus rules of an applicationset
 
 #### [#](#parameters-10)Parameters
 
@@ -259,7 +259,7 @@
 
 - `200` [PrometheusList](#v1.PrometheusList): success
 
-### [#](#create-a-prometheus-rule-for-an-applicationset)`post` Create a prometheus rule for an applicationset
+### [#](#post-create-a-prometheus-rule-for-an-applicationset)`post` Create a prometheus rule for an applicationset
 
 #### [#](#parameters-11)Parameters
 
@@ -279,7 +279,7 @@
 
 ## [#](#gitopsv1projectprojectapplicationsetsnameprometheusrulesrule_name)/gitops/v1/project/{project}/applicationsets/{name}/prometheusrules/{rule_name}
 
-### [#](#get-a-prometheus-rule-of-an-applicationset)`get` Get a prometheus rule of an applicationset
+### [#](#get-get-a-prometheus-rule-of-an-applicationset)`get` Get a prometheus rule of an applicationset
 
 #### [#](#parameters-12)Parameters
 
@@ -300,7 +300,7 @@
 
 - `200` [PrometheusRule](#v1.PrometheusRule): success
 
-### [#](#update-a-prometheus-rule-of-an-applicationset)`put` Update a prometheus rule of an applicationset
+### [#](#put-update-a-prometheus-rule-of-an-applicationset)`put` Update a prometheus rule of an applicationset
 
 #### [#](#parameters-13)Parameters
 
@@ -321,7 +321,7 @@
 
 - `200` [PrometheusRule](#v1.PrometheusRule): success
 
-### [#](#delete-a-prometheus-rule-of-an-applicationset)`delete` Delete a prometheus rule of an applicationset
+### [#](#delete-delete-a-prometheus-rule-of-an-applicationset)`delete` Delete a prometheus rule of an applicationset
 
 #### [#](#parameters-14)Parameters
 
@@ -342,7 +342,7 @@
 
 - `204` : success
 
-### [#](#patch-a-prometheus-rule-of-an-applicationset)`patch` Patch a prometheus rule of an applicationset
+### [#](#patch-patch-a-prometheus-rule-of-an-applicationset)`patch` Patch a prometheus rule of an applicationset
 
 #### [#](#parameters-15)Parameters
 
@@ -365,7 +365,7 @@
 
 ## [#](#gitopsv1projectprojectapplicationsetsnamerefresh)/gitops/v1/project/{project}/applicationsets/{name}/refresh
 
-### [#](#refresh-all-applications-in-an-applicationset)`post` Refresh all applications in an applicationset
+### [#](#post-refresh-all-applications-in-an-applicationset)`post` Refresh all applications in an applicationset
 
 #### [#](#parameters-16)Parameters
 
@@ -385,7 +385,7 @@
 
 ## [#](#gitopsv1projectprojectapplicationsetsnamesync)/gitops/v1/project/{project}/applicationsets/{name}/sync
 
-### [#](#sync-all-applications-in-an-applicationset)`post` Sync all applications in an applicationset
+### [#](#post-sync-all-applications-in-an-applicationset)`post` Sync all applications in an applicationset
 
 #### [#](#parameters-17)Parameters
 
@@ -405,7 +405,7 @@
 
 ## [#](#gitopsv1projectprojectapplicationsetsnametopology)/gitops/v1/project/{project}/applicationsets/{name}/topology
 
-### [#](#get-subtopology-of-an-applicationset)`post` Get (sub)topology of an applicationset
+### [#](#post-get-subtopology-of-an-applicationset)`post` Get (sub)topology of an applicationset
 
 #### [#](#parameters-18)Parameters
 
@@ -421,7 +421,7 @@
 
 #### [#](#request-body-2)Request Body
 
-[Topology](#gitops.Topology)
+[Topology](#gitops.Topology)required
 
 #### [#](#response-18)Response
 

@@ -2,9 +2,9 @@
 
 ## [#](#gitopsv1projectprojectapplicationsets)/gitops/v1/project/{project}/applicationsets
 
-### [#](#list-applicationsets-in-a-project)`get` List applicationsets in a project
+### [#](#get-list-applicationsets-in-a-project)`get` List applicationsets in a project
 
-#### [#](#parameters)Parameters
+#### [#](#参数)参数
 
 - `Authorization` (*in header*): `string` Given Bearer token will use this as authorization for the API
 
@@ -22,13 +22,13 @@
 
 
 
-#### [#](#response)Response
+#### [#](#响应)响应
 
 - `200` [ApplicationSetList](#v1alpha1.ApplicationSetList): success
 
-### [#](#create-an-applicationset-in-a-project)`post` Create an applicationset in a project
+### [#](#post-create-an-applicationset-in-a-project)`post` Create an applicationset in a project
 
-#### [#](#parameters-1)Parameters
+#### [#](#参数-1)参数
 
 - `Authorization` (*in header*): `string` Given Bearer token will use this as authorization for the API
 
@@ -37,19 +37,19 @@
 
 
 
-#### [#](#request-body)Request Body
+#### [#](#请求体)请求体
 
 [ApplicationSet](#v1alpha1.ApplicationSet)required
 
-#### [#](#response-1)Response
+#### [#](#响应-1)响应
 
 - `201` [ApplicationSet](#v1alpha1.ApplicationSet): success
 
 ## [#](#gitopsv1projectprojectapplicationsetsname)/gitops/v1/project/{project}/applicationsets/{name}
 
-### [#](#get-an-applicationset-in-a-project)`get` Get an applicationset in a project
+### [#](#get-get-an-applicationset-in-a-project)`get` Get an applicationset in a project
 
-#### [#](#parameters-2)Parameters
+#### [#](#参数-2)参数
 
 - `Authorization` (*in header*): `string` Given Bearer token will use this as authorization for the API
 
@@ -61,13 +61,13 @@
 
 
 
-#### [#](#response-2)Response
+#### [#](#响应-2)响应
 
 - `200` [ApplicationSet](#v1alpha1.ApplicationSet): success
 
-### [#](#update-an-applicationset-in-a-project)`put` Update an applicationset in a project
+### [#](#put-update-an-applicationset-in-a-project)`put` Update an applicationset in a project
 
-#### [#](#parameters-3)Parameters
+#### [#](#参数-3)参数
 
 - `Authorization` (*in header*): `string` Given Bearer token will use this as authorization for the API
 
@@ -79,17 +79,17 @@
 
 
 
-#### [#](#request-body-1)Request Body
+#### [#](#请求体-1)请求体
 
 [ApplicationSet](#v1alpha1.ApplicationSet)required
 
-#### [#](#response-3)Response
+#### [#](#响应-3)响应
 
 - `200` [ApplicationSet](#v1alpha1.ApplicationSet): success
 
-### [#](#delete-an-applicationset-in-a-project)`delete` Delete an applicationset in a project
+### [#](#delete-delete-an-applicationset-in-a-project)`delete` Delete an applicationset in a project
 
-#### [#](#parameters-4)Parameters
+#### [#](#参数-4)参数
 
 - `Authorization` (*in header*): `string` Given Bearer token will use this as authorization for the API
 
@@ -101,15 +101,15 @@
 
 
 
-#### [#](#response-4)Response
+#### [#](#响应-4)响应
 
 - `204` : success
 
 ## [#](#gitopsv1projectprojectapplicationsetsnameapplications)/gitops/v1/project/{project}/applicationsets/{name}/applications
 
-### [#](#list-applications-in-an-applicationset)`get` List applications in an applicationset
+### [#](#get-list-applications-in-an-applicationset)`get` List applications in an applicationset
 
-#### [#](#parameters-5)Parameters
+#### [#](#参数-5)参数
 
 - `Authorization` (*in header*): `string` Given Bearer token will use this as authorization for the API
 
@@ -121,15 +121,15 @@
 
 
 
-#### [#](#response-5)Response
+#### [#](#响应-5)响应
 
 - `200` [ApplicationList](#v1alpha1.ApplicationList): success
 
 ## [#](#gitopsv1projectprojectapplicationsetsnameapplicationsapp_name)/gitops/v1/project/{project}/applicationsets/{name}/applications/{app_name}
 
-### [#](#get-an-application-in-an-applicationset)`get` Get an application in an applicationset
+### [#](#get-get-an-application-in-an-applicationset)`get` Get an application in an applicationset
 
-#### [#](#parameters-6)Parameters
+#### [#](#参数-6)参数
 
 - `Authorization` (*in header*): `string` Given Bearer token will use this as authorization for the API
 
@@ -144,13 +144,13 @@
 
 
 
-#### [#](#response-6)Response
+#### [#](#响应-6)响应
 
 - `200` [Application](#v1alpha1.Application): success
 
-### [#](#delete-an-application-in-an-applicationset)`delete` Delete an application in an applicationset
+### [#](#delete-delete-an-application-in-an-applicationset)`delete` Delete an application in an applicationset
 
-#### [#](#parameters-7)Parameters
+#### [#](#参数-7)参数
 
 - `Authorization` (*in header*): `string` Given Bearer token will use this as authorization for the API
 
@@ -165,15 +165,15 @@
 
 
 
-#### [#](#response-7)Response
+#### [#](#响应-7)响应
 
 - `204` : success
 
 ## [#](#gitopsv1projectprojectapplicationsetsnameapplicationsapp_namesync)/gitops/v1/project/{project}/applicationsets/{name}/applications/{app_name}/sync
 
-### [#](#sync-resources-of-application-in-an-applicationset)`post` Sync resources of application in an applicationset
+### [#](#post-sync-resources-of-application-in-an-applicationset)`post` Sync resources of application in an applicationset
 
-#### [#](#parameters-8)Parameters
+#### [#](#参数-8)参数
 
 - `Authorization` (*in header*): `string` Given Bearer token will use this as authorization for the API
 
@@ -188,15 +188,15 @@
 
 
 
-#### [#](#response-8)Response
+#### [#](#响应-8)响应
 
 - `204` : success
 
 ## [#](#gitopsv1projectprojectapplicationsetsnameevents)/gitops/v1/project/{project}/applicationsets/{name}/events
 
-### [#](#query-events-of-an-applicationset-and-its-applications)`get` Query events of an applicationset and its applications
+### [#](#get-query-events-of-an-applicationset-and-its-applications)`get` Query events of an applicationset and its applications
 
-#### [#](#parameters-9)Parameters
+#### [#](#参数-9)参数
 
 - `Authorization` (*in header*): `string` Given Bearer token will use this as authorization for the API
 
@@ -232,15 +232,15 @@
 
 
 
-#### [#](#response-9)Response
+#### [#](#响应-9)响应
 
 - `200` : success
 
 ## [#](#gitopsv1projectprojectapplicationsetsnameprometheusrules)/gitops/v1/project/{project}/applicationsets/{name}/prometheusrules
 
-### [#](#list-prometheus-rules-of-an-applicationset)`get` List prometheus rules of an applicationset
+### [#](#get-list-prometheus-rules-of-an-applicationset)`get` List prometheus rules of an applicationset
 
-#### [#](#parameters-10)Parameters
+#### [#](#参数-10)参数
 
 - `Authorization` (*in header*): `string` Given Bearer token will use this as authorization for the API
 
@@ -255,13 +255,13 @@
 
 
 
-#### [#](#response-10)Response
+#### [#](#响应-10)响应
 
 - `200` [PrometheusList](#v1.PrometheusList): success
 
-### [#](#create-a-prometheus-rule-for-an-applicationset)`post` Create a prometheus rule for an applicationset
+### [#](#post-create-a-prometheus-rule-for-an-applicationset)`post` Create a prometheus rule for an applicationset
 
-#### [#](#parameters-11)Parameters
+#### [#](#参数-11)参数
 
 - `Authorization` (*in header*): `string` Given Bearer token will use this as authorization for the API
 
@@ -273,15 +273,15 @@
 
 
 
-#### [#](#response-11)Response
+#### [#](#响应-11)响应
 
 - `201` [PrometheusRule](#v1.PrometheusRule): success
 
 ## [#](#gitopsv1projectprojectapplicationsetsnameprometheusrulesrule_name)/gitops/v1/project/{project}/applicationsets/{name}/prometheusrules/{rule_name}
 
-### [#](#get-a-prometheus-rule-of-an-applicationset)`get` Get a prometheus rule of an applicationset
+### [#](#get-get-a-prometheus-rule-of-an-applicationset)`get` Get a prometheus rule of an applicationset
 
-#### [#](#parameters-12)Parameters
+#### [#](#参数-12)参数
 
 - `Authorization` (*in header*): `string` Given Bearer token will use this as authorization for the API
 
@@ -296,13 +296,13 @@
 
 
 
-#### [#](#response-12)Response
+#### [#](#响应-12)响应
 
 - `200` [PrometheusRule](#v1.PrometheusRule): success
 
-### [#](#update-a-prometheus-rule-of-an-applicationset)`put` Update a prometheus rule of an applicationset
+### [#](#put-update-a-prometheus-rule-of-an-applicationset)`put` Update a prometheus rule of an applicationset
 
-#### [#](#parameters-13)Parameters
+#### [#](#参数-13)参数
 
 - `Authorization` (*in header*): `string` Given Bearer token will use this as authorization for the API
 
@@ -317,13 +317,13 @@
 
 
 
-#### [#](#response-13)Response
+#### [#](#响应-13)响应
 
 - `200` [PrometheusRule](#v1.PrometheusRule): success
 
-### [#](#delete-a-prometheus-rule-of-an-applicationset)`delete` Delete a prometheus rule of an applicationset
+### [#](#delete-delete-a-prometheus-rule-of-an-applicationset)`delete` Delete a prometheus rule of an applicationset
 
-#### [#](#parameters-14)Parameters
+#### [#](#参数-14)参数
 
 - `Authorization` (*in header*): `string` Given Bearer token will use this as authorization for the API
 
@@ -338,13 +338,13 @@
 
 
 
-#### [#](#response-14)Response
+#### [#](#响应-14)响应
 
 - `204` : success
 
-### [#](#patch-a-prometheus-rule-of-an-applicationset)`patch` Patch a prometheus rule of an applicationset
+### [#](#patch-patch-a-prometheus-rule-of-an-applicationset)`patch` Patch a prometheus rule of an applicationset
 
-#### [#](#parameters-15)Parameters
+#### [#](#参数-15)参数
 
 - `Authorization` (*in header*): `string` Given Bearer token will use this as authorization for the API
 
@@ -359,15 +359,15 @@
 
 
 
-#### [#](#response-15)Response
+#### [#](#响应-15)响应
 
 - `200` [PrometheusRule](#v1.PrometheusRule): success
 
 ## [#](#gitopsv1projectprojectapplicationsetsnamerefresh)/gitops/v1/project/{project}/applicationsets/{name}/refresh
 
-### [#](#refresh-all-applications-in-an-applicationset)`post` Refresh all applications in an applicationset
+### [#](#post-refresh-all-applications-in-an-applicationset)`post` Refresh all applications in an applicationset
 
-#### [#](#parameters-16)Parameters
+#### [#](#参数-16)参数
 
 - `Authorization` (*in header*): `string` Given Bearer token will use this as authorization for the API
 
@@ -379,15 +379,15 @@
 
 
 
-#### [#](#response-16)Response
+#### [#](#响应-16)响应
 
 - `204` : success
 
 ## [#](#gitopsv1projectprojectapplicationsetsnamesync)/gitops/v1/project/{project}/applicationsets/{name}/sync
 
-### [#](#sync-all-applications-in-an-applicationset)`post` Sync all applications in an applicationset
+### [#](#post-sync-all-applications-in-an-applicationset)`post` Sync all applications in an applicationset
 
-#### [#](#parameters-17)Parameters
+#### [#](#参数-17)参数
 
 - `Authorization` (*in header*): `string` Given Bearer token will use this as authorization for the API
 
@@ -399,15 +399,15 @@
 
 
 
-#### [#](#response-17)Response
+#### [#](#响应-17)响应
 
 - `204` : success
 
 ## [#](#gitopsv1projectprojectapplicationsetsnametopology)/gitops/v1/project/{project}/applicationsets/{name}/topology
 
-### [#](#get-subtopology-of-an-applicationset)`post` Get (sub)topology of an applicationset
+### [#](#post-get-subtopology-of-an-applicationset)`post` Get (sub)topology of an applicationset
 
-#### [#](#parameters-18)Parameters
+#### [#](#参数-18)参数
 
 - `Authorization` (*in header*): `string` Given Bearer token will use this as authorization for the API
 
@@ -419,11 +419,11 @@
 
 
 
-#### [#](#request-body-2)Request Body
+#### [#](#请求体-2)请求体
 
-[Topology](#gitops.Topology)
+[Topology](#gitops.Topology)required
 
-#### [#](#response-18)Response
+#### [#](#响应-18)响应
 
 - `204` [ApplicationSetTopology](#gitops.ApplicationSetTopology): success
 

@@ -2,7 +2,7 @@
 
 ## [#](#platformeventsalaudaiov1events)/platform/events.alauda.io/v1/events
 
-### [#](#retrieve-kubernetes-events)`get` Retrieve Kubernetes events
+### [#](#get-retrieve-kubernetes-events)`get` Retrieve Kubernetes events
 
 Retrieve the k8s events using query parameters.
 
@@ -48,7 +48,7 @@ Retrieve the k8s events using query parameters.
 
 ## [#](#platformeventsalaudaiov1projectsprojectclustersclusternamespacesnamespaceevents)/platform/events.alauda.io/v1/projects/{project}/clusters/{cluster}/namespaces/{namespace}/events
 
-### [#](#retrieve-kubernetes-events-for-a-specific-project-and-namespace)`get` Retrieve Kubernetes events for a specific project and namespace
+### [#](#get-retrieve-kubernetes-events-for-a-specific-project-and-namespace)`get` Retrieve Kubernetes events for a specific project and namespace
 
 Retrieve the k8s events with a business view. For these requests, the cluster, project, and namespace fields must be provided.
 

@@ -38,6 +38,11 @@ api:
     v1alpha1.CodeQualityBranch: /apis/references/CodeQualityBranch#v1alpha1.CodeQualityBranch
   # Optional, API documentation path prefix. If the current business uses gateway or other proxy services, this can be configured
   pathPrefix: /apis
+  # Optional, which version of a multi-version CRD a page renders when it passes no `apiVersion` prop
+  # `preferred` (default): the version `kubectl` resolves to — the highest-priority `served` version
+  # `storage`: the etcd storage version (`storage: true`)
+  # `first`: legacy behavior — `spec.versions[0]`, even when it is not served
+  crdVersion: preferred
 ```
 
 Refer to [API Documentation](/en/usage/api.md) for writing documentation.

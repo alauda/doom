@@ -2,7 +2,7 @@
 
 ## [#](#platformloggingalaudaiov2logssearch)/platform/logging.alauda.io/v2/logs/search
 
-### [#](#log-search)`get` Log Search
+### [#](#get-log-search)`get` Log Search
 
 Search logs with authentication.
 
@@ -68,7 +68,7 @@ Search logs with authentication.
 
 ## [#](#platformloggingalaudaiov2clustersclusterlogssearch)/platform/logging.alauda.io/v2/clusters/{cluster}/logs/search
 
-### [#](#log-search-by-cluster)`get` Log Search by Cluster
+### [#](#get-log-search-by-cluster)`get` Log Search by Cluster
 
 Search logs by cluster with authentication.
 
@@ -134,7 +134,7 @@ Search logs by cluster with authentication.
 
 ## [#](#platformloggingalaudaiov2projectsprojectclustersclusternamespacesnamespacelogssearch)/platform/logging.alauda.io/v2/projects/{project}/clusters/{cluster}/namespaces/{namespace}/logs/search
 
-### [#](#log-search-by-project-cluster-and-namespace)`get` Log Search by Project, Cluster and Namespace
+### [#](#get-log-search-by-project-cluster-and-namespace)`get` Log Search by Project, Cluster and Namespace
 
 Search logs within a specific project, cluster, and namespace with authentication.
 

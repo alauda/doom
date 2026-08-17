@@ -2,9 +2,9 @@
 
 ## [#](#pluginsv1alpha1templatecodequalitytasktask-idsummary)/plugins/v1alpha1/template/codeQuality/task/{task-id}/summary
 
-### [#](#getsummarybytaskid)`get` GetSummaryByTaskID
+### [#](#get-getsummarybytaskid)`get` GetSummaryByTaskID
 
-#### [#](#parameters)Parameters
+#### [#](#参数)参数
 
 - `task-id` (*in path*): `string` required code scan task id
 
@@ -19,7 +19,7 @@
 
 
 
-#### [#](#response)Response
+#### [#](#响应)响应
 
 - `200` [CodeQualityTaskMetrics](#v1alpha1.CodeQualityTaskMetrics): OK
 

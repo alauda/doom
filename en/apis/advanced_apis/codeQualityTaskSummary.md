@@ -2,7 +2,7 @@
 
 ## [#](#pluginsv1alpha1templatecodequalitytasktask-idsummary)/plugins/v1alpha1/template/codeQuality/task/{task-id}/summary
 
-### [#](#getsummarybytaskid)`get` GetSummaryByTaskID
+### [#](#get-getsummarybytaskid)`get` GetSummaryByTaskID
 
 #### [#](#parameters)Parameters
 

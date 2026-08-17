@@ -2,11 +2,11 @@
 
 ## [#](#platformeventsalaudaiov1events)/platform/events.alauda.io/v1/events
 
-### [#](#retrieve-kubernetes-events)`get` Retrieve Kubernetes events
+### [#](#get-retrieve-kubernetes-events)`get` Retrieve Kubernetes events
 
 Retrieve the k8s events using query parameters.
 
-#### [#](#parameters)Parameters
+#### [#](#参数)参数
 
 - `start_time` (*in query*): `number` required Required: Unix timestamp for start time.
 
@@ -42,17 +42,17 @@ Retrieve the k8s events using query parameters.
 
 
 
-#### [#](#response)Response
+#### [#](#响应)响应
 
 - `200` [EventsResponse](#EventsResponse): Successful retrieval of events.
 
 ## [#](#platformeventsalaudaiov1projectsprojectclustersclusternamespacesnamespaceevents)/platform/events.alauda.io/v1/projects/{project}/clusters/{cluster}/namespaces/{namespace}/events
 
-### [#](#retrieve-kubernetes-events-for-a-specific-project-and-namespace)`get` Retrieve Kubernetes events for a specific project and namespace
+### [#](#get-retrieve-kubernetes-events-for-a-specific-project-and-namespace)`get` Retrieve Kubernetes events for a specific project and namespace
 
 Retrieve the k8s events with a business view. For these requests, the cluster, project, and namespace fields must be provided.
 
-#### [#](#parameters-1)Parameters
+#### [#](#参数-1)参数
 
 - `projectName` (*in path*): `string` required Required: Name of the project.
 
@@ -91,7 +91,7 @@ Retrieve the k8s events with a business view. For these requests, the cluster, p
 
 
 
-#### [#](#response-1)Response
+#### [#](#响应-1)响应
 
 - `200` [EventsResponse](#EventsResponse): Successful retrieval of events.
 

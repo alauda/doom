@@ -38,12 +38,16 @@
 ### `props`
 
 - `name`: OpenAPI schema `definitions`(v2) or `components/schemas`(v3) 下的引用名称或CRD `metadata.name`
-- `namespaced`: 指示资源是否为命名空间级别，默认为 `true`，即 API Endpoints 是否包含命名空间路径参数 `namespaces/{namespace}`
+- `namespaced`: 指示资源是否为命名空间级别，即 API Endpoints 是否包含命名空间路径参数 `namespaces/{namespace}`。未指定时由 CRD 的 `spec.scope` 决定；OpenAPI 源不携带 scope，默认为 `true`
 - `pathPrefix`: 可以用于覆盖全局配置中的 `api.pathPrefix`
 - `filepath`: 类似[指定 openapi 路径](#specified-openapi-path)，用于指定特定的 openapi 或 CRD 文件
 - `apiGroup`: 可选，指定 API 组，openapi 会尝试读取引用的 `x-kubernetes-group-version-kind`，下同
-- `apiVersion`: 可选，指定 API 版本，CRD 会默认使用 `spec.versions` 中第一个版本
+- `apiVersion`: 可选，指定 API 版本；CRD 默认使用 `kubectl` 会解析到的版本，即 `served` 版本中优先级最高的那个，可通过 [`api.crdVersion`](/usage/configuration.md#api) 更改
 - `apiKind`: 可选，指定 API 资源类型
+- `plural`: 可选，端点路径中使用的资源复数名。CRD 会自动读取 `spec.names.plural`；OpenAPI 源的复数形式不规则时需要指定，否则由 kind 推导
+- `hasStatus`: 可选，API server 是否暴露 `status` 子资源。CRD 由 `subresources.status` 决定，OpenAPI 源由文档中登记的路由决定，本 prop 可覆盖两者
+
+如果 OpenAPI 文档不带 `x-kubernetes-group-version-kind`（聚合层 apiserver 的文档普遍不带），必须在此显式声明 `apiVersion` 与 `apiKind`，非 core 组还需 `apiGroup`。否则无法推导出 group/version/kind：API Endpoints 段会整段省略，而不是用空路径段拼出来，同时 `doom lint` 会报告该页面。
 
 ## 高级 API
 

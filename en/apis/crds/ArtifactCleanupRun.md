@@ -1,6 +1,6 @@
 # ArtifactCleanupRun
 
-DescriptionArtifactCleanupRun is the Schema for the artifactcleanupruns APIType`object`## Specification
+DescriptionArtifactCleanupRun is the Schema for the artifactcleanupruns APIType`object`## [#](#specification)Specification
 
 | Property | Type | Description |
 | --- | --- | --- |
@@ -17,7 +17,7 @@ More info: [https://git.k8s.io/community/contributors/devel/sig-architecture/api
 | `spec` | `object` | ArtifactCleanupRunSpec defines the desired state of ArtifactCleanupRun |
 | `status` | `object` | ArtifactCleanupRunStatus defines the observed state of ArtifactCleanupRun |
 
-### .spec
+### [#](#spec).spec
 
 DescriptionArtifactCleanupRunSpec defines the desired state of ArtifactCleanupRunType`object`| Property | Type | Description |
 | --- | --- | --- |
@@ -26,7 +26,7 @@ DescriptionArtifactCleanupRunSpec defines the desired state of ArtifactCleanupRu
 | `dryRun` | `boolean` | `True` means that the simulation runs without performing specific cleanup operations. |
 | `status` | `string` | Status Used for cancelling a ArtifactCleanupRun (and maybe more later on) |
 
-### .spec.artifactCleanupRef
+### [#](#specartifactcleanupref).spec.artifactCleanupRef
 
 DescriptionReference to an existing ArtifactCleanupType`object`| Property | Type | Description |
 | --- | --- | --- |
@@ -50,7 +50,7 @@ More info: [https://git.k8s.io/community/contributors/devel/sig-architecture/api
 | `uid` | `string` | UID of the referent.
 More info: [https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids) |
 
-### .spec.artifactCleanupSpec
+### [#](#specartifactcleanupspec).spec.artifactCleanupSpec
 
 DescriptionIn-line spec for ArtifactCleanup. This options is mutually exclusive with artifactCleanupRef.Type`object`| Property | Type | Description |
 | --- | --- | --- |
@@ -63,7 +63,7 @@ It only calculates already completed items |
 | `resource` | `object` | Resources array of predefined resources to be used |
 | `triggers` | `object` | all triggers defined for triggering current artifactcleanup |
 
-### .spec.artifactCleanupSpec.address
+### [#](#specartifactcleanupspecaddress).spec.artifactCleanupSpec.address
 
 DescriptionAddress stores the integrated service API addressType`object`| Property | Type | Description |
 | --- | --- | --- |
@@ -72,7 +72,7 @@ according to [https://www.rfc-editor.org/rfc/rfc7468](https://www.rfc-editor.org
 | `name` | `string` | Name is the name of the address. |
 | `url` | `string` |  |
 
-### .spec.artifactCleanupSpec.historyLimits
+### [#](#specartifactcleanupspechistorylimits).spec.artifactCleanupSpec.historyLimits
 
 DescriptionHistoryLimits limits the number of executed items are preserved
 It only calculates already completed itemsType`object`| Property | Type | Description |
@@ -80,7 +80,7 @@ It only calculates already completed itemsType`object`| Property | Type | Descri
 | `count` | `integer` | Sets a hard count for all finished items
 to be cleared from storage |
 
-### .spec.artifactCleanupSpec.integrationRef
+### [#](#specartifactcleanupspecintegrationref).spec.artifactCleanupSpec.integrationRef
 
 DescriptionReference to specific integration that contains the tool API define.Type`object`| Property | Type | Description |
 | --- | --- | --- |
@@ -104,9 +104,9 @@ More info: [https://git.k8s.io/community/contributors/devel/sig-architecture/api
 | `uid` | `string` | UID of the referent.
 More info: [https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids) |
 
-### .spec.artifactCleanupSpec.policies
+### [#](#specartifactcleanupspecpolicies).spec.artifactCleanupSpec.policies
 
-DescriptionList of strategies.Type`array`### .spec.artifactCleanupSpec.policies[]
+DescriptionList of strategies.Type`array`### [#](#specartifactcleanupspecpolicies-1).spec.artifactCleanupSpec.policies[]
 
 DescriptionPolicy A detailed description of the policy, including warehouse, cleanup rules, and retention rules.Type`object`| Property | Type | Description |
 | --- | --- | --- |
@@ -114,9 +114,9 @@ DescriptionPolicy A detailed description of the policy, including warehouse, cle
 | `repository` | `object` | A list of Repository to match. Regular expressions are supported. |
 | `retentionRules` | `array` | Retention a list of rules. |
 
-### .spec.artifactCleanupSpec.policies[].cleanupRules
+### [#](#specartifactcleanupspecpoliciescleanuprules).spec.artifactCleanupSpec.policies[].cleanupRules
 
-DescriptionClean up the list of rules.Type`array`### .spec.artifactCleanupSpec.policies[].cleanupRules[]
+DescriptionClean up the list of rules.Type`array`### [#](#specartifactcleanupspecpoliciescleanuprules-1).spec.artifactCleanupSpec.policies[].cleanupRules[]
 
 DescriptionRule Describes the parameters of the rule.Type`object`| Property | Type | Description |
 | --- | --- | --- |
@@ -126,16 +126,16 @@ DescriptionRule Describes the parameters of the rule.Type`object`| Property | Ty
 | `regexp` | `string` | The regular expression used to hold the match type rules. |
 | `type` | `string` | Rule type |
 
-### .spec.artifactCleanupSpec.policies[].repository
+### [#](#specartifactcleanupspecpoliciesrepository).spec.artifactCleanupSpec.policies[].repository
 
 DescriptionA list of Repository to match. Regular expressions are supported.Type`object`| Property | Type | Description |
 | --- | --- | --- |
 | `name` | `string` | Matches the warehouse rule name, for display only. |
 | `regexp` | `string` | Regular expression that matches the repository. |
 
-### .spec.artifactCleanupSpec.policies[].retentionRules
+### [#](#specartifactcleanupspecpoliciesretentionrules).spec.artifactCleanupSpec.policies[].retentionRules
 
-DescriptionRetention a list of rules.Type`array`### .spec.artifactCleanupSpec.policies[].retentionRules[]
+DescriptionRetention a list of rules.Type`array`### [#](#specartifactcleanupspecpoliciesretentionrules-1).spec.artifactCleanupSpec.policies[].retentionRules[]
 
 DescriptionRule Describes the parameters of the rule.Type`object`| Property | Type | Description |
 | --- | --- | --- |
@@ -145,7 +145,7 @@ DescriptionRule Describes the parameters of the rule.Type`object`| Property | Ty
 | `regexp` | `string` | The regular expression used to hold the match type rules. |
 | `type` | `string` | Rule type |
 
-### .spec.artifactCleanupSpec.resource
+### [#](#specartifactcleanupspecresource).spec.artifactCleanupSpec.resource
 
 DescriptionResources array of predefined resources to be usedType`object`Required`name``type`| Property | Type | Description |
 | --- | --- | --- |
@@ -160,11 +160,11 @@ used by the ClusterIntegration object when replicating and creating Integration 
 | `syncPolicy` | `string` | SyncPolicy specifies how resources are synced to the system. Defaults to "SyncOnly" |
 | `type` | `string` | Type of resource associated with the object |
 
-### .spec.artifactCleanupSpec.resource.annotations
+### [#](#specartifactcleanupspecresourceannotations).spec.artifactCleanupSpec.resource.annotations
 
-DescriptionAnnotations provides a method to annotate specific resources in order to provide some metadataType`object`### .spec.artifactCleanupSpec.resource.properties
+DescriptionAnnotations provides a method to annotate specific resources in order to provide some metadataType`object`### [#](#specartifactcleanupspecresourceproperties).spec.artifactCleanupSpec.resource.properties
 
-DescriptionProperties of the resource. This is used to transmit fields and values to the integration classType`object`### .spec.artifactCleanupSpec.resource.replicationPolicyRef
+DescriptionProperties of the resource. This is used to transmit fields and values to the integration classType`object`### [#](#specartifactcleanupspecresourcereplicationpolicyref).spec.artifactCleanupSpec.resource.replicationPolicyRef
 
 DescriptionReplicationPolicyRef stores a reference to a policy that generated this resource
 used by the ClusterIntegration object when replicating and creating Integration objectsType`object`| Property | Type | Description |
@@ -189,9 +189,9 @@ More info: [https://git.k8s.io/community/contributors/devel/sig-architecture/api
 | `uid` | `string` | UID of the referent.
 More info: [https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids) |
 
-### .spec.artifactCleanupSpec.resource.subResources
+### [#](#specartifactcleanupspecresourcesubresources).spec.artifactCleanupSpec.resource.subResources
 
-DescriptionSubResources sub resource to be used in resourceType`array`### .spec.artifactCleanupSpec.resource.subResources[]
+DescriptionSubResources sub resource to be used in resourceType`array`### [#](#specartifactcleanupspecresourcesubresources-1).spec.artifactCleanupSpec.resource.subResources[]
 
 Type`object`Required`name``type`| Property | Type | Description |
 | --- | --- | --- |
@@ -201,19 +201,19 @@ Type`object`Required`name``type`| Property | Type | Description |
 | `subtype` | `string` | Subtype of resource associated with the object |
 | `type` | `string` | Type of resource associated with the object |
 
-### .spec.artifactCleanupSpec.resource.subResources[].annotations
+### [#](#specartifactcleanupspecresourcesubresourcesannotations).spec.artifactCleanupSpec.resource.subResources[].annotations
 
-DescriptionAnnotations provides a method to annotate specific resources in order to provide some metadataType`object`### .spec.artifactCleanupSpec.resource.subResources[].properties
+DescriptionAnnotations provides a method to annotate specific resources in order to provide some metadataType`object`### [#](#specartifactcleanupspecresourcesubresourcesproperties).spec.artifactCleanupSpec.resource.subResources[].properties
 
-DescriptionProperties of the resource. This is used to transmit fields and values to the integration classType`object`### .spec.artifactCleanupSpec.triggers
+DescriptionProperties of the resource. This is used to transmit fields and values to the integration classType`object`### [#](#specartifactcleanupspectriggers).spec.artifactCleanupSpec.triggers
 
 Descriptionall triggers defined for triggering current artifactcleanupType`object`| Property | Type | Description |
 | --- | --- | --- |
 | `cronTriggers` | `array` | List of timed triggers |
 
-### .spec.artifactCleanupSpec.triggers.cronTriggers
+### [#](#specartifactcleanupspectriggerscrontriggers).spec.artifactCleanupSpec.triggers.cronTriggers
 
-DescriptionList of timed triggersType`array`### .spec.artifactCleanupSpec.triggers.cronTriggers[]
+DescriptionList of timed triggersType`array`### [#](#specartifactcleanupspectriggerscrontriggers-1).spec.artifactCleanupSpec.triggers.cronTriggers[]
 
 DescriptionArtifactCleanupCronTrigger defines cronTrigger.Type`object`| Property | Type | Description |
 | --- | --- | --- |
@@ -224,12 +224,12 @@ More info: [http://kubernetes.io/docs/user-guide/annotations](http://kubernetes.
 | `name` | `string` | The name of the timed trigger |
 | `spec` | `object` | Trigger the desired property periodically. |
 
-### .spec.artifactCleanupSpec.triggers.cronTriggers[].annotations
+### [#](#specartifactcleanupspectriggerscrontriggersannotations).spec.artifactCleanupSpec.triggers.cronTriggers[].annotations
 
 DescriptionAnnotations is an unstructured key value map stored with a resource that may be
 set by external tools to store and retrieve arbitrary metadata. They are not
 queryable and should be preserved when modifying objects.
-More info: http://kubernetes.io/docs/user-guide/annotationsType`object`### .spec.artifactCleanupSpec.triggers.cronTriggers[].spec
+More info: http://kubernetes.io/docs/user-guide/annotationsType`object`### [#](#specartifactcleanupspectriggerscrontriggersspec).spec.artifactCleanupSpec.triggers.cronTriggers[].spec
 
 DescriptionTrigger the desired property periodically.Type`object`Required`schedule`| Property | Type | Description |
 | --- | --- | --- |
@@ -243,9 +243,9 @@ DescriptionTrigger the desired property periodically.Type`object`Required`schedu
 More general information about time zones: [https://www.iana.org/time-zones](https://www.iana.org/time-zones)
 List of valid timezone values: [https://en.wikipedia.org/wiki/List_of_tz_database_time_zones](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) |
 
-### .spec.artifactCleanupSpec.triggers.cronTriggers[].spec.params
+### [#](#specartifactcleanupspectriggerscrontriggersspecparams).spec.artifactCleanupSpec.triggers.cronTriggers[].spec.params
 
-DescriptionParams for rendering runnable templateType`array`### .spec.artifactCleanupSpec.triggers.cronTriggers[].spec.params[]
+DescriptionParams for rendering runnable templateType`array`### [#](#specartifactcleanupspectriggerscrontriggersspecparams-1).spec.artifactCleanupSpec.triggers.cronTriggers[].spec.params[]
 
 DescriptionTriggerValueBinding represent values that will bind to templateType`object`| Property | Type | Description |
 | --- | --- | --- |
@@ -254,7 +254,7 @@ DescriptionTriggerValueBinding represent values that will bind to templateType`o
 | `value` | `string` | value of template parameter
 do we only need type of string |
 
-### .spec.artifactCleanupSpec.triggers.cronTriggers[].spec.runnableRef
+### [#](#specartifactcleanupspectriggerscrontriggersspecrunnableref).spec.artifactCleanupSpec.triggers.cronTriggers[].spec.runnableRef
 
 Descriptionreference of runnabledefinitionType`object`| Property | Type | Description |
 | --- | --- | --- |
@@ -278,22 +278,22 @@ More info: [https://git.k8s.io/community/contributors/devel/sig-architecture/api
 | `uid` | `string` | UID of the referent.
 More info: [https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids) |
 
-### .spec.artifactCleanupSpec.triggers.cronTriggers[].spec.runnableSpec
+### [#](#specartifactcleanupspectriggerscrontriggersspecrunnablespec).spec.artifactCleanupSpec.triggers.cronTriggers[].spec.runnableSpec
 
 DescriptionInline spec for runnable template.Type`object`| Property | Type | Description |
 | --- | --- | --- |
 | `kube` | `object` | Uses a yaml format to create a template for resource |
 
-### .spec.artifactCleanupSpec.triggers.cronTriggers[].spec.runnableSpec.kube
+### [#](#specartifactcleanupspectriggerscrontriggersspecrunnablespeckube).spec.artifactCleanupSpec.triggers.cronTriggers[].spec.runnableSpec.kube
 
 DescriptionUses a yaml format to create a template for resourceType`object`| Property | Type | Description |
 | --- | --- | --- |
 | `parameters` | `array` | Parameters used to generate the resource with jsonpath replacement rules |
 | `template` | `object` | Raw resource definition yaml |
 
-### .spec.artifactCleanupSpec.triggers.cronTriggers[].spec.runnableSpec.kube.parameters
+### [#](#specartifactcleanupspectriggerscrontriggersspecrunnablespeckubeparameters).spec.artifactCleanupSpec.triggers.cronTriggers[].spec.runnableSpec.kube.parameters
 
-DescriptionParameters used to generate the resource with jsonpath replacement rulesType`array`### .spec.artifactCleanupSpec.triggers.cronTriggers[].spec.runnableSpec.kube.parameters[]
+DescriptionParameters used to generate the resource with jsonpath replacement rulesType`array`### [#](#specartifactcleanupspectriggerscrontriggersspecrunnablespeckubeparameters-1).spec.artifactCleanupSpec.triggers.cronTriggers[].spec.runnableSpec.kube.parameters[]
 
 DescriptionKubeParameter used to generate the resource with jsonpath replacement rulesType`object`| Property | Type | Description |
 | --- | --- | --- |
@@ -302,13 +302,13 @@ DescriptionKubeParameter used to generate the resource with jsonpath replacement
 | `required` | `boolean` | Parameter required, Defaults to false |
 | `type` | `string` | Parameter value type, one of [string, number, boolean], default is string |
 
-### .spec.artifactCleanupSpec.triggers.cronTriggers[].spec.runnableSpec.kube.parameters[].fieldPaths
+### [#](#specartifactcleanupspectriggerscrontriggersspecrunnablespeckubeparametersfieldpaths).spec.artifactCleanupSpec.triggers.cronTriggers[].spec.runnableSpec.kube.parameters[].fieldPaths
 
-DescriptionFieldPaths is jsonpath for replacing the parameter value into the resource at render timeType`array`### .spec.artifactCleanupSpec.triggers.cronTriggers[].spec.runnableSpec.kube.parameters[].fieldPaths[]
+DescriptionFieldPaths is jsonpath for replacing the parameter value into the resource at render timeType`array`### [#](#specartifactcleanupspectriggerscrontriggersspecrunnablespeckubeparametersfieldpaths-1).spec.artifactCleanupSpec.triggers.cronTriggers[].spec.runnableSpec.kube.parameters[].fieldPaths[]
 
-Type`string`### .spec.artifactCleanupSpec.triggers.cronTriggers[].spec.runnableSpec.kube.template
+Type`string`### [#](#specartifactcleanupspectriggerscrontriggersspecrunnablespeckubetemplate).spec.artifactCleanupSpec.triggers.cronTriggers[].spec.runnableSpec.kube.template
 
-DescriptionRaw resource definition yamlType`object`### .status
+DescriptionRaw resource definition yamlType`object`### [#](#status).status
 
 DescriptionArtifactCleanupRunStatus defines the observed state of ArtifactCleanupRunType`object`| Property | Type | Description |
 | --- | --- | --- |
@@ -326,12 +326,12 @@ was last processed by the controller. |
 | `summary` | `object` | Describe the overall result of the cleanup. Record success, failure, ignore the number of records. |
 | `triggeredBy` | `object` | TriggeredBy stores a list of triggered information. |
 
-### .status.annotations
+### [#](#statusannotations).status.annotations
 
 DescriptionAnnotations is additional Status fields for the Resource to save some
 additional State as well as convey more information to the user. This is
 roughly akin to Annotations on any k8s resource, just the reconciler conveying
-richer information outwards.Type`object`### .status.artifactCleanupSpec
+richer information outwards.Type`object`### [#](#statusartifactcleanupspec).status.artifactCleanupSpec
 
 DescriptionWhen spec.artifactCleanupRef is used, the spec will be stored here for future referenceType`object`| Property | Type | Description |
 | --- | --- | --- |
@@ -344,7 +344,7 @@ It only calculates already completed items |
 | `resource` | `object` | Resources array of predefined resources to be used |
 | `triggers` | `object` | all triggers defined for triggering current artifactcleanup |
 
-### .status.artifactCleanupSpec.address
+### [#](#statusartifactcleanupspecaddress).status.artifactCleanupSpec.address
 
 DescriptionAddress stores the integrated service API addressType`object`| Property | Type | Description |
 | --- | --- | --- |
@@ -353,7 +353,7 @@ according to [https://www.rfc-editor.org/rfc/rfc7468](https://www.rfc-editor.org
 | `name` | `string` | Name is the name of the address. |
 | `url` | `string` |  |
 
-### .status.artifactCleanupSpec.historyLimits
+### [#](#statusartifactcleanupspechistorylimits).status.artifactCleanupSpec.historyLimits
 
 DescriptionHistoryLimits limits the number of executed items are preserved
 It only calculates already completed itemsType`object`| Property | Type | Description |
@@ -361,7 +361,7 @@ It only calculates already completed itemsType`object`| Property | Type | Descri
 | `count` | `integer` | Sets a hard count for all finished items
 to be cleared from storage |
 
-### .status.artifactCleanupSpec.integrationRef
+### [#](#statusartifactcleanupspecintegrationref).status.artifactCleanupSpec.integrationRef
 
 DescriptionReference to specific integration that contains the tool API define.Type`object`| Property | Type | Description |
 | --- | --- | --- |
@@ -385,9 +385,9 @@ More info: [https://git.k8s.io/community/contributors/devel/sig-architecture/api
 | `uid` | `string` | UID of the referent.
 More info: [https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids) |
 
-### .status.artifactCleanupSpec.policies
+### [#](#statusartifactcleanupspecpolicies).status.artifactCleanupSpec.policies
 
-DescriptionList of strategies.Type`array`### .status.artifactCleanupSpec.policies[]
+DescriptionList of strategies.Type`array`### [#](#statusartifactcleanupspecpolicies-1).status.artifactCleanupSpec.policies[]
 
 DescriptionPolicy A detailed description of the policy, including warehouse, cleanup rules, and retention rules.Type`object`| Property | Type | Description |
 | --- | --- | --- |
@@ -395,9 +395,9 @@ DescriptionPolicy A detailed description of the policy, including warehouse, cle
 | `repository` | `object` | A list of Repository to match. Regular expressions are supported. |
 | `retentionRules` | `array` | Retention a list of rules. |
 
-### .status.artifactCleanupSpec.policies[].cleanupRules
+### [#](#statusartifactcleanupspecpoliciescleanuprules).status.artifactCleanupSpec.policies[].cleanupRules
 
-DescriptionClean up the list of rules.Type`array`### .status.artifactCleanupSpec.policies[].cleanupRules[]
+DescriptionClean up the list of rules.Type`array`### [#](#statusartifactcleanupspecpoliciescleanuprules-1).status.artifactCleanupSpec.policies[].cleanupRules[]
 
 DescriptionRule Describes the parameters of the rule.Type`object`| Property | Type | Description |
 | --- | --- | --- |
@@ -407,16 +407,16 @@ DescriptionRule Describes the parameters of the rule.Type`object`| Property | Ty
 | `regexp` | `string` | The regular expression used to hold the match type rules. |
 | `type` | `string` | Rule type |
 
-### .status.artifactCleanupSpec.policies[].repository
+### [#](#statusartifactcleanupspecpoliciesrepository).status.artifactCleanupSpec.policies[].repository
 
 DescriptionA list of Repository to match. Regular expressions are supported.Type`object`| Property | Type | Description |
 | --- | --- | --- |
 | `name` | `string` | Matches the warehouse rule name, for display only. |
 | `regexp` | `string` | Regular expression that matches the repository. |
 
-### .status.artifactCleanupSpec.policies[].retentionRules
+### [#](#statusartifactcleanupspecpoliciesretentionrules).status.artifactCleanupSpec.policies[].retentionRules
 
-DescriptionRetention a list of rules.Type`array`### .status.artifactCleanupSpec.policies[].retentionRules[]
+DescriptionRetention a list of rules.Type`array`### [#](#statusartifactcleanupspecpoliciesretentionrules-1).status.artifactCleanupSpec.policies[].retentionRules[]
 
 DescriptionRule Describes the parameters of the rule.Type`object`| Property | Type | Description |
 | --- | --- | --- |
@@ -426,7 +426,7 @@ DescriptionRule Describes the parameters of the rule.Type`object`| Property | Ty
 | `regexp` | `string` | The regular expression used to hold the match type rules. |
 | `type` | `string` | Rule type |
 
-### .status.artifactCleanupSpec.resource
+### [#](#statusartifactcleanupspecresource).status.artifactCleanupSpec.resource
 
 DescriptionResources array of predefined resources to be usedType`object`Required`name``type`| Property | Type | Description |
 | --- | --- | --- |
@@ -441,11 +441,11 @@ used by the ClusterIntegration object when replicating and creating Integration 
 | `syncPolicy` | `string` | SyncPolicy specifies how resources are synced to the system. Defaults to "SyncOnly" |
 | `type` | `string` | Type of resource associated with the object |
 
-### .status.artifactCleanupSpec.resource.annotations
+### [#](#statusartifactcleanupspecresourceannotations).status.artifactCleanupSpec.resource.annotations
 
-DescriptionAnnotations provides a method to annotate specific resources in order to provide some metadataType`object`### .status.artifactCleanupSpec.resource.properties
+DescriptionAnnotations provides a method to annotate specific resources in order to provide some metadataType`object`### [#](#statusartifactcleanupspecresourceproperties).status.artifactCleanupSpec.resource.properties
 
-DescriptionProperties of the resource. This is used to transmit fields and values to the integration classType`object`### .status.artifactCleanupSpec.resource.replicationPolicyRef
+DescriptionProperties of the resource. This is used to transmit fields and values to the integration classType`object`### [#](#statusartifactcleanupspecresourcereplicationpolicyref).status.artifactCleanupSpec.resource.replicationPolicyRef
 
 DescriptionReplicationPolicyRef stores a reference to a policy that generated this resource
 used by the ClusterIntegration object when replicating and creating Integration objectsType`object`| Property | Type | Description |
@@ -470,9 +470,9 @@ More info: [https://git.k8s.io/community/contributors/devel/sig-architecture/api
 | `uid` | `string` | UID of the referent.
 More info: [https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids) |
 
-### .status.artifactCleanupSpec.resource.subResources
+### [#](#statusartifactcleanupspecresourcesubresources).status.artifactCleanupSpec.resource.subResources
 
-DescriptionSubResources sub resource to be used in resourceType`array`### .status.artifactCleanupSpec.resource.subResources[]
+DescriptionSubResources sub resource to be used in resourceType`array`### [#](#statusartifactcleanupspecresourcesubresources-1).status.artifactCleanupSpec.resource.subResources[]
 
 Type`object`Required`name``type`| Property | Type | Description |
 | --- | --- | --- |
@@ -482,19 +482,19 @@ Type`object`Required`name``type`| Property | Type | Description |
 | `subtype` | `string` | Subtype of resource associated with the object |
 | `type` | `string` | Type of resource associated with the object |
 
-### .status.artifactCleanupSpec.resource.subResources[].annotations
+### [#](#statusartifactcleanupspecresourcesubresourcesannotations).status.artifactCleanupSpec.resource.subResources[].annotations
 
-DescriptionAnnotations provides a method to annotate specific resources in order to provide some metadataType`object`### .status.artifactCleanupSpec.resource.subResources[].properties
+DescriptionAnnotations provides a method to annotate specific resources in order to provide some metadataType`object`### [#](#statusartifactcleanupspecresourcesubresourcesproperties).status.artifactCleanupSpec.resource.subResources[].properties
 
-DescriptionProperties of the resource. This is used to transmit fields and values to the integration classType`object`### .status.artifactCleanupSpec.triggers
+DescriptionProperties of the resource. This is used to transmit fields and values to the integration classType`object`### [#](#statusartifactcleanupspectriggers).status.artifactCleanupSpec.triggers
 
 Descriptionall triggers defined for triggering current artifactcleanupType`object`| Property | Type | Description |
 | --- | --- | --- |
 | `cronTriggers` | `array` | List of timed triggers |
 
-### .status.artifactCleanupSpec.triggers.cronTriggers
+### [#](#statusartifactcleanupspectriggerscrontriggers).status.artifactCleanupSpec.triggers.cronTriggers
 
-DescriptionList of timed triggersType`array`### .status.artifactCleanupSpec.triggers.cronTriggers[]
+DescriptionList of timed triggersType`array`### [#](#statusartifactcleanupspectriggerscrontriggers-1).status.artifactCleanupSpec.triggers.cronTriggers[]
 
 DescriptionArtifactCleanupCronTrigger defines cronTrigger.Type`object`| Property | Type | Description |
 | --- | --- | --- |
@@ -505,12 +505,12 @@ More info: [http://kubernetes.io/docs/user-guide/annotations](http://kubernetes.
 | `name` | `string` | The name of the timed trigger |
 | `spec` | `object` | Trigger the desired property periodically. |
 
-### .status.artifactCleanupSpec.triggers.cronTriggers[].annotations
+### [#](#statusartifactcleanupspectriggerscrontriggersannotations).status.artifactCleanupSpec.triggers.cronTriggers[].annotations
 
 DescriptionAnnotations is an unstructured key value map stored with a resource that may be
 set by external tools to store and retrieve arbitrary metadata. They are not
 queryable and should be preserved when modifying objects.
-More info: http://kubernetes.io/docs/user-guide/annotationsType`object`### .status.artifactCleanupSpec.triggers.cronTriggers[].spec
+More info: http://kubernetes.io/docs/user-guide/annotationsType`object`### [#](#statusartifactcleanupspectriggerscrontriggersspec).status.artifactCleanupSpec.triggers.cronTriggers[].spec
 
 DescriptionTrigger the desired property periodically.Type`object`Required`schedule`| Property | Type | Description |
 | --- | --- | --- |
@@ -524,9 +524,9 @@ DescriptionTrigger the desired property periodically.Type`object`Required`schedu
 More general information about time zones: [https://www.iana.org/time-zones](https://www.iana.org/time-zones)
 List of valid timezone values: [https://en.wikipedia.org/wiki/List_of_tz_database_time_zones](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) |
 
-### .status.artifactCleanupSpec.triggers.cronTriggers[].spec.params
+### [#](#statusartifactcleanupspectriggerscrontriggersspecparams).status.artifactCleanupSpec.triggers.cronTriggers[].spec.params
 
-DescriptionParams for rendering runnable templateType`array`### .status.artifactCleanupSpec.triggers.cronTriggers[].spec.params[]
+DescriptionParams for rendering runnable templateType`array`### [#](#statusartifactcleanupspectriggerscrontriggersspecparams-1).status.artifactCleanupSpec.triggers.cronTriggers[].spec.params[]
 
 DescriptionTriggerValueBinding represent values that will bind to templateType`object`| Property | Type | Description |
 | --- | --- | --- |
@@ -535,7 +535,7 @@ DescriptionTriggerValueBinding represent values that will bind to templateType`o
 | `value` | `string` | value of template parameter
 do we only need type of string |
 
-### .status.artifactCleanupSpec.triggers.cronTriggers[].spec.runnableRef
+### [#](#statusartifactcleanupspectriggerscrontriggersspecrunnableref).status.artifactCleanupSpec.triggers.cronTriggers[].spec.runnableRef
 
 Descriptionreference of runnabledefinitionType`object`| Property | Type | Description |
 | --- | --- | --- |
@@ -559,22 +559,22 @@ More info: [https://git.k8s.io/community/contributors/devel/sig-architecture/api
 | `uid` | `string` | UID of the referent.
 More info: [https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids) |
 
-### .status.artifactCleanupSpec.triggers.cronTriggers[].spec.runnableSpec
+### [#](#statusartifactcleanupspectriggerscrontriggersspecrunnablespec).status.artifactCleanupSpec.triggers.cronTriggers[].spec.runnableSpec
 
 DescriptionInline spec for runnable template.Type`object`| Property | Type | Description |
 | --- | --- | --- |
 | `kube` | `object` | Uses a yaml format to create a template for resource |
 
-### .status.artifactCleanupSpec.triggers.cronTriggers[].spec.runnableSpec.kube
+### [#](#statusartifactcleanupspectriggerscrontriggersspecrunnablespeckube).status.artifactCleanupSpec.triggers.cronTriggers[].spec.runnableSpec.kube
 
 DescriptionUses a yaml format to create a template for resourceType`object`| Property | Type | Description |
 | --- | --- | --- |
 | `parameters` | `array` | Parameters used to generate the resource with jsonpath replacement rules |
 | `template` | `object` | Raw resource definition yaml |
 
-### .status.artifactCleanupSpec.triggers.cronTriggers[].spec.runnableSpec.kube.parameters
+### [#](#statusartifactcleanupspectriggerscrontriggersspecrunnablespeckubeparameters).status.artifactCleanupSpec.triggers.cronTriggers[].spec.runnableSpec.kube.parameters
 
-DescriptionParameters used to generate the resource with jsonpath replacement rulesType`array`### .status.artifactCleanupSpec.triggers.cronTriggers[].spec.runnableSpec.kube.parameters[]
+DescriptionParameters used to generate the resource with jsonpath replacement rulesType`array`### [#](#statusartifactcleanupspectriggerscrontriggersspecrunnablespeckubeparameters-1).status.artifactCleanupSpec.triggers.cronTriggers[].spec.runnableSpec.kube.parameters[]
 
 DescriptionKubeParameter used to generate the resource with jsonpath replacement rulesType`object`| Property | Type | Description |
 | --- | --- | --- |
@@ -583,15 +583,15 @@ DescriptionKubeParameter used to generate the resource with jsonpath replacement
 | `required` | `boolean` | Parameter required, Defaults to false |
 | `type` | `string` | Parameter value type, one of [string, number, boolean], default is string |
 
-### .status.artifactCleanupSpec.triggers.cronTriggers[].spec.runnableSpec.kube.parameters[].fieldPaths
+### [#](#statusartifactcleanupspectriggerscrontriggersspecrunnablespeckubeparametersfieldpaths).status.artifactCleanupSpec.triggers.cronTriggers[].spec.runnableSpec.kube.parameters[].fieldPaths
 
-DescriptionFieldPaths is jsonpath for replacing the parameter value into the resource at render timeType`array`### .status.artifactCleanupSpec.triggers.cronTriggers[].spec.runnableSpec.kube.parameters[].fieldPaths[]
+DescriptionFieldPaths is jsonpath for replacing the parameter value into the resource at render timeType`array`### [#](#statusartifactcleanupspectriggerscrontriggersspecrunnablespeckubeparametersfieldpaths-1).status.artifactCleanupSpec.triggers.cronTriggers[].spec.runnableSpec.kube.parameters[].fieldPaths[]
 
-Type`string`### .status.artifactCleanupSpec.triggers.cronTriggers[].spec.runnableSpec.kube.template
+Type`string`### [#](#statusartifactcleanupspectriggerscrontriggersspecrunnablespeckubetemplate).status.artifactCleanupSpec.triggers.cronTriggers[].spec.runnableSpec.kube.template
 
-DescriptionRaw resource definition yamlType`object`### .status.conditions
+DescriptionRaw resource definition yamlType`object`### [#](#statusconditions).status.conditions
 
-DescriptionConditions the latest available observations of a resource's current state.Type`array`### .status.conditions[]
+DescriptionConditions the latest available observations of a resource's current state.Type`array`### [#](#statusconditions-1).status.conditions[]
 
 DescriptionCondition defines a readiness condition for a Knative resource.
 See: https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#typical-status-propertiesType`object`Required`status``type`| Property | Type | Description |
@@ -606,9 +606,9 @@ When this is not specified, it defaults to Error. |
 | `status` | `string` | Status of the condition, one of True, False, Unknown. |
 | `type` | `string` | Type of condition. |
 
-### .status.resources
+### [#](#statusresources).status.resources
 
-DescriptionResources stores a list of clean record.Type`array`### .status.resources[]
+DescriptionResources stores a list of clean record.Type`array`### [#](#statusresources-1).status.resources[]
 
 DescriptionResource A detailed description of the cleanup reocrd.Type`object`| Property | Type | Description |
 | --- | --- | --- |
@@ -619,9 +619,9 @@ DescriptionResource A detailed description of the cleanup reocrd.Type`object`| P
 | `tags` | `array` | Retation a list of rules. |
 | `version` | `string` | Clean up the list of rules. |
 
-### .status.resources[].tags
+### [#](#statusresourcestags).status.resources[].tags
 
-DescriptionRetation a list of rules.Type`array`### .status.resources[].tags[]
+DescriptionRetation a list of rules.Type`array`### [#](#statusresourcestags-1).status.resources[].tags[]
 
 Type`object`| Property | Type | Description |
 | --- | --- | --- |
@@ -629,7 +629,7 @@ Type`object`| Property | Type | Description |
 | `pullTime` | `string` | tag push time, if Name is empty, the pushtime of the version |
 | `pushTime` | `string` | tag pull time, if Name is empty, the pulltime of the version |
 
-### .status.summary
+### [#](#statussummary).status.summary
 
 DescriptionDescribe the overall result of the cleanup. Record success, failure, ignore the number of records.Type`object`| Property | Type | Description |
 | --- | --- | --- |
@@ -637,7 +637,7 @@ DescriptionDescribe the overall result of the cleanup. Record success, failure, 
 | `skiped` | `integer` | Skiped records the total number of cleanup ignores. |
 | `succeeded` | `integer` | Succeeded records the total number of successful cleanups. |
 
-### .status.triggeredBy
+### [#](#statustriggeredby).status.triggeredBy
 
 DescriptionTriggeredBy stores a list of triggered information.Type`object`| Property | Type | Description |
 | --- | --- | --- |
@@ -648,7 +648,7 @@ it is added here for convinience only |
 | `triggeredType` | `string` | Indicates trigger type, such as Manual Automated. |
 | `user` | `object` | Reference to the user that triggered the object. Any Kubernetes `Subject` is accepted. |
 
-### .status.triggeredBy.cloudEvent
+### [#](#statustriggeredbycloudevent).status.triggeredBy.cloudEvent
 
 DescriptionCloud Event data for the event that triggered.Type`object`| Property | Type | Description |
 | --- | --- | --- |
@@ -662,9 +662,9 @@ DescriptionCloud Event data for the event that triggered.Type`object`| Property 
 | `time` | `string` |  |
 | `type` | `string` | Type of event |
 
-### .status.triggeredBy.cloudEvent.extensions
+### [#](#statustriggeredbycloudeventextensions).status.triggeredBy.cloudEvent.extensions
 
-Type`object`### .status.triggeredBy.ref
+Type`object`### [#](#statustriggeredbyref).status.triggeredBy.ref
 
 DescriptionReference to another object that might have triggered this objectType`object`| Property | Type | Description |
 | --- | --- | --- |
@@ -688,7 +688,7 @@ More info: [https://git.k8s.io/community/contributors/devel/sig-architecture/api
 | `uid` | `string` | UID of the referent.
 More info: [https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids) |
 
-### .status.triggeredBy.user
+### [#](#statustriggeredbyuser).status.triggeredBy.user
 
 DescriptionReference to the user that triggered the object. Any Kubernetes `Subject` is accepted.Type`object`Required`kind``name`| Property | Type | Description |
 | --- | --- | --- |

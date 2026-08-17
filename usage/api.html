@@ -9,7 +9,7 @@
 <script defer src="/static/js/lib-react.e6c7aac663.js"></script>
 <script defer src="/static/js/lib-router.2bfbb5df4a.js"></script>
 <script defer src="/static/js/2533.7e44300dea.js"></script>
-<script defer src="/static/js/index.204ca680ce.js"></script>
+<script defer src="/static/js/index.9f1dd1694d.js"></script>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="generator" content="Rspress v2.0.12">
 <link rel="icon" href="/logo.svg" type="image/svg+xml">
@@ -45,13 +45,16 @@
 <h3 class="rp-toc-include" id="props"><a href="#props" class="rp-header-anchor rp-link" aria-hidden="true">#</a><code>props</code></h3>
 <ul>
 <li><code>name</code>: OpenAPI schema <code>definitions</code>(v2) or <code>components/schemas</code>(v3) 下的引用名称或CRD <code>metadata.name</code></li>
-<li><code>namespaced</code>: 指示资源是否为命名空间级别，默认为 <code>true</code>，即 API Endpoints 是否包含命名空间路径参数 <code>namespaces/{namespace}</code></li>
+<li><code>namespaced</code>: 指示资源是否为命名空间级别，即 API Endpoints 是否包含命名空间路径参数 <code>namespaces/{namespace}</code>。未指定时由 CRD 的 <code>spec.scope</code> 决定；OpenAPI 源不携带 scope，默认为 <code>true</code></li>
 <li><code>pathPrefix</code>: 可以用于覆盖全局配置中的 <code>api.pathPrefix</code></li>
 <li><code>filepath</code>: 类似<a href="#specified-openapi-path" class="rp-link">指定 openapi 路径</a>，用于指定特定的 openapi 或 CRD 文件</li>
 <li><code>apiGroup</code>: 可选，指定 API 组，openapi 会尝试读取引用的 <code>x-kubernetes-group-version-kind</code>，下同</li>
-<li><code>apiVersion</code>: 可选，指定 API 版本，CRD 会默认使用 <code>spec.versions</code> 中第一个版本</li>
+<li><code>apiVersion</code>: 可选，指定 API 版本；CRD 默认使用 <code>kubectl</code> 会解析到的版本，即 <code>served</code> 版本中优先级最高的那个，可通过 <a href="/usage/configuration.html#api" class="rp-link"><code>api.crdVersion</code></a> 更改</li>
 <li><code>apiKind</code>: 可选，指定 API 资源类型</li>
+<li><code>plural</code>: 可选，端点路径中使用的资源复数名。CRD 会自动读取 <code>spec.names.plural</code>；OpenAPI 源的复数形式不规则时需要指定，否则由 kind 推导</li>
+<li><code>hasStatus</code>: 可选，API server 是否暴露 <code>status</code> 子资源。CRD 由 <code>subresources.status</code> 决定，OpenAPI 源由文档中登记的路由决定，本 prop 可覆盖两者</li>
 </ul>
+<p>如果 OpenAPI 文档不带 <code>x-kubernetes-group-version-kind</code>（聚合层 apiserver 的文档普遍不带），必须在此显式声明 <code>apiVersion</code> 与 <code>apiKind</code>，非 core 组还需 <code>apiGroup</code>。否则无法推导出 group/version/kind：API Endpoints 段会整段省略，而不是用空路径段拼出来，同时 <code>doom lint</code> 会报告该页面。</p>
 <h2 class="rp-toc-include" id="高级-api"><a href="#高级-api" class="rp-header-anchor rp-link" aria-hidden="true">#</a>高级 API</h2>
 <div class="container-hIRndJ auto-expandable"><div class=""><div><div class="rp-codeblock language-mdx"><div class="rp-codeblock__title">advanced_apis/codeQualityTaskSummary.mdx</div><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="mdx" data-title="advanced_apis/codeQualityTaskSummary.mdx"><code><span class="line"><span style="color:var(--shiki-foreground)"># CodeQualityTaskSummary</span></span>
 <span class="line"></span>
