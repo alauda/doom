@@ -91,9 +91,12 @@ export const createTranslationChecker = (): TranslationChecker => {
     targetPath.endsWith('.mdx') ? mdxProcessor : mdProcessor
 
   const check = async (targetPath: string, content: string) => {
-    // Both anchor caches key on a path and assume a path names one fixed
-    // document. Here the same path holds different content on every repair
-    // turn, so last turn's reading has to be dropped or the repair is invisible.
+    // A lint run over a directory sees each path once, so rules are free to
+    // cache what a path contained. This does not: the same path holds different
+    // content on every repair turn, and a rule reading last turn's copy would
+    // report a problem the repair already fixed. `no-unmatched-anchor` is the
+    // one rule that caches today — it is not in this rule set any more, but the
+    // invariant is a property of the checker rather than of that rule.
     forgetDocumentAnchors(targetPath)
 
     let vfile: VFile

@@ -22,6 +22,7 @@ import {
   noMultiOpenAPIPaths,
   noParagraphIndent,
   noUnmatchedAnchor,
+  noUnparsedEmphasis,
   noUnresolvedApiRef,
   site,
   tableSize,
@@ -79,8 +80,9 @@ export const TRANSLATION_PARITY_RULES = [
 ] as unknown as Rule[]
 
 /**
- * Rules that need state from outside the document: the site's route table, the
- * generated API modules, the configured sibling sites.
+ * Rules whose verdict depends on documents other than the one being linted: the
+ * site's route table, the generated API modules, the configured sibling sites,
+ * the headings of whatever a link points at.
  *
  * The translator skips these. Two things have to both hold before a rule
  * belongs here:
@@ -90,16 +92,26 @@ export const TRANSLATION_PARITY_RULES = [
  *    language directory is still being filled in, so a link to a page whose
  *    translation has not been written yet resolves to nothing — a red that says
  *    only "this file was translated before that one".
- * 2. **The translator could not act on it anyway.** Link targets, `href`s and
- *    api references are masked before the model sees the document, so they come
- *    back byte-identical to the source by construction, and `link-isomorphism`
- *    proves that separately. A dead link in a translation is a dead link in the
- *    source, and it belongs to whoever lints the source.
+ * 2. **The translator could not act on it anyway.** Link targets, `href`s,
+ *    heading anchors and api references are masked before the model sees the
+ *    document, so they come back byte-identical to the source by construction,
+ *    and `link-isomorphism` proves that separately. A dead link in a
+ *    translation is a dead link in the source, and it belongs to whoever lints
+ *    the source.
  *
- * They still run in `doom lint`, over a docs tree that is complete.
+ * `no-unmatched-anchor` is here on evidence rather than on principle. The first
+ * real translation run failed `zh/install/installing.mdx` over an anchor in
+ * `install/prepare/download.mdx` — a *different* document, whose stale
+ * translation had lost the heading that carries it. Nothing about the document
+ * being translated was wrong, the link and its anchor were both masked, and no
+ * repair round could have changed the outcome. A red like that costs turns and
+ * then blames the wrong file.
+ *
+ * They all still run in `doom lint`, over a docs tree that is complete.
  */
 export const ROUTE_DEPENDENT_RULES = [
   checkDeadLinks,
+  noUnmatchedAnchor,
   noUnresolvedApiRef,
   site,
 ] as unknown as Rule[]
@@ -133,6 +145,7 @@ export const LINT_RULES = [
   noMultiOpenAPIPaths,
   noParagraphIndent,
   noUnmatchedAnchor,
+  noUnparsedEmphasis,
   noUnresolvedApiRef,
   site,
   tableSize,
