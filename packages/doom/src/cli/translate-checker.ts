@@ -122,9 +122,11 @@ export const createTranslationChecker = (): TranslationChecker => {
     check,
     async assertCheckable(targetPath, content) {
       const processor = processorFor(targetPath)
-      let tree
+      let tree: Root
       try {
-        tree = processor.parse(new VFile({ path: targetPath, value: content }))
+        tree = processor.parse(
+          new VFile({ path: targetPath, value: content }),
+        ) as Root
       } catch (error) {
         throw new TranslationNotCheckableError(
           targetPath,
@@ -132,7 +134,7 @@ export const createTranslationChecker = (): TranslationChecker => {
         )
       }
       const status = await resolveTranslation(
-        tree as Root,
+        tree,
         new VFile({ path: targetPath, value: content }),
       )
       switch (status.kind) {

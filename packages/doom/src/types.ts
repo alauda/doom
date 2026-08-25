@@ -39,6 +39,28 @@ export interface TranslateOptions {
   systemPrompt?: string
   userPrompt?: string
   /**
+   * Model id on the translation gateway. Defaults to `ALAUDA_OPENAI_MODEL`, and
+   * then to the version this was measured against.
+   */
+  model?: string
+  /** Reasoning effort for the translator. Defaults to `low`. */
+  reasoningEffort?: 'minimal' | 'low' | 'medium' | 'high' | 'xhigh' | 'max'
+  /**
+   * How many times a document's findings are fed back before it is failed.
+   * Exhausting them fails the document — it never ships what it could not fix.
+   */
+  maxRepairRounds?: number
+  /** Runaway guard: total model turns for one document, tool calls included. */
+  maxTurns?: number
+  /**
+   * Context the translator plans for, in tokens. Deliberately lower than what
+   * the gateway offers: planning for less costs a re-read, planning for more
+   * loses content.
+   */
+  contextWindow?: number
+  /** Cap on a single model response, in tokens. */
+  maxOutputTokens?: number
+  /**
    * Glob patterns (relative to each language directory) whose files are copied
    * verbatim to the target language instead of being translated. Defaults to
    * the generated API directories (`apis/advanced_apis/**`, `apis/crds/**`,

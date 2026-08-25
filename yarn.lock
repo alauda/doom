@@ -34,6 +34,7 @@ __metadata:
     "@alauda/doom-export": "npm:^0.4.2"
     "@cspell/eslint-plugin": "npm:^10.0.0"
     "@earendil-works/pi-agent-core": "npm:0.84.3"
+    "@earendil-works/pi-ai": "npm:0.84.3"
     "@eslint-react/eslint-plugin": "npm:^5.8.3"
     "@eslint/js": "npm:^10.0.1"
     "@inquirer/prompts": "npm:^8.4.3"
@@ -1612,7 +1613,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@earendil-works/pi-ai@npm:^0.84.3":
+"@earendil-works/pi-ai@npm:0.84.3, @earendil-works/pi-ai@npm:^0.84.3":
   version: 0.84.3
   resolution: "@earendil-works/pi-ai@npm:0.84.3"
   dependencies:
@@ -4366,7 +4367,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:^24.12.4, @types/node@npm:>=13.7.0":
+"@types/node@npm:*, @types/node@npm:>=13.7.0, @types/node@npm:^24.12.4":
   version: 24.12.4
   resolution: "@types/node@npm:24.12.4"
   dependencies:
@@ -12247,13 +12248,6 @@ __metadata:
   version: 7.16.0
   resolution: "undici-types@npm:7.16.0"
   checksum: 10c0/3033e2f2b5c9f1504bdc5934646cb54e37ecaca0f9249c983f7b1fc2e87c6d18399ebb05dc7fd5419e02b2e915f734d872a65da2e3eeed1813951c427d33cc9a
-  languageName: node
-  linkType: hard
-
-"undici-types@npm:~8.3.0":
-  version: 8.3.0
-  resolution: "undici-types@npm:8.3.0"
-  checksum: 10c0/c8aa7e2fbebfce519654dafadc0ece59be888d2ccaf180fb4495da875e7b536d2456345c384069c7e6f3e9c9ab7435f074957da306f142343eee86ff8048855a
   languageName: node
   linkType: hard
 
