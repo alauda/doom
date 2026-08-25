@@ -63,6 +63,22 @@ const loadYamlOrJson = async <T>(base: string, patterns?: string[]) => {
   return out
 }
 
+/**
+ * Reads a Kubernetes source that may be either a single resource or a
+ * `kind: List` wrapper.
+ *
+ * The permission plugin unwraps `items` when it builds the runtime module, so a
+ * check that reads `metadata.name` off the wrapper finds nothing at all and
+ * then reports every reference as unresolved.
+ */
+export const unwrapK8sList = <T>(doc: unknown): T[] => {
+  if (!doc || typeof doc !== 'object') {
+    return []
+  }
+  const { items } = doc as { items?: unknown }
+  return Array.isArray(items) ? (items as T[]) : [doc as T]
+}
+
 const loadSources = async (): Promise<ApiSources> => {
   const { config, configFilePath } = await getConfig()
   const base = configFilePath ? path.dirname(configFilePath) : config.root!
@@ -111,12 +127,15 @@ const loadSources = async (): Promise<ApiSources> => {
     }
   }
 
-  const functionResources = await loadYamlOrJson<{
-    metadata?: { name?: string }
-  } | null>(base, config.permission?.functionresources)
-  for (const fr of functionResources) {
-    if (fr?.metadata?.name) {
-      functionNames.add(fr.metadata.name)
+  const functionResourceDocs = await loadYamlOrJson<unknown>(
+    base,
+    config.permission?.functionresources,
+  )
+  for (const doc of functionResourceDocs) {
+    for (const fr of unwrapK8sList<{ metadata?: { name?: string } }>(doc)) {
+      if (fr.metadata?.name) {
+        functionNames.add(fr.metadata.name)
+      }
     }
   }
 

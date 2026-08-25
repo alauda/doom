@@ -1,0 +1,18 @@
+diff --git a/node_modules/unified-message-control/lib/index.js b/node_modules/unified-message-control/lib/index.js
+index 498819b..2c674c2 100644
+--- a/node_modules/unified-message-control/lib/index.js
++++ b/node_modules/unified-message-control/lib/index.js
+@@ -485,7 +485,12 @@ function detectGaps(tree) {
+   function one(node) {
+     update(node.position && node.position.start && node.position.start.offset)
+ 
+-    if (!('children' in node)) {
++    // A parent's span is covered by walking its children — unless it has none.
++    // A self-closing MDX element (`<K8sAPI name="…" />`) is a parent with an
++    // empty `children` array, so without this its end offset is never recorded:
++    // when it is the last node, everything from its start to the end of the
++    // file becomes a "gap", and every message inside it is silently discarded.
++    if (!('children' in node) || node.children.length === 0) {
+       update(node.position && node.position.end && node.position.end.offset)
+     }
+   }

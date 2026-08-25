@@ -6,6 +6,7 @@ import { unified } from 'unified'
 import {
   type ApiSources,
   checkApiRefs,
+  unwrapK8sList,
 } from '#remark-lint/no-unresolved-api-ref.ts'
 
 const parse = (value: string) =>
@@ -142,6 +143,44 @@ describe('no-unresolved-api-ref', () => {
         gvkless(),
       )
       expect(messages).toHaveLength(0)
+    })
+  })
+
+  describe('reading Kubernetes sources', () => {
+    // The permission plugin builds its runtime module from `items`, so a source
+    // written as a `kind: List` — which is what `kubectl get -o yaml` produces,
+    // and what this repo's own fixture is — has to be read the same way here.
+    // Reading `metadata.name` off the wrapper instead yields no names at all,
+    // and then every reference on the page is reported as unresolved.
+    test('unwraps a kind: List wrapper', () => {
+      const items = unwrapK8sList<{ metadata: { name: string } }>({
+        apiVersion: 'v1',
+        kind: 'List',
+        items: [
+          { metadata: { name: 'acp-app' } },
+          { metadata: { name: 'acp-alertsquery' } },
+        ],
+      })
+
+      expect(items.map((item) => item.metadata.name)).toEqual([
+        'acp-app',
+        'acp-alertsquery',
+      ])
+    })
+
+    test('reads a bare resource as a single item', () => {
+      const items = unwrapK8sList<{ metadata: { name: string } }>({
+        kind: 'FunctionResource',
+        metadata: { name: 'acp-app' },
+      })
+
+      expect(items.map((item) => item.metadata.name)).toEqual(['acp-app'])
+    })
+
+    test('reads nothing out of an empty or unparsable source', () => {
+      expect(unwrapK8sList(null)).toEqual([])
+      expect(unwrapK8sList(undefined)).toEqual([])
+      expect(unwrapK8sList('not a document')).toEqual([])
     })
   })
 })
