@@ -48,6 +48,20 @@ export default {
     remarkLintNoDuplicateHeadingsInSection,
     remarkLintNoHiddenTableCell,
     doomLint,
+    // translation-parity: compare a translation with the source it was made
+    // from. These run **before** `checkDeadLinks`, which rewrites link urls in
+    // place (`.mdx` to `.html`, language prefixes) as a side effect of asking
+    // rspress to resolve them. A rule that compares a rewritten translation
+    // against an unrewritten source reports every link in the corpus.
+    translationUpToDate,
+    translationComponentMultiset,
+    translationFrontmatterPreservation,
+    translationHeadingSequence,
+    translationJsxAttributeParity,
+    translationLengthRatio,
+    translationLinkIsomorphism,
+    translationEchoedSource,
+    translationUrlResidue,
     checkDeadLinks,
     headingAnchorFormat,
     noDeepHeading,
@@ -60,16 +74,6 @@ export default {
     site,
     tableSize,
     titleRequired,
-    // translation-parity: compare a translation with the source it was made from
-    translationUpToDate,
-    translationComponentMultiset,
-    translationFrontmatterPreservation,
-    translationHeadingSequence,
-    translationJsxAttributeParity,
-    translationLengthRatio,
-    translationLinkIsomorphism,
-    translationEchoedSource,
-    translationUrlResidue,
     unitCase,
   ],
 }
