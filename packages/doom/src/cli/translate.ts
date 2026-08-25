@@ -33,12 +33,15 @@ import {
   getMatchedDocFilePaths,
   parseBoolean,
   parseTerms,
-  replaceCodeBlocksWithPlaceholders,
-  restoreCodeBlockPlaceholders,
   stringifyMatter,
   translateCodeFile,
 } from './helpers.js'
 import { loadConfig } from './load-config.js'
+import {
+  MaskIntegrityError,
+  maskAst,
+  restoreMaskedContent,
+} from './translate-mask.js'
 
 export interface I18nFrontmatter {
   i18n?: {
@@ -67,14 +70,7 @@ You are a professional technical documentation engineer, skilled in writing high
 ## Baseline Requirements
 - Sentences should be fluent and conform to the expression habits of the <%= targetLang %> language.
 - Input format is MDX; output format must also retain the original MDX format. Do not translate the names of jsx components such as <Overview />, and do not wrap output in unnecessary code blocks.
-- **CRITICAL**: Do not translate or modify ANY link content in the document. This includes:
-  - URLs in markdown links: [text](URL) - keep URL exactly as is but translate the text
-  - Reference-style links: [text][ref] and [ref]: URL - keep both ref and URL unchanged
-  - Inline URLs: https://example.com - keep completely unchanged
-  - Image links: ![alt](src) - keep src unchanged, but alt text should be translated
-  - Anchor links: [text](#anchor) - keep #anchor unchanged
-  - Custom anchors in headings: # Heading \\{#custom-anchor} - keep \\{#custom-anchor} unchanged and translate "Heading"
-  - Any href attributes in HTML tags - keep unchanged
+- **CRITICAL**: Tokens shaped like \`__DOOM_TR_KIND_N__\` (for example \`__DOOM_TR_LINK_3__\`) are protected placeholders. They stand in for content that must never be translated — link targets, image sources, code, identifiers, component attribute values, heading anchors. Reproduce each one **verbatim and exactly once**, in the position it appears. Never translate, reformat, split, renumber, remove, duplicate or invent one. Text around a placeholder — link text, alt text, prose — is translated as usual.
 - Do not translate professional technical terms and proper nouns, including but not limited to: Kubernetes, Docker, CLI, API, REST, GraphQL, JSON, YAML, Git, GitHub, GitLab, AWS, Azure, GCP, Linux, Windows, macOS, Node.js, React, Vue, Angular, TypeScript, JavaScript, Python, Java, Go, Rust, etc. Keep these terms in their original form.
 - The title field and description field in frontmatter should be translated, other frontmatter fields should retain and do not translate.
 - Content within MDX components needs to be translated, whereas MDX component names and parameter keys do not.
@@ -519,8 +515,12 @@ export const translateCommand = new Command('translate')
                 ),
               }
 
-              const codeBlockPlaceholders =
-                replaceCodeBlocksWithPlaceholders(normalizedAst)
+              // Everything the model must not author — link targets, JSX
+              // attribute values, code, anchors — is replaced by an opaque
+              // placeholder here, so the real value is not in the model's
+              // context to rewrite. Restoring it back verifies the round trip
+              // and throws if the document came back damaged.
+              const maskEntries = maskAst(normalizedAst)
 
               const normalizedSourceContent = processor.stringify(normalizedAst)
 
@@ -532,10 +532,18 @@ export const translateCommand = new Command('translate')
                 additionalPrompts: sourceFrontmatter.i18n?.additionalPrompts,
               })
 
-              if (codeBlockPlaceholders.length > 0) {
-                const targetAst = processor.parse(targetContent)
-                restoreCodeBlockPlaceholders(targetAst, codeBlockPlaceholders)
-                targetContent = processor.stringify(targetAst)
+              try {
+                targetContent = restoreMaskedContent(
+                  targetContent,
+                  maskEntries,
+                  processor,
+                )
+              } catch (error) {
+                // Name the file: a damaged translation is only actionable if
+                // you know which one it is.
+                throw error instanceof MaskIntegrityError
+                  ? new MaskIntegrityError(error.findings, sourceRelativePath)
+                  : error
               }
 
               const newFrontmatter = { ...sourceFrontmatter, sourceSHA }

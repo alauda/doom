@@ -12,12 +12,9 @@ import {
   isDoc,
   parseBoolean,
   parseBooleanOrString,
-  replaceCodeBlocksWithPlaceholders,
-  restoreCodeBlockPlaceholders,
   stringifyMatter,
   translateCodeFile,
 } from '#cli/helpers.ts'
-import { mdProcessor } from '#plugins/index.ts'
 
 describe('parseBoolean', () => {
   test('returns true for undefined', () => {
@@ -373,120 +370,5 @@ describe('translateCodeFile', () => {
     })
 
     expect(content.meta).toBe("file='/source/docs/assets/demo.mdx'")
-  })
-})
-
-describe('code block translation placeholders', () => {
-  test('replaces and restores a code node', () => {
-    const content: Code = {
-      type: 'code',
-      lang: 'ts',
-      meta: 'title="example.ts"',
-      value: [
-        'const message = "你好"',
-        'const target = "world"',
-        'const output = `${message}, ${target}`',
-        'console.log(output)',
-      ].join('\n'),
-    }
-
-    const placeholders = replaceCodeBlocksWithPlaceholders(content)
-
-    expect(placeholders).toEqual([
-      {
-        node: {
-          type: 'code',
-          lang: 'ts',
-          meta: 'title="example.ts"',
-          value: [
-            'const message = "你好"',
-            'const target = "world"',
-            'const output = `${message}, ${target}`',
-            'console.log(output)',
-          ].join('\n'),
-        },
-        placeholder: '__DOOM_TRANSLATE_CODE_BLOCK_0__',
-      },
-    ])
-    expect(content).toEqual({
-      type: 'code',
-      value: '__DOOM_TRANSLATE_CODE_BLOCK_0__',
-    })
-
-    restoreCodeBlockPlaceholders(content, placeholders)
-
-    expect(content).toEqual({
-      type: 'code',
-      lang: 'ts',
-      meta: 'title="example.ts"',
-      value: [
-        'const message = "你好"',
-        'const target = "world"',
-        'const output = `${message}, ${target}`',
-        'console.log(output)',
-      ].join('\n'),
-    })
-  })
-
-  test('leaves short code snippets untouched', () => {
-    const content: Code = {
-      type: 'code',
-      lang: 'sh',
-      value: 'kubectl get pods',
-    }
-
-    const placeholders = replaceCodeBlocksWithPlaceholders(content)
-
-    expect(placeholders).toEqual([])
-    expect(content).toEqual({
-      type: 'code',
-      lang: 'sh',
-      value: 'kubectl get pods',
-    })
-  })
-
-  test('restores protected code blocks after markdown round trip', () => {
-    const ast = mdProcessor.parse(
-      [
-        '# Usage',
-        '',
-        'Run `doom translate` before release.',
-        '',
-        '```ts title="example.ts"',
-        'const message = "你好"',
-        'const target = "world"',
-        'const output = `${message}, ${target}`',
-        'console.log(output)',
-        '```',
-        '',
-        '- Step',
-        '',
-        '  ```sh',
-        '  echo 你好',
-        '  ```',
-      ].join('\n'),
-    )
-
-    const placeholders = replaceCodeBlocksWithPlaceholders(ast)
-    const protectedContent = mdProcessor.stringify(ast)
-
-    expect(protectedContent).toContain('__DOOM_TRANSLATE_CODE_BLOCK_0__')
-    expect(protectedContent).not.toContain('__DOOM_TRANSLATE_CODE_BLOCK_1__')
-    expect(protectedContent).toContain('`doom translate`')
-    expect(protectedContent).toContain('echo 你好')
-    expect(protectedContent).not.toContain('```ts title="example.ts"')
-    expect(protectedContent).not.toContain('const message')
-
-    const translatedAst = mdProcessor.parse(
-      protectedContent.replace('# Usage', '# 用法'),
-    )
-    restoreCodeBlockPlaceholders(translatedAst, placeholders)
-    const restoredContent = mdProcessor.stringify(translatedAst)
-
-    expect(restoredContent).toContain('# 用法')
-    expect(restoredContent).toContain('`doom translate`')
-    expect(restoredContent).toContain('```ts title="example.ts"')
-    expect(restoredContent).toContain('const message = "你好"')
-    expect(restoredContent).toContain('  echo 你好')
   })
 })
