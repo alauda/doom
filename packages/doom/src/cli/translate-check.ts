@@ -2,34 +2,15 @@ import fs from 'node:fs/promises'
 import path from 'node:path'
 
 import { logger } from '@rspress/core'
-import remarkFrontmatter from 'remark-frontmatter'
-import remarkGfm from 'remark-gfm'
-import remarkMdx from 'remark-mdx'
-import remarkParse from 'remark-parse'
-import remarkStringify from 'remark-stringify'
 import { glob } from 'tinyglobby'
-import type { Plugin, Processor } from 'unified'
-import { unified } from 'unified'
-import { VFile } from 'vfile'
 import { cyan, red } from 'yoctocolors'
 
-import doomLint from '../remark-lint/index.ts'
-import {
-  translationComponentMultiset,
-  translationFrontmatterPreservation,
-  translationHeadingSequence,
-  translationJsxAttributeParity,
-  translationLengthRatio,
-  translationLinkIsomorphism,
-  translationEchoedSource,
-  translationUpToDate,
-  translationUrlResidue,
-} from '../remark-lint/translation-parity/index.ts'
 import { SUPPORTED_LANGUAGES } from '../shared/index.ts'
 import type { GlobalCliOptions } from '../types.ts'
 import { OPTIONS_FILE, STORAGE_DIR } from '../utils/index.ts'
 
 import { loadConfig } from './load-config.ts'
+import { createTranslationChecker } from './translate-checker.ts'
 
 /**
  * `doom translate check` — run the translation checks over translations that
@@ -43,42 +24,9 @@ import { loadConfig } from './load-config.ts'
  * to fall out of it.
  */
 
-// Order matters only for readability of the output: whether the pair is even
-// comparable comes first, because nothing after it means anything otherwise.
-const PARITY_RULES = [
-  translationUpToDate,
-  translationComponentMultiset,
-  translationLinkIsomorphism,
-  translationJsxAttributeParity,
-  translationHeadingSequence,
-  translationFrontmatterPreservation,
-  translationLengthRatio,
-  translationEchoedSource,
-  translationUrlResidue,
-] as unknown as Array<Plugin<[], never>>
-
 export interface TranslateCheckOptions {
   glob: string[]
   target?: string[]
-}
-
-const buildProcessor = (mdx: boolean, rules: Array<Plugin<[], never>>) => {
-  let processor = unified()
-    .use(remarkParse)
-    .use(remarkStringify)
-    .use(remarkGfm)
-    .use(remarkFrontmatter) as unknown as Processor
-  if (mdx) {
-    processor = processor.use(remarkMdx)
-  }
-  // `doomLint` is message control: it is what makes `<!-- lint disable -->`
-  // work. Included so this command and `doom lint` agree about what a document
-  // says — one rule set means one answer.
-  processor = processor.use(doomLint) as unknown as Processor
-  for (const rule of rules) {
-    processor = processor.use(rule)
-  }
-  return processor.freeze()
 }
 
 export const checkTranslations = async (
@@ -147,32 +95,21 @@ export const checkTranslations = async (
     `Checking ${cyan(String(files.length))} translated document(s) in ${targets.map((lang) => `\`${cyan(lang)}\``).join(', ')}...`,
   )
 
-  const mdxProcessor = buildProcessor(true, PARITY_RULES)
-  const mdProcessor = buildProcessor(false, PARITY_RULES)
+  const checker = createTranslationChecker()
 
   let problems = 0
   for (const file of files) {
     const value = await fs.readFile(file, 'utf8')
-    const processor = file.endsWith('.mdx') ? mdxProcessor : mdProcessor
-    let vfile: VFile
-    try {
-      vfile = await processor.process(new VFile({ path: file, value }))
-    } catch (error) {
-      problems++
-      logger.error(
-        `${cyan(path.relative(docsDir, file))}\n  ${red('does not parse')}: ${error instanceof Error ? error.message : String(error)}`,
-      )
+    const findings = await checker.check(file, value)
+    if (findings.length === 0) {
       continue
     }
-    if (vfile.messages.length === 0) {
-      continue
-    }
-    problems += vfile.messages.length
+    problems += findings.length
     logger.error(
-      `${cyan(path.relative(docsDir, file))}\n${vfile.messages
+      `${cyan(path.relative(docsDir, file))}\n${findings
         .map(
-          (message) =>
-            `  ${red(message.ruleId ?? 'unknown')}  ${message.reason}`,
+          (finding) =>
+            `  ${red(finding.rule)}${finding.line ? ` (line ${finding.line})` : ''}  ${finding.reason}`,
         )
         .join('\n')}`,
     )
