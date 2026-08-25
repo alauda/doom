@@ -46,6 +46,7 @@
     "@alauda/doc-stream-sdk": "0.1.0",
     "@alauda/doom-export": "^0.4.2",
     "@cspell/eslint-plugin": "^10.0.0",
+    "@earendil-works/pi-agent-core": "0.84.3",
     "@eslint-react/eslint-plugin": "^5.8.3",
     "@eslint/js": "^10.0.1",
     "@inquirer/prompts": "^8.4.3",
