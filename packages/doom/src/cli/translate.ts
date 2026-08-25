@@ -21,6 +21,7 @@ import {
   type NormalizeImgSrcOptions,
 } from '../plugins/index.js'
 import {
+  DEFAULT_COPY_ONLY_DIRECTORIES,
   Language,
   SUPPORTED_LANGUAGES,
   TITLE_TRANSLATION_MAP,
@@ -38,6 +39,10 @@ import {
 } from './helpers.js'
 import { loadConfig } from './load-config.js'
 import {
+  type TranslateCheckOptions,
+  checkTranslations,
+} from './translate-check.js'
+import {
   MaskIntegrityError,
   maskAst,
   restoreMaskedContent,
@@ -54,15 +59,6 @@ export interface I18nFrontmatter {
 }
 
 export const TERMS_SUPPORTED_LANGUAGES: Language[] = ['en', 'zh', 'ru']
-
-// Directories that are copied instead of translated by default. Override with
-// `translate.copyOnlyDirectories` in the config.
-const DEFAULT_COPY_ONLY_DIRECTORIES = [
-  'apis/advanced_apis/**',
-  'apis/crds/**',
-  'apis/kubernetes_apis/**',
-  'apis/references/**',
-]
 
 const DEFAULT_SYSTEM_PROMPT = `
 You are a professional technical documentation engineer, skilled in writing high-quality technical documentation in <%= targetLang %>. Please accurately translate the following text from <%= sourceLang %> to <%= targetLang %>, maintaining the style consistent with technical documentation in <%= sourceLang %>.
@@ -277,7 +273,8 @@ const limit = pRateLimit({
 export interface TranslateCommandOptions {
   source: Language
   target: Language
-  glob: string[]
+  // Not required by commander — see the option definition below.
+  glob?: string[]
   copy?: boolean
 }
 
@@ -285,6 +282,7 @@ const supportedLanguages = SUPPORTED_LANGUAGES.join(', ')
 
 export const translateCommand = new Command('translate')
   .description('Translate the documentation')
+  .enablePositionalOptions()
   .argument('[root]', 'Root directory of the documentation')
   .option(
     '-s, --source <language>',
@@ -296,7 +294,10 @@ export const translateCommand = new Command('translate')
     `Document target language, one of ${supportedLanguages}`,
     'zh',
   )
-  .requiredOption(
+  // Deliberately not `requiredOption`: commander walks up the hierarchy when it
+  // checks mandatory options, so a required option here would make every
+  // subcommand — `doom translate check` — unusable. Checked in the action.
+  .option(
     '-g, --glob <path...>',
     'Glob patterns of source dirs/files to translate',
   )
@@ -315,6 +316,14 @@ export const translateCommand = new Command('translate')
       force,
       ...globalOptions
     } = this.optsWithGlobals<TranslateCommandOptions & GlobalCliOptions>()
+
+    if (!globs?.length) {
+      logger.error(
+        `Missing required option \`${cyan('-g, --glob <path...>')}\`: which source files to translate.`,
+      )
+      process.exitCode = 1
+      return
+    }
 
     if (
       !Object.hasOwn(Language, source) ||
@@ -616,4 +625,25 @@ export const translateCommand = new Command('translate')
       `Failed to translate after ${retry} retries, please try again later.`,
     )
     process.exitCode = 1
+  })
+
+translateCommand
+  .command('check')
+  .description(
+    'Check translations that already exist against their sources — offline, with no translation model involved. Runs the same rules the translator runs in its own loop',
+  )
+  .argument('[root]', 'Root directory of the documentation')
+  .option(
+    '-g, --glob <path...>',
+    'Glob patterns within each language directory',
+    ['**/*.md{,x}'],
+  )
+  .option(
+    '-t, --target <language...>',
+    'Languages to check (default: every translated language directory present)',
+  )
+  .action(async function (root?: string) {
+    const globalOptions = this.optsWithGlobals<GlobalCliOptions>()
+    const { glob: globs, target } = this.opts<TranslateCheckOptions>()
+    await checkTranslations(root, globalOptions, { glob: globs, target })
   })

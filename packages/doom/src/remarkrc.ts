@@ -24,6 +24,15 @@ import doomLint, {
   site,
   tableSize,
   titleRequired,
+  translationComponentMultiset,
+  translationFrontmatterPreservation,
+  translationHeadingSequence,
+  translationJsxAttributeParity,
+  translationLengthRatio,
+  translationLinkIsomorphism,
+  translationEchoedSource,
+  translationUpToDate,
+  translationUrlResidue,
   unitCase,
 } from './remark-lint/index.ts'
 
@@ -51,6 +60,16 @@ export default {
     site,
     tableSize,
     titleRequired,
+    // translation-parity: compare a translation with the source it was made from
+    translationUpToDate,
+    translationComponentMultiset,
+    translationFrontmatterPreservation,
+    translationHeadingSequence,
+    translationJsxAttributeParity,
+    translationLengthRatio,
+    translationLinkIsomorphism,
+    translationEchoedSource,
+    translationUrlResidue,
     unitCase,
   ],
 }

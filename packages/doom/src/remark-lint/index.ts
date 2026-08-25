@@ -23,6 +23,7 @@ export * from './no-unresolved-api-ref.ts'
 export * from './site.ts'
 export * from './table-size.ts'
 export * from './title-required.ts'
+export * from './translation-parity/index.ts'
 export * from './unit-case.ts'
 
 const doomLint: Plugin<[], Root> = function () {
