@@ -13,6 +13,7 @@ import remarkLintNoHiddenTableCell from 'remark-lint-no-hidden-table-cell'
 
 import doomLint, {
   checkDeadLinks,
+  chineseTypographyOnlyInChinese,
   headingAnchorFormat,
   noDeepHeading,
   noDeepList,
@@ -47,6 +48,8 @@ export default {
     remarkLintNoChinesePunctuationInNumber,
     remarkLintNoDuplicateHeadingsInSection,
     remarkLintNoHiddenTableCell,
+    // Must follow the two Chinese-typography rules above.
+    chineseTypographyOnlyInChinese,
     doomLint,
     // translation-parity: compare a translation with the source it was made
     // from. These run **before** `checkDeadLinks`, which rewrites link urls in
