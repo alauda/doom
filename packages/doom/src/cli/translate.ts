@@ -31,13 +31,11 @@ import {
   escapeMarkdownHeadingIds,
   getMatchedDocFilePaths,
   parseBoolean,
-  parseTerms,
   stringifyMatter,
   translateCodeFile,
 } from './helpers.js'
 import { loadConfig } from './load-config.js'
 import {
-  type TermPair,
   type TranslateAgentResult,
   translateWithAgent,
 } from './translate-agent.js'
@@ -49,8 +47,14 @@ import {
   createTranslationChecker,
   type TranslationFinding,
 } from './translate-checker.js'
+import { createJudge } from './translate-judge.js'
 import { maskAst } from './translate-mask.js'
-import { DEFAULT_REASONING_EFFORT, createGateway } from './translate-models.js'
+import {
+  DEFAULT_JUDGE_REASONING_EFFORT,
+  DEFAULT_REASONING_EFFORT,
+  createGateway,
+} from './translate-models.js'
+import { resolveTerms } from './translate-terms.js'
 
 /**
  * `doom translate` — orchestration and the gate.
@@ -76,8 +80,6 @@ export interface I18nFrontmatter {
   title?: string
   description?: string
 }
-
-export const TERMS_SUPPORTED_LANGUAGES: Language[] = ['en', 'zh', 'ru']
 
 /**
  * The translation rules.
@@ -146,52 +148,6 @@ const DEFAULT_MAX_REPAIR_ROUNDS = 3
  */
 const DEFAULT_MAX_TURNS = 60
 
-const resolveTerms = async (
-  sourceLang: Language,
-  targetLang: Language,
-  sourceContent: string,
-): Promise<{ text: string; pairs: TermPair[] }> => {
-  const parsedTerms = await parseTerms()
-
-  // Filter terms that exist in source content and have translations for both source and target languages
-  const relevantTerms = parsedTerms.filter((term) => {
-    // Check if term has both source and target language translations
-    const sourceTranslation = term[sourceLang]
-    const targetTranslation = term[targetLang]
-
-    if (!sourceTranslation || !targetTranslation) {
-      return false
-    }
-
-    // Check if the source translation appears in the source content (case-insensitive)
-    const sourceTermRegex = new RegExp(
-      `\\b${sourceTranslation.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`,
-      'i',
-    )
-    return sourceTermRegex.test(sourceContent)
-  })
-
-  if (relevantTerms.length === 0) {
-    logger.debug('No relevant terms found for translation')
-    return { text: '', pairs: [] }
-  }
-
-  const sourceLangName = Language[sourceLang]
-  const targetLangName = Language[targetLang]
-
-  const pairs = relevantTerms.map((term) => ({
-    source: term[sourceLang]!,
-    target: term[targetLang]!,
-  }))
-
-  const text =
-    `- The following is a common related terminology vocabulary table (${sourceLangName} <=> ${targetLangName}), you should use it to translate the matched text.\n` +
-    pairs.map((pair) => `  * ${pair.source} <=> ${pair.target}`).join('\n')
-
-  logger.debug('Resolved terms:', text)
-  return { text, pairs }
-}
-
 function extractFirstLevelHeading(content: string): string | null {
   const lines = content.split('\n')
   for (const line of lines) {
@@ -233,12 +189,7 @@ const renderTranslationRules = async ({
   const sourceLang = Language[source]
   const targetLang = Language[target]
 
-  let terms = { text: '', pairs: [] as TermPair[] }
-  if (
-    [source, target].every((lang) => TERMS_SUPPORTED_LANGUAGES.includes(lang))
-  ) {
-    terms = await resolveTerms(source, target, sourceContent)
-  }
+  const terms = await resolveTerms(source, target, sourceContent)
 
   const firstLevelHeading = extractFirstLevelHeading(sourceContent)
   let titleTranslationPrompt = ''
@@ -465,6 +416,7 @@ export const translateCommand = new Command('translate')
     // wall of unrelated stream errors.
     const gateway = await createGateway({
       modelId: translateOptions.model,
+      judgeModelId: translateOptions.judge?.model,
       contextWindow: translateOptions.contextWindow,
       maxOutputTokens: translateOptions.maxOutputTokens,
     })
@@ -478,8 +430,24 @@ export const translateCommand = new Command('translate')
     const reasoningEffort =
       translateOptions.reasoningEffort ?? DEFAULT_REASONING_EFFORT
 
+    const judge =
+      translateOptions.judge?.enabled === false
+        ? undefined
+        : createJudge({
+            models: gateway.models,
+            model: gateway.judgeModel,
+            reasoningEffort:
+              translateOptions.judge?.reasoningEffort ??
+              DEFAULT_JUDGE_REASONING_EFFORT,
+            draws: translateOptions.judge?.draws,
+            limit: modelCallLimit,
+          })
+
     logger.info(
-      `Translating with \`${cyan(gateway.model.id)}\` (reasoning ${cyan(reasoningEffort)}), up to ${cyan(String(maxRepairRounds))} repair round(s) per document.`,
+      `Translating with \`${cyan(gateway.model.id)}\` (reasoning ${cyan(reasoningEffort)}), up to ${cyan(String(maxRepairRounds))} repair round(s) per document. ` +
+        (judge
+          ? `Reviewed by \`${cyan(gateway.judgeModel.id)}\`.`
+          : `${red('Judge disabled')} — only the deterministic checks are running.`),
     )
 
     const failures: FailedDocument[] = []
@@ -624,6 +592,7 @@ export const translateCommand = new Command('translate')
             translationRules: rules,
             terms,
             checker,
+            judge,
             models: gateway.models,
             model: gateway.model,
             reasoningEffort,

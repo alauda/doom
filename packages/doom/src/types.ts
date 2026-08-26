@@ -61,6 +61,29 @@ export interface TranslateOptions {
   /** Cap on a single model response, in tokens. */
   maxOutputTokens?: number
   /**
+   * The semantic check that reads both documents and says what the translation
+   * lost, added or got wrong — the only check that can see a translation which
+   * is well-formed and about something else.
+   */
+  judge?: {
+    /** Defaults to the translator's model: independence comes from the separate call, not a different model. */
+    model?: string
+    /** Defaults to `medium` — reading two documents against each other is the harder job. */
+    reasoningEffort?: 'minimal' | 'low' | 'medium' | 'high' | 'xhigh' | 'max'
+    /** How many independent readings must agree before a finding counts. Defaults to 2. */
+    draws?: number
+    /**
+     * Turns the judge off.
+     *
+     * Not a way to make a build pass: a document that fails the judge fails,
+     * and the escape hatch for one document is `i18n.disableAutoTranslation`
+     * in its own frontmatter. This exists for measuring what the judge is
+     * worth — running a corpus with and without it — and for a repository whose
+     * gateway has no budget for a second reading.
+     */
+    enabled?: boolean
+  }
+  /**
    * Glob patterns (relative to each language directory) whose files are copied
    * verbatim to the target language instead of being translated. Defaults to
    * the generated API directories (`apis/advanced_apis/**`, `apis/crds/**`,

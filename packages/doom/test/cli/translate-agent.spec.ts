@@ -7,7 +7,11 @@ import { createAssistantMessageEventStream } from '@earendil-works/pi-ai'
 import { afterAll, beforeAll, describe, expect, test } from '@rstest/core'
 
 import { translateWithAgent } from '#cli/translate-agent.ts'
-import type { TranslationChecker } from '#cli/translate-checker.ts'
+import type {
+  TranslationChecker,
+  TranslationFinding,
+} from '#cli/translate-checker.ts'
+import type { Judge } from '#cli/translate-judge.ts'
 import { maskAst } from '#cli/translate-mask.ts'
 import { gatewayModel } from '#cli/translate-models.ts'
 import { mdxProcessor } from '#plugins/index.ts'
@@ -141,18 +145,34 @@ const checkerReturning = (
   assertCheckable: () => Promise.resolve(),
 })
 
+/** A judge whose verdict the test decides. Its opinion is tested in its own spec. */
+const judgeReturning = (findings: TranslationFinding[]): Judge => {
+  let readings = 0
+  return {
+    readings: () => readings,
+    review: () => {
+      readings++
+      return Promise.resolve(findings)
+    },
+  }
+}
+
 const run = async ({
   script,
   fallback = () => says('I am done.'),
   checker = checkerReturning(() => []),
+  judge,
   maxRepairRounds = 3,
   maxTurns = 30,
+  maxModelRetries = 0,
 }: {
   script: Turn[]
   fallback?: () => AssistantMessage
   checker?: TranslationChecker
+  judge?: Judge
   maxRepairRounds?: number
   maxTurns?: number
+  maxModelRetries?: number
 }) => {
   const { maskEntries, maskedSource } = prepareSource()
   const { models, modelCalls, everythingSeen } = scriptedModels(
@@ -170,12 +190,15 @@ const run = async ({
     target: 'zh',
     translationRules: 'Translate from English to Chinese.',
     checker,
+    judge,
     models,
     model: gatewayModel({ id: 'test', baseUrl: 'http://localhost:1/v1' }),
     reasoningEffort: 'low',
     scratchDir: path.join(workspace, 'scratch'),
     maxRepairRounds,
     maxTurns,
+    maxModelRetries,
+    modelRetryDelayMs: 1,
     limit: (job) => job(),
   })
   return { result, maskedSource, modelCalls, everythingSeen }
@@ -344,13 +367,108 @@ describe('the repair loop', () => {
     expect(everythingSeen()).not.toContain('global/install.mdx')
   })
 
-  test('a failure from the model is raised, not translated around', async () => {
+  test('a failure that never clears is raised, not translated around', async () => {
     await expect(
       run({
         script: [errors('gateway said no')],
         fallback: () => errors('gateway said no'),
+        maxModelRetries: 2,
       }),
     ).rejects.toThrow(/gateway said no/)
+  })
+
+  test('a gateway that refuses once is retried, and the draft survives', async () => {
+    // Both messages here were seen on the real gateway while translating: a
+    // 429 and an upstream 503. Neither is a translation problem, and neither
+    // should cost the work already on disk.
+    const { maskedSource } = prepareSource()
+    const { result } = await run({
+      script: [
+        calls('write', {
+          path: 'translation.mdx',
+          content: goodTranslation(maskedSource),
+        }),
+        errors('429: user requests-per-minute limit exceeded'),
+        says('Carrying on — it was already written.'),
+      ],
+      maxModelRetries: 2,
+    })
+
+    expect(result.document).toContain('# 安装')
+    expect(result.findings).toEqual([])
+  })
+
+  test('what the judge blocks on sends the agent back, and fails it in the end', async () => {
+    const { maskedSource } = prepareSource()
+    const judge = judgeReturning([
+      {
+        rule: 'doom-judge:omission',
+        reason:
+          'a whole bullet is missing — the source says: “contact support”',
+      },
+    ])
+
+    const { result } = await run({
+      script: [
+        calls('write', {
+          path: 'translation.mdx',
+          content: goodTranslation(maskedSource),
+        }),
+      ],
+      fallback: () => says('Looks complete to me.'),
+      judge,
+      maxRepairRounds: 2,
+    })
+
+    expect(result.repairRounds).toBe(2)
+    expect(result.document).toBeUndefined()
+    expect(result.findings[0].rule).toBe('doom-judge:omission')
+  })
+
+  test('a readability note is reported and lets the document through', async () => {
+    // "Meets the standard" is the bar. A loop that also had to satisfy an
+    // opinion about style would be a loop with no exit.
+    const { maskedSource } = prepareSource()
+    const judge = judgeReturning([
+      {
+        rule: 'doom-judge:fluency',
+        reason: 'reads stiffly — the source says: “See the”',
+        blocking: false,
+      },
+    ])
+
+    const { result } = await run({
+      script: [
+        calls('write', {
+          path: 'translation.mdx',
+          content: goodTranslation(maskedSource),
+        }),
+        says('Done.'),
+      ],
+      judge,
+    })
+
+    expect(result.document).toContain('# 安装')
+    expect(result.repairRounds).toBe(0)
+    expect(result.findings.map((f) => f.rule)).toEqual(['doom-judge:fluency'])
+  })
+
+  test('the judge is not asked about a draft the rules have already faulted', async () => {
+    const { maskedSource } = prepareSource()
+    const damaged = goodTranslation(maskedSource).replace(
+      /__DOOM_TR_ICODE_0__/,
+      'kubectl apply',
+    )
+    const judge = judgeReturning([])
+
+    await run({
+      script: [calls('write', { path: 'translation.mdx', content: damaged })],
+      fallback: () => says('I believe it is correct.'),
+      judge,
+      maxRepairRounds: 1,
+    })
+
+    expect(judge.readings()).toBe(0)
   })
 
   test('the scratch directory is removed whether the run passes or fails', async () => {

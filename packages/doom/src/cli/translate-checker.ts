@@ -33,7 +33,22 @@ export interface TranslationFinding {
   reason: string
   line?: number
   column?: number
+  /**
+   * Whether this finding stops the document from shipping.
+   *
+   * Everything a rule finds does — the rules only report things that are
+   * wrong. The judge is the exception: it also reports readability, which is
+   * worth telling the translator about and is not worth failing a build over.
+   * "Meets the standard" is the bar, not "cannot be improved".
+   *
+   * Absent means blocking.
+   */
+  blocking?: boolean
 }
+
+/** Findings that stop a document from shipping. */
+export const blockingFindings = (findings: readonly TranslationFinding[]) =>
+  findings.filter((finding) => finding.blocking !== false)
 
 /**
  * Raised when a document cannot be checked at all.

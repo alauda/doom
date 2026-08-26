@@ -17,6 +17,14 @@ export const DEFAULT_TRANSLATE_MODEL = 'gpt-5.6'
 export const DEFAULT_REASONING_EFFORT: ThinkingLevel = 'low'
 
 /**
+ * The judge reads rather than writes, and reading two documents against each
+ * other is the harder job — so it gets a step more reasoning than the
+ * translator. It runs on the same model: independence comes from it being a
+ * separate call with a separate job and two draws, not from a different model.
+ */
+export const DEFAULT_JUDGE_REASONING_EFFORT: ThinkingLevel = 'medium'
+
+/**
  * How much of the model's context we plan for.
  *
  * Deliberately conservative, and deliberately not the number the gateway
@@ -108,12 +116,16 @@ export const BASE_URL_ENV = 'ALAUDA_OPENAI_BASE_URL'
 
 export interface Gateway {
   models: Models
+  /** The model that writes translations. */
   model: Model<'openai-completions'>
+  /** The model that reviews them. The same one unless configured otherwise. */
+  judgeModel: Model<'openai-completions'>
   baseUrl: string
 }
 
 export interface CreateGatewayOptions {
   modelId?: string
+  judgeModelId?: string
   contextWindow?: number
   maxOutputTokens?: number
 }
@@ -127,6 +139,7 @@ export interface CreateGatewayOptions {
  */
 export const createGateway = async ({
   modelId = process.env.ALAUDA_OPENAI_MODEL || DEFAULT_TRANSLATE_MODEL,
+  judgeModelId,
   contextWindow,
   maxOutputTokens,
 }: CreateGatewayOptions = {}): Promise<Gateway> => {
@@ -153,6 +166,15 @@ export const createGateway = async ({
     contextWindow,
     maxOutputTokens,
   })
+  const judgeModel =
+    judgeModelId && judgeModelId !== modelId
+      ? gatewayModel({
+          id: judgeModelId,
+          baseUrl,
+          contextWindow,
+          maxOutputTokens,
+        })
+      : model
 
   const models = createModels()
   models.setProvider(
@@ -163,10 +185,10 @@ export const createGateway = async ({
       auth: {
         apiKey: envApiKeyAuth('Alauda translation gateway', [API_KEY_ENV]),
       },
-      models: [model],
+      models: judgeModel === model ? [model] : [model, judgeModel],
       api: openAICompletionsApi(),
     }),
   )
 
-  return { models, model, baseUrl }
+  return { models, model, judgeModel, baseUrl }
 }

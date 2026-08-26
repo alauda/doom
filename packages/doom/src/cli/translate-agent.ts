@@ -1,6 +1,7 @@
 import path from 'node:path'
 
 import type {
+  AgentEventSink,
   AgentMessage,
   AgentTool,
   AgentToolResult,
@@ -16,12 +17,14 @@ import type {
   ToolResultMessage,
 } from '@earendil-works/pi-ai'
 
-import type { Language } from '../shared/index.ts'
+import { Language } from '../shared/index.ts'
 
 import {
+  blockingFindings,
   type TranslationChecker,
   type TranslationFinding,
 } from './translate-checker.ts'
+import type { Judge } from './translate-judge.ts'
 import {
   MaskIntegrityError,
   type MaskEntry,
@@ -29,6 +32,7 @@ import {
   restoreMaskedContent,
 } from './translate-mask.ts'
 import { createScratch, loadPi } from './translate-scratch.ts'
+import type { TermPair } from './translate-terms.ts'
 
 /**
  * Translating one document, as a loop that ends when the document passes its
@@ -51,11 +55,6 @@ import { createScratch, loadPi } from './translate-scratch.ts'
  * anyway.
  */
 
-export interface TermPair {
-  source: string
-  target: string
-}
-
 export interface TranslateAgentOptions {
   /** The masked source, exactly as the model will see it. */
   maskedSource: string
@@ -76,6 +75,8 @@ export interface TranslateAgentOptions {
   /** Terms the source matched, used to keep one document's wording consistent across segments. */
   terms?: readonly TermPair[]
   checker: TranslationChecker
+  /** The semantic check. Absent only in tests that are about control flow. */
+  judge?: Judge
   models: Models
   model: Model<'openai-completions'>
   reasoningEffort: ThinkingLevel
@@ -87,13 +88,23 @@ export interface TranslateAgentOptions {
   maxTurns: number
   /** Applied to every model call, so an agent's extra turns count against the same budget. */
   limit: <T>(run: () => Promise<T>) => Promise<T>
+  /** How many times a refused request is retried before the document fails. */
+  maxModelRetries?: number
+  /** First backoff after a refused request, doubled per attempt. */
+  modelRetryDelayMs?: number
   onProgress?: (message: string) => void
 }
 
 export interface TranslateAgentResult {
   /** The finished document, when it passed. */
   document?: string
-  /** What was still wrong when the run ended. Empty exactly when `document` is set. */
+  /**
+   * What was still wrong when the run ended.
+   *
+   * `document` is set exactly when none of these block. A passing document can
+   * still carry advisory findings — the judge's readability notes — which are
+   * worth printing and are not worth failing a build over.
+   */
   findings: TranslationFinding[]
   turns: number
   repairRounds: number
@@ -102,6 +113,10 @@ export interface TranslateAgentResult {
 
 /** How many findings to put in front of the model at once. */
 const MAX_REPORTED_FINDINGS = 25
+
+/** Retries for a refused request. Transient limits are normal at corpus scale. */
+const MODEL_MAX_RETRIES = 5
+const MODEL_RETRY_DELAY_MS = 3_000
 
 const SCRATCH_SOURCE_NAME = 'source'
 const SCRATCH_TRANSLATION_NAME = 'translation'
@@ -161,9 +176,12 @@ export const translateWithAgent = async (
     compose,
     targetPath,
     sourceLabel,
+    source,
+    target,
     translationRules,
     terms = [],
     checker,
+    judge,
     models,
     model,
     reasoningEffort,
@@ -171,6 +189,8 @@ export const translateWithAgent = async (
     maxRepairRounds,
     maxTurns,
     limit,
+    maxModelRetries = MODEL_MAX_RETRIES,
+    modelRetryDelayMs = MODEL_RETRY_DELAY_MS,
     onProgress,
   } = options
 
@@ -227,7 +247,34 @@ export const translateWithAgent = async (
 
       const document = compose(restored)
       const findings = await checker.check(targetPath, document)
-      return findings.length > 0 ? { findings } : { findings, document }
+      if (findings.length > 0) {
+        // The judge is the expensive check and the only one that reads. Asking
+        // it about a draft the deterministic rules have already faulted spends
+        // a reading on a document that is going back for repair regardless —
+        // and asks it to judge the meaning of a half-written page.
+        return { findings }
+      }
+
+      if (judge) {
+        findings.push(
+          ...(await judge.review({
+            // The masked pair, not the restored one. Judge findings are fed
+            // back into the translator's context, and a finding quoting an
+            // unmasked link target would put that target back within the
+            // model's reach. Placeholders are stable on both sides, so nothing
+            // about judging prose is lost.
+            sourceText: maskedSource,
+            translationText: draft,
+            sourceLanguage: Language[source],
+            targetLanguage: Language[target],
+            terms,
+          })),
+        )
+      }
+
+      return blockingFindings(findings).length > 0
+        ? { findings }
+        : { findings, document }
     }
 
     // ---------------------------------------------------------------- tools
@@ -532,7 +579,13 @@ export const translateWithAgent = async (
     let turns = 0
     let repairRounds = 0
     let modelCalls = 0
-    let streamError: string | undefined
+    const failure: { message?: string } = {}
+    // Cleared through a call, not an assignment: an assignment here narrows the
+    // property to `undefined` for the rest of the block, and the sink that sets
+    // it is a callback the compiler cannot follow.
+    const clearFailure = () => {
+      failure.message = undefined
+    }
 
     const streamFn: Parameters<typeof runAgentLoop>[5] = (
       streamModel,
@@ -550,6 +603,12 @@ export const translateWithAgent = async (
     const config: Parameters<typeof runAgentLoop>[2] = {
       model,
       reasoning: reasoningEffort,
+      // The gateway refuses requests when a user is over its per-minute limit,
+      // and a corpus run is thousands of calls. Measured: a translation that
+      // met a 429 ended the whole document, because nothing retried it. The
+      // rate limiter keeps us under the limit in the normal case; this is what
+      // happens when something else is also using the budget.
+      maxRetries: MODEL_MAX_RETRIES,
       convertToLlm: (messages) => messages as Message[],
       transformContext,
 
@@ -565,7 +624,12 @@ export const translateWithAgent = async (
       // route around it.
       getFollowUpMessages: async () => {
         const report = await inspectDraft()
-        if (report.findings.length === 0) {
+        // Advisory findings — the judge's readability notes — travel with the
+        // feedback when there is feedback, and never cause a round of their
+        // own. Meeting the standard is the bar; "cannot be improved" is not a
+        // bar a loop can reach.
+        const blocking = blockingFindings(report.findings)
+        if (blocking.length === 0) {
           return []
         }
         if (repairRounds >= maxRepairRounds) {
@@ -573,7 +637,7 @@ export const translateWithAgent = async (
         }
         repairRounds++
         onProgress?.(
-          `${sourceLabel}: ${report.findings.length} problem(s) after round ${repairRounds}, sending them back`,
+          `${sourceLabel}: ${blocking.length} problem(s) after round ${repairRounds}, sending them back`,
         )
         return [
           {
@@ -585,30 +649,69 @@ export const translateWithAgent = async (
       },
     }
 
-    await runAgentLoop(
-      [initialPrompt],
-      { systemPrompt, messages: [], tools },
-      config,
-      (event) => {
-        if (
-          event.type === 'turn_end' &&
-          'stopReason' in event.message &&
-          (event.message.stopReason === 'error' ||
-            event.message.stopReason === 'aborted')
-        ) {
-          streamError =
-            ('errorMessage' in event.message
-              ? event.message.errorMessage
-              : undefined) ?? event.message.stopReason
-        }
-      },
-      undefined,
-      streamFn,
-    )
+    const watchForStreamFailure = (event: Parameters<AgentEventSink>[0]) => {
+      if (
+        event.type === 'turn_end' &&
+        'stopReason' in event.message &&
+        (event.message.stopReason === 'error' ||
+          event.message.stopReason === 'aborted')
+      ) {
+        failure.message =
+          ('errorMessage' in event.message
+            ? event.message.errorMessage
+            : undefined) ?? event.message.stopReason
+      }
+    }
 
-    if (streamError) {
-      throw new Error(
-        `The translation model failed while translating ${sourceLabel}: ${streamError}`,
+    /**
+     * A gateway that refuses is not a translation that failed.
+     *
+     * Measured on the real gateway while translating three documents: "429
+     * user requests-per-minute limit exceeded" and "Upstream service
+     * temporarily unavailable", both of which pi surfaces as a stream error
+     * that ends the run. A corpus is thousands of calls; meeting one of those
+     * is routine, and failing the document over it would fail the wrong thing
+     * — loudly, and in a way that makes the gate look unreliable rather than
+     * the gateway.
+     *
+     * Retrying is cheap here because the draft is on disk. The agent starts
+     * with a fresh context and is told to carry on from what it has already
+     * written, so a refusal costs the turns since the last write rather than
+     * the whole document.
+     */
+    for (let attempt = 0; ; attempt++) {
+      clearFailure()
+      const prompt: Message =
+        attempt === 0
+          ? initialPrompt
+          : {
+              role: 'user',
+              content: `Continue translating \`${sourceName}\` into \`${translationName}\`. Some of it may already be written: \`read\` \`${translationName}\` first, then call \`check\` to see what is still missing, and carry on from there.`,
+              timestamp: Date.now(),
+            }
+
+      await runAgentLoop(
+        [prompt],
+        { systemPrompt, messages: [], tools },
+        config,
+        watchForStreamFailure,
+        undefined,
+        streamFn,
+      )
+
+      if (!failure.message) {
+        break
+      }
+      if (attempt >= maxModelRetries || turns >= maxTurns) {
+        throw new Error(
+          `The translation model failed while translating ${sourceLabel}: ${failure.message}`,
+        )
+      }
+      onProgress?.(
+        `${sourceLabel}: the gateway refused (${failure.message}) — retrying from what is already written`,
+      )
+      await new Promise((resolve) =>
+        globalThis.setTimeout(resolve, modelRetryDelayMs * 2 ** attempt),
       )
     }
 
