@@ -1,7 +1,7 @@
 ---
 description: Configure the `doom` documentation tool
 weight: 1
-sourceSHA: 27119a6df4df3d54a1dc267141c4501c4b0358a7ec6091bf45a0274761e24885
+sourceSHA: 06e5d5e655545fa084d80eba3851180bac0de92d56631135be69acd94948e373
 ---
 
 # Configuration {#configuration}
