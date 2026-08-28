@@ -50,12 +50,24 @@ export const DEFAULT_MAX_OUTPUT_TOKENS = 32_000
 /**
  * What the gateway calls each reasoning level.
  *
- * Measured against the real gateway: the vocabulary is
- * `none / low / medium / high / xhigh / max`. It has no `minimal` — passing one
- * is a 400 — so that level is marked unsupported and pi clamps to the next one
- * it does have.
+ * This is a property of the *model*, not of the gateway. It reads like a
+ * gateway constant — one endpoint, one vocabulary — and that was true while the
+ * gateway served one model family. It is not true now, and the two families
+ * disagree on exactly the two ends of the scale:
+ *
+ * | level     | `gpt-*` | `grok-*` |
+ * | --------- | ------- | -------- |
+ * | `none`    | ok      | **400**  |
+ * | `minimal` | **400** | ok       |
+ *
+ * So a single map cannot describe both: whichever one it is written for, it
+ * makes the other 400 at the edges. An unsupported level is `null`, which pi
+ * clamps to the nearest one the model does have.
+ *
+ * Re-measure by POSTing `/chat/completions` with each `reasoning_effort` value
+ * and reading the status — the levels are not discoverable from `/models`.
  */
-const GATEWAY_THINKING_LEVELS = {
+const GPT_THINKING_LEVELS = {
   off: 'none',
   minimal: null,
   low: 'low',
@@ -64,6 +76,27 @@ const GATEWAY_THINKING_LEVELS = {
   xhigh: 'xhigh',
   max: 'max',
 } as const
+
+const GROK_THINKING_LEVELS = {
+  ...GPT_THINKING_LEVELS,
+  off: null,
+  minimal: 'minimal',
+} as const
+
+/**
+ * Which vocabulary a model id speaks.
+ *
+ * The gateway exposes the same model under several ids — `grok-4.6`,
+ * `grok/grok-4.6`, `x-ai/grok-4.6`, `xai/grok-4.6` — so this matches the family
+ * anywhere in the id rather than anchoring at the start.
+ *
+ * An unknown model gets the `gpt-*` vocabulary, because that is the family this
+ * gateway has always served and the one every default here names. That is a
+ * guess, and a wrong guess shows up as a 400 naming the level — loudly, on the
+ * first call, not as a silently degraded translation.
+ */
+export const thinkingLevelsFor = (modelId: string) =>
+  /grok/i.test(modelId) ? GROK_THINKING_LEVELS : GPT_THINKING_LEVELS
 
 export interface GatewayModelOptions {
   id: string
@@ -84,7 +117,7 @@ export const gatewayModel = ({
   provider: GATEWAY_PROVIDER_ID,
   baseUrl,
   reasoning: true,
-  thinkingLevelMap: { ...GATEWAY_THINKING_LEVELS },
+  thinkingLevelMap: { ...thinkingLevelsFor(id) },
   input: ['text'],
   // Billing for this gateway is not per-request, and nothing here reads cost.
   cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
@@ -114,6 +147,18 @@ export class MissingGatewayCredentialsError extends Error {
 export const API_KEY_ENV = 'ALAUDA_OPENAI_API_KEY'
 export const BASE_URL_ENV = 'ALAUDA_OPENAI_BASE_URL'
 
+/**
+ * Which model reviews the translations, when it should not be the one that
+ * wrote them.
+ *
+ * An environment variable rather than only `translate.judge.model` because the
+ * judge is a property of the *gateway* the build talks to, not of the site
+ * being built: switching it in config means editing every documentation
+ * repository, and leaves them free to drift apart. The per-site option still
+ * wins, for a repository that has a reason to differ.
+ */
+export const JUDGE_MODEL_ENV = 'ALAUDA_OPENAI_JUDGE_MODEL'
+
 export interface Gateway {
   models: Models
   /** The model that writes translations. */
@@ -139,7 +184,7 @@ export interface CreateGatewayOptions {
  */
 export const createGateway = async ({
   modelId = process.env.ALAUDA_OPENAI_MODEL || DEFAULT_TRANSLATE_MODEL,
-  judgeModelId,
+  judgeModelId = process.env[JUDGE_MODEL_ENV],
   contextWindow,
   maxOutputTokens,
 }: CreateGatewayOptions = {}): Promise<Gateway> => {
