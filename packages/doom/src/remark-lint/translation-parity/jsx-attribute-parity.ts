@@ -1,7 +1,7 @@
 import type { Root } from 'mdast'
 import { lintRule } from 'unified-lint-rule'
 
-import { TRANSLATABLE_JSX_ATTRS } from '../../runtime/components/translation-policy.ts'
+import { TRANSLATABLE_JSX_ATTRS } from '../../runtime/components/_translation-policy.ts'
 
 import { collectJsxAttributes, currentPair, diffMultiset } from './shared.ts'
 
@@ -31,7 +31,7 @@ const isExempt = (key: string) => {
  * `<OpenAPIPath path="/v1/alerthistories" />` — none of these is prose, and a
  * translation that changes one produces a page that renders wrong while the
  * build stays green. The exceptions are declared in one place,
- * `runtime/components/translation-policy.ts`, and are the same list the
+ * `runtime/components/_translation-policy.ts`, and are the same list the
  * translator's masking uses: what may be translated is exactly what is not
  * protected.
  */

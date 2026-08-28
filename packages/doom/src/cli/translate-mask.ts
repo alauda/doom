@@ -8,7 +8,7 @@ import type {
 } from 'mdast-util-mdx'
 import { visit } from 'unist-util-visit'
 
-import { isTranslatableJsxAttr } from '../runtime/components/translation-policy.ts'
+import { isTranslatableJsxAttr } from '../runtime/components/_translation-policy.ts'
 
 /**
  * Deterministic masking for `doom translate`.

@@ -16,6 +16,6 @@ Restoring verifies the round trip and throws `MaskIntegrityError` — naming the
 - a placeholder ended up in a node kind it was not issued for;
 - the response, or the restored document, does not parse.
 
-Which JSX attributes carry prose is declared in `runtime/components/translation-policy.ts` — `Directive.title`, `ExternalSiteLink.children`, `Tab.label`, `img.alt`. Everything else is masked, so a component nobody has classified yet fails safe: an untranslated label is visible and harmless, whereas a rewritten identifier is silent and breaks the page.
+Which JSX attributes carry prose is declared in `runtime/components/_translation-policy.ts` — `Directive.title`, `ExternalSiteLink.children`, `Tab.label`, `img.alt`. Everything else is masked, so a component nobody has classified yet fails safe: an untranslated label is visible and harmless, whereas a rewritten identifier is silent and breaks the page.
 
 Masking only ever touches AST nodes; it never pattern-matches inside prose text, so it cannot swallow content that should have been translated. Verified over 1789 real documents (914 English sources, 875 Chinese translations): mask → restore reproduces the document byte-for-byte in 1788 of them, the one difference being a pre-existing non-idempotency in remark's own stringifier that reproduces with no masking at all.

@@ -11,7 +11,7 @@ The new `translation-parity` rules read two documents instead of one, paired exa
 - **`translation-up-to-date`** — the pairing itself. Every other rule stands down unless this one is satisfied, and it says so out loud rather than skipping in silence.
 - **`translation-link-isomorphism`** — every link resolved against the document holding it, language segment stripped, multisets compared. Resolving is what makes it possible at all: a translation's asset links legitimately read `../../../en/networking/x.png` where the source reads `./x.png`, and both name the same file.
 - **`translation-component-multiset`** — a component is a thing on the page, not a turn of phrase; translating never adds or removes one.
-- **`translation-jsx-attribute-parity`** — component attributes are identifiers. Which ones are prose is declared once, in `runtime/components/translation-policy.ts`, and is the same list the translator's masking uses.
+- **`translation-jsx-attribute-parity`** — component attributes are identifiers. Which ones are prose is declared once, in `runtime/components/_translation-policy.ts`, and is the same list the translator's masking uses.
 - **`translation-echoed-source`** — the model handed back what it was given.
 - **`translation-heading-sequence`**, **`translation-frontmatter-preservation`**, **`translation-length-ratio`**, **`translation-url-residue`**.
 
