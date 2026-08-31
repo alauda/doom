@@ -1,5 +1,139 @@
 # @alauda/doom
 
+## 2.6.0
+
+### Minor Changes
+
+- [#347](https://github.com/alauda/doom/pull/347) [`c6fe198`](https://github.com/alauda/doom/commit/c6fe1989d356826a2dabaaeca18e213d6e5191c3) Thanks [@youyongsong](https://github.com/youyongsong)! - Fix a family of API-reference rendering defects where the components ignored facts already present in the CRD / OpenAPI sources, plus add offline integrity tooling.
+
+  **Correctness — endpoints and schema now read the source instead of guessing:**
+  - `<K8sAPI>` derives `namespaced` from the CRD's `spec.scope` instead of always defaulting to `true`, so `Cluster`-scoped resources no longer render an unreachable `/namespaces/{namespace}/` path. The `namespaced` prop still overrides.
+  - Endpoint paths use the resource's real plural from `spec.names.plural` instead of guessing with `pluralize(kind)`, fixing hyphenated (`vpc-egress-gateways`) and irregular (`alaudaloadbalancer2`) plurals. A new `plural` prop is an escape hatch for OpenAPI-sourced resources. (`toLocaleLowerCase` → `toLowerCase`.)
+  - When a page does not pass `apiVersion`, a multi-version CRD now renders the version `kubectl` resolves to — the highest-priority `served` version (GA > beta > alpha, apimachinery ordering) — instead of `spec.versions[0]`. This never publishes a `served: false` version. Both the schema and the endpoint-path version now come from this single resolved version. Configurable via `api.crdVersion: 'preferred' | 'storage' | 'first'`.
+  - `<K8sAPI>` no longer renders endpoint paths it cannot derive. When an OpenAPI schema carries no `x-kubernetes-group-version-kind` — aggregation-layer documents routinely omit it — and no CRD backs the name, the group, version and kind used to fall back to empty strings and concatenate into `/api//` and `/api///{name}`, shipping a broken path on a green build. The endpoints section is now omitted, with a `console.error` naming the props to declare; the schema still renders. `apiVersion` + `apiKind` (plus `apiGroup` outside the core group) make the page render endpoints again.
+  - `/status` (and the new `/scale`) endpoints follow what the source declares, not whether the schema happens to contain a `status` property — fixing both fabricated `/status` endpoints and missing ones. A CRD declares the subresource in `spec.versions[].subresources`; an OpenAPI document declares it by routing it, so its `paths` decide, and a document that routes the resource without a `/status` route renders none. A document that does not route the resource at all says nothing either way, so the schema property stays the fallback there. The new `hasStatus` prop overrides both.
+  - `x-kubernetes-int-or-string` fields (carried under `anyOf`) now render their type (`integer|string`) instead of an empty cell.
+
+  **Anchors and badges:**
+  - Array-item schema sections (`.spec.foo[]`) no longer collide with their parent (`.spec.foo`) on the same HTML id; schema headings use a page-level stateful slugger, so every property section is uniquely addressable (HTML id uniqueness / WCAG 4.1.1).
+  - OpenAPI operations without a `summary` no longer produce `id="undefined"` / `href="#undefined"` or bare numeric anchors; the heading id is derived from the method (and summary when present).
+  - The `<OpenAPIPath>` Request Body **required** badge reads `requestBody.required` (the boolean on the request body) instead of the body schema's list of required _properties_.
+
+  **New configuration and tooling:**
+  - `api.references` accepts an object form `{ href, routePath?: string | false }`, separating the link href from the page-identity key used to decide inline expansion. Plain string values are unchanged. `routePath: false` explicitly means "always link, never expand".
+  - `translate.copyOnlyDirectories` overrides which directories are copied instead of translated (default unchanged).
+  - New `doom api check` command: an offline validation of the local CRD / OpenAPI sources — every file parses, CRDs have the right kind and a unique name, filenames follow the `<group>_<plural>.yaml` convention, and OpenAPI definitions do not conflict across files.
+  - New `no-unresolved-api-ref` lint rule flags `<K8sAPI>` / `<K8sCrd>` / `<OpenAPIRef>` / `<OpenAPIPath>` / `<K8sPermissionTable>` references that cannot be resolved, before they ship as blank pages. It also flags a `<K8sAPI>` whose group, version and kind can be derived from neither the schema nor a CRD nor explicit props, so that failure surfaces at lint time instead of as a missing endpoints section.
+  - Deterministic source ordering: schema files are sorted, and the `filepath` / `openapiPath` map key no longer depends on `process.cwd()`, so pinning a source is stable across working directories and `<OpenAPIPath>` uses a consistent first-match.
+
+  **Other:**
+  - `<K8sPermissionTable>` renders a visible "not found" row instead of silently dropping an unresolved function.
+  - API component chrome (`Property`, `Type`, `Description`, `Required`, `Specification`, `API Endpoints`, `HTTP method`, `Common Parameters`, `Request Body`, `Response`, …) is now translated via `useTranslation` (en/zh/ru) instead of hardcoded English.
+  - API reference pages surface their top-level properties in the page outline (previously a two-line TOC), while deeper nested properties stay excluded.
+
+  > **Downstream impact:** the scope / plural / version / status fixes change the rendered endpoints on already-published pages (measured: immutable-infra-docs 8, asm-docs 4, aml-docs 4, acp-docs 3, plus fabricated `/status` across ~19 pages). `namespaced` (`docs/*/usage/api.md`) and the CRD default-version behavior were documented public defaults; downstream docs should re-review their API pages after upgrading.
+  >
+  > The OpenAPI-branch `/status` change was measured against the full consumer corpus (222 `<K8sAPI>` / `<K8sCrd>` tags across 11 repositories; 26 resolve to OpenAPI schemas, all of them in acp-docs): **no page changes**, because every document that routes one of those resources also routes its `/status`. The two pages whose documents do not are covered by the fallback rather than losing endpoints.
+
+- [#350](https://github.com/alauda/doom/pull/350) [`cac2679`](https://github.com/alauda/doom/commit/cac267964df6d897c9d9252edb16a515c0d1f347) Thanks [@youyongsong](https://github.com/youyongsong)! - Translate in a checked loop instead of one call, and have a second reading judge the meaning.
+
+  `doom translate` used to hand a document to the model once and write down whatever came back. Nothing read the result: a dropped bullet, a sentence that lost the product name, a page returned in the source language — all of it shipped, because the only gate downstream was whether the build could still resolve every link.
+
+  Translating a document is now a bounded loop. The model writes, the same checks that `doom translate check` runs are applied to what it wrote, and any findings go back to it as its next instruction. The loop is bounded on purpose — `maxRepairRounds` per document and `maxTurns` overall — and exhausting either fails the document rather than shipping the best attempt so far. A failed document fails the whole run and nothing is uploaded, so a partial success cannot reach a translations repository. The final verdict is always the harness re-running the checks itself; the agent's own account of what it fixed is never taken as evidence.
+
+  The agent works in a scratch directory it cannot escape, and it only ever sees masked content — the placeholders described above are never resolved inside the loop, so no repair round can rewrite a link or an identifier.
+
+  Structure is not meaning, so a second reading looks at the two documents side by side and reports what the translation lost, added or got wrong. It is the only check that can see a translation which is well-formed, passes every structural rule, and is about something else. Two independent readings are taken and only findings both agree on count, which is what keeps a single confident misreading out of the results.
+
+  Which model does that reading is now a choice:
+  - `translate.judge.model` in a site's config, or `ALAUDA_OPENAI_JUDGE_MODEL` for a whole gateway;
+  - unset, it stays the translator's model — the independence comes from a separate call with a separate job, not from a different model.
+
+  A reviewer that is not the writer is worth having, because two readings by one model share its blind spots and its preference for its own output; a different model does not. It is not free, though: the pass/fail line for the judge is a measured property of the model behind it — its false-positive rate on translations believed to be good, and its recall on damage deliberately introduced — so changing the model means measuring both again before trusting it. The shipped default was calibrated; another model is not, until someone calibrates it.
+
+  Reasoning levels are now read per model rather than per gateway. One endpoint can serve families that disagree about the vocabulary — one accepts `none` and rejects `minimal`, the other does the reverse — and a single map for the gateway makes whichever family it was not written for fail at the ends of the scale.
+
+  The previous single-call path is gone rather than kept behind a flag: there is one way translations are produced, and rolling back means releasing a previous version.
+
+- [#350](https://github.com/alauda/doom/pull/350) [`cac2679`](https://github.com/alauda/doom/commit/cac267964df6d897c9d9252edb16a515c0d1f347) Thanks [@youyongsong](https://github.com/youyongsong)! - Protect everything a translation model must not author, deterministically, instead of asking it not to touch things.
+
+  `doom translate` used to send the whole document to the model with a detailed `**CRITICAL**: Do not translate or modify ANY link content` instruction, and only code blocks longer than 50 characters were actually protected. The instruction did not hold: translated documents came back with `<ExternalSiteLink … />` flattened into a markdown link, `../virtualization/virtual_machine/` collapsed into `../virtualization_virtual_machine/`, `../global_dr.mdx` rewritten as `../global.dr.mdx`, `how_to/` rewritten as `how-to/`, and links generated twice. None of that is visible to a build unless the resulting link happens to be dead, so it shipped.
+
+  Link targets, image sources, code (fenced and inline, with no length floor), MDX JSX attribute values, `href`/`src` in raw HTML, custom heading anchors, bare URLs, MDX expressions and reference/footnote labels are now replaced with opaque placeholders before the document reaches the model, and restored afterwards. The model never has the real value in its context, so it cannot rewrite it.
+
+  Restoring verifies the round trip and throws `MaskIntegrityError` — naming the file and each offending placeholder — when:
+  - a placeholder came back fewer times than it went out (the model deleted the node it stood for);
+  - it came back more often (the model duplicated it);
+  - the model invented a placeholder that was never issued;
+  - a placeholder ended up in a node kind it was not issued for;
+  - the response, or the restored document, does not parse.
+
+  Which JSX attributes carry prose is declared in `runtime/components/_translation-policy.ts` — `Directive.title`, `ExternalSiteLink.children`, `Tab.label`, `img.alt`. Everything else is masked, so a component nobody has classified yet fails safe: an untranslated label is visible and harmless, whereas a rewritten identifier is silent and breaks the page.
+
+  Masking only ever touches AST nodes; it never pattern-matches inside prose text, so it cannot swallow content that should have been translated. Verified over 1789 real documents (914 English sources, 875 Chinese translations): mask → restore reproduces the document byte-for-byte in 1788 of them, the one difference being a pre-existing non-idempotency in remark's own stringifier that reproduces with no masking at all.
+
+- [#350](https://github.com/alauda/doom/pull/350) [`cac2679`](https://github.com/alauda/doom/commit/cac267964df6d897c9d9252edb16a515c0d1f347) Thanks [@youyongsong](https://github.com/youyongsong)! - Review translations with a different model by default, and give the gateway a budget that can be set.
+
+  **The reviewer is no longer the translator.** Two readings by one model share that model's blind spots, and a model asked to review what it just wrote prefers it; taking more draws fixes neither. The default reviewer is now `grok-4.6` while the translator stays `gpt-5.6`.
+
+  Measured on 40 held-out pairs neither model had been run against, both reviewing under the same prompt: injection recall identical at 18/20, and the false-positive rate no worse — 3 of 40 documents flagged against 4 of 40. Those two numbers are one document apart, and the same model swings that far between samples, so this is not a claim that one model reviews better. It is a claim that the failures are not shared, which is the property being bought. In the round that measured it, the new reviewer caught a heading where "Collect Evidence Before Escalation" had become "before a version upgrade" — on a page the old arrangement passed.
+
+  `translate.judge.model` still decides for one site, and `ALAUDA_OPENAI_JUDGE_MODEL` for a whole gateway. Setting either to the translator's own id restores the previous behaviour.
+
+  **This requires the gateway to serve both models.** One that does not will fail on the first review, naming the model — set `translate.judge.model` to the translator's id there.
+
+  **How hard the gateway is driven is now a setting**, where it used to be two constants:
+  - `translate.concurrency` / `ALAUDA_OPENAI_CONCURRENCY` — how many documents are translated at once, and how many model calls may be in flight. Defaults to **2**, down from 10.
+  - `translate.requestsPerMinute` / `ALAUDA_OPENAI_REQUESTS_PER_MINUTE` — the budget in model requests a minute. It counts calls rather than documents, so the extra turns a repair round takes count against it. Defaults to **25**, down from 50.
+
+  Concurrency is one number rather than a pair that can drift apart, and a malformed value fails naming the variable instead of quietly falling back to the default: a run that is not the run that was asked for should say so.
+
+  The new defaults are deliberately lower than the old constants. Translating a corpus is not urgent, and a gateway shared with everything else is the resource worth protecting; a run that finishes later costs less than one that crowds out the rest of the platform.
+
+- [#350](https://github.com/alauda/doom/pull/350) [`cac2679`](https://github.com/alauda/doom/commit/cac267964df6d897c9d9252edb16a515c0d1f347) Thanks [@youyongsong](https://github.com/youyongsong)! - Check translations against the source they were made from, as lint rules, and add `doom translate check` to run those checks offline.
+
+  Nothing has ever compared a translated document with its source. A translation could drop a bullet, rewrite a link into a different existing page, or come back verbatim in English, and every gate stayed green: the build only notices a link that resolves nowhere, and it notices it after the damaged file has already been committed back to the translations repository.
+
+  The new `translation-parity` rules read two documents instead of one, paired exactly by the `sourceSHA` the translator writes:
+  - **`translation-up-to-date`** — the pairing itself. Every other rule stands down unless this one is satisfied, and it says so out loud rather than skipping in silence.
+  - **`translation-link-isomorphism`** — every link resolved against the document holding it, language segment stripped, multisets compared. Resolving is what makes it possible at all: a translation's asset links legitimately read `../../../en/networking/x.png` where the source reads `./x.png`, and both name the same file.
+  - **`translation-component-multiset`** — a component is a thing on the page, not a turn of phrase; translating never adds or removes one.
+  - **`translation-jsx-attribute-parity`** — component attributes are identifiers. Which ones are prose is declared once, in `runtime/components/_translation-policy.ts`, and is the same list the translator's masking uses.
+  - **`translation-echoed-source`** — the model handed back what it was given.
+  - **`translation-heading-sequence`**, **`translation-frontmatter-preservation`**, **`translation-length-ratio`**, **`translation-url-residue`**.
+
+  `doom translate check [root]` runs them over translations that already exist, with no translation model involved — the offline way to survey which documents are damaged before deciding what is worth re-translating.
+
+  Measured over a real corpus of 1768 translated documents: 14 findings, each one verified by hand, none of them false. They include three documents whose prose came back in English with only the frontmatter translated, a `<Term>` wrapped in backticks so it renders as literal source, two hyperlinks dropped from a page, a list item merged away, and — from the source side — a document whose frontmatter is missing its opening `---`, so `weight: 13` renders as a heading.
+
+  Two rules were cut back to get there, and both cases are recorded in the rules themselves: comparing `src`/`href` as written reported every illustrated page, and matching anything shaped like `name.tld/path` reported API groups and annotation keys. `translation-terminology-adherence` ships but is deliberately **not** in the default rule set: run against the shared terminology table it reports 490 problems on a corpus that is substantially correct, because that table is a glossary of preferences rather than a set of invariants.
+
+### Patch Changes
+
+- [#350](https://github.com/alauda/doom/pull/350) [`cac2679`](https://github.com/alauda/doom/commit/cac267964df6d897c9d9252edb16a515c0d1f347) Thanks [@youyongsong](https://github.com/youyongsong)! - Keep the Chinese-typography rules on Chinese documents.
+
+  `remark-lint-match-punctuation` and `remark-lint-no-chinese-punctuation-in-number` pair and place CJK punctuation. They joined the rule set when the only documents anyone linted were Chinese; now that translations are linted too, they read `pod’ами` — which is how Russian declines a Latin word — as an unmatched quotation mark and report every page that does it.
+
+  Measured over a real corpus of 1728 translated documents, that was 17 of 19 findings, and none of the 17 was a defect. Both rules now apply only to documents under a `zh` directory. A document whose language cannot be told from its path keeps its messages: not knowing is a reason to report, not a reason to go quiet.
+
+- [#350](https://github.com/alauda/doom/pull/350) [`cac2679`](https://github.com/alauda/doom/commit/cac267964df6d897c9d9252edb16a515c0d1f347) Thanks [@youyongsong](https://github.com/youyongsong)! - Stop `doom lint` from silently discarding messages on a trailing self-closing element.
+
+  Message control drops messages that fall in a "gap" — a region of the file not represented in the tree. It decided a node's span was covered by walking its children, but a self-closing MDX element (`<K8sAPI name="…" />`) is a parent with an _empty_ `children` array, so its end offset was never recorded. When such an element was the last node, everything from its start to the end of the file became a gap and every message inside it was thrown away.
+
+  A canonical API reference page is exactly that shape — a heading followed by a single `<K8sAPI … />` — so the rules written for those pages reported nothing at all, on a green build. Every rule's own spec passed throughout, because the specs did not run message control; a `lintMdxPipeline` test helper now does, and the regression case fails without the fix.
+
+  Fixing that immediately surfaced a second defect it had been hiding: `no-unresolved-api-ref` read `metadata.name` straight off each permission source, while the permission plugin builds its runtime module from `items`. Against a `kind: List` source — what `kubectl get -o yaml` produces, and what this repository's own fixture is — the check therefore knew no function names at all and reported every `<K8sPermissionTable>` reference as unresolved. Both shapes are now read the way the runtime reads them.
+
+- [#350](https://github.com/alauda/doom/pull/350) [`cac2679`](https://github.com/alauda/doom/commit/cac267964df6d897c9d9252edb16a515c0d1f347) Thanks [@youyongsong](https://github.com/youyongsong)! - Apply doom's lint rules to translated documents at all.
+
+  `doom lint` reported success on a directory of translations having applied no rule to it. The remark config — which is what carries every doom lint rule, dead links included — was attached only to files under the source-language directory, so `zh/` and `ru/` documents were parsed and then checked against nothing. Linting a translation and linting nothing produced the same output.
+
+  The remark config now covers every language directory. Spell checking stays scoped to the source language, where its dictionaries belong.
+
+  The `translation-parity` rules also now run **before** `check-dead-links`, which rewrites link urls in place (`.mdx` to `.html`, language prefixes) as a side effect of asking rspress to resolve them. Comparing a rewritten translation against an unrewritten source reported 961 problems on a corpus that has one.
+
+  Expect a first run over an existing repository to find things: these rules have never seen the translated half of it.
+
 ## 2.5.4
 
 ### Patch Changes
