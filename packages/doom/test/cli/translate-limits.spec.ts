@@ -7,7 +7,7 @@ import {
   REQUESTS_PER_MINUTE_ENV,
   createLimits,
   positiveIntFromEnv,
-} from '#cli/translate.ts'
+} from '#cli/translate-limits.ts'
 
 const NAME = CONCURRENCY_ENV
 
