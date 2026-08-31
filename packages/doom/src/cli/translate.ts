@@ -220,21 +220,65 @@ const renderTranslationRules = async ({
   return { rules, terms: terms.pairs }
 }
 
-/**
- * Model calls, rate limited.
- *
- * This used to wrap a whole file, because a whole file was one call. It is now
- * per call, so the extra turns an agent takes count against the same budget
- * the gateway is protected by rather than slipping past it.
- */
-const modelCallLimit = pRateLimit({
-  interval: 60_000, // 1min
-  rate: 50,
-  concurrency: 10,
-})
+export const CONCURRENCY_ENV = 'ALAUDA_OPENAI_CONCURRENCY'
+export const REQUESTS_PER_MINUTE_ENV = 'ALAUDA_OPENAI_REQUESTS_PER_MINUTE'
 
-/** How many documents are worked on at once. */
-const documentLimit = pRateLimit({ concurrency: 10 })
+/** How many documents are translated at once. */
+export const DEFAULT_CONCURRENCY = 2
+
+/** How many model requests a minute the gateway is asked to take. */
+export const DEFAULT_REQUESTS_PER_MINUTE = 25
+
+/**
+ * Reads a positive integer from the environment, or fails naming the variable.
+ *
+ * Falling back to the default on a malformed value would be the worst of the
+ * three outcomes: the run is not what was asked for, and nothing says so. A
+ * gateway budget set to `twenty` is a mistake worth stopping for.
+ */
+export const positiveIntFromEnv = (name: string, fallback: number) => {
+  const raw = process.env[name]
+  if (raw == null || raw === '') {
+    return fallback
+  }
+  const value = Number(raw)
+  if (!Number.isInteger(value) || value < 1) {
+    throw new Error(
+      `\`${name}\` must be a whole number of at least 1, and is \`${raw}\`.`,
+    )
+  }
+  return value
+}
+
+/**
+ * The two limits a run is given, and the one number each of them means.
+ *
+ * `concurrency` bounds documents in flight *and* model calls in flight. They
+ * are one knob rather than two because "how many translations are running" is
+ * what a gateway feels, and two numbers that mean nearly the same thing drift
+ * apart. The cost is internal queueing — the judge's two draws take their turn
+ * instead of going out together — which slows a document down without changing
+ * what it produces.
+ *
+ * `requestsPerMinute` is the budget the gateway is protected by. It counts
+ * calls, not documents: the loop makes as many as a document needs, and the
+ * extra turns an agent takes count against the same budget rather than
+ * slipping past it.
+ */
+export const createLimits = ({
+  concurrency,
+  requestsPerMinute,
+}: {
+  concurrency: number
+  requestsPerMinute: number
+}) => ({
+  modelCallLimit: pRateLimit({
+    interval: 60_000, // 1min
+    rate: requestsPerMinute,
+    concurrency,
+  }),
+  documentLimit: pRateLimit({ concurrency }),
+})
 
 export interface TranslateCommandOptions {
   source: Language
@@ -424,6 +468,19 @@ export const translateCommand = new Command('translate')
     const scratchDir = path.resolve(STORAGE_DIR, 'translate-scratch')
     await fs.rm(scratchDir, { recursive: true, force: true })
 
+    // Per-site config wins; the environment is how one gateway's budget is set
+    // for every repository that talks to it, without editing each of them.
+    const concurrency =
+      translateOptions.concurrency ??
+      positiveIntFromEnv(CONCURRENCY_ENV, DEFAULT_CONCURRENCY)
+    const requestsPerMinute =
+      translateOptions.requestsPerMinute ??
+      positiveIntFromEnv(REQUESTS_PER_MINUTE_ENV, DEFAULT_REQUESTS_PER_MINUTE)
+    const { modelCallLimit, documentLimit } = createLimits({
+      concurrency,
+      requestsPerMinute,
+    })
+
     const maxRepairRounds =
       translateOptions.maxRepairRounds ?? DEFAULT_MAX_REPAIR_ROUNDS
     const maxTurns = translateOptions.maxTurns ?? DEFAULT_MAX_TURNS
@@ -445,6 +502,7 @@ export const translateCommand = new Command('translate')
 
     logger.info(
       `Translating with \`${cyan(gateway.model.id)}\` (reasoning ${cyan(reasoningEffort)}), up to ${cyan(String(maxRepairRounds))} repair round(s) per document. ` +
+        `${cyan(String(concurrency))} at a time, at most ${cyan(String(requestsPerMinute))} model request(s) a minute. ` +
         (judge
           ? `Reviewed by \`${cyan(gateway.judgeModel.id)}\`.`
           : `${red('Judge disabled')} — only the deterministic checks are running.`),

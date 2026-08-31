@@ -61,12 +61,27 @@ export interface TranslateOptions {
   /** Cap on a single model response, in tokens. */
   maxOutputTokens?: number
   /**
+   * How many documents are translated at once, and how many model calls may be
+   * in flight. Defaults to 2, or `ALAUDA_OPENAI_CONCURRENCY`.
+   */
+  concurrency?: number
+  /**
+   * The gateway's budget, in model requests a minute — calls, not documents, so
+   * the extra turns a repair round takes count against it. Defaults to 25, or
+   * `ALAUDA_OPENAI_REQUESTS_PER_MINUTE`.
+   */
+  requestsPerMinute?: number
+  /**
    * The semantic check that reads both documents and says what the translation
    * lost, added or got wrong — the only check that can see a translation which
    * is well-formed and about something else.
    */
   judge?: {
-    /** Defaults to the translator's model: independence comes from the separate call, not a different model. */
+    /**
+     * Who reviews. Defaults to a model that is *not* the translator, because
+     * two readings by one model share its blind spots and its preference for
+     * its own output. Set it to the translator's own id to turn that off.
+     */
     model?: string
     /** Defaults to `medium` — reading two documents against each other is the harder job. */
     reasoningEffort?: 'minimal' | 'low' | 'medium' | 'high' | 'xhigh' | 'max'

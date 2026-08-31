@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, test } from '@rstest/core'
 
 import {
   API_KEY_ENV,
+  DEFAULT_JUDGE_MODEL,
   BASE_URL_ENV,
   DEFAULT_TRANSLATE_MODEL,
   JUDGE_MODEL_ENV,
@@ -95,9 +96,10 @@ describe('createGateway — which model reviews', () => {
     }
   })
 
-  test('reviews with the translator by default', async () => {
+  test('reviews with something other than the translator by default', async () => {
     const gateway = await createGateway({ modelId: 'gpt-5.6' })
-    expect(gateway.judgeModel).toBe(gateway.model)
+    expect(gateway.judgeModel.id).toBe(DEFAULT_JUDGE_MODEL)
+    expect(gateway.judgeModel.id).not.toBe(gateway.model.id)
   })
 
   test(`\`${JUDGE_MODEL_ENV}\` switches the reviewer`, async () => {

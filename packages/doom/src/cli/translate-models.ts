@@ -14,13 +14,26 @@ export const GATEWAY_PROVIDER_ID = 'alauda'
 /** The default translator model. Measured against this gateway; see the proposal's §5.4. */
 export const DEFAULT_TRANSLATE_MODEL = 'gpt-5.6'
 
+/**
+ * The default reviewer, and deliberately not the translator.
+ *
+ * Two readings by one model share that model's blind spots, and a model asked
+ * to review what it just wrote prefers it. Neither is fixed by taking more
+ * draws — only by asking something else.
+ *
+ * Measured on 40 held-out pairs against the translator reviewing itself: the
+ * same 18/20 injection recall, and no worse a false-positive rate. The reason
+ * to prefer it is the failures it does not share, not a better score.
+ */
+export const DEFAULT_JUDGE_MODEL = 'grok-4.6'
+
 export const DEFAULT_REASONING_EFFORT: ThinkingLevel = 'low'
 
 /**
  * The judge reads rather than writes, and reading two documents against each
  * other is the harder job — so it gets a step more reasoning than the
- * translator. It runs on the same model: independence comes from it being a
- * separate call with a separate job and two draws, not from a different model.
+ * translator. Both families this gateway serves accept this level; they
+ * disagree only at the ends of the scale.
  */
 export const DEFAULT_JUDGE_REASONING_EFFORT: ThinkingLevel = 'medium'
 
@@ -163,7 +176,7 @@ export interface Gateway {
   models: Models
   /** The model that writes translations. */
   model: Model<'openai-completions'>
-  /** The model that reviews them. The same one unless configured otherwise. */
+  /** The model that reviews them — `DEFAULT_JUDGE_MODEL` unless configured otherwise. */
   judgeModel: Model<'openai-completions'>
   baseUrl: string
 }
@@ -184,7 +197,7 @@ export interface CreateGatewayOptions {
  */
 export const createGateway = async ({
   modelId = process.env.ALAUDA_OPENAI_MODEL || DEFAULT_TRANSLATE_MODEL,
-  judgeModelId = process.env[JUDGE_MODEL_ENV],
+  judgeModelId = process.env[JUDGE_MODEL_ENV] || DEFAULT_JUDGE_MODEL,
   contextWindow,
   maxOutputTokens,
 }: CreateGatewayOptions = {}): Promise<Gateway> => {
