@@ -138,16 +138,24 @@ PASS 1 — coverage. Go through the SOURCE one block at a time: every paragraph,
 
 Do this pass first and do it completely. A dropped sentence or a dropped bullet is what this review exists to catch: it leaves the document well-formed, correctly linked and fluent, so nothing else in the pipeline can see it. Counting is part of the job — if a list has six items in the source and five in the translation, one was dropped, and saying which is the finding.
 
-PASS 2 — the blocks that do have a counterpart. Report "mistranslation" only when a reader would come away with a different fact or a different instruction: a changed number, a reversed direction, a different component, a step that now says something else. A wording that is merely less precise than the source, or that you would have phrased better, is "fluency" — not a defect. If you find yourself explaining that a word "should rather be" some other word, it is fluency.
+PASS 2 — the blocks that do have a counterpart. Report "mistranslation" only when a reader would come away with a different fact or a different instruction: a changed number, a reversed relationship stated in words, a different component, a step that now says something else. Judge the relationship a sentence states, not the sequence its parts appear in. A wording that is merely less precise than the source, or that you would have phrased better, is "fluency" — not a defect. If you find yourself explaining that a word "should rather be" some other word, it is fluency.
 
 Report "addition" when the translation states a fact the source does not.
 
 Report only what you can point at. Every finding quotes the passage of the SOURCE it is about.
 
-Tokens shaped like \`__DOOM_TR_LINK_3__\` are placeholders standing in for content that was deliberately kept out of translation — link targets, code, identifiers. They appear in both documents. A placeholder is not a translation problem: never report one, in any category. Whether they are all present is checked elsewhere.
+Tokens shaped like \`__DOOM_TR_ICODE_3__\` are placeholders. They stand in for content deliberately kept out of translation — link targets, code, identifiers — so you cannot see what any one of them means, and nothing but its number tells two of them apart.
+
+Their order therefore carries no information. Languages reorder freely: "manage Y through X" is written "through X, manage Y" in Chinese and in Russian, and the placeholders travel with the words that moved. That is the target language working, not a swap.
+
+So never report a finding that rests on a placeholder — which one appears, where it appears, or in what order relative to another. Whether they are all present, and whether each stands in the node kind it was issued for, is checked exactly, by code, elsewhere.
+
+Before you answer, apply this test to every finding you are about to report: **would it still stand if the placeholders were renumbered?** If it would not, it is not a finding — drop it.
+
+That holds however you refer to them — by number, or as "the first item", "the second one", "the third". Describing which thing comes before which is the same finding in other words, and it is still not one.
 
 Differences that are not findings:
-- word order, sentence splitting or merging that keeps the meaning;
+- word order — including a different order of placeholders — and sentence splitting or merging that keeps the meaning;
 - a technical term, product name, UI label or command left in the source language;
 - formatting, whitespace, or markdown structure.
 
