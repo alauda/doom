@@ -1,7 +1,7 @@
 # Permission Description Document
 
 ```mdx
-<K8sPermissionTable functions={['devops-testplans', 'devops-testmodules']} />
+<K8sPermissionTable functions={['acp-app', 'acp-alertsquery']} />
 ```
 
 ## `props`
@@ -12,14 +12,14 @@
 
 | Function | Action | Platform Administrator | Platform auditors | Project Manager | Namespace Administrator | Developers | Cluster Administrator |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| testplans
-`devops-testplans` | View | ✓ | ✓ | ✓ | ✓ | ✓ | ✕ |
+| app
+`acp-app` | View | ✓ | ✓ | ✓ | ✓ | ✓ | ✕ |
 | Create | ✓ | ✕ | ✓ | ✓ | ✓ | ✕ |
 | Update | ✓ | ✕ | ✓ | ✓ | ✓ | ✕ |
 | Delete | ✓ | ✕ | ✓ | ✓ | ✓ | ✕ |
-| testmodules
-`devops-testmodules` | View | ✓ | ✓ | ✓ | ✓ | ✓ | ✕ |
-| Create | ✓ | ✕ | ✓ | ✓ | ✓ | ✕ |
-| Update | ✓ | ✕ | ✓ | ✓ | ✓ | ✕ |
-| Delete | ✓ | ✕ | ✓ | ✓ | ✓ | ✕ |
+| alertsquery
+`acp-alertsquery` | View | ✓ | ✓ | ✓ | ✓ | ✓ | ✕ |
+| Create | ✓ | ✕ | ✕ | ✕ | ✕ | ✕ |
+| Update | ✓ | ✕ | ✕ | ✕ | ✕ | ✕ |
+| Delete | ✓ | ✕ | ✕ | ✕ | ✕ | ✕ |
 
