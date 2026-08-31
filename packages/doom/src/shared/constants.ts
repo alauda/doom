@@ -112,3 +112,18 @@ export const TITLE_TRANSLATION_MAP: Array<Partial<Record<Language, string>>> = [
 export const UNVERSIONED = 'unversioned'
 
 export const UNVERSIONED_PREFIX = `${UNVERSIONED}-`
+
+/**
+ * Directories that `doom translate` copies verbatim instead of translating.
+ * Override with `translate.copyOnlyDirectories`.
+ *
+ * The checks need this too: a copied document is supposed to still be in the
+ * source language, so asking whether it reads as Chinese is asking the wrong
+ * question of the right file.
+ */
+export const DEFAULT_COPY_ONLY_DIRECTORIES = [
+  'apis/advanced_apis/**',
+  'apis/crds/**',
+  'apis/kubernetes_apis/**',
+  'apis/references/**',
+]

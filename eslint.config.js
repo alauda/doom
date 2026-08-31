@@ -18,8 +18,11 @@ export default defineConfig(
       'vendor',
       '**/lib',
       '**/pyodide',
-      // main language is en which is different with docs
-      'fixture-docs/zh',
+      // Test material, not documentation: several fixtures reference resources
+      // that deliberately do not exist, which is the point of the fixture. Its
+      // main language is en, the other way round from `docs`, so the
+      // translation checks would read it backwards as well.
+      'fixture-docs',
     ],
   },
   ...(await doom(new URL('docs', import.meta.url))),

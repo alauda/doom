@@ -67,3 +67,38 @@ describe('doom eslint config', () => {
     )
   })
 })
+
+describe('doom eslint config: which files carry the remark rules', () => {
+  /**
+   * doom's lint rules live in a remark config, and eslint-plugin-mdx only
+   * applies it to files whose config entry declares `remarkConfigPath`. That
+   * declaration used to sit on the entry scoped to the source language, so
+   * `zh/` and `ru/` documents were parsed and then checked against nothing —
+   * a lint run over a translation reported success having applied no rule.
+   */
+  const remarkConfigPathFor = async (filePath: string) => {
+    const eslint = new ESLint({
+      cwd: process.cwd(),
+      overrideConfigFile: true,
+      overrideConfig: (await doom(
+        null,
+      )) as unknown as ESLintOptions['overrideConfig'],
+    })
+    const config = (await eslint.calculateConfigForFile(filePath)) as {
+      languageOptions?: { parserOptions?: { remarkConfigPath?: string } }
+    }
+    return config.languageOptions?.parserOptions?.remarkConfigPath
+  }
+
+  test('applies the remark config to translations, not only to the source language', async () => {
+    const forSource = await remarkConfigPathFor('docs/en/install/a.mdx')
+    expect(forSource).toBeTruthy()
+
+    for (const translated of [
+      'docs/zh/install/a.mdx',
+      'docs/ru/install/a.mdx',
+    ]) {
+      expect(await remarkConfigPathFor(translated)).toBe(forSource)
+    }
+  })
+})

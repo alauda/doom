@@ -1,56 +1,13 @@
-import remarkDirective from 'remark-directive'
-import remarkFrontmatter from 'remark-frontmatter'
-import remarkGfm from 'remark-gfm'
-// @ts-expect-error -- https://github.com/ilyatitovich/remark-lint-code-block-split-list/issues/2
-import remarkLintCodeBlockSplitList from 'remark-lint-code-block-split-list'
-import remarkLintHeadingIncrement from 'remark-lint-heading-increment'
-// @ts-expect-error -- https://github.com/laysent/remark-lint-plugins/issues/51
-import remarkLintLintMatchPunctuation from 'remark-lint-match-punctuation'
-// @ts-expect-error -- https://github.com/laysent/remark-lint-plugins/issues/51
-import remarkLintNoChinesePunctuationInNumber from 'remark-lint-no-chinese-punctuation-in-number'
-import remarkLintNoDuplicateHeadingsInSection from 'remark-lint-no-duplicate-headings-in-section'
-import remarkLintNoHiddenTableCell from 'remark-lint-no-hidden-table-cell'
-
-import doomLint, {
-  checkDeadLinks,
-  headingAnchorFormat,
-  noDeepHeading,
-  noDeepList,
-  noLegacyOSNames,
-  noMultiOpenAPIPaths,
-  noParagraphIndent,
-  noUnmatchedAnchor,
-  noUnresolvedApiRef,
-  site,
-  tableSize,
-  titleRequired,
-  unitCase,
-} from './remark-lint/index.ts'
+import doomLint from './remark-lint/index.ts'
+import { LINT_RULES, SYNTAX_PLUGINS } from './remark-lint/rule-sets.ts'
 
 export default {
   plugins: [
-    remarkDirective,
-    remarkFrontmatter,
-    remarkGfm,
-    remarkLintCodeBlockSplitList,
-    remarkLintHeadingIncrement,
-    remarkLintLintMatchPunctuation,
-    remarkLintNoChinesePunctuationInNumber,
-    remarkLintNoDuplicateHeadingsInSection,
-    remarkLintNoHiddenTableCell,
+    ...SYNTAX_PLUGINS,
+    // Message control (`<!-- lint disable -->`). It registers its transformer
+    // from inside its own attacher, which lands it at the end of the queue, so
+    // it filters the messages of every rule regardless of where it sits here.
     doomLint,
-    checkDeadLinks,
-    headingAnchorFormat,
-    noDeepHeading,
-    noDeepList,
-    noLegacyOSNames,
-    noMultiOpenAPIPaths,
-    noParagraphIndent,
-    noUnmatchedAnchor,
-    noUnresolvedApiRef,
-    site,
-    tableSize,
-    titleRequired,
-    unitCase,
+    ...LINT_RULES,
   ],
 }

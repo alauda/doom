@@ -17,6 +17,20 @@ const anchorsCache = new Map<string, Set<string>>()
 
 const astCache = new Map<string, Root>()
 
+/**
+ * Forget what this document looked like the last time it was linted.
+ *
+ * Both caches key on a path and assume a path names one fixed document, which
+ * holds for a lint run over a directory. The translator breaks that assumption:
+ * it checks the same target path once per repair turn, with different content
+ * each time. Without this, turn 2 is judged against turn 1's anchors — a red
+ * that no amount of repairing can clear, because the repair is invisible.
+ */
+export const forgetDocumentAnchors = (filepath: string) => {
+  anchorsCache.delete(filepath)
+  astCache.delete(filepath)
+}
+
 const getAnchors = (filepath: string) => {
   if (anchorsCache.has(filepath)) {
     return anchorsCache.get(filepath)!

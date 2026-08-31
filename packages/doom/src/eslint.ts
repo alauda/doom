@@ -16,6 +16,7 @@ import tseslint from 'typescript-eslint'
 
 import { loadConfig } from './cli/load-config.js'
 import { getGlobalComponentNames } from './plugins/global/components.js'
+import { SUPPORTED_LANGUAGES } from './shared/index.js'
 import { pkgResolve } from './utils/index.js'
 
 const cjsRequire = createRequire(import.meta.url)
@@ -87,13 +88,31 @@ async function doom(userConfigOrRoot?: UserConfig | string | null | URL) {
       },
     },
     {
+      // Every language directory, not just the one documents are written in.
+      // The remark config is what carries doom's lint rules, so scoping it to
+      // the source language meant a translated document was parsed and then
+      // checked against nothing: a lint run over `zh/` reported success having
+      // applied no rule at all.
+      //
+      // Still scoped to language directories rather than to every markdown file
+      // in the repository — changesets, READMEs and design notes are not
+      // documentation pages and do not want documentation rules.
+      files: [
+        `**/{${SUPPORTED_LANGUAGES.join(',')}}/**/*.{js,jsx,md,mdx,ts,tsx}`,
+      ],
+      languageOptions: {
+        parserOptions: {
+          ...(remarkConfigPath && { remarkConfigPath }),
+        },
+      },
+    },
+    {
+      // Spell checking stays scoped to the source language: the dictionaries
+      // are for it, and running them over a translation is noise.
       files: [`**/${config?.lang ?? 'en'}/**/*.{js,jsx,md,mdx,ts,tsx}`],
       extends: cspellEnabled ? [cspellRecommended] : [],
       languageOptions: {
         globals: globals.browser,
-        parserOptions: {
-          ...(remarkConfigPath && { remarkConfigPath }),
-        },
       },
       rules: cspellEnabled
         ? {

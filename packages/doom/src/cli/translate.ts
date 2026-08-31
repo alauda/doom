@@ -1,7 +1,6 @@
 import crypto from 'node:crypto'
 import fs from 'node:fs/promises'
 import path from 'node:path'
-import { setTimeout } from 'node:timers/promises'
 import { isDeepStrictEqual } from 'node:util'
 
 import { logger } from '@rspress/core'
@@ -9,8 +8,6 @@ import { removeLeadingSlash } from '@rspress/shared'
 import matter from '@rspress/shared/gray-matter'
 import { Command } from 'commander'
 import ejs from 'ejs'
-import { OpenAI, RateLimitError } from 'openai'
-import { pRateLimit } from 'p-ratelimit'
 import { glob } from 'tinyglobby'
 import { cyan, red } from 'yoctocolors'
 
@@ -21,24 +18,65 @@ import {
   type NormalizeImgSrcOptions,
 } from '../plugins/index.js'
 import {
+  DEFAULT_COPY_ONLY_DIRECTORIES,
   Language,
   SUPPORTED_LANGUAGES,
   TITLE_TRANSLATION_MAP,
 } from '../shared/index.js'
 import type { GlobalCliOptions, TranslateOptions } from '../types.js'
-import { pathExists } from '../utils/index.js'
+import { OPTIONS_FILE, STORAGE_DIR, pathExists } from '../utils/index.js'
 
 import {
   escapeMarkdownHeadingIds,
   getMatchedDocFilePaths,
   parseBoolean,
-  parseTerms,
-  replaceCodeBlocksWithPlaceholders,
-  restoreCodeBlockPlaceholders,
   stringifyMatter,
   translateCodeFile,
 } from './helpers.js'
 import { loadConfig } from './load-config.js'
+import {
+  type TranslateAgentResult,
+  translateWithAgent,
+} from './translate-agent.js'
+import {
+  type TranslateCheckOptions,
+  checkTranslations,
+} from './translate-check.js'
+import {
+  createTranslationChecker,
+  type TranslationFinding,
+} from './translate-checker.js'
+import { createJudge } from './translate-judge.js'
+import {
+  CONCURRENCY_ENV,
+  DEFAULT_CONCURRENCY,
+  DEFAULT_REQUESTS_PER_MINUTE,
+  REQUESTS_PER_MINUTE_ENV,
+  createLimits,
+  positiveIntFromEnv,
+} from './translate-limits.js'
+import { maskAst } from './translate-mask.js'
+import {
+  DEFAULT_JUDGE_REASONING_EFFORT,
+  DEFAULT_REASONING_EFFORT,
+  createGateway,
+} from './translate-models.js'
+import { resolveTerms } from './translate-terms.js'
+
+/**
+ * `doom translate` — orchestration and the gate.
+ *
+ * Everything that decides *what* gets translated lives here: which files the
+ * globs match, which are already current by `sourceSHA`, which are copied
+ * rather than translated, how a translation's frontmatter is merged, and the
+ * deterministic rewrites (`normalizeImgSrc`, `translateCodeFile`) that are ours
+ * to make rather than a model's.
+ *
+ * Translating a document does not live here at all. That is a checked loop, in
+ * `translate-agent.ts`. There is one path through it: no flag turns it off and
+ * no single-shot fallback remains, because a protection that can be skipped is
+ * one that gets skipped.
+ */
 
 export interface I18nFrontmatter {
   i18n?: {
@@ -50,31 +88,20 @@ export interface I18nFrontmatter {
   description?: string
 }
 
-export const TERMS_SUPPORTED_LANGUAGES: Language[] = ['en', 'zh', 'ru']
-
-// Directories that are copied instead of translated by default. Override with
-// `translate.copyOnlyDirectories` in the config.
-const DEFAULT_COPY_ONLY_DIRECTORIES = [
-  'apis/advanced_apis/**',
-  'apis/crds/**',
-  'apis/kubernetes_apis/**',
-  'apis/references/**',
-]
-
+/**
+ * The translation rules.
+ *
+ * Overridable per repository through `translate.systemPrompt`, which is why
+ * the placeholder discipline is *not* here: it is part of the harness's own
+ * prompt in `translate-agent.ts`, where a repository cannot drop it by
+ * replacing this text.
+ */
 const DEFAULT_SYSTEM_PROMPT = `
-You are a professional technical documentation engineer, skilled in writing high-quality technical documentation in <%= targetLang %>. Please accurately translate the following text from <%= sourceLang %> to <%= targetLang %>, maintaining the style consistent with technical documentation in <%= sourceLang %>.
+You are a professional technical documentation engineer, skilled in writing high-quality technical documentation in <%= targetLang %>. Please accurately translate from <%= sourceLang %> to <%= targetLang %>, maintaining the style consistent with technical documentation in <%= sourceLang %>.
 
 ## Baseline Requirements
 - Sentences should be fluent and conform to the expression habits of the <%= targetLang %> language.
 - Input format is MDX; output format must also retain the original MDX format. Do not translate the names of jsx components such as <Overview />, and do not wrap output in unnecessary code blocks.
-- **CRITICAL**: Do not translate or modify ANY link content in the document. This includes:
-  - URLs in markdown links: [text](URL) - keep URL exactly as is but translate the text
-  - Reference-style links: [text][ref] and [ref]: URL - keep both ref and URL unchanged
-  - Inline URLs: https://example.com - keep completely unchanged
-  - Image links: ![alt](src) - keep src unchanged, but alt text should be translated
-  - Anchor links: [text](#anchor) - keep #anchor unchanged
-  - Custom anchors in headings: # Heading \\{#custom-anchor} - keep \\{#custom-anchor} unchanged and translate "Heading"
-  - Any href attributes in HTML tags - keep unchanged
 - Do not translate professional technical terms and proper nouns, including but not limited to: Kubernetes, Docker, CLI, API, REST, GraphQL, JSON, YAML, Git, GitHub, GitLab, AWS, Azure, GCP, Linux, Windows, macOS, Node.js, React, Vue, Angular, TypeScript, JavaScript, Python, Java, Go, Rust, etc. Keep these terms in their original form.
 - The title field and description field in frontmatter should be translated, other frontmatter fields should retain and do not translate.
 - Content within MDX components needs to be translated, whereas MDX component names and parameter keys do not.
@@ -103,7 +130,6 @@ You are a professional technical documentation engineer, skilled in writing high
 ## Additional Requirements
 These are additional requirements for the translation. They should be met along with the baseline requirements, and in case of any conflict, the baseline requirements should take precedence.
 
-The text for translation is provided below, within triple quotes:
 """
 <% if (userPrompt) { %>
 <%- userPrompt %>
@@ -116,58 +142,18 @@ The text for translation is provided below, within triple quotes:
 <% } %>
 `.trim()
 
-let openai: OpenAI | undefined
-const openaiModel = process.env.ALAUDA_OPENAI_MODEL || 'gpt-5.4-mini'
+/** How many times findings are fed back before a document is failed. */
+const DEFAULT_MAX_REPAIR_ROUNDS = 3
 
-export interface InternalTranslateOptions extends TranslateOptions {
-  source: Language
-  sourceContent: string
-  target: Language
-  additionalPrompts?: string
-}
-
-const resolveTerms = async (
-  sourceLang: Language,
-  targetLang: Language,
-  sourceContent: string,
-) => {
-  const parsedTerms = await parseTerms()
-
-  // Filter terms that exist in source content and have translations for both source and target languages
-  const relevantTerms = parsedTerms.filter((term) => {
-    // Check if term has both source and target language translations
-    const sourceTranslation = term[sourceLang]
-    const targetTranslation = term[targetLang]
-
-    if (!sourceTranslation || !targetTranslation) {
-      return false
-    }
-
-    // Check if the source translation appears in the source content (case-insensitive)
-    const sourceTermRegex = new RegExp(
-      `\\b${sourceTranslation.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`,
-      'i',
-    )
-    return sourceTermRegex.test(sourceContent)
-  })
-
-  if (relevantTerms.length === 0) {
-    logger.debug('No relevant terms found for translation')
-    return ''
-  }
-
-  const sourceLangName = Language[sourceLang]
-  const targetLangName = Language[targetLang]
-
-  const terms =
-    `- The following is a common related terminology vocabulary table (${sourceLangName} <=> ${targetLangName}), you should use it to translate the matched text.\n` +
-    relevantTerms
-      .map((term) => `  * ${term[sourceLang]} <=> ${term[targetLang]}`)
-      .join('\n')
-
-  logger.debug('Resolved terms:', terms)
-  return terms
-}
+/**
+ * Total assistant turns for one document, tool calls included.
+ *
+ * Separate from the repair rounds on purpose: a long document legitimately
+ * spends many turns reading and appending before it has anything to repair, so
+ * one number cannot be both the budget for producing a translation and the
+ * budget for fixing it. This one is a runaway guard, not a quality knob.
+ */
+const DEFAULT_MAX_TURNS = 60
 
 function extractFirstLevelHeading(content: string): string | null {
   const lines = content.split('\n')
@@ -193,35 +179,27 @@ function getTitleTranslation(
   return null
 }
 
-export const translate = async ({
+/** Renders the translation rules for one document. */
+const renderTranslationRules = async ({
   source,
-  sourceContent,
   target,
-  systemPrompt,
-  userPrompt = '',
-  additionalPrompts = '',
-}: InternalTranslateOptions) => {
-  if (!openai) {
-    openai = new OpenAI({
-      baseURL: process.env.ALAUDA_OPENAI_BASE_URL,
-      apiKey: process.env.ALAUDA_OPENAI_API_KEY,
-    })
-  }
-
+  sourceContent,
+  options,
+  additionalPrompts,
+}: {
+  source: Language
+  target: Language
+  sourceContent: string
+  options: TranslateOptions
+  additionalPrompts?: string
+}) => {
   const sourceLang = Language[source]
   const targetLang = Language[target]
 
-  let terms = ''
-
-  if (
-    [source, target].every((lang) => TERMS_SUPPORTED_LANGUAGES.includes(lang))
-  ) {
-    terms = await resolveTerms(source, target, sourceContent)
-  }
+  const terms = await resolveTerms(source, target, sourceContent)
 
   const firstLevelHeading = extractFirstLevelHeading(sourceContent)
   let titleTranslationPrompt = ''
-
   if (firstLevelHeading) {
     const titleTranslation = getTitleTranslation(
       firstLevelHeading,
@@ -233,62 +211,41 @@ export const translate = async ({
     }
   }
 
-  const finalSystemPrompt = await ejs.render(
-    systemPrompt?.trim() || DEFAULT_SYSTEM_PROMPT,
+  const rules = await ejs.render(
+    options.systemPrompt?.trim() || DEFAULT_SYSTEM_PROMPT,
     {
       sourceLang,
       targetLang,
-      userPrompt,
-      additionalPrompts,
-      terms,
+      userPrompt: options.userPrompt ?? '',
+      additionalPrompts: additionalPrompts ?? '',
+      terms: terms.text,
       titleTranslationPrompt,
     },
     { async: true },
   )
 
-  logger.debug('Final system prompt:\n', finalSystemPrompt)
-  const stream = await openai.chat.completions.create({
-    messages: [
-      {
-        role: 'system',
-        content: finalSystemPrompt,
-      },
-      {
-        role: 'user',
-        content: sourceContent,
-      },
-    ],
-    model: openaiModel,
-    temperature: 0.2,
-    stream: true,
-  })
-
-  let content = ''
-
-  for await (const chunk of stream) {
-    content += chunk.choices[0]?.delta.content ?? ''
-  }
-
-  return content
+  return { rules, terms: terms.pairs }
 }
-
-const limit = pRateLimit({
-  interval: 60_000, // 1min
-  rate: 50,
-  concurrency: 10,
-})
 
 export interface TranslateCommandOptions {
   source: Language
   target: Language
-  glob: string[]
+  // Not required by commander — see the option definition below.
+  glob?: string[]
   copy?: boolean
+}
+
+interface FailedDocument {
+  file: string
+  findings: TranslationFinding[]
+  result?: TranslateAgentResult
 }
 
 const supportedLanguages = SUPPORTED_LANGUAGES.join(', ')
 
 export const translateCommand = new Command('translate')
   .description('Translate the documentation')
+  .enablePositionalOptions()
   .argument('[root]', 'Root directory of the documentation')
   .option(
     '-s, --source <language>',
@@ -300,7 +257,10 @@ export const translateCommand = new Command('translate')
     `Document target language, one of ${supportedLanguages}`,
     'zh',
   )
-  .requiredOption(
+  // Deliberately not `requiredOption`: commander walks up the hierarchy when it
+  // checks mandatory options, so a required option here would make every
+  // subcommand — `doom translate check` — unusable. Checked in the action.
+  .option(
     '-g, --glob <path...>',
     'Glob patterns of source dirs/files to translate',
   )
@@ -320,6 +280,14 @@ export const translateCommand = new Command('translate')
       ...globalOptions
     } = this.optsWithGlobals<TranslateCommandOptions & GlobalCliOptions>()
 
+    if (!globs?.length) {
+      logger.error(
+        `Missing required option \`${cyan('-g, --glob <path...>')}\`: which source files to translate.`,
+      )
+      process.exitCode = 1
+      return
+    }
+
     if (
       !Object.hasOwn(Language, source) ||
       !Object.hasOwn(Language, target) ||
@@ -333,6 +301,16 @@ export const translateCommand = new Command('translate')
     }
 
     const { config } = await loadConfig(root, globalOptions)
+
+    // The pairwise lint rules find the docs root through this file. Without it
+    // they resolve against whatever the last doom command left behind, decide
+    // the document is not a translation, and report nothing at all — a check
+    // that passes because it never ran.
+    await fs.mkdir(STORAGE_DIR, { recursive: true })
+    await fs.writeFile(
+      OPTIONS_FILE,
+      JSON.stringify({ root, globalOptions }, null, 2),
+    )
 
     const docsDir = config.root!
 
@@ -422,190 +400,287 @@ export const translateCommand = new Command('translate')
       }
     }
 
-    const executor = async () =>
-      await Promise.all(
-        [...allSourceFilePaths].map(async (sourceFilePath) => {
-          const sourceContent = await fs.readFile(sourceFilePath, 'utf-8')
+    const translateOptions = config.translate ?? {}
 
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const { sourceSHA: _sourceSHA, ...sourceFrontmatter } = matter(
-            sourceContent,
-          ).data as I18nFrontmatter
+    // Built once: the provider wiring, and the processors the rules run in.
+    // Missing credentials fail here, by name, rather than once per file as a
+    // wall of unrelated stream errors.
+    const gateway = await createGateway({
+      modelId: translateOptions.model,
+      judgeModelId: translateOptions.judge?.model,
+      contextWindow: translateOptions.contextWindow,
+      maxOutputTokens: translateOptions.maxOutputTokens,
+    })
+    const checker = createTranslationChecker()
+    const scratchDir = path.resolve(STORAGE_DIR, 'translate-scratch')
+    await fs.rm(scratchDir, { recursive: true, force: true })
 
-          if (sourceFrontmatter.i18n?.disableAutoTranslation) {
-            allSourceFilePaths.delete(sourceFilePath)
+    // Per-site config wins; the environment is how one gateway's budget is set
+    // for every repository that talks to it, without editing each of them.
+    const concurrency =
+      translateOptions.concurrency ??
+      positiveIntFromEnv(CONCURRENCY_ENV, DEFAULT_CONCURRENCY)
+    const requestsPerMinute =
+      translateOptions.requestsPerMinute ??
+      positiveIntFromEnv(REQUESTS_PER_MINUTE_ENV, DEFAULT_REQUESTS_PER_MINUTE)
+    const { modelCallLimit, documentLimit } = createLimits({
+      concurrency,
+      requestsPerMinute,
+    })
+
+    const maxRepairRounds =
+      translateOptions.maxRepairRounds ?? DEFAULT_MAX_REPAIR_ROUNDS
+    const maxTurns = translateOptions.maxTurns ?? DEFAULT_MAX_TURNS
+    const reasoningEffort =
+      translateOptions.reasoningEffort ?? DEFAULT_REASONING_EFFORT
+
+    const judge =
+      translateOptions.judge?.enabled === false
+        ? undefined
+        : createJudge({
+            models: gateway.models,
+            model: gateway.judgeModel,
+            reasoningEffort:
+              translateOptions.judge?.reasoningEffort ??
+              DEFAULT_JUDGE_REASONING_EFFORT,
+            draws: translateOptions.judge?.draws,
+            limit: modelCallLimit,
+          })
+
+    logger.info(
+      `Translating with \`${cyan(gateway.model.id)}\` (reasoning ${cyan(reasoningEffort)}), up to ${cyan(String(maxRepairRounds))} repair round(s) per document. ` +
+        `${cyan(String(concurrency))} at a time, at most ${cyan(String(requestsPerMinute))} model request(s) a minute. ` +
+        (judge
+          ? `Reviewed by \`${cyan(gateway.judgeModel.id)}\`.`
+          : `${red('Judge disabled')} — only the deterministic checks are running.`),
+    )
+
+    const failures: FailedDocument[] = []
+
+    await Promise.all(
+      [...allSourceFilePaths].map(async (sourceFilePath) => {
+        const sourceContent = await fs.readFile(sourceFilePath, 'utf-8')
+
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { sourceSHA: _sourceSHA, ...sourceFrontmatter } = matter(
+          sourceContent,
+        ).data as I18nFrontmatter
+
+        if (sourceFrontmatter.i18n?.disableAutoTranslation) {
+          return
+        }
+
+        const sourceSHA = crypto
+          .createHash('sha256')
+          .update(sourceContent)
+          .digest('hex')
+
+        const targetFilePath = sourceFilePath.replace(sourceDir, targetDir)
+
+        if (await pathExists(targetFilePath, 'file')) {
+          const targetContent = await fs.readFile(targetFilePath, 'utf-8')
+          const targetFrontmatter = matter(targetContent)
+            .data as I18nFrontmatter
+          if (!force && targetFrontmatter.sourceSHA === sourceSHA) {
+            return
+          }
+        }
+
+        const shouldCopyOnly = copyOnlyFilePathsSet.has(sourceFilePath)
+        const sourceRelativePath = path.relative(docsDir, sourceFilePath)
+        const targetRelativePath = path.relative(docsDir, targetFilePath)
+        const targetBase = path.dirname(targetFilePath)
+
+        /** The document exactly as it will be written, given a translated body. */
+        const compose = (restored: string) => {
+          const newFrontmatter = { ...sourceFrontmatter, sourceSHA }
+          delete newFrontmatter.i18n
+
+          const { data, content } = matter(restored)
+          const typedData = data as I18nFrontmatter
+
+          if (typedData.title && typeof typedData.title === 'string') {
+            newFrontmatter.title = typedData.title
+          }
+          if (
+            typedData.description &&
+            typeof typedData.description === 'string'
+          ) {
+            newFrontmatter.description = typedData.description
+          }
+
+          if (sourceFrontmatter.title) {
+            const titleTranslation = getTitleTranslation(
+              sourceFrontmatter.title,
+              source,
+              target,
+            )
+            if (titleTranslation) {
+              newFrontmatter.title = titleTranslation
+            }
+          }
+
+          if (typeof newFrontmatter.title !== 'string') {
+            delete newFrontmatter.title
+          }
+
+          return stringifyMatter(newFrontmatter, content)
+        }
+
+        await documentLimit(async () => {
+          if (shouldCopyOnly) {
+            logger.info(
+              `Copying ${cyan(sourceRelativePath)} to ${cyan(targetRelativePath)}`,
+            )
+            const { content } = matter(sourceContent)
+            await fs.mkdir(targetBase, { recursive: true })
+            await fs.writeFile(targetFilePath, compose(content))
             return
           }
 
-          const sourceSHA = crypto
-            .createHash('sha256')
-            .update(sourceContent)
-            .digest('hex')
+          logger.info(
+            `Translating ${cyan(sourceRelativePath)} to ${cyan(targetRelativePath)}`,
+          )
 
-          const targetFilePath = sourceFilePath.replace(sourceDir, targetDir)
+          const isMdx = sourceFilePath.endsWith('.mdx')
+          const processor = isMdx ? mdxProcessor : mdProcessor
 
-          let targetContent: string | undefined
+          const ast = processor.parse(escapeMarkdownHeadingIds(sourceContent))
 
-          let targetFrontmatter: I18nFrontmatter | undefined
-
-          if (await pathExists(targetFilePath, 'file')) {
-            targetContent = await fs.readFile(targetFilePath, 'utf-8')
-
-            targetFrontmatter = matter(targetContent).data
-
-            if (!force && targetFrontmatter.sourceSHA === sourceSHA) {
-              allSourceFilePaths.delete(sourceFilePath)
-              return
-            }
+          const sourceBase = path.dirname(sourceFilePath)
+          const normalizeOptions = { sourceBase, targetBase }
+          const normalizeImgSrcOptions: NormalizeImgSrcOptions = {
+            ...normalizeOptions,
+            localPublicBase: path.resolve(docsDir, 'public'),
+            translating: { source, target, copy },
           }
 
-          const shouldCopyOnly = copyOnlyFilePathsSet.has(sourceFilePath)
+          const normalizedAst = {
+            ...ast,
+            children: ast.children.map((it) =>
+              translateCodeFile(
+                normalizeImgSrc(it, normalizeImgSrcOptions),
+                normalizeOptions,
+              ),
+            ),
+          }
 
-          await limit(async () => {
-            const sourceRelativePath = path.relative(docsDir, sourceFilePath)
-            const targetRelativePath = path.relative(docsDir, targetFilePath)
+          // Everything the model must not author — link targets, JSX attribute
+          // values, code, anchors — becomes an opaque placeholder here, so the
+          // real value is never in the model's context to rewrite.
+          const maskEntries = maskAst(normalizedAst)
+          const maskedSource = processor.stringify(normalizedAst)
 
-            if (shouldCopyOnly) {
-              logger.info(
-                `Copying ${cyan(sourceRelativePath)} to ${cyan(targetRelativePath)}`,
-              )
+          // Proves the pairwise rules will actually compare this document
+          // against its source before anything is spent translating it. Their
+          // failure mode is to return quietly, so "no findings" and "not
+          // checked" are the same output — and this is the difference.
+          await checker.assertCheckable(targetFilePath, compose('# probe\n'))
 
-              // For copy-only files, we still update the sourceSHA but don't translate
-              const newFrontmatter = { ...sourceFrontmatter, sourceSHA }
-              delete newFrontmatter.i18n
-
-              const { content } = matter(sourceContent)
-
-              targetContent = stringifyMatter(newFrontmatter, content)
-
-              const targetBase = path.dirname(targetFilePath)
-              await fs.mkdir(targetBase, { recursive: true })
-              await fs.writeFile(targetFilePath, targetContent)
-
-              logger.info(
-                `${cyan(sourceRelativePath)} copied to ${cyan(targetRelativePath)}`,
-              )
-            } else {
-              logger.info(
-                `Translating ${cyan(sourceRelativePath)} to ${cyan(targetRelativePath)}`,
-              )
-
-              const isMdx = sourceFilePath.endsWith('.mdx')
-
-              const processor = isMdx ? mdxProcessor : mdProcessor
-
-              const ast = processor.parse(
-                escapeMarkdownHeadingIds(sourceContent),
-              )
-
-              const sourceBase = path.dirname(sourceFilePath)
-              const targetBase = path.dirname(targetFilePath)
-
-              const normalizeOptions = { sourceBase, targetBase }
-
-              const normalizeImgSrcOptions: NormalizeImgSrcOptions = {
-                ...normalizeOptions,
-                localPublicBase: path.resolve(docsDir, 'public'),
-                translating: { source, target, copy },
-              }
-
-              const normalizedAst = {
-                ...ast,
-                children: ast.children.map((it) =>
-                  translateCodeFile(
-                    normalizeImgSrc(it, normalizeImgSrcOptions),
-                    normalizeOptions,
-                  ),
-                ),
-              }
-
-              const codeBlockPlaceholders =
-                replaceCodeBlocksWithPlaceholders(normalizedAst)
-
-              const normalizedSourceContent = processor.stringify(normalizedAst)
-
-              targetContent = await translate({
-                ...config.translate,
-                source,
-                sourceContent: normalizedSourceContent,
-                target,
-                additionalPrompts: sourceFrontmatter.i18n?.additionalPrompts,
-              })
-
-              if (codeBlockPlaceholders.length > 0) {
-                const targetAst = processor.parse(targetContent)
-                restoreCodeBlockPlaceholders(targetAst, codeBlockPlaceholders)
-                targetContent = processor.stringify(targetAst)
-              }
-
-              const newFrontmatter = { ...sourceFrontmatter, sourceSHA }
-              delete newFrontmatter.i18n
-
-              const { data, content } = matter(targetContent)
-              const typedData = data as I18nFrontmatter
-
-              if (typedData.title && typeof typedData.title === 'string') {
-                newFrontmatter.title = typedData.title
-              }
-              if (
-                typedData.description &&
-                typeof typedData.description === 'string'
-              ) {
-                newFrontmatter.description = typedData.description
-              }
-
-              if (sourceFrontmatter.title) {
-                const titleTranslation = getTitleTranslation(
-                  sourceFrontmatter.title,
-                  source,
-                  target,
-                )
-                if (titleTranslation) {
-                  newFrontmatter.title = titleTranslation
-                }
-              }
-
-              if (typeof newFrontmatter.title !== 'string') {
-                delete newFrontmatter.title
-              }
-
-              targetContent = stringifyMatter(newFrontmatter, content)
-
-              await fs.mkdir(targetBase, { recursive: true })
-
-              await fs.writeFile(targetFilePath, targetContent)
-
-              logger.info(
-                `${cyan(sourceRelativePath)} translated to ${cyan(targetRelativePath)}`,
-              )
-            }
-
-            allSourceFilePaths.delete(sourceFilePath)
+          const { rules, terms } = await renderTranslationRules({
+            source,
+            target,
+            sourceContent,
+            options: translateOptions,
+            additionalPrompts: sourceFrontmatter.i18n?.additionalPrompts,
           })
-        }),
+
+          const result = await translateWithAgent({
+            maskedSource,
+            maskEntries,
+            processor,
+            compose,
+            targetPath: targetFilePath,
+            sourceLabel: sourceRelativePath,
+            source,
+            target,
+            translationRules: rules,
+            terms,
+            checker,
+            judge,
+            models: gateway.models,
+            model: gateway.model,
+            reasoningEffort,
+            scratchDir,
+            maxRepairRounds,
+            maxTurns,
+            limit: modelCallLimit,
+            onProgress: (message) => {
+              logger.info(message)
+            },
+          })
+
+          if (!result.document) {
+            failures.push({
+              file: targetRelativePath,
+              findings: result.findings,
+              result,
+            })
+            logger.error(
+              `${cyan(targetRelativePath)} did not pass its checks after ${result.repairRounds} repair round(s).`,
+            )
+            return
+          }
+
+          await fs.mkdir(targetBase, { recursive: true })
+          await fs.writeFile(targetFilePath, result.document)
+
+          logger.info(
+            `${cyan(sourceRelativePath)} translated to ${cyan(targetRelativePath)} (${result.turns} turn(s), ${result.modelCalls} model call(s), ${result.repairRounds} repair round(s))`,
+          )
+        })
+      }),
+    )
+
+    await fs.rm(scratchDir, { recursive: true, force: true })
+
+    // Fail at the end, with the whole list.
+    //
+    // Not per file, and not by falling back to the previous translation: a
+    // failed document that is written out anyway, or quietly left at its old
+    // version, is a problem nobody sees. A red pipeline is the one channel in
+    // this organisation that has ever actually reached anyone, and the build
+    // does not go red for a document that was silently skipped.
+    if (failures.length > 0) {
+      logger.error(
+        `${red(String(failures.length))} document(s) could not be translated to a state that passes their checks. Nothing will be uploaded.\n` +
+          failures
+            .map(
+              ({ file, findings, result }) =>
+                `\n${cyan(file)} — ${findings.length} unresolved problem(s) after ${result?.repairRounds ?? 0} repair round(s):\n` +
+                findings
+                  .map(
+                    (finding) =>
+                      `  ${red(finding.rule)}${finding.line ? ` (line ${finding.line})` : ''}  ${finding.reason}`,
+                  )
+                  .join('\n'),
+            )
+            .join('\n'),
       )
-
-    let retry = 0
-
-    while (retry < 15) {
-      try {
-        await executor()
-        return
-      } catch (error) {
-        if (error instanceof RateLimitError) {
-          const retryAfter =
-            Number(error.headers.get('retry-after')) || 60 * ++retry
-          logger.warn(`Rate limit exceeded, retrying in ${retryAfter}s...`)
-          await setTimeout(retryAfter)
-          continue
-        }
-
-        throw error
-      }
+      process.exitCode = 1
+      return
     }
 
-    logger.error(
-      `Failed to translate after ${retry} retries, please try again later.`,
-    )
-    process.exitCode = 1
+    logger.success('All translations passed their checks.')
+  })
+
+translateCommand
+  .command('check')
+  .description(
+    'Check translations that already exist against their sources — offline, with no translation model involved. Runs the same rules the translator runs in its own loop',
+  )
+  .argument('[root]', 'Root directory of the documentation')
+  .option(
+    '-g, --glob <path...>',
+    'Glob patterns within each language directory',
+    ['**/*.md{,x}'],
+  )
+  .option(
+    '-t, --target <language...>',
+    'Languages to check (default: every translated language directory present)',
+  )
+  .action(async function (root?: string) {
+    const globalOptions = this.optsWithGlobals<GlobalCliOptions>()
+    const { glob: globs, target } = this.opts<TranslateCheckOptions>()
+    await checkTranslations(root, globalOptions, { glob: globs, target })
   })
