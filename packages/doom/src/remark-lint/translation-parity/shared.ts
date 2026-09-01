@@ -10,11 +10,11 @@ import type { VFile } from 'vfile'
 import { parse as parseYaml } from 'yaml'
 
 import { escapeMarkdownHeadingIds } from '../../cli/helpers.ts'
-import { mdProcessor, mdxProcessor } from '../../plugins/index.ts'
 import {
   DEFAULT_COPY_ONLY_DIRECTORIES,
   SUPPORTED_LANGUAGES,
 } from '../../shared/index.ts'
+import { syntaxProcessor } from '../syntax-plugins.ts'
 import { getConfig } from '../utils.ts'
 
 /**
@@ -104,7 +104,11 @@ const loadSource = async (sourcePath: string): Promise<CachedSource> => {
   if (cached?.sha === sha) {
     return cached
   }
-  const processor = sourcePath.endsWith('.mdx') ? mdxProcessor : mdProcessor
+  // The same syntax stack the document being linted came through: a
+  // comparison between two differently-parsed trees measures the parsers.
+  const processor = sourcePath.endsWith('.mdx')
+    ? syntaxProcessor.mdx
+    : syntaxProcessor.md
   // The same escaping `doom translate` applies before parsing: without it a
   // custom heading anchor is an MDX expression and the parse fails outright.
   const entry = {

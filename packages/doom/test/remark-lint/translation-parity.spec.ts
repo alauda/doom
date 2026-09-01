@@ -1,6 +1,9 @@
 import { describe, expect, test } from '@rstest/core'
+import { visit } from 'unist-util-visit'
 
 import { mdProcessor, mdxProcessor } from '#plugins/index.ts'
+import { syntaxProcessor } from '#remark-lint/syntax-plugins.ts'
+import { partitionAbsorbed } from '#remark-lint/translation-parity/link-isomorphism.ts'
 import {
   collectComponents,
   collectHeadingDepths,
@@ -11,6 +14,7 @@ import {
   docDirInRoot,
   resolveLinkTarget,
 } from '#remark-lint/translation-parity/shared.ts'
+import { collectProseUrls } from '#remark-lint/translation-parity/url-residue.ts'
 
 /**
  * The judgement in the `translation-parity` rules lives in these collectors:
@@ -190,5 +194,99 @@ describe('docDirInRoot', () => {
   test('gives the directory a document sits in, inside its language tree', () => {
     expect(docDirInRoot('zh', 'install/installing.mdx')).toBe('zh/install')
     expect(docDirInRoot('en', 'index.mdx')).toBe('en')
+  })
+})
+
+describe('the two sides of a comparison are parsed the same way', () => {
+  /**
+   * Measured on a real build: `tektoncd-operator` release-4.2/4.6/4.8 all went
+   * red on `auto-translate-zh` over one line of an English source —
+   * `eg. HTTP_PROXY=http://10.10.10.10:8080` — and no repair round could clear
+   * it. The source was parsed with the site's `mdxProcessor`, the translation
+   * with the lint pipeline, and only the latter has `remark-directive`, which
+   * reads `:8080` as a text directive. Nothing the translator could write made
+   * the two sides agree.
+   */
+  test('the parity source processor carries the lint pipeline s directive syntax', () => {
+    const tree = syntaxProcessor.mdx.parse('port 10.10.10.10:8080 is open')
+    const kinds: string[] = []
+    visit(tree, (node) => {
+      kinds.push(node.type)
+    })
+
+    expect(kinds).toContain('textDirective')
+  })
+
+  test('a url inside a link is link-isomorphism s, not prose residue', () => {
+    // The spelling of a bare URL that Chinese sentence punctuation cannot
+    // corrupt — and the one the translator reaches for when told it lost a URL.
+    const asLink = syntaxProcessor.mdx.parse(
+      '例如 HTTP_PROXY=[http://10.10.10.10:8080](http://10.10.10.10:8080)。',
+    )
+    // The same URL in the English source, which GFM turns into an autolink.
+    const asAutolink = syntaxProcessor.mdx.parse(
+      'eg. HTTP_PROXY=http://10.10.10.10:8080',
+    )
+
+    expect(collectProseUrls(asLink)).toEqual([])
+    expect(collectProseUrls(asAutolink)).toEqual([])
+  })
+
+  test('a url markdown leaves as plain text is still collected', () => {
+    // The case the rule exists for: no scheme GFM linkifies, so nothing
+    // protects it structurally.
+    expect(
+      collectProseUrls(
+        syntaxProcessor.mdx.parse('fetch it from ftp://h/x.tar'),
+      ),
+    ).toEqual(['ftp://h/x.tar'])
+  })
+})
+
+describe('punctuation a bare URL swallowed is named as such', () => {
+  test('a non-ASCII suffix is reported as absorbed, with the url intact', () => {
+    const { absorbed, lost, unmatched } = partitionAbsorbed(
+      ['http://10.10.10.10:8080'],
+      ['http://10.10.10.10:8080。'],
+    )
+
+    expect(absorbed).toEqual([
+      { target: 'http://10.10.10.10:8080', suffix: '。' },
+    ])
+    expect(lost).toEqual([])
+    expect(unmatched).toEqual([])
+  })
+
+  test('a comma takes the rest of the sentence with it', () => {
+    const { absorbed } = partitionAbsorbed(
+      ['http://10.10.10.10:8080'],
+      ['http://10.10.10.10:8080，供代理使用。'],
+    )
+
+    expect(absorbed).toEqual([
+      { target: 'http://10.10.10.10:8080', suffix: '，供代理使用。' },
+    ])
+  })
+
+  test('an ASCII suffix is a real retarget, not swallowed punctuation', () => {
+    const { absorbed, lost, unmatched } = partitionAbsorbed(
+      ['https://x.com'],
+      ['https://x.com/docs'],
+    )
+
+    expect(absorbed).toEqual([])
+    expect(lost).toEqual(['https://x.com'])
+    expect(unmatched).toEqual(['https://x.com/docs'])
+  })
+
+  test('unrelated differences still come back as lost and extra', () => {
+    const { absorbed, lost, unmatched } = partitionAbsorbed(
+      ['/a/how_to/x.mdx'],
+      ['/a/how-to/x.mdx'],
+    )
+
+    expect(absorbed).toEqual([])
+    expect(lost).toEqual(['/a/how_to/x.mdx'])
+    expect(unmatched).toEqual(['/a/how-to/x.mdx'])
   })
 })

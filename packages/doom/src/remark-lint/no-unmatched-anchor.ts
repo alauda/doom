@@ -9,8 +9,8 @@ import { visit } from 'unist-util-visit'
 import { visitParents } from 'unist-util-visit-parents'
 
 import { isDoc } from '../cli/helpers.ts'
-import { mdProcessor, mdxProcessor } from '../plugins/index.ts'
 
+import { syntaxProcessor } from './syntax-plugins.ts'
 import { getConfig } from './utils.ts'
 
 const anchorsCache = new Map<string, Set<string>>()
@@ -40,7 +40,11 @@ const getAnchors = (filepath: string) => {
 
   let ast = astCache.get(filepath)
   if (!ast) {
-    const processor = filepath.endsWith('.mdx') ? mdxProcessor : mdProcessor
+    // The same stack the lint pipeline uses, so a document's anchors do not
+    // depend on whether this run happened to lint it before reading it.
+    const processor = filepath.endsWith('.mdx')
+      ? syntaxProcessor.mdx
+      : syntaxProcessor.md
     ast = processor.parse(fs.readFileSync(filepath, 'utf-8'))
     astCache.set(filepath, ast)
   }
