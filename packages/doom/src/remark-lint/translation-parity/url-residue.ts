@@ -1,6 +1,6 @@
 import type { Root } from 'mdast'
 import { lintRule } from 'unified-lint-rule'
-import { visit } from 'unist-util-visit'
+import { SKIP, visit } from 'unist-util-visit'
 
 import { currentPair, diffMultiset } from './shared.ts'
 
@@ -28,9 +28,31 @@ import { currentPair, diffMultiset } from './shared.ts'
  */
 const BARE_URL = /\b(?:[a-z][a-z0-9+.-]*:\/\/|www\.)\S+/gi
 
-const collect = (tree: Root) => {
+/**
+ * Text inside a link is not prose for this purpose.
+ *
+ * The rule's whole premise is that a URL markdown *did* turn into a link is
+ * protected structurally and belongs to `link-isomorphism`. The first
+ * implementation still walked into link nodes, so an autolink counted twice:
+ * once as a target and once as the label text that repeats it. That is not
+ * merely redundant. A translator that writes `[http://host:8080](http://host:8080)`
+ * — the one spelling of a bare URL that Chinese sentence punctuation cannot
+ * corrupt — had its label read as prose, found the URL missing from it (the
+ * port is a `textDirective` there), and was told it had lost a URL it had in
+ * fact preserved exactly. No spelling it could reach satisfied both rules, so
+ * the repair loop could only run out of rounds.
+ */
+const IS_LINK = new Set(['link', 'linkReference', 'definition'])
+
+export const collectProseUrls = (tree: Root) => {
   const found: string[] = []
-  visit(tree, 'text', (node) => {
+  visit(tree, (node) => {
+    if (IS_LINK.has(node.type)) {
+      return SKIP
+    }
+    if (node.type !== 'text') {
+      return
+    }
     for (const [match] of node.value.matchAll(BARE_URL)) {
       found.push(match)
     }
@@ -46,7 +68,10 @@ export const translationUrlResidue = lintRule<Root>(
       return
     }
 
-    const { missing } = diffMultiset(collect(pair.sourceTree), collect(tree))
+    const { missing } = diffMultiset(
+      collectProseUrls(pair.sourceTree),
+      collectProseUrls(tree),
+    )
     if (!missing.length) {
       return
     }

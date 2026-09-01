@@ -15,6 +15,49 @@ const preview = (values: readonly string[]) =>
     .join(', ') + (values.length > 5 ? `, … (${values.length} total)` : '')
 
 /**
+ * A bare URL ends where markdown says it ends, and markdown does not know
+ * about Chinese sentence punctuation.
+ *
+ * GFM closes an autolink literal at whitespace and drops *ASCII* trailing
+ * punctuation, so `see http://h:8080.` links to `http://h:8080`. A full-width
+ * stop is not ASCII: it is absorbed, and `例如 http://h:8080。` links to
+ * `http://h:8080。`, an address that does not exist. The translator writes
+ * correct Chinese and gets a broken link for it — and the two messages it used
+ * to get, "lost this target" and "points at that one", never said which of the
+ * two spellings was the one to change, so the repair loop could only guess.
+ *
+ * Only a non-ASCII suffix is read this way. `https://x.com` becoming
+ * `https://x.com/docs` is also a prefix, and that one is a real retarget.
+ */
+const isAbsorbedSuffix = (suffix: string) =>
+  suffix.length > 0 && suffix.codePointAt(0)! > 0x7f
+
+export const partitionAbsorbed = (
+  missing: readonly string[],
+  extra: readonly string[],
+) => {
+  const unmatched = [...extra]
+  const lost: string[] = []
+  const absorbed: Array<{ target: string; suffix: string }> = []
+
+  for (const target of missing) {
+    const index = unmatched.findIndex(
+      (candidate) =>
+        candidate.startsWith(target) &&
+        isAbsorbedSuffix(candidate.slice(target.length)),
+    )
+    if (index === -1) {
+      lost.push(target)
+      continue
+    }
+    absorbed.push({ target, suffix: unmatched[index].slice(target.length) })
+    unmatched.splice(index, 1)
+  }
+
+  return { absorbed, lost, unmatched }
+}
+
+/**
  * A translation points at exactly the same places its source points at.
  *
  * Not "its links resolve" — that is a much weaker property, and it is the one
@@ -56,16 +99,23 @@ export const translationLinkIsomorphism = lintRule<Root>(
     )
 
     const { missing, extra } = diffMultiset(expected, actual)
+    const { absorbed, lost, unmatched } = partitionAbsorbed(missing, extra)
 
-    if (missing.length) {
+    for (const { target, suffix } of absorbed) {
       vfile.message(
-        `Translation lost ${missing.length} link target(s) the source has: ${preview(missing)}.`,
+        `Translation link \`${target}${suffix}\` swallowed the \`${suffix}\` that follows it: a bare URL runs on until a space, and markdown only leaves out trailing ASCII punctuation. Write it as \`[${target}](${target})\` so the punctuation stays outside the link.`,
         tree,
       )
     }
-    if (extra.length) {
+    if (lost.length) {
       vfile.message(
-        `Translation points at ${extra.length} target(s) the source does not: ${preview(extra)}.`,
+        `Translation lost ${lost.length} link target(s) the source has: ${preview(lost)}.`,
+        tree,
+      )
+    }
+    if (unmatched.length) {
+      vfile.message(
+        `Translation points at ${unmatched.length} target(s) the source does not: ${preview(unmatched)}.`,
         tree,
       )
     }

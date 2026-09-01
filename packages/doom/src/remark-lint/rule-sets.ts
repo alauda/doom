@@ -1,6 +1,3 @@
-import remarkDirective from 'remark-directive'
-import remarkFrontmatter from 'remark-frontmatter'
-import remarkGfm from 'remark-gfm'
 // @ts-expect-error -- https://github.com/ilyatitovich/remark-lint-code-block-split-list/issues/2
 import remarkLintCodeBlockSplitList from 'remark-lint-code-block-split-list'
 import remarkLintHeadingIncrement from 'remark-lint-heading-increment'
@@ -53,12 +50,9 @@ import {
 
 type Rule = Plugin<[], never>
 
-/** Syntax plugins every rule needs before it can run. */
-export const SYNTAX_PLUGINS = [
-  remarkDirective,
-  remarkFrontmatter,
-  remarkGfm,
-] as unknown as Rule[]
+// The syntax stack lives in its own module so `translation-parity` can parse
+// the source side with it without importing the rules that import it back.
+export { SYNTAX_PLUGINS } from './syntax-plugins.ts'
 
 /**
  * Rules that compare a translation with the source it was made from.
