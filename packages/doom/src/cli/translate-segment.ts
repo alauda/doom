@@ -96,6 +96,15 @@ export interface SegmentLabel {
   line?: number
   /** The section it falls under. Both are for people reading a build log. */
   heading?: string
+  /**
+   * Line that heading is on, in the source.
+   *
+   * The text alone does not identify a section: `Procedure`, `Prerequisites`
+   * and `Verification` repeat under every top-level heading of a real page, so
+   * marking the outline by text puts the mark on the first one of that name
+   * rather than on this segment's. The line is what tells them apart.
+   */
+  headingLine?: number
 }
 
 export interface Segment {
@@ -266,28 +275,39 @@ const headingText = (node: RootContent): string | undefined => {
   return text === '' ? undefined : text
 }
 
-/** Every heading on the page, in order — the map a segment is placed on. */
 /** The first heading a run of blocks establishes, if any. */
 const firstHeadingIn = (children: readonly RootContent[]) => {
   for (const child of children) {
     if (child.type === 'heading' && child.depth <= 3) {
       const text = headingText(child)
       if (text) {
-        return text
+        return { heading: text, headingLine: child.position?.start.line }
       }
     }
   }
   return undefined
 }
 
-export const documentOutline = (tree: Root) => {
-  const headings: { depth: number; text: string }[] = []
+export interface OutlineHeading {
+  depth: number
+  text: string
+  /** Where it is in the source — how a segment says which of two same-named sections it is in. */
+  line?: number
+}
+
+/** Every heading on the page, in order — the map a segment is placed on. */
+export const documentOutline = (tree: Root): OutlineHeading[] => {
+  const headings: OutlineHeading[] = []
   const walk = (children: readonly RootContent[]) => {
     for (const child of children) {
       if (child.type === 'heading') {
         const text = headingText(child)
         if (text) {
-          headings.push({ depth: child.depth, text })
+          headings.push({
+            depth: child.depth,
+            text,
+            line: child.position?.start.line,
+          })
         }
       }
       if ('children' in child && Array.isArray(child.children)) {
@@ -354,7 +374,7 @@ export const planSegments = ({
   }
 
   /** The section heading in force, carried down into drilled containers. */
-  const section: { heading?: string } = {}
+  const section: { heading?: string; headingLine?: number } = {}
 
   const walk = (children: RootContent[], container: number[]) => {
     let start = -1
@@ -375,9 +395,7 @@ export const planSegments = ({
         // holding the frontmatter — takes the first heading it contains. Its
         // section is the page's own title, and without this it is the one
         // segment with no place in the outline.
-        label.heading
-          ? label
-          : { ...label, heading: firstHeadingIn(slice) ?? label.heading },
+        label.heading ? label : { ...label, ...firstHeadingIn(slice) },
       )
       start = -1
       size = 0
@@ -388,10 +406,12 @@ export const planSegments = ({
       const heading = headingText(child)
       if (heading && child.type === 'heading' && child.depth <= 3) {
         section.heading = heading
+        section.headingLine = child.position?.start.line
       }
       const labelHere: SegmentLabel = {
         line: child.position?.start.line,
         heading: section.heading,
+        headingLine: section.headingLine,
       }
 
       const text = stringifyBlocks([child])
@@ -578,7 +598,17 @@ export interface AssembleResult {
  * exact because the context is parsed once on its own to learn how many blocks
  * it is.
  */
-const definitionContext = (tree: Root, processor: MaskProcessor) => {
+export interface DefinitionContext {
+  /** The definitions, rendered. Appended to a segment before parsing it. */
+  text: string
+  /** How many blocks that renders to, so the appended part can be dropped exactly. */
+  blocks: number
+}
+
+export const definitionContext = (
+  tree: Root,
+  processor: MaskProcessor,
+): DefinitionContext | undefined => {
   const definitions: RootContent[] = []
   visit(tree, ['definition', 'footnoteDefinition'], (node) => {
     definitions.push(node as RootContent)
@@ -594,6 +624,36 @@ const definitionContext = (tree: Root, processor: MaskProcessor) => {
     return undefined
   }
   return blocks > 0 ? { text, blocks } : undefined
+}
+
+/**
+ * Parses one segment's worth of markdown with the document's definitions in
+ * scope, and gives back only the segment's own blocks.
+ *
+ * Shared by the two places that take a segment out of a document and parse it
+ * on its own — assembly, which parses each translated segment before splicing
+ * it back, and the segment cache, which parses the previous translation's
+ * blocks to check whether they can be reused. Both were losing references the
+ * same way, so they resolve them the same way.
+ */
+export const parseWithDefinitions = (
+  text: string,
+  context: DefinitionContext | undefined,
+  processor: MaskProcessor,
+): RootContent[] => {
+  const alone = processor.parse(text).children
+  if (!context) {
+    return alone
+  }
+  const withContext = processor.parse(`${text}\n\n${context.text}`).children
+  // Anything but an exact match means the appended context merged with the
+  // text's own last block, and slicing would eat part of the segment. Parsing
+  // it alone is then the safe answer — no worse than not having tried.
+  // Documents with no definitions never reach here, so the second parse is paid
+  // only by the documents it is for.
+  return withContext.length === alone.length + context.blocks
+    ? withContext.slice(0, alone.length)
+    : alone
 }
 
 export const assemble = ({
@@ -634,21 +694,7 @@ export const assemble = ({
       )
     }
     try {
-      const alone = processor.parse(translation).children
-      if (!context) {
-        return alone
-      }
-      const withContext = processor.parse(
-        `${translation}\n\n${context.text}`,
-      ).children
-      // Anything but an exact match means the appended context merged with the
-      // translation's own last block, and slicing would eat part of the
-      // segment. Parsing it alone is then the safe answer — no worse than not
-      // having tried. Documents with no definitions never reach here, so the
-      // second parse is paid only by the documents it is for.
-      return withContext.length === alone.length + context.blocks
-        ? withContext.slice(0, alone.length)
-        : alone
+      return parseWithDefinitions(translation, context, processor)
     } catch (error) {
       throw new SegmentAssemblyError(
         `Segment ${segment.index}'s translation does not parse: ${error instanceof Error ? error.message : String(error)}`,

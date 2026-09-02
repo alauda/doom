@@ -356,6 +356,71 @@ describe('the segment pipeline', () => {
     }
   })
 
+  test('a section name that repeats is marked where this segment actually is', async () => {
+    // `Procedure`, `Prerequisites` and `Verification` sit under every top-level
+    // heading of a real page, so the heading text does not identify a section.
+    // Marking by text put the mark on the first heading of that name — telling
+    // a segment in the CLI section it was in the console section, which is
+    // worse than not marking anything at all.
+    const long = (n: number) =>
+      `Paragraph ${n} is long enough to force a split on its own. `.repeat(6)
+    const twoWays = [
+      '---',
+      'title: Two ways',
+      '---',
+      '',
+      '# Two ways',
+      '',
+      '## Install with the console',
+      '',
+      long(1),
+      '',
+      '### Procedure',
+      '',
+      'Click the button.',
+      '',
+      '## Install with the CLI',
+      '',
+      long(2),
+      '',
+      '### Procedure',
+      '',
+      'Run the command.',
+      '',
+    ].join('\n')
+
+    const { translator } = await run({
+      answer: (request) => request.segment.text,
+      source: twoWays,
+      segmentCap: 340,
+    })
+
+    // Which outline line each segment was marked on, by index rather than by
+    // text — the two `Procedure` lines read identically, so text cannot tell
+    // this test what it needs to know.
+    const markedLine = (outline?: string) =>
+      (outline ?? '')
+        .split('\n')
+        .findIndex((line) => line.includes('← you are here'))
+    const outlines = translator.seen.map((request) =>
+      markedLine(request.outline),
+    )
+
+    // The outline itself: `# Two ways`, two H2s, two identically named H3s.
+    const outline = translator.seen[0].outline!.split('\n')
+    expect(outline.length).toBe(5)
+    expect(outline[2]).toContain('Procedure')
+    expect(outline[4]).toContain('Procedure')
+
+    // Every segment is marked exactly once, and never on a line that is not
+    // its own section.
+    expect(outlines.every((line) => line >= 0)).toBe(true)
+    // The last segment starts at the *second* `### Procedure`, so its mark
+    // belongs on outline line 4. Marking by text put it on line 2.
+    expect(outlines.at(-1)).toBe(4)
+    expect(outlines).toContain(2)
+  })
+
   test('the model is never shown what masking removed', async () => {
     const seenByModel: string[] = []
     const seenByRules: string[] = []

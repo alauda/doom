@@ -240,20 +240,26 @@ export const unwrap = (
   return wrapper && !onlyFence(segment.text) ? wrapper.value : trimmed
 }
 
-/** Every heading on the page, indented by level, with the current segment marked. */
+/**
+ * Every heading on the page, indented by level, with the current segment marked.
+ *
+ * Marked by the heading's **line**, not by its text. A real page repeats
+ * `Procedure`, `Prerequisites` and `Verification` under every top-level
+ * heading, and matching on text put the mark on the first one of that name — so
+ * a segment in the CLI section was told it was in the console section, which is
+ * worse than not marking anything.
+ */
 export const renderOutline = (
-  headings: readonly { depth: number; text: string }[],
-  current?: string,
-) => {
-  const seen = new Set<string>()
-  return headings
-    .map(({ depth, text }) => {
-      const mark = text === current && !seen.has(text) ? '  ← you are here' : ''
-      seen.add(text)
+  headings: readonly { depth: number; text: string; line?: number }[],
+  currentLine?: number,
+) =>
+  headings
+    .map(({ depth, text, line }) => {
+      const mark =
+        currentLine != null && line === currentLine ? '  ← you are here' : ''
       return `${'  '.repeat(Math.max(0, depth - 1))}- ${text}${mark}`
     })
     .join('\n')
-}
 
 /** The last few lines of a translation, for the next segment to continue from. */
 export const tailOf = (translation: string, lines = DEFAULT_CONTEXT_TAIL) => {

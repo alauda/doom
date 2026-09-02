@@ -57,6 +57,40 @@ const EDITED = page(
   'You need a cluster and the `kubectl` command, plus the [prerequisites](./prereq.mdx). One more sentence was added here.',
 )
 
+/**
+ * A page whose reference definitions live in a section of their own.
+ *
+ * `[text][label]`, `![x][fig]` and `[^1]` are only reference nodes while the
+ * definition they name is in scope, and definitions are conventionally written
+ * once, at the end. So the first two sections hold references whose definitions
+ * are in the third — the shape that made the cache re-parse them as plain
+ * bracketed text and refuse to reuse anything holding one.
+ */
+const referencePage = (url: string, verifying = 'Check the status.') =>
+  `---
+title: Refs
+weight: 10
+---
+
+# Refs
+
+Start from the [manual][handbook] and see the note[^1].
+
+## Prerequisites
+
+It is also covered in the [manual][handbook] and the note[^1].
+
+## Verifying
+
+${verifying}
+
+[handbook]: ${url}
+
+[^1]: A footnote body.
+`
+
+const HANDBOOK = 'https://example.com/handbook'
+
 const translated = (text: string) =>
   text
     .replace(/# Installing$/gm, '# 安装')
@@ -254,6 +288,74 @@ describe('the segment cache', () => {
     expect(second.result.document).toContain(
       '## 验证\n\n检查每个节点是否就绪。',
     )
+  })
+
+  test('a segment whose reference definition is elsewhere is still reused', async () => {
+    // The blocks of the previous translation are parsed on their own to check
+    // them, and a reference whose definition is in another segment parsed as
+    // plain bracketed text — no `linkReference` to mask, nothing to match the
+    // `REFID` the current source expects, so the candidate was refused and a
+    // segment nobody had touched was translated again. Assembly had the same
+    // defect on the other side of the cache; both resolve it by parsing with
+    // the document's definitions in scope.
+    const first = await translate({ source: referencePage(HANDBOOK) })
+    expect(first.asked).toEqual([0, 1, 2])
+
+    const second = await translate({
+      source: referencePage(HANDBOOK, 'Check the status carefully.'),
+      previousDocument: first.result.document,
+    })
+
+    // Only the section that changed. Segment 0 carries the frontmatter and is
+    // never cached; segment 1 holds a reference link and a footnote reference
+    // whose definitions are both in segment 2.
+    expect(second.asked).toEqual([0, 2])
+    expect(second.result.outcomes[1].status).toBe('cached')
+    expect(second.result.document).toContain('[manual][handbook]')
+    expect(second.result.document).toContain('[^1]')
+    expect(second.result.document).not.toContain('__DOOM_TR_')
+    // And nothing was escaped on the way through.
+    expect(second.result.document).not.toContain('\\[manual]')
+  })
+
+  test('a reference label somebody edited by hand is not reused', async () => {
+    // The twin of the test above: resolving references must not become a way to
+    // accept a candidate whose reference points somewhere else now. The label
+    // is the value the `REFID` stands for, so changing it has to fail the
+    // match.
+    const first = await translate({ source: referencePage(HANDBOOK) })
+    const tampered = first.result.document!.replace(
+      '[manual][handbook] and the note',
+      '[manual][handbuch] and the note',
+    )
+
+    const second = await translate({
+      source: referencePage(HANDBOOK, 'Check the status carefully.'),
+      previousDocument: tampered,
+    })
+
+    // Segment 1 was tampered with, so it is translated again rather than
+    // trusted; segment 2 is untouched and is still reused.
+    expect(second.asked).toContain(1)
+    expect(second.result.outcomes[1].status).toBe('translated')
+  })
+
+  test('changing a definition retranslates the definition, not every reference to it', async () => {
+    // Worth stating because it is easy to assume the opposite: the url lives in
+    // the segment holding the definition, and a segment that only *references*
+    // the label is byte-identical and maps to the same label. Reusing it is
+    // correct — the new url reaches the page through the definition, which was
+    // retranslated.
+    const first = await translate({ source: referencePage(HANDBOOK) })
+    const second = await translate({
+      source: referencePage('https://example.com/handbook-v2'),
+      previousDocument: first.result.document,
+    })
+
+    expect(second.result.outcomes[1].status).toBe('cached')
+    expect(second.asked).toContain(2)
+    expect(second.result.document).toContain('https://example.com/handbook-v2')
+    expect(second.result.document).not.toContain(`${HANDBOOK}\n`)
   })
 
   test('reuse survives a round trip: what is cached is what was written', async () => {

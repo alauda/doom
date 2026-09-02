@@ -96,6 +96,41 @@ const withTabs = () =>
     '',
   ].join('\n')
 
+/**
+ * Reference links, an image reference and a footnote, all defined in a later
+ * section than they are used.
+ *
+ * `[text][label]`, `![x][fig]` and `[^1]` are only reference nodes while the
+ * definition they name is in scope, and a definition is written once, usually
+ * at the bottom. So a segment that holds a use but not the definition parses
+ * standalone as plain bracketed text — and stringifying that escapes both the
+ * brackets and the underscores in the masked label, which destroys the
+ * placeholder.
+ */
+const withReferences = () =>
+  [
+    '---',
+    'title: Refs',
+    '---',
+    '',
+    '# Refs',
+    '',
+    'Start from the [manual][handbook] and see the note[^1]. Also ![diagram][fig].',
+    '',
+    '## Prerequisites',
+    '',
+    'It is also covered in the [manual][handbook] and again[^1].',
+    '',
+    '## Where definitions live',
+    '',
+    'Definitions follow.',
+    '',
+    '[handbook]: https://example.com/handbook',
+    '[fig]: ./diagram.png',
+    '[^1]: The footnote text with `code`.',
+    '',
+  ].join('\n')
+
 /** Masks a document the way `doom translate` does, and cuts it up. */
 const prepare = (
   source: string,
@@ -320,6 +355,48 @@ describe('assembly', () => {
       translations,
     })
     expect(text).toMatch(/label="(控制台|命令行)"/)
+  })
+
+  test('a reference whose definition is in another segment survives the round trip', () => {
+    // Assembly parses each segment's translation on its own before splicing it
+    // back, so a use separated from its definition used to come back as escaped
+    // text — `[manual][__DOOM_TR_REFID_0__]` stringified as
+    // `\\[manual]\\[**DOOM\\_TR\\_REFID\\_0**]` — and the placeholder was gone.
+    // All three reference kinds are here because they take three different
+    // paths through masking and only one of them was covered before.
+    const { tree, plan, masked, maskEntries } = prepare(withReferences())
+
+    // The fixture only means anything if the uses and the definitions really
+    // did land in different segments.
+    expect(plan.segments.length).toBeGreaterThan(1)
+    const holdsDefinition = plan.segments.findIndex((segment) =>
+      /^\[__DOOM_TR_REFID_\d+__\]:/mu.test(segment.text),
+    )
+    const holdsUse = plan.segments.findIndex(
+      (segment, index) =>
+        index !== holdsDefinition &&
+        /\]\[__DOOM_TR_REFID_\d+__\]/u.test(segment.text),
+    )
+    expect(holdsDefinition).toBeGreaterThanOrEqual(0)
+    expect(holdsUse).toBeGreaterThanOrEqual(0)
+
+    const { text } = assemble({
+      tree,
+      plan,
+      processor: mdxProcessor,
+      translations: identity(plan),
+    })
+
+    expect(text).toBe(mdxProcessor.stringify(mdxProcessor.parse(masked)))
+    expect(restoreMaskedContent(text, maskEntries, mdxProcessor)).toBe(
+      restoreMaskedContent(masked, maskEntries, mdxProcessor),
+    )
+    // Said directly as well, because the equalities above would also hold if
+    // both sides were escaped.
+    expect(text).not.toContain('\\[')
+    expect(restoreMaskedContent(text, maskEntries, mdxProcessor)).toContain(
+      '[manual][handbook]',
+    )
   })
 
   test('every segment is given a locator for the next run', () => {

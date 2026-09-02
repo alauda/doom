@@ -272,7 +272,7 @@ export const translateDocument = async (
   const outlineFor = (segment: Segment) => {
     let rendered = outlines.get(segment.index)
     if (rendered == null) {
-      rendered = renderOutline(headings, segment.label.heading)
+      rendered = renderOutline(headings, segment.label.headingLine)
       outlines.set(segment.index, rendered)
     }
     return rendered

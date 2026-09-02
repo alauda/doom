@@ -10,10 +10,13 @@ import {
   maskAst,
 } from './translate-mask.ts'
 import {
+  type DefinitionContext,
   type Segment,
   type SegmentAddress,
   type SegmentPlan,
   type SegmentRecord,
+  definitionContext,
+  parseWithDefinitions,
   resolveAttributeNode,
   resolvePlacement,
 } from './translate-segment.ts'
@@ -193,6 +196,9 @@ export const matchCachedSegments = ({
   const entriesByToken = new Map(
     maskEntries.map((entry) => [entry.placeholder.toLowerCase(), entry]),
   )
+  // Computed once for the document, not once per segment: it walks the whole
+  // previous translation, and every segment is asked about the same one.
+  const context = definitionContext(tree, processor)
 
   for (const [index, previousIndex] of alignBySha(
     plan.segments.map((segment) => segment.sha),
@@ -203,6 +209,7 @@ export const matchCachedSegments = ({
       tree,
       address: previousRecords[previousIndex].address,
       processor,
+      context,
     })
     if (candidate == null) {
       continue
@@ -268,10 +275,24 @@ const extract = ({
   tree,
   address,
   processor,
+  context,
 }: {
   tree: Root
   address: SegmentAddress
   processor: MaskProcessor
+  /**
+   * The previous translation's own reference definitions.
+   *
+   * The blocks are re-parsed on their own below, and `[text][label]`, `![x][fig]`
+   * and `[^1]` are only reference nodes while the definition they name is in
+   * scope. A segment whose definitions live in a *different* segment therefore
+   * parsed as plain bracketed text, `maskAst` found no reference to mask, and
+   * the candidate could not account for the `REFID`/`FNID` the current source
+   * expects — so it was rejected and the segment retranslated although nothing
+   * about it had changed. That is the same defect assembly had, on the other
+   * side of the cache, and it is resolved the same way.
+   */
+  context?: DefinitionContext
 }): Root | undefined => {
   if (address.kind === 'attributes') {
     const node = resolveAttributeNode(tree, address)
@@ -305,9 +326,14 @@ const extract = ({
   // Re-parsed rather than reused: masking mutates, and the tree these nodes
   // came from is the caller's.
   try {
-    return processor.parse(
-      processor.stringify({ type: 'root', children: resolved.nodes }),
-    )
+    return {
+      type: 'root',
+      children: parseWithDefinitions(
+        processor.stringify({ type: 'root', children: resolved.nodes }),
+        context,
+        processor,
+      ),
+    }
   } catch {
     return undefined
   }
