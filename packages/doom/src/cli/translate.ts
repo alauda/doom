@@ -860,7 +860,13 @@ export const translateCommand = new Command('translate')
               `(${result.outcomes.length} segment(s)` +
               (cached ? `, ${cached} reused` : '') +
               (repaired ? `, ${repaired} repaired` : '') +
-              `, ${translator.calls()} model call(s)` +
+              // Translation calls, named as such. The reviewers, the repair
+              // agent and the diagnosis all cost model calls too, and none of
+              // them are counted here: their judges are shared by every
+              // document being translated at once, so there is no per-document
+              // number to print. Calling this "model calls" made it look like
+              // there was.
+              `, ${translator.calls()} translation call(s)` +
               (result.assemblyRounds
                 ? `, ${result.assemblyRounds} assembly round(s)`
                 : '') +

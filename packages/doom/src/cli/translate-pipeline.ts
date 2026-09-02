@@ -250,7 +250,33 @@ export const translateDocument = async (
   const documentTokens = new Set(
     maskEntries.map((entry) => entry.placeholder.toLowerCase()),
   )
-  const outline = renderOutline(documentOutline(tree))
+  /**
+   * Whether the reviewer is looking at a piece of a page or at the page.
+   *
+   * A one-segment document is not a fragment, and must not be reviewed as one:
+   * the fragment prompt stops counting a missing beginning or end as an
+   * omission, and on a page that *is* the segment those are the omissions.
+   * Half of this corpus is a single segment, and there the segment reviewer is
+   * the only blocking semantic check there is.
+   */
+  const fragment = plan.segments.length > 1
+  /**
+   * The page's headings, with the segment's own section marked.
+   *
+   * Rendered per segment rather than once: the list is the same, but the mark
+   * is what makes it useful — the prompt tells the model this is "so you know
+   * where the segment sits", and an unmarked list does not say that.
+   */
+  const headings = documentOutline(tree)
+  const outlines = new Map<number, string>()
+  const outlineFor = (segment: Segment) => {
+    let rendered = outlines.get(segment.index)
+    if (rendered == null) {
+      rendered = renderOutline(headings, segment.label.heading)
+      outlines.set(segment.index, rendered)
+    }
+    return rendered
+  }
 
   /** The accepted translation of each segment. Only ever written on a pass. */
   const frozen: (string | undefined)[] = []
@@ -264,7 +290,19 @@ export const translateDocument = async (
     history: [],
     findings: [],
   }))
-  const advisory: TranslationFinding[] = []
+  /**
+   * The non-blocking notes each segment came back with, by segment.
+   *
+   * Kept per segment and replaced rather than appended to, because a segment
+   * can be worked on more than once — a later assembly round can send it back
+   * — and a note from the attempt that was superseded is not a note about the
+   * document that shipped. Appending printed the same readability remark twice
+   * for every segment that was ever revisited.
+   */
+  const advisoryBySegment: TranslationFinding[][] = []
+  /** Notes about the assembled page, which belong to no segment. */
+  const documentAdvisory: TranslationFinding[] = []
+  const advisory = () => [...advisoryBySegment.flat(), ...documentAdvisory]
 
   const previousTail = (segment: Segment) => {
     if (contextTail === 0) {
@@ -296,7 +334,7 @@ export const translateDocument = async (
       outcome.attempts++
       const translation = await translator.translate({
         segment,
-        outline,
+        outline: outlineFor(segment),
         previousTail: previousTail(segment),
         attempt,
         retry,
@@ -307,6 +345,7 @@ export const translateDocument = async (
         processor,
         documentTokens,
         judge: segmentJudge,
+        fragment,
         sourceLanguage,
         targetLanguage,
         terms,
@@ -317,7 +356,7 @@ export const translateDocument = async (
         frozen[segment.index] = translation
         outcome.status = 'translated'
         outcome.findings = []
-        advisory.push(...findings)
+        advisoryBySegment[segment.index] = findings
         return true
       }
 
@@ -348,6 +387,7 @@ export const translateDocument = async (
             processor,
             documentTokens,
             judge: segmentJudge,
+            fragment,
             sourceLanguage,
             targetLanguage,
             terms,
@@ -360,6 +400,7 @@ export const translateDocument = async (
           processor,
           documentTokens,
           judge: segmentJudge,
+          fragment,
           sourceLanguage,
           targetLanguage,
           terms,
@@ -368,7 +409,7 @@ export const translateDocument = async (
           frozen[segment.index] = repaired
           outcome.status = 'repaired'
           outcome.findings = []
-          advisory.push(...findings)
+          advisoryBySegment[segment.index] = findings
           onProgress?.(
             `${sourceLabel} [segment ${segment.index + 1}/${plan.segments.length}${describe(segment)}] repaired`,
           )
@@ -474,13 +515,13 @@ export const translateDocument = async (
           targetLanguage,
           terms,
         })
-        advisory.push(
+        documentAdvisory.push(
           ...whole.map((finding) => ({ ...finding, blocking: false })),
         )
       }
       return {
         document,
-        findings: [...findings, ...advisory],
+        findings: [...findings, ...advisory()],
         outcomes,
         assemblyRounds,
         records: assembled.records,
@@ -489,7 +530,7 @@ export const translateDocument = async (
 
     if (assemblyRounds >= maxAssemblyRounds) {
       return {
-        findings: [...blocking, ...advisory],
+        findings: [...blocking, ...advisory()],
         failure: { kind: 'assembly' },
         outcomes,
         assemblyRounds,
@@ -510,7 +551,7 @@ export const translateDocument = async (
       // reported as it is, which is already an order of magnitude better than
       // the 873 undifferentiated problems this replaced.
       return {
-        findings: [...blocking, ...advisory],
+        findings: [...blocking, ...advisory()],
         failure: { kind: 'unlocatable' },
         outcomes,
         assemblyRounds,
@@ -538,23 +579,43 @@ const summarise = (findings: readonly TranslationFinding[]) =>
     .join(', ') + (findings.length > 3 ? `, +${findings.length - 3} more` : '')
 
 /**
+ * Rules that compare the translation with its source across the whole tree.
+ *
+ * Every one of them reports on the root node, so `line` is 1 no matter where
+ * the defect is. Treating that 1 as a location is how a page without
+ * frontmatter used to send its first segment back for something that segment
+ * had nothing to do with.
+ */
+const PAIRWISE_RULE_PREFIX = 'doom-lint:translation-'
+
+/**
  * Which segment each whole-document finding belongs to.
  *
  * Two routes, because the findings arrive in two shapes:
  *
- * - **a placeholder** names its segment exactly — the token belongs to one
- *   segment's table and no other. This is the important one: it covers every
- *   way the masked round trip can fail;
+ * - **a placeholder** names its segments exactly — the token belongs to those
+ *   segments' tables and no others. This is the important one: it covers every
+ *   way the masked round trip can fail. Reference and footnote labels
+ *   (`REFID`/`FNID`) are shared linkage keys, so a definition and its uses can
+ *   sit in different segments; all of them are asked again, because which one
+ *   dropped the label is exactly what the finding does not say;
  * - **a line number** is looked up in the composed document, whose block
- *   structure is the one assembly recorded.
+ *   structure is the one assembly recorded. When several segments' spans
+ *   contain the line — a drilled container's tag segment covers every line of
+ *   its children — the **narrowest** one is the owner. A child is always
+ *   narrower than the container it sits in.
  *
  * The pairwise rules — `translation-component-multiset`,
  * `translation-heading-sequence` and the rest — report against the document as
- * a whole and carry no usable line, so they cannot be routed at all. That is
- * why the same comparisons are made per segment during acceptance, where they
- * arrive with a segment attached. One of them firing *here*, after every
- * segment passed the same comparison, means assembly itself did something —
- * and that is worth failing loudly for rather than retrying blindly.
+ * a whole and always land on line 1, which is not a location: on a page with
+ * frontmatter that line belongs to nobody, and on a page without one it belongs
+ * to the first segment by accident. So they are recognised by name and never
+ * routed by line, which is what makes the same defect fail the same way on both
+ * kinds of page. That is also why the same comparisons are made per segment
+ * during acceptance, where they arrive with a segment attached. One of them
+ * firing *here*, after every segment passed the same comparison, means assembly
+ * itself did something — and that is worth failing loudly for rather than
+ * retrying blindly.
  */
 const route = ({
   findings,
@@ -579,10 +640,15 @@ const route = ({
     }
   }
 
-  const byPlaceholder = new Map<string, number>()
+  const byPlaceholder = new Map<string, number[]>()
   for (const segment of plan.segments) {
     for (const token of segment.expected.keys()) {
-      byPlaceholder.set(token, segment.index)
+      const owners = byPlaceholder.get(token)
+      if (owners) {
+        owners.push(segment.index)
+      } else {
+        byPlaceholder.set(token, [segment.index])
+      }
     }
   }
 
@@ -590,19 +656,32 @@ const route = ({
 
   for (const finding of findings) {
     const token = finding.placeholder?.toLowerCase()
-    const owner = token ? byPlaceholder.get(token) : undefined
-    if (owner != null) {
-      add(owner, finding)
+    const owners = token ? byPlaceholder.get(token) : undefined
+    if (owners?.length) {
+      for (const owner of owners) {
+        add(owner, finding)
+      }
       continue
     }
-    if (finding.line == null || finding.line <= 0) {
+    if (
+      finding.line == null ||
+      finding.line <= 0 ||
+      finding.rule.startsWith(PAIRWISE_RULE_PREFIX)
+    ) {
       continue
     }
-    const span = spans.find(
-      ({ start, end }) => finding.line! >= start && finding.line! <= end,
-    )
-    if (span) {
-      add(span.segment, finding)
+    const line = finding.line
+    let owner: (typeof spans)[number] | undefined
+    for (const span of spans) {
+      if (line < span.start || line > span.end) {
+        continue
+      }
+      if (!owner || span.end - span.start < owner.end - owner.start) {
+        owner = span
+      }
+    }
+    if (owner) {
+      add(owner.segment, finding)
     }
   }
 

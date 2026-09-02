@@ -51,6 +51,23 @@ export interface CheckSegmentOptions {
   documentTokens?: ReadonlySet<string>
   /** The semantic check. Absent in tests that are about control flow. */
   judge?: Judge
+  /**
+   * Whether this segment is one piece of a longer page.
+   *
+   * It decides which prompt the reviewer gets, and the two differ in what
+   * counts as an omission: a fragment has no beginning and no end, so a missing
+   * introduction or a section that runs past the cut is a property of the cut
+   * rather than of the translation, and the fragment prompt says so.
+   *
+   * That relaxation is right for a piece and wrong for a whole page. Half of
+   * this corpus is one segment, and on those pages the segment reviewer is the
+   * *only* blocking semantic check there is — the whole-page one is advisory
+   * and is not even asked when there is a single segment, because it would be
+   * reading the same text twice. Telling it "this is a fragment" there would
+   * quietly excuse exactly the defect it exists to catch: a how-to whose last
+   * section, "what to do next", never made it into the translation.
+   */
+  fragment?: boolean
   sourceLanguage: string
   targetLanguage: string
   terms?: readonly TermPair[]
@@ -62,6 +79,7 @@ export const checkSegment = async ({
   processor,
   documentTokens,
   judge,
+  fragment = false,
   sourceLanguage,
   targetLanguage,
   terms,
@@ -120,7 +138,7 @@ export const checkSegment = async ({
         sourceLanguage,
         targetLanguage,
         terms,
-        fragment: true,
+        fragment,
       })),
     )
   }

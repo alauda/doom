@@ -18,14 +18,16 @@ import type { Segment } from '#cli/translate-segment.ts'
  * The repair agent's blast radius, asserted rather than described.
  *
  * This is the one place in the pipeline where a model is left to work on its
- * own, and the claim being made about it is narrow and mechanical: it cannot
- * replace the file it is working on, because nothing it can call does that.
- * The design this replaced made the same claim in a prompt — "prefer `edit`
- * over rewriting" — while handing the model `write`, and the incident that
- * followed was a whole document rewritten in one call.
+ * own, and the claim being made about it is narrow and mechanical: nothing it
+ * can call takes a replacement for the file it is working on. The design this
+ * replaced made the same claim in a prompt — "prefer `edit` over rewriting" —
+ * while handing the model `write`, and the incident that followed was a whole
+ * document rewritten in one call.
  *
- * So the test is not that it behaves well. It is that misbehaving is not
- * expressible.
+ * So the test is not that it behaves well. It is that the tool that made
+ * misbehaving free is not there. It is not that a rewrite is unreachable:
+ * `edit` would accept one whose `oldText` quoted the entire file, which is a
+ * price rather than a wall. What is asserted here is the tool face.
  */
 
 let workspace: string
@@ -68,15 +70,20 @@ const calls = (name: string, args: Record<string, unknown>) =>
     'toolUse',
   )
 
-const scriptedModels = (script: Array<AssistantMessage>) => {
+const scriptedModels = (
+  script:
+    | Array<AssistantMessage>
+    | ((context: AgentContext) => AssistantMessage),
+) => {
   const offered: string[][] = []
+  const contexts: AgentContext[] = []
   const models = {
-    streamSimple: (
-      _model: unknown,
-      context: { tools?: Array<{ name: string }> },
-    ) => {
+    streamSimple: (_model: unknown, context: AgentContext) => {
       offered.push((context.tools ?? []).map((tool) => tool.name))
-      const produced = script.shift() ?? says('I am done.')
+      contexts.push(context)
+      const produced =
+        (typeof script === 'function' ? script(context) : script.shift()) ??
+        says('I am done.')
       const stream = createAssistantMessageEventStream()
       stream.push({ type: 'start', partial: produced })
       stream.push({
@@ -88,7 +95,14 @@ const scriptedModels = (script: Array<AssistantMessage>) => {
     },
   } as unknown as Models
 
-  return { models, offered: () => offered }
+  return { models, offered: () => offered, contexts: () => contexts }
+}
+
+/** As much of pi's context as these tests look at. */
+interface AgentContext {
+  tools?: Array<{ name: string }>
+  systemPrompt?: string
+  messages?: unknown[]
 }
 
 const SEGMENT: Segment = {
@@ -109,10 +123,10 @@ const run = async ({
   script,
   check = () => Promise.resolve([]),
 }: {
-  script: AssistantMessage[]
+  script: AssistantMessage[] | ((context: AgentContext) => AssistantMessage)
   check?: (translation: string) => Promise<TranslationFinding[]>
 }) => {
-  const { models, offered } = scriptedModels(script)
+  const { models, offered, contexts } = scriptedModels(script)
   const repairer = createRepairAgent({
     models,
     model: gatewayModel({ id: 'test', baseUrl: 'http://localhost:1/v1' }),
@@ -128,7 +142,7 @@ const run = async ({
     history: [],
     check,
   })
-  return { repaired, offered }
+  return { repaired, offered, contexts }
 }
 
 describe('the repair agent', () => {
@@ -194,6 +208,37 @@ describe('the repair agent', () => {
 
     // Saying so does not end it: the harness checks again when it stops.
     expect(asked).toBeGreaterThan(1)
+  })
+
+  test('the files its prompt names are files it can actually read', async () => {
+    // The prompt is the agent's whole map of its working directory, so a name
+    // in it that is not on disk costs a turn and gets `not_found` with no
+    // explanation. Asserted by reading them rather than by comparing strings:
+    // the point is that the name resolves, not that two constants match.
+    let turn = 0
+    const named: string[] = []
+    const { contexts } = await run({
+      script: (context) => {
+        if (turn++ > 0) {
+          return says('Done.')
+        }
+        const directory = /## Your working directory([\s\S]*?)\n## /u.exec(
+          context.systemPrompt ?? '',
+        )?.[1]
+        named.push(
+          ...[...(directory ?? '').matchAll(/`([\w.-]+\.mdx)`/gu)].map(
+            (match) => match[1],
+          ),
+        )
+        return calls('read', { path: named[0] })
+      },
+    })
+
+    expect(named).toEqual(['source.mdx', 'translation.mdx'])
+    // And the read of the first one came back with the segment, not an error.
+    const afterRead = JSON.stringify(contexts().at(-1)?.messages ?? [])
+    expect(afterRead).not.toContain('not_found')
+    expect(afterRead).toContain('__DOOM_TR_ICODE_0__')
   })
 
   test('the scratch directory is removed either way', async () => {

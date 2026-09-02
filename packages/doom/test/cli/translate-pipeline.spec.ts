@@ -51,13 +51,54 @@ You need a cluster and the \`kubectl\` command, plus the [prerequisites](./prere
 Run the installer and wait. Read the [troubleshooting notes](./trouble.mdx) if it stops.
 `
 
-const prepare = (source = SOURCE) => {
+/** A paragraph with enough masked content to matter, and enough bulk to split. */
+const paragraph = (n: number) =>
+  `Paragraph ${n} explains how to run \`kubectl get pods -n ns-${n}\` and then read the [guide](../g-${n}.mdx) before continuing with the next step.`
+
+/**
+ * A `<Tabs>` too large for the cap, so the segmenter drills into it.
+ *
+ * Both `<Tab>`s carry a translatable `label`, which becomes an attributes
+ * segment of its own — and that segment's span, taken from the tag's node,
+ * covers every line of the tab's children.
+ */
+const withTabs = () =>
+  [
+    '---',
+    'title: Installing',
+    '---',
+    '',
+    '# Installing',
+    '',
+    '<Tabs>',
+    '',
+    ...['Web Console', 'Command Line']
+      .map((label, index) => [
+        `<Tab label="${label}">`,
+        '',
+        ...Array.from(
+          { length: 4 },
+          (_, n) => `${paragraph(index * 10 + n)}\n`,
+        ),
+        '</Tab>',
+        '',
+      ])
+      .flat(),
+    '</Tabs>',
+    '',
+    '## After installing',
+    '',
+    paragraph(99),
+    '',
+  ].join('\n')
+
+const prepare = (source = SOURCE, cap?: number) => {
   const tree = mdxProcessor.parse(escapeMarkdownHeadingIds(source))
   const maskEntries = maskAst(tree)
   const maskedSource = mdxProcessor.stringify(tree)
   // A floor of 0 so the three sections are three segments: the point here is
   // the machinery around segments, and a document small enough to read.
-  const plan = planSegments({ tree, processor: mdxProcessor, floor: 0 })
+  const plan = planSegments({ tree, processor: mdxProcessor, floor: 0, cap })
   return { tree, maskEntries, maskedSource, plan }
 }
 
@@ -96,15 +137,19 @@ const checkerReturning = (
   }
 }
 
-const judgeReturning = (findings: TranslationFinding[]): Judge => {
+const judgeReturning = (findings: TranslationFinding[] = []) => {
   let readings = 0
-  return {
+  const seen: { fragment?: boolean }[] = []
+  const judge: Judge & { seen: typeof seen } = {
+    seen,
     readings: () => readings,
-    review: () => {
+    review: (request) => {
       readings++
+      seen.push(request)
       return Promise.resolve(findings)
     },
   }
+  return judge
 }
 
 const run = async ({
@@ -115,6 +160,8 @@ const run = async ({
   maxSegmentAttempts,
   maxAssemblyRounds,
   source,
+  segmentCap,
+  keepFrontmatter = true,
 }: {
   answer: (request: SegmentTranslationRequest) => string
   checker?: TranslationChecker
@@ -123,8 +170,16 @@ const run = async ({
   maxSegmentAttempts?: number
   maxAssemblyRounds?: number
   source?: string
+  /** Small enough to force a container to be drilled into. */
+  segmentCap?: number
+  /**
+   * Whether the composed document carries frontmatter. Production always
+   * writes `sourceSHA`, so this is only ever turned off to check that routing
+   * does not silently depend on that.
+   */
+  keepFrontmatter?: boolean
 }) => {
-  const { tree, maskEntries, maskedSource } = prepare(source)
+  const { tree, maskEntries, maskedSource } = prepare(source, segmentCap)
   const translator = scripted(answer)
   const result = await translateDocument({
     tree,
@@ -138,7 +193,8 @@ const run = async ({
     // finding to the wrong segment.
     compose: (restored) => {
       const { content } = matter(restored)
-      return `---\nsourceSHA: test\n---\n\n${content.replace(/^\n+/u, '')}`
+      const body = content.replace(/^\n+/u, '')
+      return keepFrontmatter ? `---\nsourceSHA: test\n---\n\n${body}` : body
     },
     targetPath: path.join('/docs', 'zh', 'install', 'installing.mdx'),
     sourceLabel: 'en/install/installing.mdx',
@@ -149,6 +205,7 @@ const run = async ({
     segmentJudge,
     documentJudge,
     segmentFloor: 0,
+    segmentCap,
     maxSegmentAttempts,
     maxAssemblyRounds,
   })
@@ -269,6 +326,34 @@ describe('the segment pipeline', () => {
     expect(retries[0].previousTail).toBeDefined()
     expect(buildUserPrompt(retries[0])).toContain('<<<PREVIOUS')
     expect(buildUserPrompt(retries[1])).not.toContain('<<<PREVIOUS')
+  })
+
+  test('each segment is told where it sits in the page', async () => {
+    // The prompt says the heading list is there "so you know where the segment
+    // sits", which is only true if the segment's own section is marked. The
+    // list without the mark is the same list on every call.
+    const { translator } = await run({
+      answer: (request) => translated(request.segment.text),
+    })
+
+    const marked = translator.seen.map((request) =>
+      request.outline
+        ?.split('\n')
+        .find((line) => line.includes('← you are here'))
+        ?.replace(/^\s*-\s*/u, '')
+        .replace('  ← you are here', ''),
+    )
+    expect(marked).toEqual([
+      // The first segment carries the frontmatter and the H1; its section is
+      // the page's own title.
+      'Installing',
+      'Prerequisites',
+      'Installing the cluster',
+    ])
+    // And the list itself is the whole page's, every time.
+    for (const request of translator.seen) {
+      expect(request.outline).toContain('Installing the cluster')
+    }
   })
 
   test('the model is never shown what masking removed', async () => {
@@ -487,6 +572,80 @@ describe('the reviewers', () => {
     expect(judge.readings()).toBe(0)
   })
 
+  test('a page that is one segment is reviewed as a page, not as a fragment', async () => {
+    // The fragment prompt tells the reviewer that a missing beginning or end is
+    // the cut's doing and not an omission. On a page that *is* the segment,
+    // those are the omissions — and there is nothing else blocking to catch
+    // them: the whole-page reviewer is advisory, and is not even asked when
+    // there is one segment. Half of the real corpus is one segment.
+    const onePage = `---\ntitle: Installing\n---\n\n# Installing\n\nSee the [installation guide](../global/install.mdx) and run \`kubectl apply\`.\n`
+
+    const segmentJudge = judgeReturning()
+    const documentJudge = judgeReturning()
+    const { result } = await run({
+      answer: (request) => translated(request.segment.text),
+      source: onePage,
+      segmentJudge,
+      documentJudge,
+    })
+
+    expect(result.outcomes.length).toBe(1)
+    expect(segmentJudge.readings()).toBe(1)
+    expect(segmentJudge.seen[0].fragment).toBe(false)
+    // And it is read once, not twice: the whole-page reviewer would be reading
+    // the same text.
+    expect(documentJudge.readings()).toBe(0)
+  })
+
+  test('a segment of a longer page is reviewed as a fragment', async () => {
+    const segmentJudge = judgeReturning()
+    const { result } = await run({
+      answer: (request) => translated(request.segment.text),
+      segmentJudge,
+    })
+
+    expect(result.outcomes.length).toBeGreaterThan(1)
+    expect(segmentJudge.seen.length).toBe(result.outcomes.length)
+    expect(
+      segmentJudge.seen.every((request) => request.fragment === true),
+    ).toBe(true)
+  })
+
+  test('a segment worked on twice does not report its notes twice', async () => {
+    // A readability note is about the translation that shipped, and a segment
+    // that an assembly round sent back was translated more than once. Appending
+    // each pass's notes printed the surviving one again for every segment that
+    // was ever revisited.
+    const segmentJudge = judgeReturning([
+      { rule: 'doom-judge:fluency', reason: 'reads stiffly', blocking: false },
+    ])
+    const { result } = await run({
+      answer: (request) => translated(request.segment.text),
+      segmentJudge,
+      checker: checkerReturning((content, call) =>
+        call === 0
+          ? [
+              {
+                rule: 'doom-lint:some-line-rule',
+                reason: 'something is off in the prerequisites',
+                line: lineOf(content, '前置条件'),
+              },
+            ]
+          : [],
+      ),
+    })
+
+    expect(result.document).toBeDefined()
+    expect(result.assemblyRounds).toBe(1)
+    // Segment 1 was read twice by the reviewer…
+    expect(segmentJudge.readings()).toBe(result.outcomes.length + 1)
+    // …and still contributes one note, like every other segment.
+    expect(
+      result.findings.filter((finding) => finding.rule === 'doom-judge:fluency')
+        .length,
+    ).toBe(result.outcomes.length)
+  })
+
   test('the whole-page reviewer reports and never blocks', async () => {
     const documentJudge = judgeReturning([
       {
@@ -507,6 +666,136 @@ describe('the reviewers', () => {
         (finding) => finding.rule === 'doom-judge:mistranslation',
       )?.blocking,
     ).toBe(false)
+  })
+})
+
+describe('routing a whole-document finding back to a segment', () => {
+  test('a line inside a drilled container goes to the block that owns it, not to the container’s tag', async () => {
+    const source = withTabs()
+    const { plan } = prepare(source, 300)
+    const attrs = plan.segments
+      .filter((segment) => segment.address.kind === 'attributes')
+      .map((segment) => segment.index)
+    const owner = plan.segments.find((segment) =>
+      segment.text.includes('Paragraph 12 '),
+    )?.index
+    // The fixture is only about anything if the container really was drilled
+    // into and the labels really did become segments of their own.
+    expect(attrs.length).toBe(2)
+    expect(owner).toBeDefined()
+    expect(attrs).not.toContain(owner)
+
+    const { result } = await run({
+      answer: (request) => request.segment.text,
+      source,
+      segmentCap: 300,
+      checker: checkerReturning((content, call) =>
+        call === 0
+          ? [
+              {
+                rule: 'doom-lint:some-line-rule',
+                reason: 'something is off in the second tab',
+                line: lineOf(content, 'Paragraph 12 '),
+              },
+            ]
+          : [],
+      ),
+    })
+
+    expect(result.document).toBeDefined()
+    // The block that holds the faulted line was asked again…
+    expect(result.outcomes[owner!].attempts).toBe(2)
+    // …and the `<Tab label="…">` segments, whose spans cover the same line
+    // because they are taken from the whole tag node, were left alone. Taking
+    // the first span that contains the line instead of the narrowest sent the
+    // label back and left the real defect untouched.
+    for (const index of attrs) {
+      expect(result.outcomes[index].attempts).toBe(1)
+    }
+  })
+
+  test('a pairwise rule is unlocatable whether or not the page has frontmatter', async () => {
+    // Every `doom-lint:translation-*` rule reports on the root node, so its
+    // line is 1 wherever the defect is. With frontmatter that 1 lands in the
+    // yaml block and belongs to nobody; without one it lands on the first
+    // segment by accident. Recognising the rule by name is what makes the same
+    // defect fail the same way on both — rather than the shape of the page
+    // deciding it.
+    for (const keepFrontmatter of [true, false]) {
+      const { result } = await run({
+        answer: (request) => translated(request.segment.text),
+        keepFrontmatter,
+        checker: checkerReturning(() => [
+          {
+            rule: 'doom-lint:translation-component-multiset',
+            reason: 'Translation dropped 1 `<Term>`',
+            line: 1,
+          },
+        ]),
+      })
+
+      expect(result.failure?.kind).toBe('unlocatable')
+      expect(result.assemblyRounds).toBe(0)
+      // Nothing was sent back, so no segment paid for it.
+      expect(result.outcomes.every((outcome) => outcome.attempts === 1)).toBe(
+        true,
+      )
+    }
+  })
+
+  test('a label shared by a definition and its uses sends every segment that holds it back', async () => {
+    // `REFID`/`FNID` are linkage keys: the definition and each reference mask
+    // to the same token, so more than one segment expects it. Which of them
+    // dropped it is exactly what the finding does not say, so all of them are
+    // asked — routing to whichever happened to be recorded last is a coin flip.
+    const shared = [
+      '---',
+      'title: Installing',
+      '---',
+      '',
+      '# Installing',
+      '',
+      'Start from the [manual][handbook].',
+      '',
+      '## Prerequisites',
+      '',
+      'It is also covered in the [manual][handbook].',
+      '',
+      '[handbook]: https://example.com/handbook',
+      '',
+    ].join('\n')
+
+    const { plan } = prepare(shared)
+    const holders = plan.segments
+      .filter((segment) =>
+        [...segment.expected.keys()].some((token) => token.includes('refid')),
+      )
+      .map((segment) => segment.index)
+    expect(holders.length).toBeGreaterThan(1)
+
+    const token = [...plan.segments[holders[0]].expected.keys()].find((key) =>
+      key.includes('refid'),
+    )
+    const { result } = await run({
+      answer: (request) => request.segment.text,
+      source: shared,
+      checker: checkerReturning((_content, call) =>
+        call === 0
+          ? [
+              {
+                rule: 'doom-translate:missing-placeholder',
+                reason: 'the label is gone',
+                placeholder: token,
+              },
+            ]
+          : [],
+      ),
+    })
+
+    expect(result.document).toBeDefined()
+    for (const index of holders) {
+      expect(result.outcomes[index].attempts).toBe(2)
+    }
   })
 })
 

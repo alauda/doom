@@ -16,7 +16,12 @@ import type {
 import type { TranslationFinding } from './translate-checker.ts'
 import { blockingFindings } from './translate-checker.ts'
 import type { SegmentRepairer } from './translate-pipeline.ts'
-import { createScratch, loadPi } from './translate-scratch.ts'
+import {
+  SCRATCH_SOURCE,
+  SCRATCH_TRANSLATION,
+  createScratch,
+  loadPi,
+} from './translate-scratch.ts'
 
 /**
  * The last resort for one segment, and the only place a model is left to work
@@ -31,11 +36,19 @@ import { createScratch, loadPi } from './translate-scratch.ts'
  *
  * What makes it safe is not the prompt. **The tools are `read`, `edit` and
  * `check`.** There is no `write` and no `append`, so "do not rewrite the whole
- * thing" is not advice it might ignore under pressure — it is a thing it cannot
- * express. That distinction is the entire lesson of the incident this design
- * came from: the previous agent was *told* to prefer targeted edits, had
- * `write` in its hands, and replaced a translation that was one problem from
- * finished with one that had a thousand.
+ * thing" is not advice it might ignore under pressure: nothing here takes a
+ * replacement for the file. Be exact about how far that goes — `edit` asks only
+ * that its `oldText` occur once, so quoting the entire file back and handing
+ * over a new one is still a rewrite the tool would accept. What stands in the
+ * way is the price: every byte of the segment has to be reproduced exactly to
+ * match, and a model that could do that reliably would not have needed
+ * repairing. The guarantee is economic, not syntactic — but it is the
+ * difference between a rewrite being the cheapest thing to reach for and being
+ * the most expensive. That distinction is the entire lesson of the incident
+ * this design came from: the previous agent was *told* to prefer targeted
+ * edits, had `write` in its hands — one call, no quoting, no cost — and
+ * replaced a translation that was one problem from finished with one that had a
+ * thousand.
  *
  * And it works inside a segment. Even a repair that goes as badly as possible
  * can only damage a few kilobytes that were already failing, it has to pass the
@@ -92,8 +105,11 @@ export const createRepairAgent = ({
     const [pi] = await Promise.all([loadPi()])
     const { createReadTool, createEditTool, runAgentLoop } = pi.core
 
-    const sourceName = `segment${extension}`
-    const translationName = `translation${extension}`
+    // Taken from the scratch directory's own names rather than written out
+    // again: the prompt tells the agent these files exist, and an agent that
+    // reads a name that is not there gets `not_found` and no explanation.
+    const sourceName = `${SCRATCH_SOURCE}${extension}`
+    const translationName = `${SCRATCH_TRANSLATION}${extension}`
 
     const scratch = await createScratch({
       parentDir: scratchDir,
@@ -236,7 +252,10 @@ export const createRepairAgent = ({
       const config: Parameters<typeof runAgentLoop>[2] = {
         model,
         reasoning: reasoningEffort,
-        maxRetries: MODEL_MAX_RETRIES,
+        // The caller's number, not the default: a caller that asked for no
+        // retries — a test, or a run that would rather fail than wait — was
+        // still getting five inside pi.
+        maxRetries: maxModelRetries,
         convertToLlm: (messages) => messages as Message[],
         shouldStopAfterTurn: () => ++turns >= maxTurns,
         // pi's "the agent would stop here" hook. Returning anything puts it back
@@ -325,5 +344,10 @@ export const createRepairAgent = ({
  * read it: with `write` in its hands, the previous agent replaced a translation
  * that was one finding from finished with one that had a thousand. Nothing
  * about that was against its instructions in spirit; it simply had the means.
+ *
+ * Adding a tool that takes whole-file content puts those means back. `edit`
+ * does not, in any practical sense — a rewrite through it costs an exact
+ * byte-for-byte quotation of the file — but that is a matter of price rather
+ * than of syntax, so a cheaper route to the same thing would undo it.
  */
 export const REPAIR_TOOL_NAMES = ['read', 'edit', 'check'] as const

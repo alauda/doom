@@ -2,6 +2,7 @@ import crypto from 'node:crypto'
 
 import type { Root, RootContent } from 'mdast'
 import type { MdxJsxAttribute, MdxJsxFlowElement } from 'mdast-util-mdx'
+import { visit } from 'unist-util-visit'
 
 import { isTranslatableJsxAttr } from '../runtime/components/_translation-policy.ts'
 
@@ -266,6 +267,19 @@ const headingText = (node: RootContent): string | undefined => {
 }
 
 /** Every heading on the page, in order — the map a segment is placed on. */
+/** The first heading a run of blocks establishes, if any. */
+const firstHeadingIn = (children: readonly RootContent[]) => {
+  for (const child of children) {
+    if (child.type === 'heading' && child.depth <= 3) {
+      const text = headingText(child)
+      if (text) {
+        return text
+      }
+    }
+  }
+  return undefined
+}
+
 export const documentOutline = (tree: Root) => {
   const headings: { depth: number; text: string }[] = []
   const walk = (children: readonly RootContent[]) => {
@@ -357,7 +371,13 @@ export const planSegments = ({
       push(
         { kind: 'blocks', container, start, end },
         stringifyBlocks(slice),
-        label,
+        // A segment that opened before any heading was in effect — the one
+        // holding the frontmatter — takes the first heading it contains. Its
+        // section is the page's own title, and without this it is the one
+        // segment with no place in the outline.
+        label.heading
+          ? label
+          : { ...label, heading: firstHeadingIn(slice) ?? label.heading },
       )
       start = -1
       size = 0
@@ -540,6 +560,42 @@ export interface AssembleResult {
  * — not because a check says so afterwards, but because there is no step in
  * which it could happen.
  */
+/**
+ * The document's reference definitions, rendered so a segment can be parsed
+ * with them in scope.
+ *
+ * `[text][label]` and `[^1]` are only links and footnotes if the definition
+ * they name exists — otherwise markdown reads them as ordinary brackets. A
+ * definition lives once, wherever the author put it, so any *other* segment
+ * holding a reference to it parses standalone as literal text, and stringifying
+ * that text escapes the brackets and the underscores in the label: a masked
+ * `[manual][__DOOM_TR_REFID_0__]` comes back out as
+ * `\[manual]\[**DOOM\_TR\_REFID\_0**]` and the placeholder is destroyed.
+ *
+ * So every segment is parsed with all of the document's definitions appended,
+ * and the appended blocks are dropped again. Duplicating a definition a segment
+ * already has is harmless — markdown keeps the first — and dropping by count is
+ * exact because the context is parsed once on its own to learn how many blocks
+ * it is.
+ */
+const definitionContext = (tree: Root, processor: MaskProcessor) => {
+  const definitions: RootContent[] = []
+  visit(tree, ['definition', 'footnoteDefinition'], (node) => {
+    definitions.push(node as RootContent)
+  })
+  if (definitions.length === 0) {
+    return undefined
+  }
+  const text = processor.stringify({ type: 'root', children: definitions })
+  let blocks: number
+  try {
+    blocks = processor.parse(text).children.length
+  } catch {
+    return undefined
+  }
+  return blocks > 0 ? { text, blocks } : undefined
+}
+
 export const assemble = ({
   tree,
   plan,
@@ -568,6 +624,8 @@ export const assemble = ({
 
   const placed = new Map<number, SegmentAddress>()
 
+  const context = definitionContext(tree, processor)
+
   const parseBlocks = (segment: Segment): RootContent[] => {
     const translation = translations[segment.index]
     if (typeof translation !== 'string') {
@@ -576,7 +634,21 @@ export const assemble = ({
       )
     }
     try {
-      return processor.parse(translation).children
+      const alone = processor.parse(translation).children
+      if (!context) {
+        return alone
+      }
+      const withContext = processor.parse(
+        `${translation}\n\n${context.text}`,
+      ).children
+      // Anything but an exact match means the appended context merged with the
+      // translation's own last block, and slicing would eat part of the
+      // segment. Parsing it alone is then the safe answer — no worse than not
+      // having tried. Documents with no definitions never reach here, so the
+      // second parse is paid only by the documents it is for.
+      return withContext.length === alone.length + context.blocks
+        ? withContext.slice(0, alone.length)
+        : alone
     } catch (error) {
       throw new SegmentAssemblyError(
         `Segment ${segment.index}'s translation does not parse: ${error instanceof Error ? error.message : String(error)}`,

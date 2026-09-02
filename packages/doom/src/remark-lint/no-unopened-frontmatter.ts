@@ -36,7 +36,10 @@ import { visit } from 'unist-util-visit'
 /**
  * The keys doom's frontmatter actually uses, counted across acp-docs rather
  * than remembered: weight 797 · sourceSHA 194 · title 132 · i18n 125 ·
- * queries 73 · description 21 · category 5 · author 4.
+ * queries 73 · description 21 · category 5 · author 4. `i18nSegments` is
+ * written by `doom translate` and so appears in no count taken before it
+ * existed; it is here because a translation is exactly the kind of file whose
+ * frontmatter a model can lose the opening `---` from.
  *
  * Deliberately a list and not `\w+:` — a heading really can begin "Note:" or
  * "Step 1:", and reporting those would be a rule nobody keeps.
@@ -46,6 +49,7 @@ const FRONTMATTER_KEYS = [
   'category',
   'description',
   'i18n',
+  'i18nSegments',
   'queries',
   'sourceSHA',
   'title',
