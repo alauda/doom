@@ -43,15 +43,106 @@ export interface TranslateOptions {
    * then to the version this was measured against.
    */
   model?: string
-  /** Reasoning effort for the translator. Defaults to `low`. */
+  /**
+   * Reasoning effort for translating a segment. Defaults to `low`.
+   *
+   * The main path is deliberately cheap: a segment is a small, well-specified
+   * job, and the reasoning is spent where it earns something — on repairing a
+   * segment that three attempts could not fix, and on explaining a failure.
+   */
   reasoningEffort?: 'minimal' | 'low' | 'medium' | 'high' | 'xhigh' | 'max'
   /**
-   * How many times a document's findings are fed back before it is failed.
-   * Exhausting them fails the document — it never ships what it could not fix.
+   * Largest segment sent to the model, in masked characters. Defaults to 16000.
+   *
+   * The single most important number here: it bounds how much has to be right
+   * at once. Raising it trades a lower chance of any one segment passing for
+   * fewer calls; lowering it costs context and coherence.
    */
-  maxRepairRounds?: number
-  /** Runaway guard: total model turns for one document, tool calls included. */
-  maxTurns?: number
+  segmentCap?: number
+  /**
+   * Size at which an indivisible block fails the document. Defaults to 48000.
+   *
+   * A block over `segmentCap` that cannot be divided — a huge table or list —
+   * becomes an oversized segment of its own. This is where that stops being
+   * reasonable, and the document has to be edited instead.
+   */
+  segmentHardCap?: number
+  /**
+   * Size a segment must reach before a heading may end it. Defaults to 2000.
+   *
+   * Without it, a page of one-line sections becomes a page of one-line
+   * segments, each its own model call and judge reading for no benefit.
+   */
+  segmentFloor?: number
+  /**
+   * How many times a segment is asked for before it is escalated to the repair
+   * agent. Defaults to 3 — the first go plus two with the findings attached.
+   */
+  maxSegmentAttempts?: number
+  /**
+   * How many times the assembled document may send segments back to be redone.
+   * Defaults to 2.
+   */
+  maxAssemblyRounds?: number
+  /**
+   * Lines of the previous segment's translation shown to the next one, so the
+   * voice and the wording carry across a boundary. Defaults to 20; `0` turns it
+   * off.
+   */
+  contextTail?: number
+  /**
+   * Reuse the segments whose source has not changed, from the translation
+   * already on disk. Defaults to `true`.
+   *
+   * Turning it off makes every changed document a full retranslation. Nothing
+   * is trusted unverified either way: a reused segment has to still account for
+   * exactly the content the current source expects, or it is retranslated.
+   */
+  segmentCache?: boolean
+  /**
+   * Read the assembled page as a whole, after the segments have passed.
+   * Defaults to `true`.
+   *
+   * Never blocking. It is there for what a segment cannot see — a term that
+   * drifted between sections, a join that reads badly — and those belong in a
+   * report, not in a gate.
+   */
+  fullDocJudge?: boolean
+  /**
+   * The last resort for a segment that repeated attempts could not fix.
+   *
+   * An agent with `read`, `edit` and `check` and deliberately no way to replace
+   * a file: it works inside one segment, and the reason it cannot rewrite
+   * everything is the tools it has rather than the instructions it is given.
+   */
+  repairAgent?: {
+    /** Defaults to `true`. */
+    enabled?: boolean
+    /** Defaults to the translator's model. Set it to the strongest one available. */
+    model?: string
+    /** Defaults to `high` — this path is rare and hard, which is what reasoning is for. */
+    reasoningEffort?: 'minimal' | 'low' | 'medium' | 'high' | 'xhigh' | 'max'
+    /**
+     * Runaway guard, in agent turns. Defaults to 40.
+     *
+     * A fixed number works here and did not for whole documents: a segment's
+     * size has an upper bound, so the ratio of budget to work is a constant.
+     */
+    maxTurns?: number
+  }
+  /**
+   * The failure analysis attached to a document that could not be translated.
+   *
+   * One model call over the evidence already collected, written for whoever
+   * reads the build log. Purely advisory: it never changes whether the build
+   * passes.
+   */
+  diagnose?: {
+    /** Defaults to `true`. */
+    enabled?: boolean
+    /** Defaults to `high`. */
+    reasoningEffort?: 'minimal' | 'low' | 'medium' | 'high' | 'xhigh' | 'max'
+  }
   /**
    * Context the translator plans for, in tokens. Deliberately lower than what
    * the gateway offers: planning for less costs a re-read, planning for more
@@ -87,6 +178,10 @@ export interface TranslateOptions {
     reasoningEffort?: 'minimal' | 'low' | 'medium' | 'high' | 'xhigh' | 'max'
     /** How many independent readings must agree before a finding counts. Defaults to 2. */
     draws?: number
+    /** Readings taken of a single segment. Defaults to 3. */
+    segmentDraws?: number
+    /** How many of those must agree before a segment finding counts. Defaults to 2. */
+    segmentVotes?: number
     /**
      * Turns the judge off.
      *

@@ -13,9 +13,11 @@ import { currentPair } from './shared.ts'
  * language and not the other.
  */
 const TRANSLATED_KEYS = new Set(['title', 'description'])
-// `sourceSHA` is written by the translator and `i18n` is deliberately dropped
-// from the translation — neither is a divergence.
-const TRANSLATOR_OWNED_KEYS = new Set(['sourceSHA', 'i18n'])
+// `sourceSHA` and `i18nSegments` are written by the translator and `i18n` is
+// deliberately dropped from the translation — none of the three is a
+// divergence. Leaving `i18nSegments` out of this set would report every
+// translated document in the corpus, every time.
+const TRANSLATOR_OWNED_KEYS = new Set(['sourceSHA', 'i18nSegments', 'i18n'])
 
 export const translationFrontmatterPreservation = lintRule<Root>(
   'doom-lint:translation-frontmatter-preservation',
