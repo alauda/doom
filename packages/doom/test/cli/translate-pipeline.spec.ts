@@ -294,6 +294,53 @@ describe('the segment pipeline', () => {
     )
   })
 
+  test('a segment that moves a heading’s anchor out of the end is caught, not shipped', async () => {
+    // `{#id}` is an id only as the last thing in a heading; anywhere else it is
+    // literal text. A translation can keep every placeholder and still lose the
+    // id, simply by reordering the words around it — which is the natural thing
+    // to do when the two languages disagree about where "on DCS" belongs. The
+    // placeholder count still balances, so nothing but this notices.
+    const source = [
+      '---',
+      'title: Installing',
+      '---',
+      '',
+      '# Installing',
+      '',
+      'See the [installation guide](../global/install.mdx) and run `kubectl apply`.',
+      '',
+      '## Prepare These on DCS {#dcs-prereqs}',
+      '',
+      'You need a cluster and the `kubectl` command, plus the [prerequisites](./prereq.mdx).',
+      '',
+    ].join('\n')
+
+    let moved = true
+    const { result } = await run({
+      source,
+      answer: (request) => {
+        const good = translated(request.segment.text)
+        const carrier = /`__DOOM_TR_ANCHOR_\d+__`/u.exec(good)
+        if (!moved || !carrier) {
+          return good
+        }
+        moved = false
+        // The carrier is still in the heading and still exactly once — it just
+        // is not last any more.
+        return good.replace(carrier[0], `${carrier[0]} 上准备`)
+      },
+    })
+
+    const rules = result.outcomes
+      .flatMap((outcome) => outcome.history)
+      .flat()
+      .map((finding) => finding.rule)
+    expect(rules).toContain('doom-translate:segment-heading-anchor-moved')
+    // Caught means retried, and the retry is what ships.
+    expect(result.document).toBeDefined()
+    expect(result.document).not.toContain('上准备')
+  })
+
   test('a segment that drags in a neighbour’s placeholder is told which mistake it made', async () => {
     let polluted = true
     const { result, translator } = await run({

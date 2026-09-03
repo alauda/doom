@@ -1,4 +1,5 @@
-import type { Root } from 'mdast'
+import type { Heading, Root } from 'mdast'
+import { visit } from 'unist-util-visit'
 
 import {
   collectComponents,
@@ -196,6 +197,31 @@ const placeholderFindings = (
   return findings
 }
 
+const ANCHOR_CARRIER = /^__DOOM_TR_ANCHOR_\d+__$/iu
+
+/**
+ * The anchor carrier a heading ends with, if it ends with one.
+ *
+ * `maskAst` puts a heading's `{#id}` into an `inlineCode` carrier appended as
+ * the heading's last child, because that is the only place the id exists:
+ * `HEADING_ANCHOR_PATTERN` is anchored to the end of the heading, so `{#id}`
+ * anywhere else is literal text.
+ */
+const trailingAnchor = (heading: Heading): string | undefined => {
+  const last = heading.children.at(-1)
+  return last?.type === 'inlineCode' && ANCHOR_CARRIER.test(last.value)
+    ? last.value
+    : undefined
+}
+
+const collectTrailingAnchors = (tree: Root) => {
+  const anchors: (string | undefined)[] = []
+  visit(tree, 'heading', (node) => {
+    anchors.push(trailingAnchor(node))
+  })
+  return anchors
+}
+
 /**
  * The skeleton is the source's, not the model's.
  *
@@ -259,6 +285,23 @@ const structureFindings = (
         got < want
           ? `This segment's translation dropped ${want - got} \`<${name}>\` (the source has ${want}, the translation has ${got}) — content that was in the source is missing.`
           : `This segment's translation invented ${got - want} \`<${name}>\` (the source has ${want}, the translation has ${got}).`,
+    })
+  }
+
+  // Only meaningful while the headings still correspond one to one; when they
+  // do not, the sequence finding above already says so and pairing by index
+  // would invent a second, misleading one.
+  if (expectedDepths.length === actualDepths.length) {
+    const expectedAnchors = collectTrailingAnchors(source)
+    const actualAnchors = collectTrailingAnchors(tree)
+    expectedAnchors.forEach((placeholder, index) => {
+      if (!placeholder || actualAnchors[index] === placeholder) {
+        return
+      }
+      findings.push({
+        rule: 'doom-translate:segment-heading-anchor-moved',
+        reason: `This segment's translation moved \`${placeholder}\` out of the end of its heading. A heading's \`{#id}\` is an id only as the last thing in the heading; anywhere else it is literal text, so the heading would render the id as visible punctuation and be given a generated one instead. Word order may change; keep the anchor last.`,
+      })
     })
   }
 
