@@ -34,18 +34,13 @@ import {
   translateCodeFile,
 } from './helpers.js'
 import { loadConfig } from './load-config.js'
-import {
-  type TranslateAgentResult,
-  translateWithAgent,
-} from './translate-agent.js'
+import { createSegmentTranslator } from './translate-call.js'
 import {
   type TranslateCheckOptions,
   checkTranslations,
 } from './translate-check.js'
-import {
-  createTranslationChecker,
-  type TranslationFinding,
-} from './translate-checker.js'
+import { createTranslationChecker } from './translate-checker.js'
+import { createDiagnoser } from './translate-diagnose.js'
 import { createJudge } from './translate-judge.js'
 import {
   CONCURRENCY_ENV,
@@ -60,7 +55,16 @@ import {
   DEFAULT_JUDGE_REASONING_EFFORT,
   DEFAULT_REASONING_EFFORT,
   createGateway,
+  gatewayModel,
 } from './translate-models.js'
+import {
+  DEFAULT_MAX_SEGMENT_ATTEMPTS,
+  type SegmentOutcome,
+  type TranslateDocumentResult,
+  translateDocument,
+} from './translate-pipeline.js'
+import { createRepairAgent } from './translate-repair-agent.js'
+import type { SegmentCacheRecord } from './translate-segment-cache.js'
 import { resolveTerms } from './translate-terms.js'
 
 /**
@@ -72,10 +76,10 @@ import { resolveTerms } from './translate-terms.js'
  * deterministic rewrites (`normalizeImgSrc`, `translateCodeFile`) that are ours
  * to make rather than a model's.
  *
- * Translating a document does not live here at all. That is a checked loop, in
- * `translate-agent.ts`. There is one path through it: no flag turns it off and
- * no single-shot fallback remains, because a protection that can be skipped is
- * one that gets skipped.
+ * Translating a document does not live here at all. That is a segment pipeline,
+ * in `translate-pipeline.ts`. There is one path through it: no flag turns it
+ * off and no single-shot fallback remains, because a protection that can be
+ * skipped is one that gets skipped.
  */
 
 export interface I18nFrontmatter {
@@ -84,16 +88,36 @@ export interface I18nFrontmatter {
     disableAutoTranslation?: boolean
   }
   sourceSHA?: string
+  /**
+   * Where each of this translation's segments came from and where it went.
+   *
+   * The translator's own bookkeeping, like `sourceSHA` beside it: it lets the
+   * next run reuse the segments whose source has not changed instead of
+   * retranslating a whole page because one line of it moved. Nothing renders
+   * it, and `translation-frontmatter-preservation` knows it is ours.
+   */
+  i18nSegments?: SegmentCacheRecord
   title?: string
   description?: string
 }
+
+/**
+ * How many readings a segment gets, and how many must agree.
+ *
+ * Three and two, against two-and-unanimous for a whole page. A segment is a
+ * short text, and a reviewer given less to go on has more room to find
+ * something to say; the third reading buys back the precision that unanimity
+ * gives when there is a whole document to be sure about.
+ */
+const DEFAULT_SEGMENT_DRAWS = 3
+const DEFAULT_SEGMENT_VOTES = 2
 
 /**
  * The translation rules.
  *
  * Overridable per repository through `translate.systemPrompt`, which is why
  * the placeholder discipline is *not* here: it is part of the harness's own
- * prompt in `translate-agent.ts`, where a repository cannot drop it by
+ * prompt in `translate-call.ts`, where a repository cannot drop it by
  * replacing this text.
  */
 const DEFAULT_SYSTEM_PROMPT = `
@@ -141,19 +165,6 @@ These are additional requirements for the translation. They should be met along 
 """
 <% } %>
 `.trim()
-
-/** How many times findings are fed back before a document is failed. */
-const DEFAULT_MAX_REPAIR_ROUNDS = 3
-
-/**
- * Total assistant turns for one document, tool calls included.
- *
- * Separate from the repair rounds on purpose: a long document legitimately
- * spends many turns reading and appending before it has anything to repair, so
- * one number cannot be both the budget for producing a translation and the
- * budget for fixing it. This one is a runaway guard, not a quality knob.
- */
-const DEFAULT_MAX_TURNS = 60
 
 function extractFirstLevelHeading(content: string): string | null {
   const lines = content.split('\n')
@@ -227,6 +238,94 @@ const renderTranslationRules = async ({
   return { rules, terms: terms.pairs }
 }
 
+/** One segment, named the way a person reading a build log needs it named. */
+const segmentName = (outcome: SegmentOutcome) =>
+  `segment ${outcome.index + 1}` +
+  (outcome.label.line || outcome.label.heading
+    ? ` (${[
+        outcome.label.line ? `line ${outcome.label.line}` : undefined,
+        outcome.label.heading ? `‹${outcome.label.heading}›` : undefined,
+      ]
+        .filter(Boolean)
+        .join(' ')})`
+    : '')
+
+/**
+ * Why a document failed, in one line.
+ *
+ * Three ways to fail, and they are told apart on purpose: a segment nothing
+ * could translate, a whole-document check that kept failing after the segments
+ * it named were redone, and a whole-document check nobody could attribute to a
+ * segment. They call for different things from whoever reads the log, and the
+ * design this replaced reported all of them as the same wall of problems.
+ */
+const describeFailure = (result: TranslateDocumentResult) => {
+  const { failure } = result
+  switch (failure?.kind) {
+    case 'unsplittable-block': {
+      return 'A single block is too large to translate and cannot be divided.'
+    }
+    case 'segment': {
+      return `${failure.segments.length} segment(s) never passed: ${failure.segments
+        .map((index) => segmentName(result.outcomes[index]))
+        .join(', ')}.`
+    }
+    case 'assembly': {
+      return `The assembled document still failed its checks after ${result.assemblyRounds} round(s) of sending segments back.`
+    }
+    case 'unlocatable': {
+      return 'The assembled document failed a check of the whole page that could not be attributed to any one segment.'
+    }
+    default: {
+      return 'The document did not pass its checks.'
+    }
+  }
+}
+
+/** Everything that was wrong with one failed document, grouped by segment. */
+const describeFailedDocument = ({
+  file,
+  result,
+  diagnosis,
+}: FailedDocument) => {
+  const lines = [`\n${cyan(file)} — ${describeFailure(result)}`]
+
+  const failed =
+    result.failure?.kind === 'segment'
+      ? result.failure.segments.map((index) => result.outcomes[index])
+      : []
+
+  for (const outcome of failed) {
+    lines.push(
+      `  ${segmentName(outcome)}, after ${outcome.attempts} attempt(s):`,
+      ...outcome.findings.map(
+        (finding) => `    ${red(finding.rule)}  ${finding.reason}`,
+      ),
+    )
+  }
+
+  if (failed.length === 0) {
+    lines.push(
+      ...result.findings
+        .filter((finding) => finding.blocking !== false)
+        .map(
+          (finding) =>
+            `  ${red(finding.rule)}${finding.line ? ` (line ${finding.line})` : ''}  ${finding.reason}`,
+        ),
+    )
+  }
+
+  if (diagnosis) {
+    lines.push(
+      '',
+      `  ${cyan('What this looks like')} (written by a model from the evidence above; advisory, and not part of the verdict):`,
+      ...diagnosis.split('\n').map((line) => `    ${line}`),
+    )
+  }
+
+  return lines.join('\n')
+}
+
 export interface TranslateCommandOptions {
   source: Language
   target: Language
@@ -237,8 +336,9 @@ export interface TranslateCommandOptions {
 
 interface FailedDocument {
   file: string
-  findings: TranslationFinding[]
-  result?: TranslateAgentResult
+  result: TranslateDocumentResult
+  /** The failure analysis, when one could be produced. Advisory. */
+  diagnosis?: string
 }
 
 const supportedLanguages = SUPPORTED_LANGUAGES.join(', ')
@@ -402,6 +502,34 @@ export const translateCommand = new Command('translate')
 
     const translateOptions = config.translate ?? {}
 
+    // Two options were removed when the whole-document loop was, and both of
+    // them named a budget that no longer exists. Ignoring them quietly would
+    // leave a repository believing it had configured something — which is the
+    // exact failure mode this rewrite exists to remove, in miniature.
+    const removed: Record<string, string> = {
+      maxRepairRounds:
+        '`maxSegmentAttempts` (per segment) and `maxAssemblyRounds` (per document)',
+      maxTurns:
+        '`repairAgent.maxTurns`, which now bounds only the repair agent',
+    }
+    const usedRemoved = Object.keys(removed).filter(
+      (key) => key in translateOptions,
+    )
+    if (usedRemoved.length > 0) {
+      logger.error(
+        `\`translate\` no longer has ${usedRemoved
+          .map((key) => `\`${cyan(key)}\``)
+          .join(
+            ' or ',
+          )}: a translation is now produced a segment at a time, so a budget for the whole document has nothing to bound.\n` +
+          usedRemoved
+            .map((key) => `  ${cyan(key)} → replaced by ${removed[key]}`)
+            .join('\n'),
+      )
+      process.exitCode = 1
+      return
+    }
+
     // Built once: the provider wiring, and the processors the rules run in.
     // Missing credentials fail here, by name, rather than once per file as a
     // wall of unrelated stream errors.
@@ -428,29 +556,68 @@ export const translateCommand = new Command('translate')
       requestsPerMinute,
     })
 
-    const maxRepairRounds =
-      translateOptions.maxRepairRounds ?? DEFAULT_MAX_REPAIR_ROUNDS
-    const maxTurns = translateOptions.maxTurns ?? DEFAULT_MAX_TURNS
     const reasoningEffort =
       translateOptions.reasoningEffort ?? DEFAULT_REASONING_EFFORT
+    const maxSegmentAttempts =
+      translateOptions.maxSegmentAttempts ?? DEFAULT_MAX_SEGMENT_ATTEMPTS
+    const judgeEnabled = translateOptions.judge?.enabled !== false
+    const judgeReasoning =
+      translateOptions.judge?.reasoningEffort ?? DEFAULT_JUDGE_REASONING_EFFORT
 
-    const judge =
-      translateOptions.judge?.enabled === false
-        ? undefined
-        : createJudge({
+    // Two reviewers, because they are asked two different questions. The first
+    // reads one segment against its source and can stop it being frozen; the
+    // second reads the finished page for what no segment can see — a term that
+    // drifted between sections, a join that reads badly — and only ever
+    // reports.
+    const segmentJudge = judgeEnabled
+      ? createJudge({
+          models: gateway.models,
+          model: gateway.judgeModel,
+          reasoningEffort: judgeReasoning,
+          draws: translateOptions.judge?.segmentDraws ?? DEFAULT_SEGMENT_DRAWS,
+          votes: translateOptions.judge?.segmentVotes ?? DEFAULT_SEGMENT_VOTES,
+          limit: modelCallLimit,
+        })
+      : undefined
+    const documentJudge =
+      judgeEnabled && translateOptions.fullDocJudge !== false
+        ? createJudge({
             models: gateway.models,
             model: gateway.judgeModel,
-            reasoningEffort:
-              translateOptions.judge?.reasoningEffort ??
-              DEFAULT_JUDGE_REASONING_EFFORT,
+            reasoningEffort: judgeReasoning,
             draws: translateOptions.judge?.draws,
+            limit: modelCallLimit,
+          })
+        : undefined
+
+    // A segment that repeated attempts could not fix goes to an agent that can
+    // only edit. It may be a stronger model than the one doing the translating:
+    // this path is rare and it is the hard one.
+    const repairModelId = translateOptions.repairAgent?.model
+    const repairModel =
+      repairModelId && repairModelId !== gateway.model.id
+        ? gatewayModel({
+            id: repairModelId,
+            baseUrl: gateway.baseUrl,
+            contextWindow: translateOptions.contextWindow,
+            maxOutputTokens: translateOptions.maxOutputTokens,
+          })
+        : gateway.model
+
+    const diagnoser =
+      translateOptions.diagnose?.enabled === false
+        ? undefined
+        : createDiagnoser({
+            models: gateway.models,
+            model: gateway.model,
+            reasoningEffort: translateOptions.diagnose?.reasoningEffort,
             limit: modelCallLimit,
           })
 
     logger.info(
-      `Translating with \`${cyan(gateway.model.id)}\` (reasoning ${cyan(reasoningEffort)}), up to ${cyan(String(maxRepairRounds))} repair round(s) per document. ` +
-        `${cyan(String(concurrency))} at a time, at most ${cyan(String(requestsPerMinute))} model request(s) a minute. ` +
-        (judge
+      `Translating with \`${cyan(gateway.model.id)}\` (reasoning ${cyan(reasoningEffort)}), a segment at a time, up to ${cyan(String(maxSegmentAttempts))} attempt(s) per segment. ` +
+        `${cyan(String(concurrency))} document(s) at a time, at most ${cyan(String(requestsPerMinute))} model request(s) a minute. ` +
+        (segmentJudge
           ? `Reviewed by \`${cyan(gateway.judgeModel.id)}\`.`
           : `${red('Judge disabled')} — only the deterministic checks are running.`),
     )
@@ -477,12 +644,28 @@ export const translateCommand = new Command('translate')
 
         const targetFilePath = sourceFilePath.replace(sourceDir, targetDir)
 
+        /**
+         * The translation already on disk, when there is one.
+         *
+         * Two layers use it. `sourceSHA` skips a document nobody touched at
+         * all; below that, the segments whose source did not change are reused
+         * rather than retranslated, so a one-line edit costs one segment
+         * instead of a whole page. `--force` turns off both, which is what
+         * "translate it again" has always meant.
+         */
+        let previous: { body: string; record?: SegmentCacheRecord } | undefined
         if (await pathExists(targetFilePath, 'file')) {
           const targetContent = await fs.readFile(targetFilePath, 'utf-8')
-          const targetFrontmatter = matter(targetContent)
-            .data as I18nFrontmatter
+          const parsedTarget = matter(targetContent)
+          const targetFrontmatter = parsedTarget.data as I18nFrontmatter
           if (!force && targetFrontmatter.sourceSHA === sourceSHA) {
             return
+          }
+          if (!force && translateOptions.segmentCache !== false) {
+            previous = {
+              body: parsedTarget.content,
+              record: targetFrontmatter.i18nSegments,
+            }
           }
         }
 
@@ -492,9 +675,13 @@ export const translateCommand = new Command('translate')
         const targetBase = path.dirname(targetFilePath)
 
         /** The document exactly as it will be written, given a translated body. */
-        const compose = (restored: string) => {
+        const compose = (restored: string, cache?: SegmentCacheRecord) => {
           const newFrontmatter = { ...sourceFrontmatter, sourceSHA }
           delete newFrontmatter.i18n
+          delete newFrontmatter.i18nSegments
+          if (cache) {
+            newFrontmatter.i18nSegments = cache
+          }
 
           const { data, content } = matter(restored)
           const typedData = data as I18nFrontmatter
@@ -585,39 +772,76 @@ export const translateCommand = new Command('translate')
             additionalPrompts: sourceFrontmatter.i18n?.additionalPrompts,
           })
 
-          const result = await translateWithAgent({
+          const repairer =
+            translateOptions.repairAgent?.enabled === false
+              ? undefined
+              : createRepairAgent({
+                  models: gateway.models,
+                  model: repairModel,
+                  reasoningEffort:
+                    translateOptions.repairAgent?.reasoningEffort,
+                  scratchDir,
+                  extension: isMdx ? '.mdx' : '.md',
+                  maxTurns: translateOptions.repairAgent?.maxTurns,
+                  limit: modelCallLimit,
+                  onProgress: (message) => {
+                    logger.info(`${cyan(sourceRelativePath)}: ${message}`)
+                  },
+                })
+
+          const translator = createSegmentTranslator({
+            models: gateway.models,
+            model: gateway.model,
+            reasoningEffort,
+            translationRules: rules,
+            sourceLanguage: Language[source],
+            targetLanguage: Language[target],
+            processor,
+            limit: modelCallLimit,
+          })
+
+          const result = await translateDocument({
+            tree: normalizedAst,
             maskedSource,
             maskEntries,
             processor,
             compose,
             targetPath: targetFilePath,
             sourceLabel: sourceRelativePath,
-            source,
-            target,
-            translationRules: rules,
-            terms,
+            sourceLanguage: Language[source],
+            targetLanguage: Language[target],
+            translator,
             checker,
-            judge,
-            models: gateway.models,
-            model: gateway.model,
-            reasoningEffort,
-            scratchDir,
-            maxRepairRounds,
-            maxTurns,
-            limit: modelCallLimit,
+            segmentJudge,
+            documentJudge,
+            terms,
+            segmentCap: translateOptions.segmentCap,
+            segmentHardCap: translateOptions.segmentHardCap,
+            segmentFloor: translateOptions.segmentFloor,
+            maxSegmentAttempts,
+            maxAssemblyRounds: translateOptions.maxAssemblyRounds,
+            contextTail: translateOptions.contextTail,
+            repairer,
+            previous,
             onProgress: (message) => {
               logger.info(message)
             },
           })
 
           if (!result.document) {
-            failures.push({
-              file: targetRelativePath,
+            // Explained before it is reported, so the log carries the analysis
+            // next to the failure rather than in a separate place nobody
+            // correlates. Advisory throughout: it cannot change this outcome.
+            const diagnosis = await diagnoser?.diagnose({
+              sourceLabel: sourceRelativePath,
+              failure: result.failure,
+              outcomes: result.outcomes,
               findings: result.findings,
-              result,
+              assemblyRounds: result.assemblyRounds,
             })
+            failures.push({ file: targetRelativePath, result, diagnosis })
             logger.error(
-              `${cyan(targetRelativePath)} did not pass its checks after ${result.repairRounds} repair round(s).`,
+              `${cyan(targetRelativePath)} did not pass its checks. ${describeFailure(result)}`,
             )
             return
           }
@@ -625,8 +849,28 @@ export const translateCommand = new Command('translate')
           await fs.mkdir(targetBase, { recursive: true })
           await fs.writeFile(targetFilePath, result.document)
 
+          const cached = result.outcomes.filter(
+            (outcome) => outcome.status === 'cached',
+          ).length
+          const repaired = result.outcomes.filter(
+            (outcome) => outcome.status === 'repaired',
+          ).length
           logger.info(
-            `${cyan(sourceRelativePath)} translated to ${cyan(targetRelativePath)} (${result.turns} turn(s), ${result.modelCalls} model call(s), ${result.repairRounds} repair round(s))`,
+            `${cyan(sourceRelativePath)} translated to ${cyan(targetRelativePath)} ` +
+              `(${result.outcomes.length} segment(s)` +
+              (cached ? `, ${cached} reused` : '') +
+              (repaired ? `, ${repaired} repaired` : '') +
+              // Translation calls, named as such. The reviewers, the repair
+              // agent and the diagnosis all cost model calls too, and none of
+              // them are counted here: their judges are shared by every
+              // document being translated at once, so there is no per-document
+              // number to print. Calling this "model calls" made it look like
+              // there was.
+              `, ${translator.calls()} translation call(s)` +
+              (result.assemblyRounds
+                ? `, ${result.assemblyRounds} assembly round(s)`
+                : '') +
+              ')',
           )
         })
       }),
@@ -644,18 +888,7 @@ export const translateCommand = new Command('translate')
     if (failures.length > 0) {
       logger.error(
         `${red(String(failures.length))} document(s) could not be translated to a state that passes their checks. Nothing will be uploaded.\n` +
-          failures
-            .map(
-              ({ file, findings, result }) =>
-                `\n${cyan(file)} — ${findings.length} unresolved problem(s) after ${result?.repairRounds ?? 0} repair round(s):\n` +
-                findings
-                  .map(
-                    (finding) =>
-                      `  ${red(finding.rule)}${finding.line ? ` (line ${finding.line})` : ''}  ${finding.reason}`,
-                  )
-                  .join('\n'),
-            )
-            .join('\n'),
+          failures.map(describeFailedDocument).join('\n'),
       )
       process.exitCode = 1
       return

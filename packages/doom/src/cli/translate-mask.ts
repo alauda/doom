@@ -75,21 +75,35 @@ const PLACEHOLDER_PATTERN = /__DOOM_TR_[A-Z]+_\d+__/gi
  */
 const LOOSE_PLACEHOLDER_PATTERN = /_{0,2}DOOM_TR_([A-Z]+)_(\d+)_{0,2}/gi
 
-/** Every placeholder-ish token in a raw document, in canonical lower case. */
-const collectLoosePlaceholders = (content: string) => {
-  const tokens = new Set<string>()
+/**
+ * How many times each placeholder appears in a raw document, keyed by the
+ * canonical lower-case token.
+ *
+ * Counted in the *text* rather than in the tree, and tolerant of markdown's
+ * escaping, because this is what the segment-level check has to work with: a
+ * segment's translation is a string, and counting it against the same string
+ * measurement taken from the segment's source is the only comparison that is
+ * apples to apples. {@link collectPlaceholderCounts} counts the same tokens in
+ * a parsed tree, for the whole-document assertion — the two are deliberately
+ * different measurements of the same thing.
+ */
+export const countPlaceholders = (content: string) => {
+  const counts = new Map<string, number>()
   for (const match of content
     .replace(/\\/g, '')
     .matchAll(LOOSE_PLACEHOLDER_PATTERN)) {
-    tokens.add(
-      placeholderOf(
-        match[1].toUpperCase() as MaskKind,
-        +match[2],
-      ).toLowerCase(),
-    )
+    const token = placeholderOf(
+      match[1].toUpperCase() as MaskKind,
+      +match[2],
+    ).toLowerCase()
+    counts.set(token, (counts.get(token) ?? 0) + 1)
   }
-  return tokens
+  return counts
 }
+
+/** Every placeholder-ish token in a raw document, in canonical lower case. */
+const collectLoosePlaceholders = (content: string) =>
+  new Set(countPlaceholders(content).keys())
 
 const matchesPlaceholder = (value: string) => {
   PLACEHOLDER_PATTERN.lastIndex = 0

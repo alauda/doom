@@ -34,6 +34,14 @@ export interface TranslationFinding {
   line?: number
   column?: number
   /**
+   * The placeholder this finding is about, when it is about one.
+   *
+   * Carried so a whole-document mask failure can be routed back to the one
+   * segment that owns the token, rather than to the document that contains it.
+   * Rules never set it; only the mask assertions do.
+   */
+  placeholder?: string
+  /**
    * Whether this finding stops the document from shipping.
    *
    * Everything a rule finds does — the rules only report things that are

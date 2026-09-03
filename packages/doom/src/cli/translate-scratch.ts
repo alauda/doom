@@ -364,6 +364,14 @@ export interface CreateScratchOptions {
   maskedSource: string
   /** `.mdx` or `.md`; kept so the agent sees the extension it is writing for. */
   extension: string
+  /**
+   * What the translation file starts as.
+   *
+   * Empty for a translation being written from nothing; the best rejected
+   * attempt when a repair agent is being asked to fix one rather than to
+   * produce one.
+   */
+  draft?: string
 }
 
 export const createScratch = async ({
@@ -371,6 +379,7 @@ export const createScratch = async ({
   label,
   maskedSource,
   extension,
+  draft = '',
 }: CreateScratchOptions): Promise<Scratch> => {
   const pi = await loadPi()
   await fs.mkdir(parentDir, { recursive: true })
@@ -380,7 +389,7 @@ export const createScratch = async ({
   const translationPath = path.join(root, `${SCRATCH_TRANSLATION}${extension}`)
 
   await fs.writeFile(sourcePath, maskedSource)
-  await fs.writeFile(translationPath, '')
+  await fs.writeFile(translationPath, draft)
 
   const env = new JailedExecutionEnv({
     root,

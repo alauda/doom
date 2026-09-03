@@ -79,6 +79,15 @@ export interface JudgeRequest {
    * it.
    */
   terms?: readonly { source: string; target: string }[]
+  /**
+   * Whether this is one segment of a longer document rather than a whole page.
+   *
+   * A fragment begins and ends mid-document on purpose. Without being told, a
+   * reviewer reads the missing introduction as an omission and the section that
+   * continues past the end as truncation — reporting, every time, the one thing
+   * that is certainly not wrong.
+   */
+  fragment?: boolean
 }
 
 export interface Judge {
@@ -99,6 +108,15 @@ export interface CreateJudgeOptions {
    * answers — so it needs no parameter to create it.
    */
   draws?: number
+  /**
+   * How many of those readings must agree before a finding counts.
+   *
+   * Defaults to all of them, which is what two draws have always meant.
+   * Segments take three draws and require two: a short text gives a reviewer
+   * less to go on and more room to find something to say, so the extra reading
+   * buys back the precision that unanimity gives on a whole page.
+   */
+  votes?: number
   /** Applied to every model call, so judge readings count against the same budget as translation. */
   limit: <T>(run: () => Promise<T>) => Promise<T>
   /** How many times a failed reading is retried before the document fails. */
@@ -163,6 +181,19 @@ Answer with a JSON array and nothing else. Each element:
   {"kind": "omission" | "addition" | "mistranslation" | "fluency", "source": "<the exact passage from the source>", "detail": "<what is wrong, in one sentence>"}
 
 An empty array means the translation is faithful. That is the expected answer for a good translation — do not look for something to say.`
+
+/**
+ * What changes when the pair is one piece of a page.
+ *
+ * Only the coverage pass needs adjusting: a fragment has no beginning and no
+ * end, so "the introduction is missing" and "it stops mid-section" are
+ * properties of the cut, not of the translation. Everything else — what counts
+ * as a mistranslation, what placeholders mean — is unchanged.
+ */
+const FRAGMENT_PROMPT = `
+IMPORTANT: what you are given is one FRAGMENT of a longer document, not a whole page. It starts and stops in the middle on purpose.
+
+So: a missing introduction, a missing conclusion, a heading whose section clearly continues past the end, or a sentence that refers to something you cannot see are NOT omissions. Report an omission only for a block that is present in the SOURCE fragment in front of you and has nothing corresponding to it in the TRANSLATION fragment in front of you. Judge only what you can see.`
 
 /**
  * Drops the frontmatter block.
@@ -293,15 +324,37 @@ const sameFinding = (a: JudgeFinding, b: JudgeFinding) => {
   return left.includes(right) || right.includes(left)
 }
 
-/** The findings every reading reported. */
-export const agreedFindings = (draws: readonly JudgeFinding[][]) => {
+/**
+ * The findings enough readings agreed on.
+ *
+ * `votes` defaults to every reading, which is what this has always done: with
+ * two draws, unanimity. Asking for two of three is the same idea with one more
+ * sample — a false positive still has to happen twice to reach anyone, and a
+ * real defect no longer has to be seen by every reader to count.
+ */
+export const agreedFindings = (
+  draws: readonly JudgeFinding[][],
+  votes: number = draws.length,
+) => {
   if (draws.length === 0) {
     return []
   }
-  const [first, ...rest] = draws
-  return first.filter((finding) =>
-    rest.every((draw) => draw.some((other) => sameFinding(finding, other))),
-  )
+  const required = Math.max(1, Math.min(votes, draws.length))
+  const agreed: JudgeFinding[] = []
+  for (const draw of draws) {
+    for (const finding of draw) {
+      if (agreed.some((kept) => sameFinding(kept, finding))) {
+        continue
+      }
+      const support = draws.filter((other) =>
+        other.some((candidate) => sameFinding(finding, candidate)),
+      ).length
+      if (support >= required) {
+        agreed.push(finding)
+      }
+    }
+  }
+  return agreed
 }
 
 export const parseJudgeFindings = parseFindings
@@ -311,6 +364,7 @@ export const createJudge = ({
   model,
   reasoningEffort,
   draws = DEFAULT_JUDGE_DRAWS,
+  votes,
   limit,
   maxRetries = DEFAULT_JUDGE_MAX_RETRIES,
   retryDelayMs = DEFAULT_JUDGE_RETRY_DELAY_MS,
@@ -322,7 +376,9 @@ export const createJudge = ({
     readings++
     const { contentText } = await import('@earendil-works/pi-ai')
     const context = {
-      systemPrompt: SYSTEM_PROMPT,
+      systemPrompt: request.fragment
+        ? `${SYSTEM_PROMPT}\n${FRAGMENT_PROMPT}`
+        : SYSTEM_PROMPT,
       messages: [
         {
           role: 'user' as const,
@@ -364,7 +420,7 @@ export const createJudge = ({
       const results = await Promise.all(
         Array.from({ length: draws }, () => readOnce(request)),
       )
-      return agreedFindings(results).map((finding) => ({
+      return agreedFindings(results, votes).map((finding) => ({
         rule: `doom-judge:${finding.kind}`,
         reason: `${finding.detail} — the source says: “${finding.source}”`,
         blocking: BLOCKING_JUDGE_KINDS.includes(finding.kind),
