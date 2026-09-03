@@ -417,7 +417,7 @@ describe('assembly', () => {
 })
 
 const replacer = (_key: string, value: unknown) =>
-  value instanceof Map ? [...value.entries()] : value
+  value instanceof Map ? [...(value as Map<unknown, unknown>).entries()] : value
 
 const sorted = (counts: Map<string, number>) =>
   [...counts.entries()].sort(([a], [b]) => a.localeCompare(b))

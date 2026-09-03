@@ -22,6 +22,7 @@ import {
 import { checkSegment } from './translate-segment-check.ts'
 import {
   type Segment,
+  type SegmentPlan,
   type SegmentRecord,
   UnsplittableBlockError,
   assemble,
@@ -209,7 +210,7 @@ export const translateDocument = async (
     onProgress,
   } = options
 
-  let plan
+  let plan: SegmentPlan
   try {
     plan = planSegments({
       tree,
