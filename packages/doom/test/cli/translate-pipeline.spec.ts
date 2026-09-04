@@ -341,6 +341,75 @@ describe('the segment pipeline', () => {
     expect(result.document).not.toContain('上准备')
   })
 
+  test('a segment whose bold stops parsing in the target language is caught, not shipped', async () => {
+    // The real defect, from `immutable-infra-docs`: `**Note:** text` is bold in
+    // English because the closing run is followed by a space, and the Chinese
+    // that drops the space, `**注意：**文本`, is not — the run is preceded by
+    // punctuation and followed by a letter, which CommonMark will not close on.
+    // The page shows the asterisks. Everything else about the document is fine:
+    // it parses, the headings match, no placeholder moved.
+    const source = [
+      '---',
+      'title: Installing',
+      '---',
+      '',
+      '# Installing',
+      '',
+      '**Note:** run `kubectl apply` before you start.',
+      '',
+    ].join('\n')
+
+    let broken = true
+    const { result } = await run({
+      source,
+      answer: (request) => {
+        const good = translated(request.segment.text)
+        if (!broken || !good.includes('**Note:** ')) {
+          return good
+        }
+        broken = false
+        return good.replace('**Note:** ', '**注意：**')
+      },
+    })
+
+    const rules = result.outcomes
+      .flatMap((outcome) => outcome.history)
+      .flat()
+      .map((finding) => finding.rule)
+    expect(rules).toContain('doom-translate:segment-unparsed-emphasis')
+    // Caught means retried, and the retry is what ships.
+    expect(result.document).toBeDefined()
+    expect(result.document).not.toContain('**注意：**')
+  })
+
+  test('a source that shows literal asterisks is not blamed on the translation', async () => {
+    // `no-unparsed-emphasis` fires on the source too, and a page that means to
+    // print `**` is the author's business. The translation keeps it, and the
+    // segment check must not read that as a defect the model introduced.
+    const source = [
+      '---',
+      'title: Syntax',
+      '---',
+      '',
+      '# Syntax',
+      '',
+      'Bold is written ** like this ** in the older dialect.',
+      '',
+    ].join('\n')
+
+    const { result } = await run({
+      source,
+      answer: (request) => translated(request.segment.text),
+    })
+
+    const rules = result.outcomes
+      .flatMap((outcome) => outcome.history)
+      .flat()
+      .map((finding) => finding.rule)
+    expect(rules).not.toContain('doom-translate:segment-unparsed-emphasis')
+    expect(result.document).toBeDefined()
+  })
+
   test('a segment that drags in a neighbour’s placeholder is told which mistake it made', async () => {
     let polluted = true
     const { result, translator } = await run({

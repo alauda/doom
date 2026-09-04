@@ -2,6 +2,10 @@ import type { Heading, Root } from 'mdast'
 import { visit } from 'unist-util-visit'
 
 import {
+  explainUnparsedEmphasis,
+  findUnparsedEmphasis,
+} from '../remark-lint/no-unparsed-emphasis.ts'
+import {
   collectComponents,
   collectHeadingDepths,
 } from '../remark-lint/translation-parity/shared.ts'
@@ -305,7 +309,49 @@ const structureFindings = (
     })
   }
 
+  // Emphasis the translation broke.
+  //
+  // `**` reaching a text node means the delimiters were printed instead of
+  // read, and the usual cause is a target language that does not space the way
+  // the source did: `**Note:** text` is bold, and the Chinese it becomes,
+  // `**注意：**文本`, is not — the closing run is preceded by punctuation and
+  // followed by a letter, which CommonMark refuses to close on. The page then
+  // shows the asterisks, and nothing else notices: it parses, every link
+  // resolves, every component is present.
+  //
+  // `no-unparsed-emphasis` already catches this over the whole document. It is
+  // here for the same reason the heading and component collectors are (see this
+  // function's own note): checked per segment it arrives with the segment
+  // attached and can simply be retranslated, with three attempts and a repair
+  // agent behind it, instead of sharing the two rounds the assembled page gets.
+  //
+  // Only what the translation introduced. A source that shows literal asterisks
+  // on purpose is the author's business, and its translation should keep them.
+  if (!firstUnparsedEmphasis(source)) {
+    const broken = firstUnparsedEmphasis(tree)
+    if (broken) {
+      findings.push({
+        rule: 'doom-translate:segment-unparsed-emphasis',
+        reason: `${explainUnparsedEmphasis(broken.delimiter, broken.window)} The source segment has none, so this one came from the translation. Put the punctuation outside the emphasis — \`**注意**：文本\` — or leave a space after the closing \`**\`.`,
+      })
+    }
+  }
+
   return findings
+}
+
+/**
+ * The first `**` a segment prints instead of reading, if there is one.
+ *
+ * Masked text, so the `__` half of the rule is off: a masked segment is full of
+ * `__DOOM_TR_ICODE_0__`, and `**` never appears inside a placeholder.
+ */
+const firstUnparsedEmphasis = (tree: Root) => {
+  let found: { delimiter: string; window: string } | undefined
+  visit(tree, 'text', (node) => {
+    found ??= findUnparsedEmphasis(node.value, { maskedText: true })
+  })
+  return found
 }
 
 /**
