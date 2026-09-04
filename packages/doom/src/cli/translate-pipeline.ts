@@ -52,8 +52,20 @@ import type { TermPair } from './translate-terms.ts'
 /** How many times a segment is asked for before it is escalated. */
 export const DEFAULT_MAX_SEGMENT_ATTEMPTS = 3
 
-/** How many times the assembled document may send segments back. */
-export const DEFAULT_MAX_ASSEMBLY_ROUNDS = 2
+/**
+ * How many times the assembled document may send segments back.
+ *
+ * Raised from 2 on 2026-09-03. At 2, the only rule that ever fired here in
+ * production — `no-unparsed-emphasis`, 22 send-backs out of 22 across four
+ * builds of `immutable-infra-docs` — failed three of six documents by running
+ * out of rounds, and a document that fails discards every other document's
+ * accepted work in the same run. The model does fix it; it does not always fix
+ * it twice in a row.
+ *
+ * This is the backstop, not the fix: that rule is now also checked per segment,
+ * where it gets three attempts and a repair agent before it ever reaches here.
+ */
+export const DEFAULT_MAX_ASSEMBLY_ROUNDS = 4
 
 export type SegmentStatus = 'translated' | 'cached' | 'repaired' | 'failed'
 

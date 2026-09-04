@@ -32,6 +32,18 @@ const PLACEHOLDER_DISCIPLINE = `## Placeholders
 
 Tokens shaped like \`__DOOM_TR_LINK_3__\` stand for content you must not author — link targets, code, identifiers, component attribute values. Reproduce each one verbatim and exactly once, in the position it appears. Never translate, reformat, split, renumber, remove, duplicate or invent one. The text around a placeholder is translated as usual.`
 
+/**
+ * Kept out of `DEFAULT_SYSTEM_PROMPT` for the same reason the placeholder
+ * discipline is: a repository can replace that prompt wholesale through
+ * `translate.systemPrompt`, and this constraint is enforced by a blocking
+ * check, so it has to live where a repository cannot drop it.
+ */
+const EMPHASIS_DISCIPLINE = `## Emphasis
+
+\`**bold**\` only works when the delimiters sit directly against the text, and CommonMark will not close a run that is preceded by punctuation and followed by a letter. \`**Note:** text\` is bold; \`**注意：**文本\` is not — it prints the asterisks to the page.
+
+When a bold label ends in a colon or other punctuation and the next thing is a word, put the punctuation outside the emphasis (\`**注意**：文本\`) or leave a space after the closing \`**\`. Never write \`** text **\`.`
+
 const SEGMENT_TASK = `Answer with the translated segment and nothing else: no explanation, no preamble, no summary, and no code fence wrapped around your whole answer.
 
 The segment is one piece of a longer page. It begins and ends mid-document, and that is correct — do not add a title, an introduction or a conclusion, and do not finish a section that carries on past the end of what you were given.
@@ -99,6 +111,8 @@ export const createSegmentTranslator = ({
       kind === 'attributes' ? ATTRIBUTE_TASK : SEGMENT_TASK,
       '',
       PLACEHOLDER_DISCIPLINE,
+      '',
+      EMPHASIS_DISCIPLINE,
       '',
       '## Translation rules',
       '',

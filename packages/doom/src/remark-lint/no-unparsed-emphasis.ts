@@ -38,20 +38,49 @@ import { visitParents } from 'unist-util-visit-parents'
  */
 const UNPARSED_EMPHASIS = /\*\*|(?<![\p{L}\p{N}])__|__(?![\p{L}\p{N}])/u
 
+/**
+ * The `**` half of the test on its own.
+ *
+ * `doom translate` runs this check a segment at a time, before the placeholders
+ * are put back, and a masked segment is full of `__DOOM_TR_ICODE_0__`. The `__`
+ * half would report every one of them. `**` never appears in a placeholder, so
+ * the half that matters for the defect this rule was written for is also the
+ * half that is safe to run on masked text.
+ */
+const UNPARSED_STRONG = /\*\*/u
+
+/** What one of these looks like to a person, wherever it is reported. */
+export const explainUnparsedEmphasis = (delimiter: string, window: string) =>
+  `\`${delimiter}\` is printed to the page here, not read as emphasis: \`${window}\`. ` +
+  `Emphasis delimiters must sit directly against the text they emphasise — \`**text**\`, not \`** text **\` and not \`**text：**more\`.`
+
+/**
+ * The first unparsed delimiter in a string, if there is one.
+ *
+ * `maskedText` narrows the test to `**`; see `UNPARSED_STRONG`.
+ */
+export const findUnparsedEmphasis = (
+  value: string,
+  { maskedText = false }: { maskedText?: boolean } = {},
+) => {
+  const match = (maskedText ? UNPARSED_STRONG : UNPARSED_EMPHASIS).exec(value)
+  return match
+    ? { delimiter: match[0], window: preview(value, match.index) }
+    : undefined
+}
+
 export const noUnparsedEmphasis = lintRule<Root>(
   'doom-lint:no-unparsed-emphasis',
   (root, vfile) => {
     visitParents(root, 'text', (node, parents) => {
-      const match = UNPARSED_EMPHASIS.exec(node.value)
-      if (!match) {
+      const found = findUnparsedEmphasis(node.value)
+      if (!found) {
         return
       }
-      const delimiter = match[0]
-      vfile.message(
-        `\`${delimiter}\` is printed to the page here, not read as emphasis: \`${preview(node.value, match.index)}\`. ` +
-          `Emphasis delimiters must sit directly against the text they emphasise — \`**text**\`, not \`** text **\` and not \`**text：**more\`.`,
-        { ancestors: [...parents, node], place: pointStart(node) },
-      )
+      vfile.message(explainUnparsedEmphasis(found.delimiter, found.window), {
+        ancestors: [...parents, node],
+        place: pointStart(node),
+      })
     })
   },
 )
