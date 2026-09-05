@@ -90,6 +90,8 @@ export type DocumentFailure =
   | { kind: 'assembly' }
   /** The assembled document failed a rule nothing could attribute to a segment. */
   | { kind: 'unlocatable' }
+  /** The translation stopped on an error — a gateway that never answered, or a bug. Nothing was written. */
+  | { kind: 'error'; detail: string }
 
 export interface TranslateDocumentResult {
   /** The finished document, when it passed. */
@@ -342,6 +344,15 @@ export const translateDocument = async (
     let retry = sentBack?.length
       ? { previous: frozen[segment.index] ?? '', findings: sentBack }
       : undefined
+    // A page that is a heading and an `<Overview />` has nothing for a
+    // reviewer to read, and the deterministic layers already hold the heading
+    // to the source. Half the index pages of a site are exactly that.
+    const judge = hasProse(segment) ? segmentJudge : undefined
+    if (segmentJudge && !judge && !sentBack) {
+      onProgress?.(
+        `${sourceLabel} [segment ${segment.index + 1}/${plan.segments.length}${describe(segment)}] not reviewed: nothing but headings and components`,
+      )
+    }
 
     for (let attempt = 1; attempt <= maxSegmentAttempts; attempt++) {
       outcome.attempts++
@@ -357,7 +368,7 @@ export const translateDocument = async (
         translation,
         processor,
         documentTokens,
-        judge: segmentJudge,
+        judge,
         fragment,
         sourceLanguage,
         targetLanguage,
@@ -380,7 +391,7 @@ export const translateDocument = async (
       }
       retry = { previous: translation, findings }
       onProgress?.(
-        `${sourceLabel} [segment ${segment.index + 1}/${plan.segments.length}${describe(segment)}] attempt ${attempt} rejected: ${summarise(blocking)}`,
+        `${sourceLabel} [segment ${segment.index + 1}/${plan.segments.length}${describe(segment)}] attempt ${attempt} rejected: ${summarise(blocking)}${reasons(blocking)}`,
       )
     }
 
@@ -575,7 +586,7 @@ export const translateDocument = async (
     for (const [index, sentBack] of routed) {
       const segment = plan.segments[index]
       onProgress?.(
-        `${sourceLabel} [segment ${index + 1}/${plan.segments.length}${describe(segment)}] sent back by the assembled document: ${summarise(sentBack)}`,
+        `${sourceLabel} [segment ${index + 1}/${plan.segments.length}${describe(segment)}] sent back by the assembled document: ${summarise(sentBack)}${reasons(sentBack)}`,
       )
       await workOn(segment, sentBack)
     }
@@ -590,6 +601,45 @@ const summarise = (findings: readonly TranslationFinding[]) =>
     .slice(0, 3)
     .map((finding) => finding.rule)
     .join(', ') + (findings.length > 3 ? `, +${findings.length - 3} more` : '')
+
+/**
+ * What the findings said, one per line under the summary.
+ *
+ * The rule names alone were what the build log used to carry, and they are
+ * not enough to tell a reviewer that is right from one that is not: on
+ * 2026-09-04 that question needed a day of probing to answer, because the
+ * reviewer's reasons for 29 rejections had been printed nowhere. Now they
+ * are in the log, where a person can read them.
+ */
+const reasons = (findings: readonly TranslationFinding[]) =>
+  findings
+    .slice(0, 3)
+    .map(
+      (finding) =>
+        `\n    ${finding.rule}: ${finding.reason.length > 240 ? `${finding.reason.slice(0, 240)}…` : finding.reason}`,
+    )
+    .join('')
+
+/**
+ * Whether a segment has any text a reviewer could judge.
+ *
+ * Frontmatter, headings, blank lines, lines that are only a component tag or
+ * a placeholder do not count: a heading is held to the source by the structure
+ * check, a tag by the component multiset, a placeholder by the count.
+ */
+export const hasProse = (segment: Pick<Segment, 'text'>) => {
+  const body = segment.text.replace(/^---\n[\s\S]*?\n---\n?/u, '')
+  return body.split('\n').some((line) => {
+    const text = line.trim()
+    if (text === '' || text.startsWith('#')) {
+      return false
+    }
+    if (/^<\/?[A-Za-z][^>]*>$/u.test(text) || /^\{.*\}$/u.test(text)) {
+      return false
+    }
+    return /[\p{L}\p{N}]/u.test(text.replace(/__DOOM_TR_[A-Z]+_\d+__/gu, ''))
+  })
+}
 
 /**
  * Rules that compare the translation with its source across the whole tree.

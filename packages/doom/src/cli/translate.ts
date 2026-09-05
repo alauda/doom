@@ -276,6 +276,9 @@ const describeFailure = (result: TranslateDocumentResult) => {
     case 'unlocatable': {
       return 'The assembled document failed a check of the whole page that could not be attributed to any one segment.'
     }
+    case 'error': {
+      return `The translation stopped on an error and nothing was written: ${failure.detail}`
+    }
     default: {
       return 'The document did not pass its checks.'
     }
@@ -714,7 +717,35 @@ export const translateCommand = new Command('translate')
           return stringifyMatter(newFrontmatter, content)
         }
 
+        // One document's error is that document's failure, not the run's.
+        //
+        // Measured on 2026-09-04: a judge reading refused by the gateway for
+        // longer than its retries threw out of here, and the whole process
+        // exited — forty minutes of accepted translations of other documents
+        // still in flight went with it. The documents already written stay
+        // written; this one is reported with the rest at the end.
         await documentLimit(async () => {
+          try {
+            await translateOne()
+          } catch (error) {
+            const detail =
+              error instanceof Error ? error.message : String(error)
+            failures.push({
+              file: targetRelativePath,
+              result: {
+                findings: [{ rule: 'doom-translate:error', reason: detail }],
+                failure: { kind: 'error', detail },
+                outcomes: [],
+                assemblyRounds: 0,
+              },
+            })
+            logger.error(
+              `${cyan(sourceRelativePath)}: translation stopped on an error and nothing was written: ${detail}`,
+            )
+          }
+        })
+
+        async function translateOne() {
           if (shouldCopyOnly) {
             logger.info(
               `Copying ${cyan(sourceRelativePath)} to ${cyan(targetRelativePath)}`,
@@ -872,7 +903,7 @@ export const translateCommand = new Command('translate')
                 : '') +
               ')',
           )
-        })
+        }
       }),
     )
 
