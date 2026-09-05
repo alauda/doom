@@ -22,8 +22,9 @@ import type { Segment } from './translate-segment.ts'
  */
 
 /** Retries for a refused request. Transient limits are normal at corpus scale. */
-export const DEFAULT_CALL_MAX_RETRIES = 5
-export const DEFAULT_CALL_RETRY_DELAY_MS = 3_000
+export const DEFAULT_CALL_MAX_RETRIES = 6
+/** 5 s, doubled per attempt: about five minutes, the same budget as the judge. See there for the measurement. */
+export const DEFAULT_CALL_RETRY_DELAY_MS = 5_000
 
 /** How many lines of the previous segment's translation carry the voice forward. */
 export const DEFAULT_CONTEXT_TAIL = 20

@@ -151,6 +151,70 @@ describe('a finding has to be seen twice', () => {
   })
 })
 
+describe('how many times the judge reads', () => {
+  // Measured 2026-09-04 over 80 readings of accepted translations: a reading
+  // that finds nothing is the common case, and the extra readings only ever
+  // confirm. So a clean first reading is final, and the votes are taken only
+  // when there is something blocking to vote on.
+  const blocking = JSON.stringify([
+    {
+      kind: 'mistranslation',
+      source: 'Download the package.',
+      detail: 'says upload',
+    },
+  ])
+  const notes = JSON.stringify([
+    { kind: 'fluency', source: 'Download the package.', detail: 'stiff' },
+  ])
+
+  test('a reading that finds nothing is final: one reading, no votes', async () => {
+    const judge = judgeSaying(['[]', blocking, blocking])
+    expect(await judge.review(request)).toEqual([])
+    expect(judge.readings()).toBe(1)
+  })
+
+  test('a reading that finds something is confirmed by the others, and the vote still decides', async () => {
+    const judge = judgeSaying([blocking, blocking, '[]'])
+    const findings = await judge.review(request)
+    expect(findings.map((f) => f.rule)).toEqual(['doom-judge:mistranslation'])
+    expect(judge.readings()).toBe(2)
+  })
+
+  test('a first reading nobody confirms does not count', async () => {
+    const judge = judgeSaying([blocking, '[]', '[]'])
+    expect(await judge.review(request)).toEqual([])
+    expect(judge.readings()).toBe(2)
+  })
+
+  test('notes alone do not call for more readings, and are passed on as notes', async () => {
+    const judge = judgeSaying([notes, blocking, blocking])
+    const findings = await judge.review(request)
+    expect(findings).toHaveLength(1)
+    expect(findings[0].blocking).toBe(false)
+    expect(judge.readings()).toBe(1)
+  })
+
+  test('three readings, two votes: the first reading is confirmed when one of the other two agrees', async () => {
+    const models = {
+      completeSimple: (() => {
+        const queue = [blocking, '[]', blocking]
+        return () => Promise.resolve(reply(queue.shift() ?? '[]'))
+      })(),
+    } as unknown as Models
+    const judge = createJudge({
+      models,
+      model: gatewayModel({ id: 'test', baseUrl: 'http://localhost:1/v1' }),
+      reasoningEffort: 'medium',
+      limit: (job) => job(),
+      draws: 3,
+      votes: 2,
+    })
+    const findings = await judge.review(request)
+    expect(findings.map((f) => f.rule)).toEqual(['doom-judge:mistranslation'])
+    expect(judge.readings()).toBe(3)
+  })
+})
+
 describe('what the judge hands back', () => {
   test('omission, addition and mistranslation block; fluency does not', async () => {
     const both = JSON.stringify([
@@ -184,7 +248,7 @@ describe('what the judge hands back', () => {
   test('a faithful translation gets an empty answer, and that is the expected one', async () => {
     const judge = judgeSaying(['[]', '[]'])
     expect(await judge.review(request)).toEqual([])
-    expect(judge.readings()).toBe(2)
+    expect(judge.readings()).toBe(1)
   })
 
   test('a model failure that never clears is raised, not read as "nothing wrong"', async () => {

@@ -14,7 +14,7 @@ import type {
 } from '#cli/translate-checker.ts'
 import type { Judge } from '#cli/translate-judge.ts'
 import { maskAst } from '#cli/translate-mask.ts'
-import { translateDocument } from '#cli/translate-pipeline.ts'
+import { hasProse, translateDocument } from '#cli/translate-pipeline.ts'
 import { planSegments } from '#cli/translate-segment.ts'
 import { mdxProcessor } from '#plugins/index.ts'
 
@@ -162,6 +162,7 @@ const run = async ({
   source,
   segmentCap,
   keepFrontmatter = true,
+  onProgress,
 }: {
   answer: (request: SegmentTranslationRequest) => string
   checker?: TranslationChecker
@@ -170,6 +171,7 @@ const run = async ({
   maxSegmentAttempts?: number
   maxAssemblyRounds?: number
   source?: string
+  onProgress?: (message: string) => void
   /** Small enough to force a container to be drilled into. */
   segmentCap?: number
   /**
@@ -208,6 +210,7 @@ const run = async ({
     segmentCap,
     maxSegmentAttempts,
     maxAssemblyRounds,
+    onProgress,
   })
   return { result, translator }
 }
@@ -736,6 +739,50 @@ describe('the reviewers', () => {
     )
   })
 
+  test('a page that is nothing but headings and components is not reviewed', async () => {
+    // Half the index pages of a site: a title and an <Overview />. There is
+    // no sentence for a reviewer to read, and the heading is already held to
+    // the source by the structure check.
+    const judge = judgeReturning([])
+    const progress: string[] = []
+    const { result } = await run({
+      source: `---
+title: Overview
+---
+
+# Overview
+
+<Overview />
+`,
+      answer: (request) => request.segment.text.replace('# Overview', '# 概览'),
+      segmentJudge: judge,
+      onProgress: (message) => progress.push(message),
+    })
+    expect(result.document).toBeDefined()
+    expect(judge.readings()).toBe(0)
+    expect(progress.some((line) => line.includes('not reviewed'))).toBe(true)
+  })
+
+  test('what the reviewer said is in the progress log, not only the rule name', async () => {
+    const judge = judgeReturning([
+      {
+        rule: 'doom-judge:mistranslation',
+        reason: 'the subject of the sentence was swapped',
+        blocking: true,
+      },
+    ])
+    const progress: string[] = []
+    await run({
+      answer: (request) => translated(request.segment.text),
+      segmentJudge: judge,
+      maxSegmentAttempts: 1,
+      onProgress: (message) => progress.push(message),
+    })
+    const rejected = progress.filter((line) => line.includes('rejected'))
+    expect(rejected.length).toBeGreaterThan(0)
+    expect(rejected[0]).toContain('the subject of the sentence was swapped')
+  })
+
   test('the reviewer is not asked about a segment the free checks already faulted', async () => {
     const judge = judgeReturning([])
     await run({
@@ -985,3 +1032,36 @@ const lineOf = (content: string, needle: string) => {
   const index = content.split('\n').findIndex((line) => line.includes(needle))
   return index < 0 ? 1 : index + 1
 }
+
+describe('whether a segment has prose to review', () => {
+  const segment = (text: string) => ({ text })
+
+  test('a heading and a component are not prose', () => {
+    expect(hasProse(segment('# Overview\n\n<Overview />\n'))).toBe(false)
+  })
+
+  test('frontmatter is not prose', () => {
+    expect(hasProse(segment('---\ntitle: Overview\n---\n\n# Overview\n'))).toBe(
+      false,
+    )
+  })
+
+  test('a line that is only placeholders is not prose', () => {
+    expect(
+      hasProse(
+        segment('# Install\n\n__DOOM_TR_ICODE_0__ __DOOM_TR_LINK_1__\n'),
+      ),
+    ).toBe(false)
+  })
+
+  test('a sentence is prose, in any script', () => {
+    expect(hasProse(segment('# Install\n\nRun the installer.\n'))).toBe(true)
+    expect(hasProse(segment('# 安装\n\n运行安装程序。\n'))).toBe(true)
+  })
+
+  test('a sentence next to a placeholder is prose', () => {
+    expect(hasProse(segment('See __DOOM_TR_LINK_0__ for details.\n'))).toBe(
+      true,
+    )
+  })
+})
