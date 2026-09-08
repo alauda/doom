@@ -243,6 +243,59 @@ describe('the two sides of a comparison are parsed the same way', () => {
   })
 })
 
+/**
+ * Where a URL stops, on both sides of a translation.
+ *
+ * Every case here comes from one incident: `connectors-operator` release-1.14
+ * was red on every docs build for 22 hours because a line of English prose
+ * naming a protocol — `includes the correct protocol (https://) and path` —
+ * was read as a URL, and the Chinese translation, which brackets it the way
+ * Chinese typography requires, was told it had lost one. Nothing had been
+ * lost, and the finding could not be routed to a segment, so the document
+ * failed with no repair round.
+ */
+describe('a URL, and the sentence it sits in', () => {
+  test('a scheme with no host is prose, not a URL', () => {
+    expect(
+      collectProseUrls(
+        syntaxProcessor.mdx.parse(
+          'Verify that the address includes the correct protocol (https://) and path',
+        ),
+      ),
+    ).toEqual([])
+  })
+
+  test('the two languages agree about where the URL ends', () => {
+    const english = syntaxProcessor.mdx.parse(
+      'See (ftp://h/x.tar) for the archive.',
+    )
+    // No spaces, which is why "everything up to the next space" could never
+    // work here: it took the rest of the sentence with it.
+    const chinese = syntaxProcessor.mdx.parse(
+      '\u53c2\u89c1\uff08ftp://h/x.tar\uff09\u83b7\u53d6\u5f52\u6863\u3002',
+    )
+
+    expect(collectProseUrls(english)).toEqual(['ftp://h/x.tar'])
+    expect(collectProseUrls(chinese)).toEqual(collectProseUrls(english))
+  })
+
+  test('a bracket the URL opened itself is part of it', () => {
+    expect(
+      collectProseUrls(
+        syntaxProcessor.mdx.parse('see ftp://h/Foo_(disambiguation) for more'),
+      ),
+    ).toEqual(['ftp://h/Foo_(disambiguation)'])
+  })
+
+  test('a full stop that ends the sentence is not part of the path', () => {
+    expect(
+      collectProseUrls(
+        syntaxProcessor.mdx.parse('fetch it from ftp://h/x.tar.'),
+      ),
+    ).toEqual(['ftp://h/x.tar'])
+  })
+})
+
 describe('punctuation a bare URL swallowed is named as such', () => {
   test('a non-ASCII suffix is reported as absorbed, with the url intact', () => {
     const { absorbed, lost, unmatched } = partitionAbsorbed(

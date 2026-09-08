@@ -8,7 +8,9 @@ import {
 import {
   collectComponents,
   collectHeadingDepths,
+  diffMultiset,
 } from '../remark-lint/translation-parity/shared.ts'
+import { collectProseUrls } from '../remark-lint/translation-parity/url-residue.ts'
 
 import type { TranslationFinding } from './translate-checker.ts'
 import type { Judge } from './translate-judge.ts'
@@ -229,11 +231,13 @@ const collectTrailingAnchors = (tree: Root) => {
 /**
  * The skeleton is the source's, not the model's.
  *
- * Headings and components are structure rather than prose: translating a page
- * never changes a heading's level and never adds or removes a component. Both
- * are already checked over the whole document by `translation-heading-sequence`
- * and `translation-component-multiset` — this runs the *same* collectors, one
- * segment at a time.
+ * Headings, components and URLs written in prose are structure rather than
+ * prose: translating a page never changes a heading's level, never adds or
+ * removes a component, and never drops a URL that markdown left as plain text.
+ * All three are already checked over the whole document by
+ * `translation-heading-sequence`, `translation-component-multiset` and
+ * `translation-url-residue` — this runs the *same* collectors, one segment at
+ * a time.
  *
  * That is not a duplicate of those rules, it is where they become actionable.
  * Every pairwise rule reports against the document as a whole, with no line
@@ -289,6 +293,29 @@ const structureFindings = (
         got < want
           ? `This segment's translation dropped ${want - got} \`<${name}>\` (the source has ${want}, the translation has ${got}) — content that was in the source is missing.`
           : `This segment's translation invented ${got - want} \`<${name}>\` (the source has ${want}, the translation has ${got}).`,
+    })
+  }
+
+  // URLs markdown did not turn into links.
+  //
+  // The whole-document rule that owns this comparison,
+  // `translation-url-residue`, is the one that proved the note above the hard
+  // way: it fired on an assembled page, had no segment to be routed to, and
+  // failed the document with no repair round — on a false positive, and on
+  // every build for a day. Checked here it arrives with a segment attached, so
+  // a genuine loss is retranslated instead of being fatal, and the whole-page
+  // rule goes back to meaning what the note says it means: assembly did it.
+  const expectedUrls = collectProseUrls(source)
+  const actualUrls = collectProseUrls(tree)
+  const { missing: missingUrls } = diffMultiset(expectedUrls, actualUrls)
+  if (missingUrls.length > 0) {
+    findings.push({
+      rule: 'doom-translate:segment-url-residue',
+      reason: `This segment's translation dropped ${missingUrls.length} URL(s) that the source writes out in prose: ${missingUrls
+        .map((url) => `\`${url}\``)
+        .join(
+          ', ',
+        )}. They are plain text rather than links, so nothing carries them through for you — reproduce each one exactly as the source spells it.`,
     })
   }
 
