@@ -40,6 +40,7 @@ import {
   mermaidPlugin,
   permissionPlugin,
   replacePlugin,
+  searchIndexPlugin,
 } from '../plugins/index.ts'
 import {
   isExplicitlyUnversioned,
@@ -298,6 +299,7 @@ const getCommonConfig = async ({
         localBasePath,
         force,
       }),
+      searchIndexPlugin(),
     ].filter(Boolean),
     search: algoliaOptions ? false : undefined,
     builderConfig: {
