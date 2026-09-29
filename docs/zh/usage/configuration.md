@@ -277,6 +277,20 @@ export * from '@alauda/doom/theme'
 
 :::
 
+## 站点统计 {#analytics}
+
+命令行参数 `--analytics` 为官方文档站点开启页面浏览、站内搜索、404 和「这页有帮助吗」的统计。无需任何配置，上报目标已内置。
+
+| 域名                                                             | 上报到                 |
+| ---------------------------------------------------------------- | ---------------------- |
+| `docs.alauda.io`、`docs-io-staging.alauda.cn`                    | PostHog（欧盟区）      |
+| `docs.alauda.cn`、`docs-staging.alauda.cn`、`docs-dev.alauda.cn` | 腾讯云前端性能监控 RUM |
+
+- 只有在线构建才应传入 `--analytics`。不传时，统计代码和 SDK 会在打包阶段被整体删除，离线包和 PR 预览中完全不包含。
+- 即使构建时传了参数，其他域名也不会上报，`/russian/` 下的页面同样不统计。
+- 不使用 cookie 或 `localStorage`。腾讯云 RUM 的 SDK 会在 `sessionStorage` 中保存一个随机会话 ID，关闭标签页后由浏览器清除，这一行为无法关闭。浏览器开启「请勿跟踪」（Do Not Track）或 Global Privacy Control 的读者不会被统计。
+- 「这页有帮助吗」组件属于 `@alauda/doom/theme` 的布局，只在使用该主题入口的站点上显示（参见 [Algolia 搜索配置](#algolia)）。
+
 ## Sitemap 配置 {#sitemap}
 
 ```yaml

@@ -80,6 +80,17 @@ const en = {
   products: 'Products',
   all_product_documentation: 'All Product Documentation',
   explore_doc_all_products: 'Explore and find documentation for all products',
+  feedback_question: 'Was this page helpful?',
+  feedback_yes: 'Yes',
+  feedback_no: 'No',
+  feedback_reasons_title: 'What went wrong? (select all that apply)',
+  feedback_reason_steps_failed: 'The steps did not work',
+  feedback_reason_outdated: 'Outdated or does not match the product',
+  feedback_reason_missing_info: 'Could not find the information I needed',
+  feedback_reason_unclear: 'Hard to understand',
+  feedback_reason_other: 'Other',
+  feedback_submit: 'Submit',
+  feedback_thanks: 'Thanks for your feedback!',
 }
 
 export type Translation = typeof en
@@ -161,6 +172,17 @@ const zh: Translation = {
   products: '产品',
   all_product_documentation: '所有产品文档',
   explore_doc_all_products: '探索并查找所有产品的文档',
+  feedback_question: '这页有帮助吗？',
+  feedback_yes: '有帮助',
+  feedback_no: '没帮助',
+  feedback_reasons_title: '遇到了什么问题？（可多选）',
+  feedback_reason_steps_failed: '步骤跑不通',
+  feedback_reason_outdated: '内容过时或与产品不符',
+  feedback_reason_missing_info: '找不到需要的信息',
+  feedback_reason_unclear: '看不懂',
+  feedback_reason_other: '其他',
+  feedback_submit: '提交',
+  feedback_thanks: '感谢你的反馈！',
 }
 
 const ru: Translation = {
@@ -246,6 +268,17 @@ const ru: Translation = {
   all_product_documentation: 'Документация по всем продуктам',
   explore_doc_all_products:
     'Исследуйте и найдите документацию для всех продуктов',
+  feedback_question: 'Была ли эта страница полезной?',
+  feedback_yes: 'Да',
+  feedback_no: 'Нет',
+  feedback_reasons_title: 'Что пошло не так? (можно выбрать несколько)',
+  feedback_reason_steps_failed: 'Шаги не работают',
+  feedback_reason_outdated: 'Устарело или не соответствует продукту',
+  feedback_reason_missing_info: 'Не нашёл нужную информацию',
+  feedback_reason_unclear: 'Сложно понять',
+  feedback_reason_other: 'Другое',
+  feedback_submit: 'Отправить',
+  feedback_thanks: 'Спасибо за отзыв!',
 }
 
 export const TRANSLATIONS = { en, zh, ru }

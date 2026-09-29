@@ -1,7 +1,7 @@
 ---
 description: Configure the `doom` documentation tool
 weight: 1
-sourceSHA: 97e0008c7a2ee1978d911ada6d891ecfdc2b3bd9a41567f4e543845f5aaec93a
+sourceSHA: 8d66281e149e79f5093649ca7a7915deac5f1e747fa89a4c22ecab33451a3304
 ---
 
 # Configuration {#configuration}
@@ -277,6 +277,20 @@ export * from '@alauda/doom/theme'
 ```
 
 :::
+
+## Site Analytics {#analytics}
+
+The CLI flag `--analytics` turns on page-view, search, 404 and "Was this page helpful?" analytics for the official documentation sites. It needs no configuration: the reporting targets are built in.
+
+| Host                                                             | Reports to        |
+| ---------------------------------------------------------------- | ----------------- |
+| `docs.alauda.io`, `docs-io-staging.alauda.cn`                    | PostHog (EU)      |
+| `docs.alauda.cn`, `docs-staging.alauda.cn`, `docs-dev.alauda.cn` | Tencent Cloud RUM |
+
+- Only online builds should pass `--analytics`. Without the flag, the analytics code and SDKs are removed from the bundle entirely, so offline packages and PR previews contain none of it.
+- Even in a build with the flag, any other host reports nothing, and pages under `/russian/` are excluded.
+- No cookies or `localStorage` are used. The Tencent Cloud RUM SDK keeps a random session id in `sessionStorage`, which the browser clears when the tab closes; it cannot be turned off. Readers whose browser sends Do Not Track or Global Privacy Control are not tracked.
+- The "Was this page helpful?" widget is part of the `@alauda/doom/theme` layout, so it only appears on sites that use that theme entry (see [Algolia](#algolia)).
 
 ## Sitemap Configuration {#sitemap}
 
