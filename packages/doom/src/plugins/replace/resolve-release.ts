@@ -67,6 +67,17 @@ const issuesToListItems = (
 
 const { JIRA_USERNAME, JIRA_PASSWORD } = process.env
 
+const DEFAULT_JIRA_BASE_URL = 'https://jira.alauda.cn'
+
+/**
+ * Where Jira is, without the `/rest/...` part. Unlike the credentials above,
+ * which are read once when this module loads, it is read for each request.
+ * Empty counts as unset — an unset variable often arrives that way — and a
+ * trailing `/` is dropped so the path appended to it is not doubled.
+ */
+const jiraBaseUrl = () =>
+  (process.env.JIRA_BASE_URL || DEFAULT_JIRA_BASE_URL).replace(/\/+$/, '')
+
 let warned = false
 
 const NO_ISSUE_MAPPER: Record<JiraLanguage, string> = {
@@ -132,7 +143,7 @@ const resolveRelease_ = async (
 
   try {
     ;({ issues } = await xfetch<{ issues: JiraIssue[] }>(
-      `https://jira.alauda.cn/rest/api/2/search?${new URLSearchParams({ jql })}`,
+      `${jiraBaseUrl()}/rest/api/2/search?${new URLSearchParams({ jql })}`,
       { headers: { Authorization } },
     ))
   } catch (err) {

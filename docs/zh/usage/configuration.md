@@ -112,6 +112,8 @@ releaseNotes:
 
 以上述 `template=fixed&project=DevOps` 为例，`fixed` 为 `queryTemplates` 中定义的模板名称，剩余的 `query` 参数 `project=DevOps` 将作为 [`ejs`](https://github.com/mde/ejs) 模板参数传递给 `fixed` 模板处理后作为 jira [`jql`](https://www.atlassian.com/zh/software/jira/guides/jql/overview#what-is-jql) 发起 `https://jira.alauda.cn/rest/api/2/search?jql=<jql>` 请求，此 API 要求鉴权，须提供 `JIRA_USERNAME` 和 `JIRA_PASSWORD` 环境变量才能预览生效
 
+构建环境只能经其它主机或端口访问 Jira 时，可通过 `JIRA_BASE_URL` 环境变量指定 Jira 的根地址，例如 `JIRA_BASE_URL=https://jira.example.com:8443`。未设置或为空时使用 `https://jira.alauda.cn`，末尾的 `/` 会被忽略
+
 ## 左导航配置 {#sidebar}
 
 ```yaml
