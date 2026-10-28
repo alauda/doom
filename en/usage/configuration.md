@@ -107,6 +107,8 @@ releaseNotes:
 
 Taking `template=fixed&project=DevOps` as an example, `fixed` is the template name defined in `queryTemplates`. The remaining `query` parameter `project=DevOps` is passed as [`ejs`](https://github.com/mde/ejs) template parameters to the `fixed` template, which is then processed to form a jira [`jql`](https://www.atlassian.com/zh/software/jira/guides/jql/overview#what-is-jql) request to `https://jira.alauda.cn/rest/api/2/search?jql=<jql>`. This API requires authentication, and the environment variables `JIRA_USERNAME` and `JIRA_PASSWORD` must be provided to preview the effect.
 
+If the build environment can reach Jira only through another host or port, set the `JIRA_BASE_URL` environment variable to the Jira base URL, for example `JIRA_BASE_URL=https://jira.example.com:8443`. When it is unset or empty, `https://jira.alauda.cn` is used, and a trailing `/` is ignored.
+
 ## Sidebar Configuration \{#sidebar}
 
 ```yaml
