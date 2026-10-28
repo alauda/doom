@@ -44,7 +44,9 @@ import {
 } from '../plugins/index.ts'
 import {
   isExplicitlyUnversioned,
+  Language,
   normalizeSlash,
+  SUPPORTED_LANGUAGES,
   UNVERSIONED,
   type DoomSite,
 } from '../shared/index.ts'
@@ -191,6 +193,18 @@ const getCommonConfig = async ({
         if (exclude.includes(name)) {
           continue
         }
+      }
+      // Only a language doom supports is a language. Any other directory, a
+      // `scripts/` or `images/` say, used to become one and get a
+      // `/<name>/products` page with no words to render, which failed the
+      // build. It is left out of the site like `shared/` instead: it stays in
+      // `allLanguages`, so it ends up in `unusedLanguages` and its routes are
+      // excluded below.
+      if (!Object.hasOwn(Language, name)) {
+        logger.warn(
+          `Skipped \`${cyan(path.relative(process.cwd(), path.join(root, name)))}\`: not a language directory (doom builds ${SUPPORTED_LANGUAGES.join(', ')}), so no pages are built from it, like \`shared\``,
+        )
+        continue
       }
       locales.push({
         lang: name,
