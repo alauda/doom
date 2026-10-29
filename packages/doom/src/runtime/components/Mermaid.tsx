@@ -3,6 +3,8 @@ import { clsx } from 'clsx'
 import mermaid from 'mermaid'
 import { useEffect, useId, useRef } from 'react'
 
+import { mermaidTheme } from './mermaid-theme.js'
+
 export interface MermaidProps {
   className?: string
   children: string
@@ -18,7 +20,7 @@ export const Mermaid = ({ className, children }: MermaidProps) => {
   useEffect(() => {
     const container = containerRef.current!
 
-    mermaid.initialize({ theme: isDark ? 'dark' : 'default' })
+    mermaid.initialize({ theme: mermaidTheme(isDark) })
 
     const render = async () => {
       const { svg, diagramType, bindFunctions } = await mermaid.render(
