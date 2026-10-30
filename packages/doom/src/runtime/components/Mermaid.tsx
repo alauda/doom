@@ -22,9 +22,11 @@ export const Mermaid = ({ className, children }: MermaidProps) => {
     mermaid.initialize({ theme: isDark ? 'redux-dark-color' : 'redux-color' })
 
     const render = async () => {
+      // Measure labels with the same document styles used to display the SVG.
       const { svg, diagramType, bindFunctions } = await mermaid.render(
         `mermaid-${id.slice(1, -1)}`,
         children,
+        container,
       )
 
       container.classList.add(diagramType)
