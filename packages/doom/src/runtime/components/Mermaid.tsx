@@ -18,7 +18,8 @@ export const Mermaid = ({ className, children }: MermaidProps) => {
   useEffect(() => {
     const container = containerRef.current!
 
-    mermaid.initialize({ theme: isDark ? 'dark' : 'default' })
+    // Dark has to be named; `theme: dark` would keep the old palette.
+    mermaid.initialize({ theme: isDark ? 'redux-dark-color' : 'redux-color' })
 
     const render = async () => {
       const { svg, diagramType, bindFunctions } = await mermaid.render(
