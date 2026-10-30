@@ -1,5 +1,19 @@
 # @alauda/doom
 
+## 2.10.0
+
+### Minor Changes
+
+- [#368](https://github.com/alauda/doom/pull/368) [`cf746f4`](https://github.com/alauda/doom/commit/cf746f4af1a787e6690657156f0b2d231df46a4e) Thanks [@timonwong](https://github.com/timonwong)! - Upgrade Mermaid to v12.2.0 and switch the site defaults to `redux-color` / `redux-dark-color`.
+
+  Mermaid 12 makes `redux-color` and the `neo` look the default for many diagram types, and lays those types out with ELK. Doom used to force `theme: default` in light mode and `theme: dark` in dark mode, which would have kept the old palette after the upgrade. Light mode now names `redux-color`; dark mode names `redux-dark-color`, because Mermaid does not pick that palette from `dark` on its own.
+
+  Diagrams that do not set `theme`, `look`, or `layout` in front matter will look different.
+
+### Patch Changes
+
+- [#369](https://github.com/alauda/doom/pull/369) [`3009df4`](https://github.com/alauda/doom/commit/3009df4f10c879391c1d57932fce7b1f5352f3c1) Thanks [@youyongsong](https://github.com/youyongsong)! - Fix clipped Mermaid labels by measuring diagrams inside their display container. This keeps label dimensions consistent with the documentation page's typography, including multiline labels.
+
 ## 2.9.0
 
 ### Minor Changes
