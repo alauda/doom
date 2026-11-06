@@ -1,20 +1,12 @@
 import { withBase } from '@rspress/core/runtime'
 import { getCustomMDXComponent } from '@rspress/core/theme-original'
-import { isExternalUrl, parseUrl } from '@rspress/shared'
+import { isExternalUrl } from '@rspress/shared'
 import { clsx } from 'clsx'
 import type { ComponentProps } from 'react'
 
-const X_ = getCustomMDXComponent()
+import { shouldDownload } from './_download-link.ts'
 
-const DOWNLOAD_EXTENSIONS = [
-  '.ipynb',
-  '.zip',
-  '.tgz',
-  '.tar.gz',
-  '.sh',
-  '.py',
-  '.sql',
-]
+const X_ = getCustomMDXComponent()
 
 export const X = {
   ...X_,
@@ -27,12 +19,7 @@ export const X = {
       ...rest
     } = props
     if (href) {
-      const { url } = parseUrl(href)
-      const pathname = url.split('/').at(-1)!.toLowerCase()
-      if (
-        download !== false && // type-coverage:ignore-line
-        DOWNLOAD_EXTENSIONS.some((ext) => pathname.endsWith(ext))
-      ) {
+      if (shouldDownload(href, download)) {
         return (
           <a
             className={clsx('rp-link', className)}
