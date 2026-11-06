@@ -3,6 +3,8 @@ import remarkMessageControl from 'remark-message-control'
 import type { Plugin } from 'unified'
 import type { VFile } from 'vfile'
 
+import eslintMessageControl from './eslint-message-control.ts'
+
 export * from './check-dead-links.ts'
 export * from './file-naming.ts'
 export * from './heading-anchor-format.ts'
@@ -29,13 +31,21 @@ export * from './title-required.ts'
 export * from './translation-parity/index.ts'
 export * from './unit-case.ts'
 
-const doomLint: Plugin<[], Root> = function () {
+export interface MessageControlOptions {
+  /** ESLint already applies its own directives after remark finishes. */
+  eslint?: boolean
+}
+
+const doomLint: Plugin<[MessageControlOptions?], Root> = function (options) {
   this.use(() =>
     remarkMessageControl({
       name: 'lint',
       source: ['doom-lint', 'remark-lint'],
     }),
   )
+  if (options?.eslint !== false) {
+    this.use(eslintMessageControl)
+  }
 }
 
 /**
