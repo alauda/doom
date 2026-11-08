@@ -57,7 +57,7 @@ __metadata:
     ejs: "npm:^5.0.2"
     es-toolkit: "npm:^1.46.1"
     eslint: "npm:^10.4.0"
-    eslint-plugin-mdx: "npm:^3.7.0"
+    eslint-plugin-mdx: "npm:3.8.3"
     globals: "npm:^17.6.0"
     hastscript: "npm:^9.0.1"
     html-tag-names: "npm:^2.1.0"
@@ -1632,6 +1632,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@dual-bundle/import-meta-resolve@npm:^4.2.1":
+  version: 4.2.1
+  resolution: "@dual-bundle/import-meta-resolve@npm:4.2.1"
+  checksum: 10c0/8f1e572c14c4d20ea35734635085213abd13bd440c251309cf8ae5ed1082f6759cefa1c2c52a631f76859c57e26062f78a8cee4acc239c0edc87cd316a5d3b5b
+  languageName: node
+  linkType: hard
+
 "@earendil-works/pi-agent-core@npm:0.84.3":
   version: 0.84.3
   resolution: "@earendil-works/pi-agent-core@npm:0.84.3"
@@ -2899,6 +2906,13 @@ __metadata:
   version: 0.2.9
   resolution: "@pkgr/core@npm:0.2.9"
   checksum: 10c0/ac8e4e8138b1a7a4ac6282873aef7389c352f1f8b577b4850778f5182e4a39a5241facbe48361fec817f56d02b51691b383010843fb08b34a8e8ea3614688fd5
+  languageName: node
+  linkType: hard
+
+"@pkgr/core@npm:^0.3.6":
+  version: 0.3.6
+  resolution: "@pkgr/core@npm:0.3.6"
+  checksum: 10c0/153f0f4563f505faeba13c733efa0e05e467ce1c6b941055a5fd3b4560da60fbf1dff4b11da0075f034ddda11f2842b90395f60895dde5825875b616edccc11c
   languageName: node
   linkType: hard
 
@@ -4982,12 +4996,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"acorn@npm:^8.0.0, acorn@npm:^8.15.0, acorn@npm:^8.16.0":
-  version: 8.16.0
-  resolution: "acorn@npm:8.16.0"
+"acorn@npm:^8.0.0, acorn@npm:^8.16.0, acorn@npm:^8.19.0":
+  version: 8.19.0
+  resolution: "acorn@npm:8.19.0"
   bin:
     acorn: bin/acorn
-  checksum: 10c0/c9c52697227661b68d0debaf972222d4f622aa06b185824164e153438afa7b08273432ca43ea792cadb24dada1d46f6f6bb1ef8de9956979288cc1b96bf9914e
+  checksum: 10c0/21007e0ca638dd13d44a0ad26856b7a885cc6c4319cd2bc71694bc8ec3f0606c23ecd12b157e167f909d9d2b2d68d5b50fe3f54211b1aab7c3451a7c801fe62e
   languageName: node
   linkType: hard
 
@@ -6689,29 +6703,37 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-mdx@npm:^3.7.0":
-  version: 3.7.0
-  resolution: "eslint-mdx@npm:3.7.0"
+"eslint-mdx@npm:^3.8.3":
+  version: 3.9.1
+  resolution: "eslint-mdx@npm:3.9.1"
   dependencies:
-    acorn: "npm:^8.15.0"
+    acorn: "npm:^8.19.0"
     acorn-jsx: "npm:^5.3.2"
-    espree: "npm:^9.6.1 || ^10.4.0"
+    devlop: "npm:^1.1.0"
+    eslint-scope: "npm:^8.4.0 || ^9.1.2"
+    eslint-visitor-keys: "npm:^4.2.0 || ^5.0.1"
+    espree: "npm:^9.6.1 || ^10.4.0 || ^11.2.0"
     estree-util-visit: "npm:^2.0.0"
-    remark-mdx: "npm:^3.1.0"
+    mdast-util-from-markdown: "npm:^2.1.0"
+    remark-mdx: "npm:^3.1.1"
     remark-parse: "npm:^11.0.0"
     remark-stringify: "npm:^11.0.0"
-    synckit: "npm:^0.11.8"
+    synckit: "npm:^0.12.3"
     unified: "npm:^11.0.5"
     unified-engine: "npm:^11.2.2"
-    unist-util-visit: "npm:^5.0.0"
+    unist-util-visit: "npm:^5.1.0"
+    unist-util-visit-parents: "npm:^6.0.0"
     vfile: "npm:^6.0.3"
   peerDependencies:
+    "@types/estree": ^1.0.10
     eslint: ">=8.0.0"
     remark-lint-file-extension: "*"
   peerDependenciesMeta:
+    "@types/estree":
+      optional: true
     remark-lint-file-extension:
       optional: true
-  checksum: 10c0/e8c4a4616f58ee73d59eb6bf30cbc334530548795855d770abe5377751a44c0cd86cbf534197c36c9f0b5e10cd62f9641e1ad9b9f38cbf8b43ac75fc3057e0bb
+  checksum: 10c0/450bc0dfe56f934a204d45135d91bc3115b84171a60b1c0c2aa454f855f0b8cfabb6bd4f349bd38ccc1b37e468778015d62c9e3d08c16223a99c913ecc8d4f22
   languageName: node
   linkType: hard
 
@@ -6742,23 +6764,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-mdx@npm:^3.7.0":
-  version: 3.7.0
-  resolution: "eslint-plugin-mdx@npm:3.7.0"
+"eslint-plugin-mdx@npm:3.8.3":
+  version: 3.8.3
+  resolution: "eslint-plugin-mdx@npm:3.8.3"
   dependencies:
-    eslint-mdx: "npm:^3.7.0"
-    mdast-util-from-markdown: "npm:^2.0.2"
+    eslint-mdx: "npm:^3.8.3"
+    mdast-util-from-markdown: "npm:^2.1.0"
     mdast-util-mdx: "npm:^3.0.0"
     micromark-extension-mdxjs: "npm:^3.0.0"
-    remark-mdx: "npm:^3.1.0"
+    remark-mdx: "npm:^3.1.1"
     remark-parse: "npm:^11.0.0"
     remark-stringify: "npm:^11.0.0"
-    synckit: "npm:^0.11.8"
+    synckit: "npm:^0.12.3"
     unified: "npm:^11.0.5"
     vfile: "npm:^6.0.3"
   peerDependencies:
     eslint: ">=8.0.0"
-  checksum: 10c0/a79a7900725e022fce2366c52359689e43b0ce4a94a172717068d50f3f51e2e4b53020c8de6582759370fb32934fd163f3768afe4c1f9e630621f27ca0b4bd6c
+  checksum: 10c0/4758bb2972a73486f057c938fad257d2432c5d6ecbdd95c8990366d88967e6b720ab66353f90968ae7b4ea1f0d9b1dbe1028bbec7cb7b4db0748ccb4f4eb2553
   languageName: node
   linkType: hard
 
@@ -6912,7 +6934,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-scope@npm:^9.1.2":
+"eslint-scope@npm:^8.4.0 || ^9.1.2, eslint-scope@npm:^9.1.2":
   version: 9.1.2
   resolution: "eslint-scope@npm:9.1.2"
   dependencies:
@@ -6931,14 +6953,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-visitor-keys@npm:^4.2.1":
-  version: 4.2.1
-  resolution: "eslint-visitor-keys@npm:4.2.1"
-  checksum: 10c0/fcd43999199d6740db26c58dbe0c2594623e31ca307e616ac05153c9272f12f1364f5a0b1917a8e962268fdecc6f3622c1c2908b4fcc2e047a106fe6de69dc43
-  languageName: node
-  linkType: hard
-
-"eslint-visitor-keys@npm:^5.0.0, eslint-visitor-keys@npm:^5.0.1":
+"eslint-visitor-keys@npm:^4.2.0 || ^5.0.1, eslint-visitor-keys@npm:^5.0.0, eslint-visitor-keys@npm:^5.0.1":
   version: 5.0.1
   resolution: "eslint-visitor-keys@npm:5.0.1"
   checksum: 10c0/16190bdf2cbae40a1109384c94450c526a79b0b9c3cb21e544256ed85ac48a4b84db66b74a6561d20fe6ab77447f150d711c2ad5ad74df4fcc133736bce99678
@@ -6990,7 +7005,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"espree@npm:^11.2.0":
+"espree@npm:^11.2.0, espree@npm:^9.6.1 || ^10.4.0 || ^11.2.0":
   version: 11.2.0
   resolution: "espree@npm:11.2.0"
   dependencies:
@@ -6998,17 +7013,6 @@ __metadata:
     acorn-jsx: "npm:^5.3.2"
     eslint-visitor-keys: "npm:^5.0.1"
   checksum: 10c0/cf87e18ffd9dc113eb8d16588e7757701bc10c9934a71cce8b89c2611d51672681a918307bd6b19ac3ccd0e7ba1cbccc2f815b36b52fa7e73097b251014c3d81
-  languageName: node
-  linkType: hard
-
-"espree@npm:^9.6.1 || ^10.4.0":
-  version: 10.4.0
-  resolution: "espree@npm:10.4.0"
-  dependencies:
-    acorn: "npm:^8.15.0"
-    acorn-jsx: "npm:^5.3.2"
-    eslint-visitor-keys: "npm:^4.2.1"
-  checksum: 10c0/c63fe06131c26c8157b4083313cb02a9a54720a08e21543300e55288c40e06c3fc284bdecf108d3a1372c5934a0a88644c98714f38b6ae8ed272b40d9ea08d6b
   languageName: node
   linkType: hard
 
@@ -8724,9 +8728,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mdast-util-from-markdown@npm:^2.0.0, mdast-util-from-markdown@npm:^2.0.2":
-  version: 2.0.3
-  resolution: "mdast-util-from-markdown@npm:2.0.3"
+"mdast-util-from-markdown@npm:^2.0.0, mdast-util-from-markdown@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "mdast-util-from-markdown@npm:2.1.0"
   dependencies:
     "@types/mdast": "npm:^4.0.0"
     "@types/unist": "npm:^3.0.0"
@@ -8740,7 +8744,7 @@ __metadata:
     micromark-util-symbol: "npm:^2.0.0"
     micromark-util-types: "npm:^2.0.0"
     unist-util-stringify-position: "npm:^4.0.0"
-  checksum: 10c0/d3eac9ac2b88e3b41fb85aa81c7bfd1f4f8a2fde497ad805e66fea7b2abfe486ffd94d2a20f9fd2951dcdebe4916f3bdcf851319891dd62d343e26c2f02583ba
+  checksum: 10c0/63cf2c77a3b731536eb29d777bfe134c829221a07597e83c696f1e65c7893b94d617c886ec277e5f95de7b4055b11c5253c5eca01ca7549f5f47b4dc133e571c
   languageName: node
   linkType: hard
 
@@ -11081,7 +11085,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"remark-mdx@npm:^3.0.0, remark-mdx@npm:^3.1.0, remark-mdx@npm:^3.1.1":
+"remark-mdx@npm:^3.0.0, remark-mdx@npm:^3.1.1":
   version: 3.1.1
   resolution: "remark-mdx@npm:3.1.1"
   dependencies:
@@ -12005,12 +12009,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"synckit@npm:^0.11.12, synckit@npm:^0.11.8":
+"synckit@npm:^0.11.12":
   version: 0.11.12
   resolution: "synckit@npm:0.11.12"
   dependencies:
     "@pkgr/core": "npm:^0.2.9"
   checksum: 10c0/cc4d446806688ae0d728ae7bb3f53176d065cf9536647fb85bdd721dcefbd7bf94874df6799ff61580f2b03a392659219b778a9254ad499f9a1f56c34787c235
+  languageName: node
+  linkType: hard
+
+"synckit@npm:^0.12.3":
+  version: 0.12.3
+  resolution: "synckit@npm:0.12.3"
+  dependencies:
+    "@dual-bundle/import-meta-resolve": "npm:^4.2.1"
+    "@pkgr/core": "npm:^0.3.6"
+  checksum: 10c0/e7c3c5bd8272c55c0e108c296dbd0d326e9f22614227079b46ff7bd51c0970d810b222a3a14f5b0f1797d8af2c82058b9a927ac63a06219ead8535d271b382e1
   languageName: node
   linkType: hard
 
