@@ -1,5 +1,17 @@
 # @alauda/doom
 
+## 2.11.0
+
+### Minor Changes
+
+- [#372](https://github.com/alauda/doom/pull/372) [`353a68f`](https://github.com/alauda/doom/commit/353a68f2a9d7d8cb4fc2001dfa9c108d7361fc28) Thanks [@youyongsong](https://github.com/youyongsong)! - Automatically add the `download` attribute to same-site root-path links for YAML (`.yaml` and `.yml`), JSON (`.json`), and TAR (`.tar`) files. External HTTPS links and relative links keep their existing behavior, as do the seven previously supported extensions. An explicit `download={false}` still disables automatic downloads.
+
+### Patch Changes
+
+- [#373](https://github.com/alauda/doom/pull/373) [`b196cc4`](https://github.com/alauda/doom/commit/b196cc48eeed21931324e911ca41cdffe6b8fe74) Thanks [@youyongsong](https://github.com/youyongsong)! - Pin eslint-plugin-mdx to 3.8.3 to avoid the expensive full-page difference calculation introduced in 3.9, which can make documentation linting take more than 30 minutes.
+
+- [#371](https://github.com/alauda/doom/pull/371) [`b9b2283`](https://github.com/alauda/doom/commit/b9b2283bc7c8b2de54dbb0a8e2336493e8d311b5) Thanks [@youyongsong](https://github.com/youyongsong)! - Make translation checks honor `eslint-disable`, `eslint-enable`, and `eslint-disable-next-line mdx/remark` controls.
+
 ## 2.10.0
 
 ### Minor Changes
