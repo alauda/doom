@@ -72,10 +72,12 @@ export default () => {
   const t = useTranslation()
   const productsOverviewCanonical = getProductsOverviewCanonical(
     virtual.productsOverview,
+    virtual.prefix,
   )
   const productsOverviewUrl = getProductsOverviewUrl(
     virtual.productsOverview,
     lang,
+    virtual.prefix,
   )
 
   useHead({

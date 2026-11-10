@@ -2,4 +2,4 @@
 "@alauda/doom": patch
 ---
 
-Use the configured outer products overview for the Products breadcrumb, preserve the current language with `lang`, and keep the legacy `/products` route as a canonical compatibility page.
+Derive the outer Products overview from the deployment prefix by default, allow an explicit URL override, preserve the current language with `lang`, and keep the legacy `/products` route as a canonical compatibility page.

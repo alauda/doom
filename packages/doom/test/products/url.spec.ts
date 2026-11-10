@@ -12,6 +12,14 @@ describe('products overview URLs', () => {
     )
   })
 
+  test.each([
+    ['', 'en', '/products?lang=en'],
+    ['/russian', 'ru', '/russian/products?lang=ru'],
+    ['/docs/', 'zh', '/docs/products?lang=zh'],
+  ])('derives the default URL from prefix %s', (prefix, lang, expected) => {
+    expect(getProductsOverviewUrl(undefined, lang, prefix)).toBe(expected)
+  })
+
   test('keeps an absolute deployment URL absolute', () => {
     expect(
       getProductsOverviewUrl(
@@ -24,6 +32,12 @@ describe('products overview URLs', () => {
   test('canonical URL does not inherit the language query', () => {
     expect(getProductsOverviewCanonical({ url: '/docs/products' })).toBe(
       '/docs/products',
+    )
+  })
+
+  test('derives the canonical URL from the deployment prefix', () => {
+    expect(getProductsOverviewCanonical(undefined, '/russian/')).toBe(
+      '/russian/products',
     )
   })
 
