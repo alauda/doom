@@ -13,6 +13,7 @@ import { xfetch } from 'x-fetch'
 import { parse } from 'yaml'
 
 import type { BuildInfoGroup, BuildInfoItem } from '../../products/index.tsx'
+import { getProductsOverviewUrl } from '../../products/url.ts'
 import { BuildInfoContext } from '../../shared/context.ts'
 import { X } from '../_X.ts'
 
@@ -72,6 +73,10 @@ export const BreadCrumb = () => {
   }, [pathname, sidebar])
 
   const prefix = addTrailingSlash(`/${lang === siteData.lang ? '' : lang}`)
+  const productsOverviewUrl = getProductsOverviewUrl(
+    virtual.productsOverview,
+    lang,
+  )
 
   const { groups, setGroups: setBuildInfoGroups } = use(BuildInfoContext)
 
@@ -132,7 +137,11 @@ export const BreadCrumb = () => {
       <ul className="breadcrumb-content">
         {hasGroups && (
           <li className="breadcrumb-item rp-doc">
-            <X.a href={prefix + 'products'}>{t('products')}</X.a>
+            {productsOverviewUrl ? (
+              <a href={productsOverviewUrl}>{t('products')}</a>
+            ) : (
+              <X.a href={prefix + 'products'}>{t('products')}</X.a>
+            )}
           </li>
         )}
         <li className="breadcrumb-item rp-doc">

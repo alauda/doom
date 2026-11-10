@@ -215,6 +215,14 @@ export interface AlgoliaOptions {
   indexName: string
 }
 
+export interface ProductsOverviewOptions {
+  /**
+   * The deployment's outer products overview URL. It may be an absolute URL
+   * or a root-relative path such as `/products` or `/docs/products`.
+   */
+  url: string
+}
+
 export interface ExportItem {
   name?: string
   scope: string | string[]
@@ -240,6 +248,7 @@ declare module '@rspress/shared' {
     lint?: LintOptions
     algolia?: AlgoliaOptions
     siteUrl?: string
+    productsOverview?: ProductsOverviewOptions
     export?: ExportItem[]
   }
 
