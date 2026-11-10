@@ -854,6 +854,7 @@ export const translateCommand = new Command('translate')
             contextTail: translateOptions.contextTail,
             repairer,
             previous,
+            segmentConcurrency: concurrency,
             onProgress: (message) => {
               logger.info(message)
             },

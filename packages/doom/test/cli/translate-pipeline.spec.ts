@@ -14,7 +14,12 @@ import type {
 } from '#cli/translate-checker.ts'
 import type { Judge } from '#cli/translate-judge.ts'
 import { maskAst } from '#cli/translate-mask.ts'
-import { hasProse, translateDocument } from '#cli/translate-pipeline.ts'
+import {
+  hasProse,
+  runWithConcurrency,
+  translateDocument,
+} from '#cli/translate-pipeline.ts'
+import { encodeCacheRecord } from '#cli/translate-segment-cache.ts'
 import { planSegments } from '#cli/translate-segment.ts'
 import { mdxProcessor } from '#plugins/index.ts'
 
@@ -103,7 +108,9 @@ const prepare = (source = SOURCE, cap?: number) => {
 }
 
 /** A translator the test writes the answers for. */
-const scripted = (answer: (request: SegmentTranslationRequest) => string) => {
+const scripted = (
+  answer: (request: SegmentTranslationRequest) => string | Promise<string>,
+) => {
   const seen: SegmentTranslationRequest[] = []
   let calls = 0
   return {
@@ -162,9 +169,11 @@ const run = async ({
   source,
   segmentCap,
   keepFrontmatter = true,
+  segmentConcurrency,
+  previous,
   onProgress,
 }: {
-  answer: (request: SegmentTranslationRequest) => string
+  answer: (request: SegmentTranslationRequest) => string | Promise<string>
   checker?: TranslationChecker
   segmentJudge?: Judge
   documentJudge?: Judge
@@ -180,6 +189,11 @@ const run = async ({
    * does not silently depend on that.
    */
   keepFrontmatter?: boolean
+  segmentConcurrency?: number
+  previous?: {
+    body: string
+    record?: import('#cli/translate-segment-cache.ts').SegmentCacheRecord
+  }
 }) => {
   const { tree, maskEntries, maskedSource } = prepare(source, segmentCap)
   const translator = scripted(answer)
@@ -210,12 +224,80 @@ const run = async ({
     segmentCap,
     maxSegmentAttempts,
     maxAssemblyRounds,
+    segmentConcurrency,
+    previous,
     onProgress,
   })
-  return { result, translator }
+  return { result, translator, plan: prepare(source, segmentCap).plan }
 }
 
 describe('the segment pipeline', () => {
+  test('runs uncached segments with the configured concurrency limit', async () => {
+    let inFlight = 0
+    let peak = 0
+    const seen: number[] = []
+    await run({
+      segmentConcurrency: 2,
+      answer: async (request) => {
+        inFlight++
+        peak = Math.max(peak, inFlight)
+        seen.push(request.segment.index)
+        await new Promise((resolve) => globalThis.setTimeout(resolve, 5))
+        inFlight--
+        return translated(request.segment.text)
+      },
+    })
+    expect(peak).toBe(2)
+    expect(seen).toEqual([0, 1, 2])
+  })
+
+  test('assembles by segment index even when later segments finish first', async () => {
+    const { result } = await run({
+      segmentConcurrency: 3,
+      answer: async (request) => {
+        await new Promise((resolve) =>
+          globalThis.setTimeout(resolve, (3 - request.segment.index) * 5),
+        )
+        return translated(request.segment.text)
+      },
+    })
+    expect(result.document).toMatch(
+      /# 安装[\s\S]*## 前置条件[\s\S]*## 安装集群/u,
+    )
+  })
+
+  test('propagates a worker exception after already-started work settles', async () => {
+    const events: number[] = []
+    await expect(
+      runWithConcurrency([0, 1, 2], 2, async (item) => {
+        events.push(item)
+        await new Promise((resolve) => globalThis.setTimeout(resolve, 2))
+        if (item === 0) {
+          throw new Error('fake model failure')
+        }
+      }),
+    ).rejects.toThrow('fake model failure')
+    expect(events).toEqual([0, 1])
+  })
+
+  test('does not call the translator for a verified reusable segment', async () => {
+    const first = await run({
+      answer: (request) => translated(request.segment.text),
+    })
+    const previous = {
+      body: matter(first.result.document!).content,
+      record: encodeCacheRecord(first.plan, first.result.records!),
+    }
+    const second = await run({
+      answer: (request) => translated(request.segment.text),
+      previous,
+    })
+    expect(second.translator.calls()).toBe(1)
+    expect(
+      second.result.outcomes.filter((outcome) => outcome.status === 'cached'),
+    ).toHaveLength(2)
+  })
+
   test('a document whose segments all pass is assembled and returned', async () => {
     const { result, translator } = await run({
       answer: (request) => translated(request.segment.text),
@@ -267,6 +349,7 @@ describe('the segment pipeline', () => {
             )
           : translated(request.segment.text),
       maxSegmentAttempts: 2,
+      segmentConcurrency: 2,
     })
 
     expect(result.document).toBeUndefined()
