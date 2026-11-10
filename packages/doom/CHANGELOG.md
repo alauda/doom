@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 2.11.1
+
+### Patch Changes
+
+- [#376](https://github.com/alauda/doom/pull/376) [`f5cc7e5`](https://github.com/alauda/doom/commit/f5cc7e54198bba0ae68b379b469afab284b62afd) Thanks [@youyongsong](https://github.com/youyongsong)! - Allow eslint-plugin-mdx ^3.9.4 again: 3.9.4 avoids pathological whole-page remark differences on long documents with lint messages.
+
 ## 2.11.0
 
 ### Minor Changes
