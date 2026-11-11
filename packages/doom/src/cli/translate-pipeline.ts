@@ -160,6 +160,8 @@ export interface TranslateDocumentOptions {
   maxAssemblyRounds?: number
   contextTail?: number
   repairer?: SegmentRepairer
+  /** Maximum number of uncached segments worked on at once. */
+  segmentConcurrency?: number
   /**
    * The translation already on disk, for reusing the segments that did not
    * change. Absent on a first translation, and when `--force` is given.
@@ -220,6 +222,7 @@ export const translateDocument = async (
     maxAssemblyRounds = DEFAULT_MAX_ASSEMBLY_ROUNDS,
     contextTail,
     repairer,
+    segmentConcurrency = 1,
     previous,
     onProgress,
   } = options
@@ -454,8 +457,9 @@ export const translateDocument = async (
     return true
   }
 
-  // ------------------------------------------------ every segment, in order
+  // ------------------------------------------------ cached segments first
 
+  const pending: Segment[] = []
   for (const segment of plan.segments) {
     const reused = reuse.get(segment.index)
     if (reused != null) {
@@ -463,8 +467,14 @@ export const translateDocument = async (
       outcomes[segment.index].status = 'cached'
       continue
     }
-    await workOn(segment)
+    pending.push(segment)
   }
+
+  // ------------------------------------------------ uncached segments, bounded
+
+  await runWithConcurrency(pending, segmentConcurrency, (segment) =>
+    workOn(segment),
+  )
   if (reuse.size > 0) {
     onProgress?.(
       `${sourceLabel}: reused ${reuse.size} of ${plan.segments.length} segment(s) from the previous translation`,
@@ -583,13 +593,69 @@ export const translateDocument = async (
     }
 
     assemblyRounds++
+    const rerouted: { segment: Segment; findings: TranslationFinding[] }[] = []
     for (const [index, sentBack] of routed) {
       const segment = plan.segments[index]
       onProgress?.(
         `${sourceLabel} [segment ${index + 1}/${plan.segments.length}${describe(segment)}] sent back by the assembled document: ${summarise(sentBack)}${reasons(sentBack)}`,
       )
-      await workOn(segment, sentBack)
+      rerouted.push({ segment, findings: sentBack })
     }
+    await runWithConcurrency(
+      rerouted,
+      segmentConcurrency,
+      ({ segment, findings }) => workOn(segment, findings),
+    )
+  }
+}
+
+/**
+ * Run independent segment jobs with a small worker pool.
+ *
+ * A rejected job stops new work from being scheduled but lets already-started
+ * jobs settle. This preserves the document-level error boundary while avoiding
+ * dangling promises when one model call fails.
+ */
+export const runWithConcurrency = async <T>(
+  items: readonly T[],
+  concurrency: number,
+  worker: (item: T, index: number) => Promise<unknown>,
+) => {
+  if (!Number.isInteger(concurrency) || concurrency < 1) {
+    throw new Error(
+      `segment concurrency must be a positive integer, got ${concurrency}`,
+    )
+  }
+  let next = 0
+  let stopped = false
+  const errors: unknown[] = []
+
+  const runWorker = async () => {
+    while (!stopped) {
+      const index = next++
+      const item = items[index]
+      if (item === undefined) {
+        return
+      }
+      try {
+        await worker(item, index)
+      } catch (error) {
+        if (errors.length === 0) {
+          errors.push(error)
+          stopped = true
+        }
+        return
+      }
+    }
+  }
+
+  await Promise.all(
+    Array.from({ length: Math.min(concurrency, items.length) }, () =>
+      runWorker(),
+    ),
+  )
+  if (errors.length > 0) {
+    throw errors[0]
   }
 }
 
