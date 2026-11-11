@@ -1,5 +1,6 @@
 import {
   getSidebarDataGroup,
+  useActiveMatcher,
   useLang,
   useLocation,
   useSidebar,
@@ -8,6 +9,8 @@ import { SidebarList } from '@rspress/core/theme'
 import type { NormalizedSidebar, SidebarData } from '@rspress/shared'
 import virtual from 'doom-@global-virtual'
 import { useEffect, useMemo, useState } from 'react'
+
+import { expandActiveSidebar } from './sidebar.ts'
 
 interface SharedSidebarLocale {
   lang: string
@@ -30,8 +33,9 @@ export const DeferredSidebar = () => {
   const fallback = useSidebar()
   const lang = useLang()
   const { pathname } = useLocation()
+  const activeMatcher = useActiveMatcher()
   const [payload, setPayload] = useState<SharedSidebarPayload>()
-  const [sidebarData, setSidebarData] = useState<SidebarData>(fallback)
+  const [sidebarData, setSidebarData] = useState<SidebarData>([])
 
   useEffect(() => {
     if (!virtual.sidebarManifestUrl) {
@@ -50,9 +54,15 @@ export const DeferredSidebar = () => {
         if (!isSidebarManifest(value) || !virtual.sidebarManifestUrl) {
           throw new Error('invalid sidebar manifest')
         }
-        return fetch(new URL(value.fileName, virtual.sidebarManifestUrl), {
-          cache: 'force-cache',
-        })
+        return fetch(
+          new URL(
+            value.fileName,
+            new URL(virtual.sidebarManifestUrl, window.location.href),
+          ),
+          {
+            cache: 'force-cache',
+          },
+        )
       })
       .then((response) => {
         if (!response.ok) {
@@ -66,7 +76,7 @@ export const DeferredSidebar = () => {
         }
       })
       .catch(() => {
-        // The page keeps the embedded Rspress fallback when the shared asset is unavailable.
+        // Keep the Rspress fallback when the shared asset is unavailable.
       })
 
     return () => {
@@ -83,12 +93,8 @@ export const DeferredSidebar = () => {
   }, [fallback, lang, pathname, payload])
 
   useEffect(() => {
-    setSidebarData(sharedSidebar)
-  }, [sharedSidebar])
-
-  if (typeof window === 'undefined') {
-    return null
-  }
+    setSidebarData(expandActiveSidebar(sharedSidebar, activeMatcher))
+  }, [activeMatcher, sharedSidebar])
 
   return (
     <SidebarList sidebarData={sidebarData} setSidebarData={setSidebarData} />

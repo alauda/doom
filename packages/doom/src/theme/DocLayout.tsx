@@ -1,3 +1,5 @@
+import '@rspress/core/dist/theme/layout/DocLayout/index.css'
+
 import { useSidebarMenu } from '@rspress/core/dist/theme/components/SidebarMenu/useSidebarMenu.js'
 import { useFrontmatter } from '@rspress/core/runtime'
 import {
