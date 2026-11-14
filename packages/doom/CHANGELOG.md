@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 2.11.2
+
+### Patch Changes
+
+- [#379](https://github.com/alauda/doom/pull/379) [`3129739`](https://github.com/alauda/doom/commit/3129739a541230aa2f4c0d7a6a52d9b9075bb1f8) Thanks [@youyongsong](https://github.com/youyongsong)! - Serve generated sidebars from a shared content-hashed asset so documentation pages no longer inline the full navigation.
+
 ## 2.11.1
 
 ### Patch Changes
