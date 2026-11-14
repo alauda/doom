@@ -1,16 +1,22 @@
 import fs from 'node:fs'
 import path from 'node:path'
 
-import type { RspressPlugin } from '@rspress/core'
+import type { Rspack } from '@rsbuild/core'
+import { type RspressPlugin, type UserConfig } from '@rspress/core'
 import { addTrailingSlash } from '@rspress/shared'
+import type { NormalizedSidebar } from '@rspress/shared'
 
 import { ACP_BASE, type DoomSite } from '../../shared/index.ts'
 import type { ExportItem } from '../../types.ts'
 import { baseResolve, pkgResolve } from '../../utils/index.ts'
 
 import { getGlobalComponentFiles } from './components.ts'
+import { createSidebarAsset, type SidebarAsset } from './sidebar.ts'
 
 const globalComponentsDir = baseResolve('global')
+
+const stableEntryFilename: Rspack.Filename = (pathData) =>
+  pathData.chunk?.name === 'index' ? '[name].js' : '[name].[contenthash:10].js'
 
 export interface GlobalPluginOptions {
   version?: string
@@ -22,6 +28,7 @@ export interface GlobalVirtual extends GlobalPluginOptions {
   prefix?: string
   sites?: DoomSite[]
   export?: ExportItem[]
+  sidebarManifestUrl?: string
 }
 
 // @internal
@@ -33,6 +40,20 @@ export const globalPlugin = ({
   version,
   download,
 }: GlobalPluginOptions): RspressPlugin => {
+  let sidebarAsset: SidebarAsset | undefined
+
+  const updateSidebarAsset = (config: UserConfig) => {
+    const themeConfig = config.themeConfig
+    const payload = {
+      sidebar: themeConfig?.sidebar as NormalizedSidebar | undefined,
+      locales: themeConfig?.locales?.map(({ lang, sidebar }) => ({
+        lang,
+        sidebar: sidebar as NormalizedSidebar | undefined,
+      })),
+    }
+    sidebarAsset = createSidebarAsset(payload)
+  }
+
   return {
     name: 'doom-global',
     globalStyles: pkgResolve('styles/global.scss'),
@@ -41,6 +62,17 @@ export const globalPlugin = ({
       .map((component) => path.resolve(globalComponentsDir, component)),
     markdown: {
       globalComponents: getGlobalComponentFiles(),
+    },
+    builderConfig: {
+      output: {
+        filename: {
+          js: stableEntryFilename,
+        },
+      },
+    },
+    config(config) {
+      updateSidebarAsset(config)
+      return config
     },
     addRuntimeModules(config, isProd) {
       return {
@@ -58,11 +90,32 @@ export const globalPlugin = ({
               version: site.version,
             })),
             export: config.export,
+            sidebarManifestUrl: sidebarAsset
+              ? `${addTrailingSlash(config.base || '/')}static/${sidebarAsset.manifestFileName}`
+              : undefined,
           },
           null,
           isProd ? 0 : 2,
         )}`,
       }
+    },
+    afterBuild(config) {
+      if (!sidebarAsset) {
+        updateSidebarAsset(config)
+      }
+      if (!sidebarAsset) {
+        return
+      }
+      const staticDir = path.resolve(config.outDir || 'dist', 'static')
+      fs.mkdirSync(staticDir, { recursive: true })
+      fs.writeFileSync(
+        path.join(staticDir, sidebarAsset.fileName),
+        sidebarAsset.content,
+      )
+      fs.writeFileSync(
+        path.join(staticDir, sidebarAsset.manifestFileName),
+        sidebarAsset.manifestContent,
+      )
     },
     addPages(config) {
       let loginPath: string | undefined
