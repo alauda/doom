@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 2.11.3
+
+### Patch Changes
+
+- [#378](https://github.com/alauda/doom/pull/378) [`8b541eb`](https://github.com/alauda/doom/commit/8b541eb1e7d34df06d382bac72d5025ab5ff5090) Thanks [@youyongsong](https://github.com/youyongsong)! - Translate independent segments on the same page concurrently while preserving the existing checks, retries, rate limit, and assembly order.
+
 ## 2.11.2
 
 ### Patch Changes
