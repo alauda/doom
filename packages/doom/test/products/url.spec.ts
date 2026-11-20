@@ -7,18 +7,27 @@ import {
 
 describe('products overview URLs', () => {
   test('adds the current language to a root-relative deployment URL', () => {
-    expect(getProductsOverviewUrl({ url: '/russian/products' }, 'ru')).toBe(
-      '/russian/products?lang=ru',
-    )
+    expect(
+      getProductsOverviewUrl({ url: '/russian/products' }, 'ru', '/docs'),
+    ).toBe('/russian/products?lang=ru')
   })
 
   test.each([
-    ['', 'en', '/products?lang=en'],
-    ['/russian', 'ru', '/russian/products?lang=ru'],
-    ['/docs/', 'zh', '/docs/products?lang=zh'],
-  ])('derives the default URL from prefix %s', (prefix, lang, expected) => {
-    expect(getProductsOverviewUrl(undefined, lang, prefix)).toBe(expected)
-  })
+    [undefined, 'en', '/products/'],
+    ['/', 'en', '/products/'],
+    ['/russian', 'ru', '/russian/products/'],
+    ['/docs', 'zh', '/docs/products/'],
+    ['/docs/', 'zh', '/docs/products/'],
+    ['/preview/acp', 'en', '/preview/acp/products/'],
+  ])(
+    'derives the default overview from prefix %s',
+    (prefix, lang, expected) => {
+      expect(getProductsOverviewUrl(undefined, lang, prefix)).toBe(
+        `${expected}?lang=${lang}`,
+      )
+      expect(getProductsOverviewCanonical(undefined, prefix)).toBe(expected)
+    },
+  )
 
   test('keeps an absolute deployment URL absolute', () => {
     expect(
@@ -30,15 +39,9 @@ describe('products overview URLs', () => {
   })
 
   test('canonical URL does not inherit the language query', () => {
-    expect(getProductsOverviewCanonical({ url: '/docs/products' })).toBe(
-      '/docs/products',
-    )
-  })
-
-  test('derives the canonical URL from the deployment prefix', () => {
-    expect(getProductsOverviewCanonical(undefined, '/russian/')).toBe(
-      '/russian/products',
-    )
+    expect(
+      getProductsOverviewCanonical({ url: '/docs/products' }, '/russian'),
+    ).toBe('/docs/products')
   })
 
   test('rejects a non-root-relative URL without a host', () => {

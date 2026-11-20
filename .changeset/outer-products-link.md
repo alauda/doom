@@ -2,4 +2,4 @@
 "@alauda/doom": patch
 ---
 
-Derive the outer Products overview from the deployment prefix by default, allow an explicit URL override, preserve the current language with `lang`, and keep the legacy `/products` route as a canonical compatibility page.
+Open the deployment's outer Products overview as a full page and pass the current language in `lang`. The default overview path ends in `/products/` so relative assets resolve correctly. Keep the legacy site route as a compatibility page with a canonical URL and a link to the overview.

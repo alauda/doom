@@ -4,7 +4,7 @@ const URL_BASE = 'https://doom.invalid'
 
 const defaultProductsOverviewUrl = (prefix: string | undefined) => {
   const normalizedPrefix = prefix?.replace(/\/+$/, '') ?? ''
-  return `${normalizedPrefix}/products`
+  return `${normalizedPrefix}/products/`
 }
 
 const parseOverviewUrl = (options: ProductsOverviewOptions) => {
