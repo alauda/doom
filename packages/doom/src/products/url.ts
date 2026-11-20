@@ -10,7 +10,14 @@ const defaultProductsOverviewUrl = (prefix: string | undefined) => {
 const parseOverviewUrl = (options: ProductsOverviewOptions) => {
   const { url } = options
   const parsed = new URL(url, URL_BASE)
-  if (parsed.origin === URL_BASE && !url.startsWith('/')) {
+  let isAbsolute = false
+  try {
+    isAbsolute = Boolean(new URL(url).protocol)
+  } catch {
+    // The URL is checked as a root-relative path below.
+  }
+  const isRootRelative = url.startsWith('/') && !url.startsWith('//')
+  if (!isAbsolute && !isRootRelative) {
     throw new Error(
       '`productsOverview.url` must be an absolute URL or a root-relative path',
     )

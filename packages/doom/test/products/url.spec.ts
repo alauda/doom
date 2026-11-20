@@ -49,4 +49,10 @@ describe('products overview URLs', () => {
       'absolute URL or a root-relative path',
     )
   })
+
+  test('rejects a protocol-relative URL', () => {
+    expect(
+      () => getProductsOverviewUrl({ url: '//host.example/products/' }, 'en'),
+    ).toThrow('absolute URL or a root-relative path')
+  })
 })
