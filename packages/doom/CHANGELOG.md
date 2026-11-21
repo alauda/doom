@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 2.11.4
+
+### Patch Changes
+
+- [#382](https://github.com/alauda/doom/pull/382) [`1a03513`](https://github.com/alauda/doom/commit/1a03513e00e6a13d225d91f8cb3ca15a7810fc04) Thanks [@youyongsong](https://github.com/youyongsong)! - Open the deployment's outer Products overview as a full page and pass the current language in `lang`. The default overview path ends in `/products/` so relative assets resolve correctly. Keep the legacy site route as a compatibility page with a canonical URL and a link to the overview.
+
 ## 2.11.3
 
 ### Patch Changes
