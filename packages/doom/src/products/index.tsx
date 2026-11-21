@@ -1,9 +1,11 @@
-import { addLeadingSlash, NoSSR, useSite } from '@rspress/core/runtime'
+import { addLeadingSlash, NoSSR, useHead, useSite } from '@rspress/core/runtime'
 import virtual from 'doom-@global-virtual'
 import { use } from 'react'
 
 import { BuildInfoContext } from '../shared/context.ts'
 import { isUnversioned } from '../shared/helpers.js'
+
+import { getProductsOverviewCanonical, getProductsOverviewUrl } from './url.ts'
 
 import { useIsPrint, useLang, useTranslation } from '@alauda/doom/runtime'
 import classes from '@alauda/doom/styles/products.module.scss'
@@ -66,11 +68,34 @@ const Products = () => {
 }
 
 export default () => {
+  const lang = useLang()
   const t = useTranslation()
+  const productsOverviewCanonical = getProductsOverviewCanonical(
+    virtual.productsOverview,
+    virtual.prefix,
+  )
+  const productsOverviewUrl = getProductsOverviewUrl(
+    virtual.productsOverview,
+    lang,
+    virtual.prefix,
+  )
+
+  useHead({
+    link: productsOverviewCanonical
+      ? [{ rel: 'canonical', href: productsOverviewCanonical }]
+      : [],
+  })
   return (
     <>
       <h1>{t('all_product_documentation')}</h1>
       <p>{t('explore_doc_all_products')}</p>
+      {productsOverviewUrl && (
+        <p>
+          <a className="rp-link" href={productsOverviewUrl}>
+            {t('all_product_documentation')}
+          </a>
+        </p>
+      )}
       <NoSSR>
         <Products />
       </NoSSR>

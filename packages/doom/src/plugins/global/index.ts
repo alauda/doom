@@ -7,7 +7,7 @@ import { addTrailingSlash } from '@rspress/shared'
 import type { NormalizedSidebar } from '@rspress/shared'
 
 import { ACP_BASE, type DoomSite } from '../../shared/index.ts'
-import type { ExportItem } from '../../types.ts'
+import type { ExportItem, ProductsOverviewOptions } from '../../types.ts'
 import { baseResolve, pkgResolve } from '../../utils/index.ts'
 
 import { getGlobalComponentFiles } from './components.ts'
@@ -26,6 +26,7 @@ export interface GlobalPluginOptions {
 export interface GlobalVirtual extends GlobalPluginOptions {
   userBase: string
   prefix?: string
+  productsOverview?: ProductsOverviewOptions
   sites?: DoomSite[]
   export?: ExportItem[]
   sidebarManifestUrl?: string
@@ -80,6 +81,7 @@ export const globalPlugin = ({
           {
             userBase: config.userBase,
             prefix: config.prefix,
+            productsOverview: config.productsOverview,
             version,
             download,
             sites: config.sites?.map((site) => ({
