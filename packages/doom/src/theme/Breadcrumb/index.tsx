@@ -138,7 +138,9 @@ export const BreadCrumb = () => {
       <ul className="breadcrumb-content">
         {hasGroups && (
           <li className="breadcrumb-item rp-doc">
-            <a href={productsOverviewUrl}>{t('products')}</a>
+            <a className="rp-link" href={productsOverviewUrl}>
+              {t('products')}
+            </a>
           </li>
         )}
         <li className="breadcrumb-item rp-doc">
