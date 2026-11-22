@@ -1,5 +1,11 @@
 # @alauda/doom
 
+## 2.11.5
+
+### Patch Changes
+
+- [#384](https://github.com/alauda/doom/pull/384) [`a50fbd4`](https://github.com/alauda/doom/commit/a50fbd4935ce85ee1b20480a4a80c3a6b957b795) Thanks [@youyongsong](https://github.com/youyongsong)! - Keep the Products breadcrumb styled like the other breadcrumb links while preserving its full-page navigation to the outer Products overview.
+
 ## 2.11.4
 
 ### Patch Changes
