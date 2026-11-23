@@ -40,6 +40,7 @@ import type { ExportItem } from '../types.ts'
 
 import { BreadCrumb } from './Breadcrumb/index.tsx'
 import { DocLayout } from './DocLayout.tsx'
+import { Feedback } from './Feedback/index.tsx'
 import { ForceRenderContext } from './VersionsNav/context.tsx'
 import { VersionsNav } from './VersionsNav/index.tsx'
 import { X } from './_X.ts'
@@ -185,10 +186,15 @@ const HeadTags = memo(
 
 interface CoreLayoutProps {
   afterNav?: ReactNode
+  afterDocFooter?: ReactNode
   beforeOutline?: ReactNode
 }
 
-const CoreLayout = ({ afterNav, beforeOutline }: CoreLayoutProps) => {
+const CoreLayout = ({
+  afterNav,
+  afterDocFooter,
+  beforeOutline,
+}: CoreLayoutProps) => {
   const { page } = usePage()
   const { site } = useSite()
   const { frontmatter } = useFrontmatter()
@@ -220,14 +226,24 @@ const CoreLayout = ({ afterNav, beforeOutline }: CoreLayoutProps) => {
         return <HomeLayout />
       case 'doc':
       case 'doc-wide':
-        return <DocLayout beforeOutline={beforeOutline} />
+        return (
+          <DocLayout
+            afterDocFooter={afterDocFooter}
+            beforeOutline={beforeOutline}
+          />
+        )
       case '404':
         return <NotFoundLayout />
       case 'custom':
       case 'blank':
         return <Content />
       default:
-        return <DocLayout beforeOutline={beforeOutline} />
+        return (
+          <DocLayout
+            afterDocFooter={afterDocFooter}
+            beforeOutline={beforeOutline}
+          />
+        )
     }
   }
 
@@ -311,6 +327,7 @@ export const Layout = () => {
       >
         <CoreLayout
           afterNav={<BreadCrumb />}
+          afterDocFooter={<Feedback key={pathname} />}
           beforeOutline={
             pdfLink && (
               <X.p className="rp-doc" style={{ marginBottom: 16 }}>

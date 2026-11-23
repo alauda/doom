@@ -1,0 +1,64 @@
+.doom-feedback {
+  margin-top: 32px;
+  padding-top: 16px;
+  border-top: 1px solid var(--rp-c-divider-light);
+  color: var(--rp-c-text-2);
+  font-size: 14px;
+
+  &__ask {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+  }
+
+  &__vote,
+  &__submit {
+    padding: 4px 12px;
+    border: 1px solid var(--rp-c-divider-light);
+    border-radius: 6px;
+    background-color: var(--rp-c-bg);
+    color: var(--rp-c-text-1);
+    cursor: pointer;
+
+    &:hover:not(:disabled),
+    &[aria-pressed='true'] {
+      border-color: var(--rp-c-brand);
+      color: var(--rp-c-brand);
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+  }
+
+  &__reasons {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    margin: 12px 0 0;
+    padding: 0;
+    border: 0;
+
+    legend {
+      margin-bottom: 8px;
+    }
+
+    label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+  }
+
+  &__submit {
+    margin-top: 4px;
+  }
+
+  &__thanks {
+    margin: 0;
+  }
+}

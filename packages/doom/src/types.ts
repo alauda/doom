@@ -31,6 +31,7 @@ export interface GlobalCliOptions {
   redirect?: 'auto' | 'never' | 'only-default-lang'
   editRepo?: boolean | string
   algolia?: boolean | 'alauda'
+  analytics?: boolean
   siteUrl?: boolean
   lang?: string
 }

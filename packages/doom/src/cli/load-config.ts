@@ -51,7 +51,12 @@ import {
   type DoomSite,
 } from '../shared/index.ts'
 import type { AlgoliaOptions, ExportItem, GlobalCliOptions } from '../types.ts'
-import { pathExists, pkgResolve, resolveStaticConfig } from '../utils/index.ts'
+import {
+  baseResolve,
+  pathExists,
+  pkgResolve,
+  resolveStaticConfig,
+} from '../utils/index.ts'
 
 import {
   DEFAULT_CONFIG_NAME,
@@ -90,6 +95,14 @@ const ALAUDA_RU_ALGOLIA_OPTIONS: AlgoliaOptions = {
   indexName: 'docs_alauda_io_gbnijigq50_pages',
 }
 
+// Compiled `.js` in the published package, `.ts` when running from source.
+const resolveSearchHooks = () => {
+  const jsPath = baseResolve('analytics/search-hooks.js')
+  return fs_.existsSync(jsPath)
+    ? jsPath
+    : baseResolve('analytics/search-hooks.ts')
+}
+
 const getCommonConfig = async ({
   config,
   root,
@@ -107,6 +120,7 @@ const getCommonConfig = async ({
   redirect,
   editRepo,
   algolia,
+  analytics,
   siteUrl,
   lang,
 }: {
@@ -126,6 +140,7 @@ const getCommonConfig = async ({
   redirect?: 'auto' | 'never' | 'only-default-lang'
   editRepo?: boolean | string
   algolia?: boolean | 'alauda' | 'alauda-ru'
+  analytics?: boolean
   siteUrl?: boolean
   lang?: string
 }): Promise<UserConfig> => {
@@ -315,7 +330,11 @@ const getCommonConfig = async ({
       }),
       searchIndexPlugin(),
     ].filter(Boolean),
-    search: algoliaOptions ? false : undefined,
+    search: algoliaOptions
+      ? false
+      : analytics
+        ? { searchHooks: resolveSearchHooks() }
+        : undefined,
     builderConfig: {
       dev: {
         lazyCompilation: lazy,
@@ -359,6 +378,12 @@ const getCommonConfig = async ({
                 'process.env.ALGOLIA_INDEX_NAME': JSON.stringify(
                   algoliaOptions?.indexName,
                 ),
+                // An empty string, not `undefined`, so the bundler can fold
+                // `if (process.env.DOOM_ANALYTICS)` and drop the analytics code
+                // from every build that did not ask for it.
+                'process.env.DOOM_ANALYTICS': JSON.stringify(
+                  analytics ? 'true' : '',
+                ),
               }),
             ],
           })
@@ -399,6 +424,7 @@ export async function loadConfig(
     redirect,
     editRepo,
     algolia,
+    analytics,
     siteUrl,
     lang,
   }: GlobalCliOptions = {},
@@ -485,6 +511,7 @@ export async function loadConfig(
     redirect,
     editRepo,
     algolia,
+    analytics,
     siteUrl,
     lang,
   })

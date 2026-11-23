@@ -109,6 +109,12 @@ program
     false,
   )
   .option(
+    '--analytics [boolean]',
+    'Enable site analytics for docs.alauda.io and docs.alauda.cn, only online builds should pass it',
+    parseBoolean,
+    false,
+  )
+  .option(
     '-S, --site-url',
     'Whether to enable the siteUrl for sitemap generation',
     parseBoolean,
